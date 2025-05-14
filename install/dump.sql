@@ -638,3 +638,31 @@ UNIQUE KEY `tools_ratings_tool_id_ip_binary_idx` (`tool_id`,`ip_binary`) USING B
 KEY `user_id` (`user_id`),
 CONSTRAINT `tools_ratings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SEPARATOR --
+
+CREATE TABLE `payments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `plan_id` varchar(16) DEFAULT NULL,
+  `payment_id` varchar(64) DEFAULT NULL,
+  `email` varchar(320) DEFAULT NULL,
+  `name` varchar(128) DEFAULT NULL,
+  `processor` varchar(16) DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `frequency` varchar(16) DEFAULT NULL,
+  `billing` text,
+  `taxes_ids` text,
+  `base_amount` float DEFAULT NULL,
+  `code` varchar(32) DEFAULT NULL,
+  `discount_amount` float DEFAULT NULL,
+  `total_amount` float DEFAULT NULL,
+  `total_amount_default_currency` float DEFAULT NULL,
+  `currency` varchar(4) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `plan_id` (`plan_id`),
+  CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

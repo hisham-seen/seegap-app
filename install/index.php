@@ -219,11 +219,6 @@ if(file_exists(ROOT . 'install/installed')) {
                             <h2 class="mb-4">Setup</h2>
 
                             <form id="setup_form" method="post" action="" role="form">
-                                <div class="form-group">
-                                    <label for="license_key">License key</label>
-                                    <input type="text" class="form-control" id="license_key" name="license_key" required="required">
-                                    <small class="form-text text-muted">The unique license key that you got after purchasing.</small>
-                                </div>
 
                                 <div class="form-group">
                                     <label for="installation_url">Website URL</label>
