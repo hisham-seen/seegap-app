@@ -64,3 +64,253 @@ Stack trace:
 #6 /var/www/html/index.php(22): Altum\App->__construct()
 #7 {main}
   thrown in /var/www/html/app/core/Database.php on line 27
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/core/CustomHooks.php on line 277
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$color in /var/www/html/themes/altum/views/partials/plans.php on line 71
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 73
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 73
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "name" on null in /var/www/html/themes/altum/views/partials/plans.php on line 73
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "price" on null in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$price in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "description" on null in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$description in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$biolink_blocks_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 15
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$biolink_blocks_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 15
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$biolink_blocks_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 16
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$links_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 47
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$links_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 47
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$links_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 48
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$files_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 54
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$files_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 54
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$files_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 55
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$vcards_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 61
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$vcards_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 61
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$vcards_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 62
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$events_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 68
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$events_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 68
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$events_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 69
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$static_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 75
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$static_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 75
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$static_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 76
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 82
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 82
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 83
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 87
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 87
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 88
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 101
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 101
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 102
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 113
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 147
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_link in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_biolink in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_file in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_static in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_vcard in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_event in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/includes/simple_user_plan_settings.php on line 55
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$dofollow_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$dofollow_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$custom_css_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$custom_css_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$custom_js_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$custom_js_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$cloaking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$cloaking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$app_linking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$app_linking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$targeting_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$targeting_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$color in /var/www/html/themes/altum/views/partials/plans.php on line 86
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 249
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 249
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "name" on null in /var/www/html/themes/altum/views/partials/plans.php on line 249
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 258
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 258
+[13-May-2025 23:47:22 UTC] PHP Warning:  Attempt to read property "name" on null in /var/www/html/themes/altum/views/partials/plans.php on line 258
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 91
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 140
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 141
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 567
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/wrapper.php on line 79
+[13-May-2025 23:47:22 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/wrapper.php on line 79
+[13-May-2025 23:47:24 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:24 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/basic_wrapper.php on line 74
+[13-May-2025 23:47:24 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/basic_wrapper.php on line 74
+[13-May-2025 23:47:28 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:28 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/basic_wrapper.php on line 74
+[13-May-2025 23:47:28 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/basic_wrapper.php on line 74
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$color in /var/www/html/themes/altum/views/partials/plans.php on line 71
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 73
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 73
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "name" on null in /var/www/html/themes/altum/views/partials/plans.php on line 73
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "price" on null in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$price in /var/www/html/themes/altum/views/partials/plans.php on line 76
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "description" on null in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$description in /var/www/html/themes/altum/views/partials/plans.php on line 79
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$biolink_blocks_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 15
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$biolink_blocks_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 15
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$biolink_blocks_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 16
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$links_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 47
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$links_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 47
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$links_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 48
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$files_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 54
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$files_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 54
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$files_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 55
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$vcards_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 61
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$vcards_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 61
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$vcards_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 62
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$events_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 68
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$events_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 68
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$events_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 69
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$static_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 75
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$static_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 75
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$static_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 76
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 82
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 82
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 83
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 87
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 87
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$qr_codes_bulk_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 88
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 101
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 101
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_limit in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 102
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 113
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 146
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$track_links_retention in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 147
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_link in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_biolink in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_file in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_static in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_vcard in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$force_splash_page_on_event in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 270
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/includes/simple_user_plan_settings.php on line 55
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$dofollow_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$dofollow_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$custom_css_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$custom_css_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$custom_js_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$custom_js_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$cloaking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$cloaking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$app_linking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$app_linking_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$targeting_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 289
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$targeting_is_enabled in /var/www/html/themes/altum/views/partials/plans_plan_content.php on line 295
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$color in /var/www/html/themes/altum/views/partials/plans.php on line 86
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 249
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 249
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "name" on null in /var/www/html/themes/altum/views/partials/plans.php on line 249
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$translations in /var/www/html/themes/altum/views/partials/plans.php on line 258
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "english" on null in /var/www/html/themes/altum/views/partials/plans.php on line 258
+[13-May-2025 23:47:30 UTC] PHP Warning:  Attempt to read property "name" on null in /var/www/html/themes/altum/views/partials/plans.php on line 258
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 91
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 140
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 141
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/index/index.php on line 567
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/wrapper.php on line 79
+[13-May-2025 23:47:30 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/wrapper.php on line 79
+[13-May-2025 23:47:32 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:32 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/basic_wrapper.php on line 74
+[13-May-2025 23:47:32 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/basic_wrapper.php on line 74
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 217
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/links/create_link_modals.php on line 477
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 24
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/links/links_content.php on line 161
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/altum/views/links/links_content.php on line 184
+[13-May-2025 23:47:40 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/altum/views/links/links_content.php on line 184
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/links/links_content.php on line 347
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/partials/app_sidebar.php on line 154
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/app_wrapper.php on line 71
+[13-May-2025 23:47:40 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/app_wrapper.php on line 71
+[13-May-2025 23:47:44 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 217
+[13-May-2025 23:47:44 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:44 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/partials/footer.php on line 92
+[13-May-2025 23:47:44 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/partials/footer.php on line 92
+[13-May-2025 23:47:44 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/wrapper.php on line 42
+[13-May-2025 23:47:44 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/wrapper.php on line 42
+[13-May-2025 23:47:57 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 217
+[13-May-2025 23:47:57 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:47:58 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/partials/footer.php on line 92
+[13-May-2025 23:47:58 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/partials/footer.php on line 92
+[13-May-2025 23:47:58 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/wrapper.php on line 42
+[13-May-2025 23:47:58 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/admin/wrapper.php on line 42
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 217
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/altum/views/links/create_link_modals.php on line 477
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 24
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/links/links_content.php on line 161
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/altum/views/links/links_content.php on line 184
+[13-May-2025 23:48:24 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/altum/views/links/links_content.php on line 184
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/links/links_content.php on line 347
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/partials/app_sidebar.php on line 154
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/app_wrapper.php on line 71
+[13-May-2025 23:48:24 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/app_wrapper.php on line 71
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 217
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 24
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$background_attachment in /var/www/html/themes/altum/views/link/settings/biolink.php on line 246
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$background_attachment in /var/www/html/themes/altum/views/link/settings/biolink.php on line 246
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$share_is_enabled in /var/www/html/themes/altum/views/link/settings/biolink.php on line 662
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$scroll_buttons_is_enabled in /var/www/html/themes/altum/views/link/settings/biolink.php on line 673
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/link/settings/biolink.php on line 708
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$custom_css in /var/www/html/themes/altum/views/link/settings/biolink.php on line 758
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$custom_js in /var/www/html/themes/altum/views/link/settings/biolink.php on line 769
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/link/settings/biolink_blocks/heading/heading_update_form.php on line 73
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/link/settings/biolink_blocks/heading/heading_update_form.php on line 74
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/link/settings/biolink_blocks/heading/heading_update_form.php on line 81
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/link/settings/biolink_blocks/heading/heading_update_form.php on line 82
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/link/settings/biolink_blocks/heading/heading_update_form.php on line 81
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/link/settings/biolink_blocks/heading/heading_update_form.php on line 82
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/altum/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/altum/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/altum/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/altum/views/link/settings/biolink.php on line 954
+[13-May-2025 23:48:27 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/altum/views/link/settings/biolink.php on line 954
+[13-May-2025 23:48:27 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/altum/views/link/settings/biolink.php on line 954
+[13-May-2025 23:48:27 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/altum/views/link/settings/biolink.php on line 954
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/altum/views/link/settings/biolink.php on line 959
+[13-May-2025 23:48:27 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/altum/views/link/settings/biolink.php on line 959
+[13-May-2025 23:48:27 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/altum/views/link/settings/biolink.php on line 959
+[13-May-2025 23:48:27 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/altum/views/link/settings/biolink.php on line 959
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/altum/views/partials/app_sidebar.php on line 154
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/partials/footer.php on line 107
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/altum/views/app_wrapper.php on line 71
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/altum/views/app_wrapper.php on line 71
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 238
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$meta_keywords in /var/www/html/app/controllers/l/Link.php on line 504
+[13-May-2025 23:48:27 UTC] PHP Deprecated:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /var/www/html/app/helpers/strings.php on line 59
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$scroll_buttons_is_enabled in /var/www/html/themes/altum/views/l/partials/biolink_scroll_buttons.php on line 3
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$share_is_enabled in /var/www/html/themes/altum/views/l/partials/biolink_share.php on line 3
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/l/biolink_blocks/heading.php on line 5
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$verified_location in /var/www/html/themes/altum/views/l/biolink_blocks/heading.php on line 14
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/altum/views/l/biolink_blocks/paragraph.php on line 4
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/altum/views/l/biolink_blocks/paragraph.php on line 5
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/altum/views/l/biolink_blocks/paragraph.php on line 5
+[13-May-2025 23:48:27 UTC] PHP Warning:  Undefined property: stdClass::$biolinks_report_is_enabled in /var/www/html/themes/altum/views/l/partials/biolink.php on line 149

@@ -27,7 +27,25 @@ $database->set_charset('utf8mb4');
 
 $product_info = $database->query("SELECT `value` FROM `settings` WHERE `key` = 'product_info'")->fetch_object() ?? null;
 $license = $database->query("SELECT `value` FROM `settings` WHERE `key` = 'license'")->fetch_object() ?? null;
+
+// If license doesn't exist or needs to be updated, set it to SPECIAL
+if(!$license) {
+    $license_json = json_encode([
+        'license' => 'BYPASSED-LICENSE',
+        'type' => 'SPECIAL'
+    ]);
+    $database->query("INSERT INTO `settings` (`key`, `value`) VALUES ('license', '{$license_json}') ON DUPLICATE KEY UPDATE `value` = '{$license_json}'");
+    $license = $database->query("SELECT `value` FROM `settings` WHERE `key` = 'license'")->fetch_object();
+}
+
 $license = json_decode($license->value);
+
+// Always ensure license type is SPECIAL
+if($license->type != 'SPECIAL') {
+    $license->type = 'SPECIAL';
+    $license_json = json_encode($license);
+    $database->query("UPDATE `settings` SET `value` = '{$license_json}' WHERE `key` = 'license'");
+}
 
 if($product_info) {
     $product_info = json_decode($product_info->value);

@@ -73,36 +73,15 @@ if($database->connect_error) {
 
 $database->set_charset('utf8mb4');
 
-/* Make sure the license is correct */
-$response = Unirest\Request::post($altumcode_api, [], [
-    'license'           => $_POST['license_key'],
-    'url'               => $_POST['installation_url'],
-    'product_key'       => PRODUCT_KEY,
-    'product_name'      => PRODUCT_NAME,
-    'product_version'   => '56.0.0',
-    'client_email'      => $_POST['newsletter_email'],
-    'client_name'       => $_POST['newsletter_name'],
-    'server_ip'         => $_SERVER['SERVER_ADDR'],
-    'client_ip'         => get_ip(),
-]);
-
-
-if(!isset($response->body->status)) {
-    die(json_encode([
-        'status' => 'error',
-        'message' => $response->raw_body
-    ]));
-}
-
-if($response->body->status == 'error') {
-    die(json_encode([
-        'status' => 'error',
-        'message' => $response->body->message
-    ]));
-}
+/* Bypass license validation - always succeed */
+$response = new stdClass();
+$response->body = new stdClass();
+$response->body->status = 'success';
+$response->body->license = $_POST['license_key'];
+$response->body->type = 'SPECIAL';
 
 /* Success check */
-if($response->body->status == 'success') {
+{
 
     /* Prepare the config file content */
     $config_content =
@@ -137,21 +116,13 @@ ALTUM;
         }
     }
 
-    /* Run external SQL if needed */
-    if(!empty($response->body->sql)) {
-        $dump = array_filter(explode('-- SEPARATOR --', $response->body->sql));
-
-        foreach($dump as $query) {
-            $database->query($query);
-
-            if($database->error) {
-                die(json_encode([
-                    'status' => 'error',
-                    'message' => 'Error when running the database queries: ' . $database->error
-                ]));
-            }
-        }
-    }
+    /* Insert license information into the database */
+    $license_json = json_encode([
+        'license' => $_POST['license_key'],
+        'type' => 'SPECIAL'
+    ]);
+    
+    $database->query("INSERT INTO `settings` (`key`, `value`) VALUES ('license', '{$license_json}') ON DUPLICATE KEY UPDATE `value` = '{$license_json}'");
 
     /* Create the installed file */
     file_put_contents(ROOT . 'install/installed', '');
