@@ -129,7 +129,6 @@ class AdminPlanUpdate extends Controller {
                 'links_limit' => (int) $_POST['links_limit'],
                 'links_bulk_limit'                  => (int) $_POST['links_bulk_limit'],
                 'files_limit' => (int) $_POST['files_limit'],
-                'vcards_limit' => (int) $_POST['vcards_limit'],
                 'events_limit' => (int) $_POST['events_limit'],
                 'static_limit' => (int) $_POST['static_limit'],
                 'domains_limit' => (int) $_POST['domains_limit'],
@@ -183,7 +182,7 @@ class AdminPlanUpdate extends Controller {
                     /* Make sure to not let the admin disable ALL the plans */
                     if(!$_POST['status']) {
 
-                        $enabled_plans = (int) settings()->payment->is_enabled ? database()->query("SELECT COUNT(*) AS `total` FROM `plans` WHERE `status` <> 0")->fetch_object()->total ?? 0 : 0;
+                        $enabled_plans = (int) settings()->payment->is_enabled ? db()->query("SELECT COUNT(*) AS `total` FROM `plans` WHERE `status` <> 0")->fetch_object()->total ?? 0 : 0;
 
                         if(!$enabled_plans) {
                             Alerts::add_error(l('admin_plan_update.error_message.disabled_plans'));
@@ -274,7 +273,7 @@ class AdminPlanUpdate extends Controller {
                     /* Make sure to not let the admin disable ALL the plans */
                     if(!$_POST['status']) {
 
-                        $enabled_plans = (int) database()->query("SELECT COUNT(*) AS `total` FROM `plans` WHERE `status` <> 0")->fetch_object()->total ?? 0;
+                        $enabled_plans = (int) db()->query("SELECT COUNT(*) AS `total` FROM `plans` WHERE `status` <> 0")->fetch_object()->total ?? 0;
 
                         if(
                             (

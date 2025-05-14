@@ -322,11 +322,6 @@
                     <small class="form-text text-muted"><?= l('admin_plans.plan.files_limit_help') ?></small>
                 </div>
 
-                <div class="form-group">
-                    <label for="vcards_limit"><?= l('admin_plans.plan.vcards_limit') ?></label>
-                    <input type="number" id="vcards_limit" name="vcards_limit" min="-1" class="form-control" value="<?= $data->plan->settings->vcards_limit ?>" />
-                    <small class="form-text text-muted"><?= l('admin_plans.plan.vcards_limit_help') ?></small>
-                </div>
 
                 <div class="form-group">
                     <label for="events_limit"><?= l('admin_plans.plan.events_limit') ?></label>

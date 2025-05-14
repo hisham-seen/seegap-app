@@ -17,7 +17,7 @@
 
 <?= \Altum\Alerts::output_alerts() ?>
 
-<div class="card">
+<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
 
         <form action="" method="post" role="form">
@@ -101,6 +101,34 @@
                             </div>
                             <?= \Altum\Alerts::output_field_error('monthly_price[' . $currency . ']') ?>
                             <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.monthly_price')) ?></small>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xl-4">
+                        <div class="form-group">
+                            <label for="quarterly_price[<?= $currency ?>]"><i class="fas fa-fw fa-sm fa-calendar-alt text-muted mr-1"></i> <?= l('admin_plans.quarterly_price') ?></label>
+                            <div class="input-group">
+                                <input type="text" id="quarterly_price[<?= $currency ?>]" name="quarterly_price[<?= $currency ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('quarterly_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="0" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><?= $currency ?></span>
+                                </div>
+                            </div>
+                            <?= \Altum\Alerts::output_field_error('quarterly_price[' . $currency . ']') ?>
+                            <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.quarterly_price')) ?></small>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xl-4">
+                        <div class="form-group">
+                            <label for="biannual_price[<?= $currency ?>]"><i class="fas fa-fw fa-sm fa-calendar-alt text-muted mr-1"></i> <?= l('admin_plans.biannual_price') ?></label>
+                            <div class="input-group">
+                                <input type="text" id="biannual_price[<?= $currency ?>]" name="biannual_price[<?= $currency ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('biannual_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="0" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><?= $currency ?></span>
+                                </div>
+                            </div>
+                            <?= \Altum\Alerts::output_field_error('biannual_price[' . $currency . ']') ?>
+                            <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.biannual_price')) ?></small>
                         </div>
                     </div>
 
@@ -241,11 +269,6 @@
                     <small class="form-text text-muted"><?= l('admin_plans.plan.files_limit_help') ?></small>
                 </div>
 
-                <div class="form-group">
-                    <label for="vcards_limit"><?= l('admin_plans.plan.vcards_limit') ?></label>
-                    <input type="number" id="vcards_limit" name="vcards_limit" min="-1" class="form-control" value="0" />
-                    <small class="form-text text-muted"><?= l('admin_plans.plan.vcards_limit_help') ?></small>
-                </div>
 
                 <div class="form-group">
                     <label for="events_limit"><?= l('admin_plans.plan.events_limit') ?></label>
@@ -281,7 +304,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix')): ?>
+                <?php if(\Altum\Plugin::is_active('aix') && file_exists(\Altum\Plugin::get('aix')->path . 'includes/ai_text_models.php')): ?>
                     <div class="form-group custom-control custom-switch">
                         <input id="exclusive_personal_api_keys" name="exclusive_personal_api_keys" type="checkbox" class="custom-control-input">
                         <label class="custom-control-label" for="exclusive_personal_api_keys"><?= l('admin_plans.plan.exclusive_personal_api_keys') ?></label>
@@ -310,15 +333,17 @@
                         <small class="form-text text-muted"><?= l('admin_plans.plan.unlimited') ?></small>
                     </div>
 
+                    <?php if(file_exists(\Altum\Plugin::get('aix')->path . 'includes/ai_image_models.php')): ?>
                     <div class="form-group">
                         <label for="images_api"><?= l('admin_plans.plan.images_api') ?></label>
                         <select id="images_api" name="images_api" class="custom-select">
                             <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_image_models.php' as $key => $value): ?>
-                                <option value="<?= $key ?>" <?= $data->user->plan_settings->images_api == $key ? 'selected="selected"' : null ?>><?= $value['name'] ?></option>
+                                <option value="<?= $key ?>" <?= isset($data->user->plan_settings->images_api) && $data->user->plan_settings->images_api == $key ? 'selected="selected"' : null ?>><?= $value['name'] ?></option>
                             <?php endforeach ?>
                         </select>
                         <small class="form-text text-muted"><?= l('admin_plans.plan.images_api_help') ?></small>
                     </div>
+                    <?php endif ?>
 
                     <div class="form-group">
                         <label for="images_per_month_limit"><?= l('admin_plans.plan.images_per_month_limit') ?> <small class="form-text text-muted"><?= l('admin_plans.plan.per_month') ?></small></label>
@@ -343,6 +368,7 @@
                         <small class="form-text text-muted"><?= l('admin_plans.plan.transcriptions_file_size_limit_help') ?></small>
                     </div>
 
+                    <?php if(file_exists(\Altum\Plugin::get('aix')->path . 'includes/ai_chat_models.php')): ?>
                     <div class="form-group">
                         <label for="chats_model"><?= l('admin_plans.plan.chats_model') ?></label>
                         <select id="chats_model" name="chats_model" class="custom-select">
@@ -352,6 +378,7 @@
                         </select>
                         <small class="form-text text-muted"><?= l('admin_plans.plan.chats_model_help') ?></small>
                     </div>
+                    <?php endif ?>
 
                     <div class="form-group">
                         <label for="chats_per_month_limit"><?= l('admin_plans.plan.chats_per_month_limit') ?> <small class="form-text text-muted"><?= l('admin_plans.plan.per_month') ?></small></label>
@@ -656,4 +683,3 @@
 
     </div>
 </div>
-

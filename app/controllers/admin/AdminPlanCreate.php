@@ -34,12 +34,16 @@ class AdminPlanCreate extends Controller {
             /* Prices */
             $prices = [
                 'monthly' => [],
+                'quarterly' => [],
+                'biannual' => [],
                 'annual' => [],
                 'lifetime' => [],
             ];
 
             foreach((array) settings()->payment->currencies as $currency => $currency_data) {
                 $prices['monthly'][$currency] = (float) $_POST['monthly_price'][$currency];
+                $prices['quarterly'][$currency] = (float) ($_POST['quarterly_price'][$currency] ?? 0);
+                $prices['biannual'][$currency] = (float) ($_POST['biannual_price'][$currency] ?? 0);
                 $prices['annual'][$currency] = (float) $_POST['annual_price'][$currency];
                 $prices['lifetime'][$currency] = (float) $_POST['lifetime_price'][$currency];
             }
@@ -94,7 +98,6 @@ class AdminPlanCreate extends Controller {
                 'links_limit' => (int) $_POST['links_limit'],
                 'links_bulk_limit'                  => (int) $_POST['links_bulk_limit'],
                 'files_limit' => (int) $_POST['files_limit'],
-                'vcards_limit' => (int) $_POST['vcards_limit'],
                 'events_limit' => (int) $_POST['events_limit'],
                 'static_limit' => (int) $_POST['static_limit'],
                 'domains_limit' => (int) $_POST['domains_limit'],
@@ -187,7 +190,6 @@ class AdminPlanCreate extends Controller {
                 redirect('admin/plans');
             }
         }
-
 
         /* Main View */
         $data = [

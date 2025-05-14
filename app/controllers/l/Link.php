@@ -96,7 +96,7 @@ class Link extends Controller {
         $this->link->pixels_ids = json_decode($this->link->pixels_ids ?? '[]');
 
         /* Determine the actual full url */
-        if(in_array($this->type, ['link', 'file', 'vcard', 'event'])) {
+        if(in_array($this->type, ['link', 'file', 'event'])) {
             $this->link->full_url = $domain_id && !isset($_GET['link_id']) ? \Altum\Router::$data['domain']->scheme . \Altum\Router::$data['domain']->host . '/' . (\Altum\Router::$data['domain']->link_id == $this->link->link_id ? null : $this->link->url) : SITE_URL . $this->link->url;
         } else {
             $this->link->full_url = SITE_URL . 'l/link?biolink_block_id=' . $this->link->biolink_block_id;
@@ -279,7 +279,79 @@ class Link extends Controller {
                     /* Process short url redirection */
                     $this->process_link();
                 } elseif($this->link->type == 'vcard') {
-                    $this->process_vcard();
+                    /* For vcard biolink blocks, we still need to process them */
+                    foreach(['vcard_first_name', 'vcard_last_name', 'vcard_email', 'vcard_url', 'vcard_company', 'vcard_job_title', 'vcard_birthday', 'vcard_street', 'vcard_city', 'vcard_zip', 'vcard_region', 'vcard_country', 'vcard_note'] as $key) {
+                        $this->link->settings->{$key} = htmlspecialchars_decode($this->link->settings->{$key}, ENT_QUOTES);
+                    }
+
+                    /* Check for vcard download link */
+                    $vcard = new \JeroenDesloovere\VCard\VCard();
+
+                    /* Check if we should try to add the image to the vcard */
+                    if($this->link->settings->vcard_avatar) {
+                        $vcard->addPhoto(\Altum\Uploads::get_full_url('avatars') . $this->link->settings->vcard_avatar);
+                    }
+
+                    $vcard->addName($this->link->settings->vcard_last_name, $this->link->settings->vcard_first_name);
+                    $vcard->addEmail($this->link->settings->vcard_email);
+                    $vcard->addURL($this->link->settings->vcard_url);
+                    $vcard->addCompany($this->link->settings->vcard_company);
+                    $vcard->addJobtitle($this->link->settings->vcard_job_title);
+                    $vcard->addBirthday($this->link->settings->vcard_birthday);
+                    $vcard->addNote($this->link->settings->vcard_note);
+
+                    /* Address */
+                    if($this->link->settings->vcard_street || $this->link->settings->vcard_city || $this->link->settings->vcard_region || $this->link->settings->vcard_zip || $this->link->settings->vcard_country) {
+                        $vcard->addAddress(null, null, $this->link->settings->vcard_street, $this->link->settings->vcard_city, $this->link->settings->vcard_region, $this->link->settings->vcard_zip, $this->link->settings->vcard_country);
+                    }
+
+                    /* Phone numbers */
+                    foreach($this->link->settings->vcard_phone_numbers as $key => $phone_number) {
+
+                        /* If old format (just a string) */
+                        if(is_string($phone_number)) {
+                            $vcard->addPhoneNumber(htmlspecialchars_decode($phone_number, ENT_QUOTES));
+                            continue;
+                        }
+
+                        /* New format */
+                        $phone_number->value = htmlspecialchars_decode($phone_number->value, ENT_QUOTES);
+                        $phone_number->label = htmlspecialchars_decode($phone_number->label, ENT_QUOTES);
+
+                        /* Custom label */
+                        if($phone_number->label) {
+                            $vcard->setProperty(
+                                'item' . $key . '.TEL',
+                                'item' . $key . '.TEL',
+                                $phone_number->value
+                            );
+                            $vcard->setProperty(
+                                'item' . $key . '.X-ABLabel',
+                                'item' . $key . '.X-ABLabel',
+                                $phone_number->label
+                            );
+                        }
+
+                        /* Default label */
+                        else {
+                            $vcard->addPhoneNumber($phone_number->value);
+                        }
+                    }
+
+                    /* Socials */
+                    foreach($this->link->settings->vcard_socials as $social) {
+                        $social->value = htmlspecialchars_decode($social->value, ENT_QUOTES);
+                        $social->label = htmlspecialchars_decode($social->label, ENT_QUOTES);
+
+                        $vcard->addURL(
+                            $social->value,
+                            'TYPE=' . $social->label
+                        );
+                    }
+
+                    $vcard->setFilename($this->link->settings->vcard_last_name . ' ' . $this->link->settings->vcard_first_name);
+                    $vcard->download();
+                    die();
                 }
             }
 
@@ -299,18 +371,6 @@ class Link extends Controller {
 
                 /* Process short url redirection */
                 $this->process_link();
-
-            } else if($this->link->type == 'vcard') {
-
-                if(count($this->link->pixels_ids) && !isset($_GET['process'])) {
-                    $this->redirect_to($this->link->full_url . '&process=true');
-                }
-
-                /* Store statistics */
-                $this->create_statistics();
-
-                /* Process vcard download  */
-                $this->process_vcard();
 
             } else if($this->link->type == 'event') {
 
@@ -518,81 +578,6 @@ class Link extends Controller {
         /* Prepare the view */
         $biolink_wrapper = new \Altum\View('l/biolink_wrapper', (array) $this);
         echo $biolink_wrapper->run();
-    }
-
-    private function process_vcard() {
-        foreach(['vcard_first_name', 'vcard_last_name', 'vcard_email', 'vcard_url', 'vcard_company', 'vcard_job_title', 'vcard_birthday', 'vcard_street', 'vcard_city', 'vcard_zip', 'vcard_region', 'vcard_country', 'vcard_note'] as $key) {
-            $this->link->settings->{$key} = htmlspecialchars_decode($this->link->settings->{$key}, ENT_QUOTES);
-        }
-
-        /* Check for vcard download link */
-        $vcard = new \JeroenDesloovere\VCard\VCard();
-
-        /* Check if we should try to add the image to the vcard */
-        if($this->link->settings->vcard_avatar) {
-            $vcard->addPhoto(\Altum\Uploads::get_full_url('avatars') . $this->link->settings->vcard_avatar);
-        }
-
-        $vcard->addName($this->link->settings->vcard_last_name, $this->link->settings->vcard_first_name);
-        $vcard->addEmail($this->link->settings->vcard_email);
-        $vcard->addURL($this->link->settings->vcard_url);
-        $vcard->addCompany($this->link->settings->vcard_company);
-        $vcard->addJobtitle($this->link->settings->vcard_job_title);
-        $vcard->addBirthday($this->link->settings->vcard_birthday);
-        $vcard->addNote($this->link->settings->vcard_note);
-
-        /* Address */
-        if($this->link->settings->vcard_street || $this->link->settings->vcard_city || $this->link->settings->vcard_region || $this->link->settings->vcard_zip || $this->link->settings->vcard_country) {
-            $vcard->addAddress(null, null, $this->link->settings->vcard_street, $this->link->settings->vcard_city, $this->link->settings->vcard_region, $this->link->settings->vcard_zip, $this->link->settings->vcard_country);
-        }
-
-        /* Phone numbers */
-        foreach($this->link->settings->vcard_phone_numbers as $key => $phone_number) {
-
-            /* If old format (just a string) */
-            if(is_string($phone_number)) {
-                $vcard->addPhoneNumber(htmlspecialchars_decode($phone_number, ENT_QUOTES));
-                continue;
-            }
-
-            /* New format */
-            $phone_number->value = htmlspecialchars_decode($phone_number->value, ENT_QUOTES);
-            $phone_number->label = htmlspecialchars_decode($phone_number->label, ENT_QUOTES);
-
-            /* Custom label */
-            if($phone_number->label) {
-                $vcard->setProperty(
-                    'item' . $key . '.TEL',
-                    'item' . $key . '.TEL',
-                    $phone_number->value
-                );
-                $vcard->setProperty(
-                    'item' . $key . '.X-ABLabel',
-                    'item' . $key . '.X-ABLabel',
-                    $phone_number->label
-                );
-            }
-
-            /* Default label */
-            else {
-                $vcard->addPhoneNumber($phone_number->value);
-            }
-        }
-
-        /* Socials */
-        foreach($this->link->settings->vcard_socials as $social) {
-            $social->value = htmlspecialchars_decode($social->value, ENT_QUOTES);
-            $social->label = htmlspecialchars_decode($social->label, ENT_QUOTES);
-
-            $vcard->addURL(
-                $social->value,
-                'TYPE=' . $social->label
-            );
-        }
-
-        $vcard->setFilename($this->link->settings->vcard_last_name . ' ' . $this->link->settings->vcard_first_name);
-        $vcard->download();
-        die();
     }
 
     private function process_event() {
