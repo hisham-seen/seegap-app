@@ -1,0 +1,298 @@
+<?php defined('ALTUMCODE') || die() ?>
+
+<div class="admin-sidebar">
+    <div class="admin-sidebar-title text-truncate">
+        <a
+                href="<?= url('admin') ?>"
+                data-logo
+                data-light-value="<?= settings()->main->logo_light != '' ? settings()->main->logo_light_full_url : settings()->main->title ?>"
+                data-light-class="<?= settings()->main->logo_light != '' ? 'img-fluid navbar-logo' : '' ?>"
+                data-light-tag="<?= settings()->main->logo_light != '' ? 'img' : 'span' ?>"
+                data-dark-value="<?= settings()->main->logo_dark != '' ? settings()->main->logo_dark_full_url : settings()->main->title ?>"
+                data-dark-class="<?= settings()->main->logo_dark != '' ? 'img-fluid navbar-logo' : '' ?>"
+                data-dark-tag="<?= settings()->main->logo_dark != '' ? 'img' : 'span' ?>"
+        >
+            <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()} != ''): ?>
+                <img src="<?= settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
+            <?php else: ?>
+                <?= settings()->main->title ?>
+            <?php endif ?>
+        </a>
+    </div>
+
+    <div class="admin-sidebar-links-wrapper flex-grow-1">
+        <ul class="admin-sidebar-links">
+            <li class="<?= \Altum\Router::$controller == 'AdminIndex' ? 'active' : null ?>">
+                <a href="<?= url('admin/') ?>"><i class="fas fa-fw fa-sm fa-fingerprint mr-2"></i> <?= l('admin_index.menu') ?></a>
+            </li>
+            
+            <li>
+                <a href="<?= url() ?>"><i class="fas fa-fw fa-sm fa-globe mr-2"></i> <?= l('index.menu') ?></a>
+            </li>
+            
+            <li>
+                <a href="<?= url('dashboard') ?>"><i class="fas fa-fw fa-sm fa-th mr-2"></i> <?= l('dashboard.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminUsers', 'AdminUserUpdate', 'AdminUserCreate', 'AdminUserView']) ? 'active' : null ?>">
+                <a href="<?= url('admin/users') ?>"><i class="fas fa-fw fa-sm fa-users mr-2"></i> <?= l('admin_users.menu') ?></a>
+            </li>
+
+            <li class="<?= \Altum\Router::$controller == 'AdminSettings' ? 'active' : null ?>">
+                <a href="<?= url('admin/settings') ?>"><i class="fas fa-fw fa-sm fa-wrench mr-2"></i> <?= l('admin_settings.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminPlans', 'AdminPlanCreate', 'AdminPlanUpdate']) ? 'active' : null ?>">
+                <a href="<?= url('admin/plans') ?>"><i class="fas fa-fw fa-sm fa-box-open mr-2"></i> <?= l('admin_plans.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminLanguages', 'AdminLanguageCreate', 'AdminLanguageUpdate']) ? 'active' : null ?>">
+                <a href="<?= url('admin/languages') ?>"><i class="fas fa-fw fa-sm fa-language mr-2"></i> <?= l('admin_languages.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBroadcasts', 'AdminBroadcastCreate', 'AdminBroadcastUpdate']) ? 'active' : null ?>">
+                <a href="<?= url('admin/broadcasts') ?>"><i class="fas fa-fw fa-sm fa-mail-bulk mr-2"></i> <?= l('admin_broadcasts.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminInternalNotifications', 'AdminInternalNotificationCreate']) ? 'active' : null ?>">
+                <a href="<?= url('admin/internal-notifications') ?>"><i class="fas fa-fw fa-sm fa-bell mr-2"></i> <?= l('admin_internal_notifications.menu') ?></a>
+            </li>
+
+            <?php if(\Altum\Plugin::is_active('push-notifications')): ?>
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminPushSubscribers', 'AdminPushNotifications', 'AdminPushNotificationCreate', 'AdminPushNotificationUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/push-notifications') ?>"><i class="fas fa-fw fa-sm fa-bolt-lightning mr-2"></i> <?= l('admin_push_notifications.menu') ?></a>
+                </li>
+            <?php endif ?>
+
+            <li class="<?= \Altum\Router::$controller == 'AdminPlugins' ? 'active' : null ?>">
+                <a href="<?= url('admin/plugins') ?>"><i class="fas fa-fw fa-sm fa-puzzle-piece mr-2"></i> <?= l('admin_plugins.menu') ?></a>
+            </li>
+
+            <li class="<?= \Altum\Router::$controller == 'AdminStatistics' ? 'active' : null ?>">
+                <a href="<?= url('admin/statistics') ?>"><i class="fas fa-fw fa-sm fa-chart-bar mr-2"></i> <?= l('admin_statistics.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminPages', 'AdminPageCreate', 'AdminPageUpdate', 'AdminPagesCategories', 'AdminPagesCategoryCreate', 'AdminPagesCategoryUpdate']) ? 'active' : null ?>">
+                <a href="#admin_sidebar_resources_container" data-toggle="collapse" role="button" aria-expanded="false"><i class="fas fa-fw fa-sm fa-info-circle mr-2"></i> <?= l('admin_resources.menu') ?> <i class="fas fa-fw fa-sm fa-caret-down"></i></a>
+            </li>
+
+            <div id="admin_sidebar_resources_container" class="mt-1 collapse bg-gray-200 rounded <?= in_array(\Altum\Router::$controller, ['AdminPages', 'AdminPageCreate', 'AdminPageUpdate', 'AdminPagesCategories', 'AdminPagesCategoryCreate', 'AdminPagesCategoryUpdate']) ? 'show' : null ?>">
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminPagesCategories', 'AdminPagesCategoryCreate', 'AdminPagesCategoryUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/pages-categories') ?>"><i class="fas fa-fw fa-sm fa-book mr-2"></i> <?= l('admin_pages_categories.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminPages', 'AdminPageCreate', 'AdminPageUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/pages') ?>"><i class="fas fa-fw fa-sm fa-copy mr-2"></i> <?= l('admin_pages.menu') ?></a>
+                </li>
+            </div>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBlogPosts', 'AdminBlogPostCreate', 'AdminBlogPostUpdate', 'AdminBlogPostsCategories', 'AdminBlogPostsCategoryCreate', 'AdminBlogPostsCategoryUpdate']) ? 'active' : null ?>">
+                <a href="#admin_sidebar_blog_container" data-toggle="collapse" role="button" aria-expanded="false"><i class="fas fa-fw fa-sm fa-blog mr-2"></i> <?= l('admin_blog.menu') ?> <i class="fas fa-fw fa-sm fa-caret-down"></i></a>
+            </li>
+
+            <div id="admin_sidebar_blog_container" class="mt-1 collapse bg-gray-200 rounded <?= in_array(\Altum\Router::$controller, ['AdminBlogPosts', 'AdminBlogPostCreate', 'AdminBlogPostUpdate', 'AdminBlogPostsCategories', 'AdminBlogPostsCategoryCreate', 'AdminBlogPostsCategoryUpdate']) ? 'show' : null ?>">
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminBlogPostsCategories', 'AdminBlogPostsCategoryCreate', 'AdminBlogPostsCategoryUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/blog-posts-categories') ?>"><i class="fas fa-fw fa-sm fa-map mr-2"></i> <?= l('admin_blog_posts_categories.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminBlogPosts', 'AdminBlogPostCreate', 'AdminBlogPostUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/blog-posts') ?>"><i class="fas fa-fw fa-sm fa-paste mr-2"></i> <?= l('admin_blog_posts.menu') ?></a>
+                </li>
+            </div>
+
+            <li class="<?= \Altum\Router::$controller == 'AdminApiDocumentation' ? 'active' : null ?>">
+                <a href="<?= url('admin/api-documentation') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('admin_api_documentation.menu') ?></a>
+            </li>
+
+            <?php if(in_array(settings()->license->type, ['SPECIAL','Extended License', 'extended'])): ?>
+                <div class="divider-wrapper">
+                    <div class="divider"></div>
+                </div>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminCodes', 'AdminCodeCreate', 'AdminCodeUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/codes') ?>"><i class="fas fa-fw fa-sm fa-tags mr-2"></i> <?= l('admin_codes.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminTaxes', 'AdminTaxCreate', 'AdminTaxUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/taxes') ?>"><i class="fas fa-fw fa-sm fa-paperclip mr-2"></i> <?= l('admin_taxes.menu') ?></a>
+                </li>
+
+                <li class="<?= \Altum\Router::$controller == 'AdminPayments' ? 'active' : null ?>">
+                    <a href="<?= url('admin/payments') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('admin_payments.menu') ?></a>
+                </li>
+
+                <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+                    <li class="<?= \Altum\Router::$controller == 'AdminAffiliatesWithdrawals' ? 'active' : null ?>">
+                        <a href="<?= url('admin/affiliates-withdrawals') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('admin_affiliates_withdrawals.menu') ?></a>
+                    </li>
+                <?php endif ?>
+            <?php endif ?>
+
+            <div class="divider-wrapper">
+                <div class="divider"></div>
+            </div>
+
+            <?php if(\Altum\Plugin::is_active('teams')): ?>
+                <li class="<?= \Altum\Router::$controller == 'AdminTeams' ? 'active' : null ?>">
+                    <a href="<?= url('admin/teams') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('admin_teams.menu') ?></a>
+                </li>
+
+                <li class="<?= \Altum\Router::$controller == 'AdminTeamMembers' ? 'active' : null ?>">
+                    <a href="<?= url('admin/team-members') ?>"><i class="fas fa-fw fa-sm fa-user-tag mr-2"></i> <?= l('admin_team_members.menu') ?></a>
+                </li>
+            <?php endif ?>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminUsersLogs']) ? 'active' : null ?>">
+                <a href="<?= url('admin/users-logs') ?>"><i class="fas fa-fw fa-sm fa-scroll mr-2"></i> <?= l('admin_users_logs.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminDomains', 'AdminDomainCreate', 'AdminDomainUpdate']) ? 'active' : null ?>">
+                <a href="<?= url('admin/domains') ?>"><i class="fas fa-fw fa-sm fa-globe mr-2"></i> <?= l('admin_domains.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminLinks']) ? 'active' : null ?>">
+                <a href="<?= url('admin/links') ?>"><i class="fas fa-fw fa-sm fa-link mr-2"></i> <?= l('admin_links.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBiolinksBlocks']) ? 'active' : null ?>">
+                <a href="<?= url('admin/biolinks-blocks') ?>"><i class="fas fa-fw fa-sm fa-table-cells-large mr-2"></i> <?= l('admin_biolinks_blocks.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBiolinksThemes', 'AdminBiolinkThemeCreate', 'AdminBiolinkThemeUpdate']) ? 'active' : null ?>">
+                <a href="<?= url('admin/biolinks-themes') ?>"><i class="fas fa-fw fa-sm fa-palette mr-2"></i> <?= l('admin_biolinks_themes.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBiolinksTemplates', 'AdminBiolinkTemplateCreate', 'AdminBiolinkTemplateUpdate']) ? 'active' : null ?>">
+                <a href="<?= url('admin/biolinks-templates') ?>"><i class="fas fa-fw fa-sm fa-moon mr-2"></i> <?= l('admin_biolinks_templates.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminQrCodes']) ? 'active' : null ?>">
+                <a href="<?= url('admin/qr-codes') ?>"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('admin_qr_codes.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminProjects']) ? 'active' : null ?>">
+                <a href="<?= url('admin/projects') ?>"><i class="fas fa-fw fa-sm fa-project-diagram mr-2"></i> <?= l('admin_projects.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminSplashPages']) ? 'active' : null ?>">
+                <a href="<?= url('admin/splash-pages') ?>"><i class="fas fa-fw fa-sm fa-droplet mr-2"></i> <?= l('admin_splash_pages.menu') ?></a>
+            </li>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminPixels']) ? 'active' : null ?>">
+                <a href="<?= url('admin/pixels') ?>"><i class="fas fa-fw fa-sm fa-adjust mr-2"></i> <?= l('admin_pixels.menu') ?></a>
+            </li>
+
+            <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminSignatures']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/signatures') ?>"><i class="fas fa-fw fa-sm fa-file-signature mr-2"></i> <?= l('admin_signatures.menu') ?></a>
+                </li>
+            <?php endif ?>
+
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminData']) ? 'active' : null ?>">
+                <a href="<?= url('admin/data') ?>"><i class="fas fa-fw fa-sm fa-database mr-2"></i> <?= l('admin_data.menu') ?></a>
+            </li>
+
+            <?php if(\Altum\Plugin::is_active('payment-blocks')): ?>
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminPaymentProcessors']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/payment-processors') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('admin_payment_processors.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminGuestsPayments']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/guests-payments') ?>"><i class="fas fa-fw fa-sm fa-coins mr-2"></i> <?= l('admin_guests_payments.menu') ?></a>
+                </li>
+            <?php endif ?>
+
+            <?php if(\Altum\Plugin::is_active('aix')): ?>
+                <div class="divider-wrapper">
+                    <div class="divider"></div>
+                </div>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminTemplatesCategories', 'AdminTemplateCategoryCreate', 'AdminTemplateCategoryUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/templates-categories') ?>"><i class="fas fa-fw fa-sm fa-folder mr-2"></i> <?= l('admin_templates_categories.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminTemplates', 'AdminTemplateCreate', 'AdminTemplateUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/templates') ?>"><i class="fas fa-fw fa-sm fa-moon mr-2"></i> <?= l('admin_templates.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminDocuments']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/documents') ?>"><i class="fas fa-fw fa-sm fa-robot mr-2"></i> <?= l('admin_documents.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminTranscriptions']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/transcriptions') ?>"><i class="fas fa-fw fa-sm fa-microphone-alt mr-2"></i> <?= l('admin_transcriptions.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminSyntheses']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/syntheses') ?>"><i class="fas fa-fw fa-sm fa-voicemail mr-2"></i> <?= l('admin_syntheses.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminChatsAssistants', 'AdminChatAssistantCreate', 'AdminChatAssistantUpdate']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/chats-assistants') ?>"><i class="fas fa-fw fa-sm fa-id-card-alt mr-2"></i> <?= l('admin_chats_assistants.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminChats']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/chats') ?>"><i class="fas fa-fw fa-sm fa-comments mr-2"></i> <?= l('admin_chats.menu') ?></a>
+                </li>
+
+                <li class="<?= in_array(\Altum\Router::$controller, ['AdminImages']) ? 'active' : null ?>">
+                    <a href="<?= url('admin/images') ?>"><i class="fas fa-fw fa-sm fa-icons mr-2"></i> <?= l('admin_images.menu') ?></a>
+                </li>
+            <?php endif ?>
+        </ul>
+
+        <div class="app-sidebar-footer dropdown">
+            <a href="#" class="dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="d-flex align-items-center app-sidebar-footer-block">
+                    <img src="<?= get_gravatar($this->user->email) ?>" class="app-sidebar-avatar mr-3" loading="lazy" />
+
+                    <div class="app-sidebar-footer-text d-flex flex-column text-truncate">
+                        <span class="text-truncate"><?= $this->user->name ?></span>
+                        <small class="text-truncate"><?= $this->user->email ?></small>
+                    </div>
+                </div>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="<?= url('account') ?>"><i class="fas fa-fw fa-sm fa-user-cog mr-2"></i> <?= l('account.menu') ?></a>
+
+                <a class="dropdown-item" href="<?= url('account-preferences') ?>"><i class="fas fa-fw fa-sm fa-sliders-h mr-2"></i> <?= l('account_preferences.menu') ?></a>
+
+                <a class="dropdown-item" href="<?= url('account-plan') ?>"><i class="fas fa-fw fa-sm fa-box-open mr-2"></i> <?= l('account_plan.menu') ?></a>
+
+                <?php if(settings()->payment->is_enabled): ?>
+                    <a class="dropdown-item" href="<?= url('account-payments') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('account_payments.menu') ?></a>
+
+                    <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+                        <a class="dropdown-item" href="<?= url('referrals') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('referrals.menu') ?></a>
+                    <?php endif ?>
+                <?php endif ?>
+
+                <?php if(settings()->main->api_is_enabled): ?>
+                    <a class="dropdown-item" href="<?= url('account-api') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('account_api.menu') ?></a>
+                <?php endif ?>
+
+                <?php if(\Altum\Plugin::is_active('teams')): ?>
+                    <a class="dropdown-item" href="<?= url('teams-system') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('teams_system.menu') ?></a>
+                <?php endif ?>
+
+                <?php if(settings()->sso->is_enabled && count((array) settings()->sso->websites)): ?>
+                    <div class="dropdown-divider"></div>
+
+                    <?php foreach(settings()->sso->websites as $website): ?>
+                        <a class="dropdown-item" href="<?= url('sso/switch?to=' . $website->id . '&redirect=admin') ?>"><i class="<?= $website->icon ?> fa-fw fa-sm mr-2"></i> <?= sprintf(l('sso.menu'), $website->name) ?></a>
+                    <?php endforeach ?>
+                <?php endif ?>
+                <div class="dropdown-divider"></div>
+
+                <a class="dropdown-item" href="<?= url('logout') ?>"><i class="fas fa-fw fa-sm fa-sign-out-alt mr-2"></i> <?= l('global.menu.logout') ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php ob_start() ?>
+<script>
+    document.querySelector('ul[class="admin-sidebar-links"] li.active') && document.querySelector('ul[class="admin-sidebar-links"] li.active').scrollIntoView({ behavior: 'smooth', block: 'center' });
+</script>
+<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>

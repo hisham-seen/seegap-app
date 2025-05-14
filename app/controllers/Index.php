@@ -17,6 +17,12 @@ defined('ALTUMCODE') || die();
 class Index extends Controller {
 
     public function index() {
+        
+        // Redirect to login page directly
+        header('Location: ' . url('login'));
+        die();
+
+        /* The code below will not be executed due to the redirect above */
 
         /* Custom index redirect if set */
         if(!empty(settings()->main->index_url)) {
@@ -97,9 +103,6 @@ class Index extends Controller {
             });
         }
 
-        $tools_categories = require APP_PATH . 'includes/tools/categories.php';
-        $enabled_tools = count(array_filter((array) settings()->tools->available_tools));
-
         /* Get the available domains to use */
         $domains = (new Domain())->get_available_additional_domains();
 
@@ -114,8 +117,6 @@ class Index extends Controller {
             'total_images' => $total_images ?? null,
             'images' => $images ?? null,
             'blog_posts' => $blog_posts ?? [],
-            'tools_categories' => $tools_categories,
-            'enabled_tools' => $enabled_tools,
             'domains' => $domains,
         ]));
 

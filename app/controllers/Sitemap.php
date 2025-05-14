@@ -66,14 +66,6 @@ class Sitemap extends Controller {
             $sitemap_urls[] = 'blog';
         }
 
-        if(settings()->tools->is_enabled && settings()->tools->access == 'everyone') {
-            foreach ((require APP_PATH . 'includes/tools/tools.php') as $key => $value) {
-                if(settings()->tools->available_tools->{$key}) {
-                    $sitemap_urls[] = 'tools/' . str_replace('_', '-', $key);
-                }
-            }
-        }
-
         /* Multilingual */
         $new_sitemap_urls = [];
 

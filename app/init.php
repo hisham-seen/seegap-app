@@ -11,8 +11,8 @@ defined('ALTUMCODE') || die();
 define('ROOT_PATH', realpath(__DIR__ . '/..') . '/');
 const APP_PATH = ROOT_PATH . 'app/';
 const PLUGINS_PATH = ROOT_PATH . 'plugins/';
-const THEME_PATH = ROOT_PATH . 'themes/altum/';
-const THEME_URL_PATH = 'themes/altum/';
+const THEME_PATH = ROOT_PATH . 'themes/phoenix/';
+const THEME_URL_PATH = 'themes/phoenix/';
 const ASSETS_PATH = THEME_PATH . 'assets/';
 const ASSETS_URL_PATH = THEME_URL_PATH . 'assets/';
 const UPLOADS_PATH = ROOT_PATH . 'uploads/';
@@ -97,4 +97,3 @@ require_once APP_PATH . 'helpers/66uptime.php';
 
 /* Autoload for vendor */
 require_once ROOT_PATH . 'vendor/autoload.php';
-

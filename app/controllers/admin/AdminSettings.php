@@ -1874,47 +1874,6 @@ class AdminSettings extends Controller {
         }
     }
 
-    public function tools() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            $tools = require APP_PATH . 'includes/tools/tools.php';
-
-            /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-            $_POST['access'] = in_array($_POST['access'], ['everyone', 'users']) ? $_POST['access'] : 'everyone';
-            $_POST['style'] = in_array($_POST['style'], ['frankfurt', 'munich']) ? $_POST['style'] : 'frankfurt';
-            $available_tools = [];
-            foreach($tools as $key => $value) {
-                $available_tools[$key] = in_array($key, $_POST['available_tools'] ?? []);
-            }
-
-            /* Check for errors */
-            if($available_tools['idn_punnycode_converter'] || $available_tools['whois_lookup']) {
-                if(!extension_loaded('intl')) {
-                    Alerts::add_error(sprintf(l('global.error_message.function_required'), 'INTL'));
-                }
-            }
-
-            $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'access' => $_POST['access'],
-                'style' => $_POST['style'],
-                'available_tools' => $available_tools,
-                'extra_content_is_enabled' => isset($_POST['extra_content_is_enabled']),
-                'share_is_enabled' => isset($_POST['share_is_enabled']),
-                'views_is_enabled' => isset($_POST['views_is_enabled']),
-                'submissions_is_enabled' => isset($_POST['submissions_is_enabled']),
-                'ratings_is_enabled' => isset($_POST['ratings_is_enabled']),
-                'similar_widget_is_enabled' => isset($_POST['similar_widget_is_enabled']),
-                'popular_widget_is_enabled' => isset($_POST['popular_widget_is_enabled']),
-            ]);
-
-            $this->update_settings('tools', $value);
-        }
-    }
 
     public function signatures() {
         $this->process();

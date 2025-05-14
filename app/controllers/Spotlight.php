@@ -214,13 +214,6 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(settings()->tools->is_enabled && (settings()->tools->access == 'everyone' || (settings()->tools->access == 'users' && is_logged_in()))) {
-                $available_pages[] = [
-                    'name' => l('tools.title'),
-                    'url' => 'tools'
-                ];
-            }
-
             if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled) {
                 $available_pages[] = [
                     'name' => l('signature_create.title'),
@@ -519,11 +512,6 @@ class Spotlight extends Controller {
                 $available_pages[] = [
                     'name' => l('global.menu.admin') . ' - ' . sprintf(l('admin_settings.title'), l('admin_settings.links.tab')),
                     'url'  => 'admin/settings/links'
-                ];
-
-                $available_pages[] = [
-                    'name' => l('global.menu.admin') . ' - ' . sprintf(l('admin_settings.title'), l('admin_settings.tools.tab')),
-                    'url'  => 'admin/settings/tools'
                 ];
 
                 $available_pages[] = [
