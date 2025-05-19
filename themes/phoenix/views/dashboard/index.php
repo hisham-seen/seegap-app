@@ -62,25 +62,6 @@
                 </div>
             <?php endif ?>
 
-            <?php if(settings()->links->vcards_is_enabled): ?>
-                <div class="col-12 col-sm-6 col-xl-4 p-3">
-                    <div class="card dashboard-card h-100 position-relative">
-                        <div class="card-body">
-                            <div class="dashboard-stats-card">
-                                <div class="dashboard-stats-icon" style="background: rgba(6, 182, 212, 0.1); color: #06b6d4;">
-                                    <i class="fas fa-fw fa-id-card"></i>
-                                </div>
-                                <div class="dashboard-stats-info">
-                                    <div class="dashboard-stats-value"><?= nr($data->vcard_links_total) ?></div>
-                                    <div class="dashboard-stats-label"><?= l('dashboard.vcard_links') ?></div>
-                                </div>
-                            </div>
-                            <a href="<?= url('links?type=vcard') ?>" class="stretched-link"></a>
-                        </div>
-                    </div>
-                </div>
-            <?php endif ?>
-
             <?php if(settings()->links->events_is_enabled): ?>
                 <div class="col-12 col-sm-6 col-xl-4 p-3">
                     <div class="card dashboard-card h-100 position-relative">

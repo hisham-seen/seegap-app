@@ -41,14 +41,6 @@
                             </div>
                         <?php endif ?>
 
-                        <?php if(settings()->links->vcards_is_enabled): ?>
-                            <div class="col-6 col-xl-4 index-feature text-truncate">
-                                <a href="<?= url('links?type=vcard') ?>">
-                                    <?= l('index.subheader.vcard') ?>
-                                </a>
-                            </div>
-                        <?php endif ?>
-
                         <?php if(settings()->links->events_is_enabled): ?>
                             <div class="col-6 col-xl-4 index-feature text-truncate">
                                 <a href="<?= url('links?type=event') ?>">
@@ -334,7 +326,7 @@
     </div>
 <?php endif ?>
 
-<?php if(settings()->links->biolinks_is_enabled ||settings()->links->shortener_is_enabled ||settings()->links->files_is_enabled ||settings()->links->vcards_is_enabled ||settings()->links->events_is_enabled ||settings()->links->static_is_enabled): ?>
+<?php if(settings()->links->biolinks_is_enabled ||settings()->links->shortener_is_enabled ||settings()->links->files_is_enabled ||settings()->links->events_is_enabled ||settings()->links->static_is_enabled): ?>
 <div class="container mt-6">
     <div class="card index-highly-rounded border-0" data-aos="fade-up">
         <div class="card-body">
@@ -392,14 +384,6 @@
                 color: #10b981;
             }
 
-            /* VCard Links */
-            .vcard-links-background {
-                background-color: #ecfeff;
-            }
-            .vcard-links-icon {
-                color: #06b6d4;
-            }
-
             /* Event Links */
             .event-links-background {
                 background-color: #eef2ff;
@@ -438,14 +422,6 @@
             }
             [data-theme-style="dark"] .file-links-icon {
                 color: #047857;
-            }
-
-            /* VCard Links - Dark Theme */
-            [data-theme-style="dark"] .vcard-links-background {
-                background-color: #1a4044;
-            }
-            [data-theme-style="dark"] .vcard-links-icon {
-                color: #025e73;
             }
 
             /* Event Links - Dark Theme */
@@ -491,21 +467,6 @@
                         </div>
 
                         <span class="text-muted"><?= l('index.file_links.subheader') ?></span>
-                    </div>
-                </div>
-            </div>
-        <?php endif ?>
-
-        <?php if(settings()->links->vcards_is_enabled): ?>
-            <div class="col-12 col-md-6 col-lg-4 p-4 icon-zoom-animation" data-aos="fade-up" data-aos-delay="200">
-                <div class="card index-highly-rounded border-0 d-flex flex-column justify-content-between h-100">
-                    <div class="card-body">
-                        <div class="vcard-links-background mb-3 p-3 index-highly-rounded">
-                            <i class="fas fa-fw fa-lg fa-id-card mr-3 vcard-links-icon"></i>
-                            <span class="h5"><?= l('index.vcard_links.header') ?></span>
-                        </div>
-
-                        <span class="text-muted"><?= l('index.vcard_links.subheader') ?></span>
                     </div>
                 </div>
             </div>

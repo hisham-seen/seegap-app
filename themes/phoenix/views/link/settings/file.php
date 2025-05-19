@@ -2,7 +2,7 @@
 
 <?php ob_start() ?>
 
-<div class="card">
+<div class="card col-4">
     <div class="card-body">
 
         <form name="update_file" action="" method="post" role="form">

@@ -25,10 +25,6 @@ class BiolinkBlock extends Model {
             'link' => [['path' => 'block_thumbnail_images', 'uploaded_file_key' => 'image']],
             'big_link' => [['path' => 'block_thumbnail_images', 'uploaded_file_key' => 'image']],
             'email_collector' => [['path' => 'block_thumbnail_images', 'uploaded_file_key' => 'image']],
-            'vcard' => [
-                ['path' => 'block_thumbnail_images', 'uploaded_file_key' => 'image'],
-                ['path' => 'avatars', 'uploaded_file_key' => 'vcard_avatar'],
-            ],
             'audio' => [['path' => 'files', 'uploaded_file_key' => 'file']],
             'video' => [['path' => 'files', 'uploaded_file_key' => 'file']],
             'file' => [['path' => 'files', 'uploaded_file_key' => 'file']],

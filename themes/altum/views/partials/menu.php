@@ -109,10 +109,6 @@
                                         <a href="<?= url('links?type=file') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-file mr-2"></i> <?= l('links.menu.file') ?></a>
                                     <?php endif ?>
 
-                                    <?php if(settings()->links->vcards_is_enabled): ?>
-                                        <a href="<?= url('links?type=vcard') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-id-card mr-2"></i> <?= l('links.menu.vcard') ?></a>
-                                    <?php endif ?>
-
                                     <?php if(settings()->links->events_is_enabled): ?>
                                         <a href="<?= url('links?type=event') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-calendar mr-2"></i> <?= l('links.menu.event') ?></a>
                                     <?php endif ?>

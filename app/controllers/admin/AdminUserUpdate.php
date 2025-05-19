@@ -100,7 +100,6 @@ class AdminUserUpdate extends Controller {
                         'links_limit' => (int) $_POST['links_limit'],
                         'links_bulk_limit'                  => (int) $_POST['links_bulk_limit'],
                         'files_limit' => (int) $_POST['files_limit'],
-                        'vcards_limit' => (int) $_POST['vcards_limit'],
                         'events_limit' => (int) $_POST['events_limit'],
                         'static_limit' => (int) $_POST['static_limit'],
                         'domains_limit' => (int) $_POST['domains_limit'],

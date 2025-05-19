@@ -17,15 +17,26 @@
         <div class="col-12 col-lg-auto d-flex d-print-none">
             <div>
                 <div class="dropdown">
-                    <button type="button" class="btn btn-light dropdown-toggle-simple <?= count($data->data) ? null : 'disabled' ?>" data-toggle="dropdown" data-boundary="viewport" data-tooltip title="<?= l('global.export') ?>" data-tooltip-hide-on-click>
+                    <button type="button" class="btn btn-light dropdown-toggle-simple <?= count($data->forms) ? null : 'disabled' ?>" data-toggle="dropdown" data-boundary="viewport" data-tooltip title="<?= l('global.export') ?>" data-tooltip-hide-on-click>
                         <i class="fas fa-fw fa-sm fa-download"></i>
                     </button>
 
                     <div class="dropdown-menu dropdown-menu-right d-print-none">
-                        <a href="<?= url('data?' . $data->filters->get_get() . '&export=csv')  ?>" target="_blank" class="dropdown-item <?= $this->user->plan_settings->export->csv ? null : 'disabled' ?>">
+                        <?php 
+                        // Create export URL without duplicate parameters
+                        $export_url_base = url('data');
+                        // Add any filters
+                        $filters_get = $data->filters->get_get();
+                        if(!empty($filters_get)) {
+                            $export_url_base .= '?' . $filters_get;
+                        }
+                        // Determine the correct separator for additional parameters
+                        $separator = empty($filters_get) ? '?' : '&';
+                        ?>
+                        <a href="<?= $export_url_base . $separator . 'export=csv' ?>" target="_blank" class="dropdown-item <?= $this->user->plan_settings->export->csv ? null : 'disabled' ?>">
                             <i class="fas fa-fw fa-sm fa-file-csv mr-2"></i> <?= sprintf(l('global.export_to'), 'CSV') ?>
                         </a>
-                        <a href="<?= url('data?' . $data->filters->get_get() . '&export=json') ?>" target="_blank" class="dropdown-item <?= $this->user->plan_settings->export->json ? null : 'disabled' ?>">
+                        <a href="<?= $export_url_base . $separator . 'export=json' ?>" target="_blank" class="dropdown-item <?= $this->user->plan_settings->export->json ? null : 'disabled' ?>">
                             <i class="fas fa-fw fa-sm fa-file-code mr-2"></i> <?= sprintf(l('global.export_to'), 'JSON') ?>
                         </a>
                         <a href="#" onclick="window.print();return false;" class="dropdown-item <?= $this->user->plan_settings->export->pdf ? null : 'disabled' ?>">
@@ -37,7 +48,7 @@
 
             <div class="ml-3">
                 <div class="dropdown">
-                    <button type="button" class="btn <?= $data->filters->has_applied_filters ? 'btn-dark' : 'btn-light' ?> filters-button dropdown-toggle-simple <?= count($data->data) || $data->filters->has_applied_filters ? null : 'disabled' ?>" data-toggle="dropdown" data-boundary="viewport" data-tooltip title="<?= l('global.filters.header') ?>" data-tooltip-hide-on-click>
+                    <button type="button" class="btn <?= $data->filters->has_applied_filters ? 'btn-dark' : 'btn-light' ?> filters-button dropdown-toggle-simple <?= count($data->forms) || $data->filters->has_applied_filters ? null : 'disabled' ?>" data-toggle="dropdown" data-boundary="viewport" data-tooltip title="<?= l('global.filters.header') ?>" data-tooltip-hide-on-click>
                         <i class="fas fa-fw fa-sm fa-filter"></i>
                     </button>
 
@@ -59,7 +70,7 @@
                                 </label>
                                 <select name="type" id="type" class="custom-select custom-select-sm">
                                     <option value=""><?= l('global.all') ?></option>
-                                    <?php foreach(['email_collector', 'phone_collector', 'contact_collector'] as $value): ?>
+                                    <?php foreach(['email_collector', 'phone_collector', 'contact_collector', 'feedback_collector'] as $value): ?>
                                         <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.biolink.blocks.' . $value) ?></option>
                                     <?php endforeach ?>
                                 </select>
@@ -133,7 +144,7 @@
         </div>
     </div>
 
-    <?php if(count($data->data)): ?>
+    <?php if(count($data->forms)): ?>
         <form id="table" action="<?= SITE_URL . 'data/bulk' ?>" method="post" role="form">
             <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
             <input type="hidden" name="type" value="" data-bulk-type />
@@ -150,67 +161,96 @@
                                 <label class="custom-control-label" for="bulk_select_all"></label>
                             </div>
                         </th>
-                        <th><?= l('data.title') ?></th>
+                        <th><?= l('data.form_name') ?></th>
                         <th><?= l('global.type') ?></th>
-                        <th></th>
+                        <th><?= l('data.submissions_count') ?></th>
+                        <th><?= l('data.last_submission') ?></th>
                         <?php if(settings()->links->projects_is_enabled): ?>
-                        <th></th>
+                        <th><?= l('projects.project_id') ?></th>
                         <?php endif ?>
                         <th></th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    <?php foreach($data->data as $row): ?>
-
+                    <?php foreach($data->forms as $form): ?>
                         <tr>
                             <td data-bulk-table class="d-none">
                                 <div class="custom-control custom-checkbox">
-                                    <input id="selected_datum_id_<?= $row->datum_id ?>" type="checkbox" class="custom-control-input" name="selected[]" value="<?= $row->datum_id ?>" />
-                                    <label class="custom-control-label" for="selected_datum_id_<?= $row->datum_id ?>"></label>
+                                    <input id="selected_form_id_<?= $form->biolink_block_id ?>" type="checkbox" class="custom-control-input" name="selected[]" value="<?= $form->biolink_block_id ?>" />
+                                    <label class="custom-control-label" for="selected_form_id_<?= $form->biolink_block_id ?>"></label>
                                 </div>
                             </td>
 
                             <td class="text-nowrap">
-                                <div class="d-flex flex-column small">
-                                    <?php foreach($row->data as $key => $value): ?>
-                                        <div><span class="font-weight-bold"><?= $key ?>:</span> <?= $value ?></div>
-                                    <?php endforeach ?>
+                                <div class="d-flex flex-column">
+                                    <a href="<?= url('data?biolink_block_id=' . $form->biolink_block_id) ?>" class="font-weight-bold text-truncate">
+                                        <?= $form->form_name ?>
+                                    </a>
+                                    <?php if(isset($form->instances) && count($form->instances) > 1): ?>
+                                    <small class="text-muted"><?= count($form->instances) ?> form instances</small>
+                                    <?php endif; ?>
                                 </div>
                             </td>
 
                             <td class="text-nowrap">
                                 <span class="badge badge-light">
-                                    <i class="<?= $data->biolink_blocks[$row->type]['icon'] ?> fa-fw fa-sm mr-1"></i>
-                                    <?= l('link.biolink.blocks.' . $row->type) ?>
+                                    <i class="<?= $data->biolink_blocks[$form->type]['icon'] ?> fa-fw fa-sm mr-1"></i>
+                                    <?= l('link.biolink.blocks.' . $form->type) ?>
+                                </span>
+                            </td>
+
+                            <td class="text-nowrap">
+                                <span class="badge badge-info">
+                                    <?= $form->submissions_count ?>
+                                </span>
+                            </td>
+
+                            <td class="text-nowrap text-muted">
+                                <span data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($form->last_submission_datetime, 2) . '<br /><small>' . \Altum\Date::get($form->last_submission_datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($form->last_submission_datetime) . ')</small>') ?>">
+                                    <i class="fas fa-fw fa-calendar text-muted mr-1"></i>
+                                    <?= \Altum\Date::get($form->last_submission_datetime, 1) ?>
                                 </span>
                             </td>
 
                             <?php if(settings()->links->projects_is_enabled): ?>
                             <td class="text-nowrap">
-                                <?php if($row->datum_id && isset($data->projects[$row->project_id])): ?>
-                                    <a href="<?= url('data?project_id=' . $row->project_id) ?>" class="text-decoration-none" data-toggle="tooltip" title="<?= l('projects.project_id') ?>">
-                                        <span class="badge badge-light" style="color: <?= $data->projects[$row->project_id]->color ?> !important;">
-                                            <?= $data->projects[$row->project_id]->name ?>
+                                <?php if(isset($data->projects[$form->project_id])): ?>
+                                    <a href="<?= url('data?project_id=' . $form->project_id) ?>" class="text-decoration-none" data-toggle="tooltip" title="<?= l('projects.project_id') ?>">
+                                        <span class="badge badge-light" style="color: <?= $data->projects[$form->project_id]->color ?> !important;">
+                                            <?= $data->projects[$form->project_id]->name ?>
                                         </span>
                                     </a>
                                 <?php endif ?>
                             </td>
                             <?php endif ?>
 
-                            <td class="text-nowrap text-muted">
-                                <a href="<?= url('link/' . $row->link_id . '?tab=blocks') ?>" class="mr-2 text-decoration-none" data-toggle="tooltip" title="<?= l('data.biolink') ?>">
-                                    <i class="fas fa-fw fa-hashtag text-muted"></i>
-                                </a>
-
-                                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
-                                    <i class="fas fa-fw fa-calendar text-muted"></i>
-                                </span>
-                            </td>
-
                             <td>
                                 <div class="d-flex justify-content-end">
-                                    <?= include_view(THEME_PATH . 'views/data/datum_dropdown_button.php', ['id' => $row->datum_id]) ?>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
+                                            <i class="fas fa-fw fa-ellipsis-v"></i>
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <?php if(isset($form->instances) && count($form->instances) > 1): ?>
+                                                <h6 class="dropdown-header">Form instances</h6>
+                                                <?php foreach($form->instances as $instance_id): ?>
+                                                    <a href="<?= url('data?biolink_block_id=' . $instance_id) ?>" class="dropdown-item">
+                                                        <i class="fas fa-fw fa-sm fa-eye mr-2"></i> 
+                                                        <?= isset($biolink_blocks[$instance_id]) ? $biolink_blocks[$instance_id]->settings->name ?? 'Unknown Form' : 'Unknown Form' ?> 
+                                                    </a>
+                                                <?php endforeach; ?>
+                                                <div class="dropdown-divider"></div>
+                                            <?php endif; ?>
+                                            <a href="<?= url('data?biolink_block_id=' . $form->biolink_block_id) ?>" class="dropdown-item">
+                                                <i class="fas fa-fw fa-sm fa-eye mr-2"></i> <?= l('global.view') ?>
+                                            </a>
+                                            <a href="<?= url('link/' . $form->link_id . '?tab=blocks') ?>" class="dropdown-item" data-toggle="tooltip" title="<?= l('data.biolink') ?>">
+                                                <i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('data.biolink') ?>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -234,4 +274,3 @@
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
 <?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
-

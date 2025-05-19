@@ -69,14 +69,6 @@
                             </a>
                         <?php endif ?>
 
-                        <?php if(settings()->links->vcards_is_enabled): ?>
-                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#create_vcard">
-                                <i class="fas fa-fw fa-circle fa-sm mr-2" style="color: <?= $data->links_types['vcard']['color'] ?>"></i>
-
-                                <?= l('link.vcard.name') ?>
-                            </a>
-                        <?php endif ?>
-
                         <?php if(settings()->links->events_is_enabled): ?>
                             <a href="#" class="dropdown-item" data-toggle="modal" data-target="#create_event">
                                 <i class="fas fa-fw fa-circle fa-sm mr-2" style="color: <?= $data->links_types['event']['color'] ?>"></i>
@@ -202,10 +194,6 @@
 
                                 <?php if(settings()->links->files_is_enabled): ?>
                                     <option value="file" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'file' ? 'selected="selected"' : null ?>><?= l('links.menu.file') ?></option>
-                                <?php endif ?>
-
-                                <?php if(settings()->links->vcards_is_enabled): ?>
-                                    <option value="vcard" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'vcard' ? 'selected="selected"' : null ?>><?= l('links.menu.vcard') ?></option>
                                 <?php endif ?>
 
                                 <?php if(settings()->links->events_is_enabled): ?>

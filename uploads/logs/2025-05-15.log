@@ -1,0 +1,498 @@
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined variable $loop in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 45
+[15-May-2025 23:12:37 UTC] PHP Warning:  Attempt to read property "index" on null in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 45
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined variable $loop in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 46
+[15-May-2025 23:12:37 UTC] PHP Warning:  Attempt to read property "index" on null in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 46
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:12:37 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 45
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 46
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:14:13 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:14:14 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:14:14 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:14:14 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:14:14 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:14:14 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 45
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 46
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:14:25 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 45
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 46
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:14:54 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:15:06 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:15:06 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:15:06 UTC] PHP Warning:  Undefined array key "domain_id" in /var/www/html/app/controllers/LinkAjax.php on line 1008
+[15-May-2025 23:15:06 UTC] PHP Warning:  Undefined array key "pwa_display_install_bar_delay" in /var/www/html/app/controllers/LinkAjax.php on line 1373
+[15-May-2025 23:15:07 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:15:07 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:15:07 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:15:07 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:15:07 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 45
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined variable $question_index in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/feedback_collector/feedback_collector_update_form.php on line 46
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:15:11 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:25:50 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:25:51 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:25:51 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:25:51 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:25:51 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:25:51 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:26:24 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:27:53 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:27:54 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:27:54 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:27:54 UTC] PHP Warning:  Undefined property: stdClass::$tools in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:27:54 UTC] PHP Warning:  Attempt to read property "is_enabled" on null in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:27:54 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:27:54 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:27:54 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:27:54 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:28:11 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:28:11 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:28:11 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4498
+[15-May-2025 23:28:11 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4501
+[15-May-2025 23:28:11 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4502
+[15-May-2025 23:28:11 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:28:11 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4504
+[15-May-2025 23:28:12 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:28:12 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:28:12 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:28:12 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:28:12 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:28:50 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:28:50 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:28:50 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4498
+[15-May-2025 23:28:50 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4501
+[15-May-2025 23:28:50 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4502
+[15-May-2025 23:28:50 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:28:50 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4504
+[15-May-2025 23:28:51 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:28:51 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:28:51 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:28:51 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:28:51 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:29:18 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:29:18 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:29:18 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4498
+[15-May-2025 23:29:18 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4501
+[15-May-2025 23:29:18 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4502
+[15-May-2025 23:29:18 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:29:18 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4504
+[15-May-2025 23:29:19 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:29:19 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:29:19 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:29:19 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:29:19 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:38:43 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:38:44 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:38:44 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:38:44 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:38:44 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:39:02 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:39:02 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:39:02 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:39:02 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:39:02 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:39:02 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:39:02 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:39:03 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:39:03 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:39:03 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:39:03 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:39:03 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:41:55 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:41:55 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:41:56 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:42:11 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:42:11 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:11 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:42:11 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:42:11 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:42:11 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:42:11 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:42:12 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:12 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:42:12 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:12 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:12 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:42:22 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:42:22 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:22 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:42:22 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:42:22 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:42:22 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:42:22 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:42:23 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:23 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:42:23 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:23 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:23 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:42:41 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:42:41 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:41 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:42:41 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:42:41 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:42:41 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:42:41 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:42:42 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:42 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:42:42 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:42 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:42 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:42:49 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:42:49 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:49 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:42:49 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:42:49 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:42:49 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:42:49 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:42:50 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:50 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:42:50 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:50 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:50 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:42:58 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:42:58 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:58 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:42:58 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:42:58 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:42:58 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:42:58 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:42:59 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:42:59 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:42:59 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:59 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:42:59 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:43:48 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:43:48 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:43:48 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:43:48 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:43:48 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:43:48 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:43:48 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:43:49 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:43:49 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:43:49 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:43:49 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:43:49 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:44:10 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:44:10 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:44:10 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:44:10 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:44:10 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:44:10 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:44:10 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:44:11 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:44:11 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:44:11 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:44:11 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:44:11 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:44:29 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:44:29 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:44:29 UTC] PHP Warning:  Undefined array key "image_fit" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4503
+[15-May-2025 23:44:29 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4506
+[15-May-2025 23:44:29 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:44:29 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:44:29 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:44:30 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:44:31 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:44:31 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:44:31 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:44:31 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 180
+[15-May-2025 23:54:35 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:54:35 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:54:36 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:55:10 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:55:10 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:55:10 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:55:10 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:55:10 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:55:10 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4510
+[15-May-2025 23:55:11 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:55:11 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:55:11 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:55:11 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:55:11 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:55:29 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:55:29 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:55:29 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:55:29 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:55:29 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:55:29 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4510
+[15-May-2025 23:55:30 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:55:30 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:55:30 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:55:30 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:55:30 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:55:46 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:55:46 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:55:46 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:55:46 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:55:46 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:55:46 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4510
+[15-May-2025 23:55:47 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:55:47 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:55:47 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:55:47 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:55:47 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:56:08 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:56:08 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:56:08 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:56:08 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:56:08 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:56:08 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4510
+[15-May-2025 23:56:09 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:56:09 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:56:09 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:56:09 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:56:09 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4510
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:56:21 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:56:39 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:56:39 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:56:39 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:56:39 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:56:39 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:56:39 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4510
+[15-May-2025 23:56:40 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:56:40 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:56:40 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:56:40 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:56:40 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:04 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:05 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:05 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:57:05 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:05 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:05 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:57:06 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:06 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:06 UTC] PHP Warning:  Undefined property: stdClass::$tools in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:57:06 UTC] PHP Warning:  Attempt to read property "is_enabled" on null in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:57:06 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:06 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:06 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:57:06 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$tools in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:57:09 UTC] PHP Warning:  Attempt to read property "is_enabled" on null in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:57:09 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:57:26 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:26 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:26 UTC] PHP Warning:  Undefined array key "phone_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4507
+[15-May-2025 23:57:26 UTC] PHP Warning:  Undefined array key "name_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4508
+[15-May-2025 23:57:26 UTC] PHP Warning:  Undefined array key "email_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4509
+[15-May-2025 23:57:26 UTC] PHP Warning:  Undefined array key "message_placeholder" in /var/www/html/app/controllers/BiolinkBlockAjax.php on line 4510
+[15-May-2025 23:57:27 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:27 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:57:27 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:27 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:27 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:57:29 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:29 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:29 UTC] PHP Warning:  Undefined array key "domain_id" in /var/www/html/app/controllers/LinkAjax.php on line 1008
+[15-May-2025 23:57:29 UTC] PHP Warning:  Undefined array key "pwa_display_install_bar_delay" in /var/www/html/app/controllers/LinkAjax.php on line 1373
+[15-May-2025 23:57:30 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:30 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:57:30 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:30 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:30 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:34 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 24
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 49
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$border_color in /var/www/html/themes/phoenix/views/link/settings/biolink_blocks/paragraph/paragraph_update_form.php on line 54
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$tools in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:57:38 UTC] PHP Warning:  Attempt to read property "is_enabled" on null in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:57:38 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/wrapper.php on line 79
+[15-May-2025 23:57:41 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[15-May-2025 23:57:41 UTC] PHP Warning:  Undefined property: stdClass::$border_radius in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 4
+[15-May-2025 23:57:41 UTC] PHP Warning:  Undefined property: stdClass::$border_width in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:41 UTC] PHP Warning:  Undefined property: stdClass::$background_color in /var/www/html/themes/phoenix/views/l/biolink_blocks/paragraph.php on line 5
+[15-May-2025 23:57:41 UTC] PHP Warning:  Undefined property: stdClass::$biolink_is_enabled in /var/www/html/themes/phoenix/views/l/biolink_blocks/feedback_collector.php on line 181

@@ -97,13 +97,6 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(settings()->links->vcards_is_enabled) {
-                $available_pages[] = [
-                    'name' => l('links.menu.vcard'),
-                    'url'  => 'links?type=vcard'
-                ];
-            }
-
             if(settings()->links->events_is_enabled) {
                 $available_pages[] = [
                     'name' => l('links.menu.event'),

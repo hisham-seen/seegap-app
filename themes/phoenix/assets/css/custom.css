@@ -1348,7 +1348,7 @@ input[type="radio"]:checked ~ .link-biolink-theme {
 }
 
 .table-custom td {
-	padding: 1.55rem 1rem;
+	/*padding: 1.55rem 1rem;*/
 	background: var(--white);
 	vertical-align: middle;
 	border-color: var(--gray-100);
@@ -1465,7 +1465,8 @@ input[type="radio"]:checked ~ .link-biolink-theme {
 
 /* QR Codes */
 .qr-code {
-	width: 100rem;
+	width: 350px;
+    padding-bottom: 3rem;
 }
 
 .qr-code-loading {
@@ -2214,7 +2215,6 @@ i.xl {
 
 /* Make the action buttons normal size */
 .container .d-flex.align-items-center .btn {
-  padding: 0.5rem 1rem !important;
   font-size: 1rem !important;
 }
 
@@ -2267,15 +2267,15 @@ i.xl {
   background: #555;
 }
 
-/* Settings Panel Compact Styles */
-/* Make form controls smaller */
+/* /* Settings Panel Compact Styles */
+/* Make form controls smaller 
 .card-body .form-control,
 .card-body .custom-select {
   padding: 0.3rem 0.5rem;
   font-size: 0.85rem;
   min-height: 30px;
   height: calc(1.5em + 0.5rem + 2px);
-}
+} */
 
 /* Make input groups smaller */
 .card-body .input-group-sm > .form-control,

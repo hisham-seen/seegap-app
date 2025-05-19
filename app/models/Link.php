@@ -52,13 +52,6 @@ class Link extends Model {
             return;
         }
 
-        /* Process to delete the stored files of the vcard avatar */
-        if($link->type == 'vcard') {
-            $link->settings = json_decode($link->settings ?? '');
-
-            \Altum\Uploads::delete_uploaded_file($link->settings->vcard_avatar, 'avatars');
-        }
-
         /* Process to delete the stored files of the link */
         if($link->type == 'file') {
             $link->settings = json_decode($link->settings ?? '');

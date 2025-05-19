@@ -66,15 +66,6 @@
         </li>
     <?php endif ?>
 
-    <?php if(settings()->links->vcards_is_enabled): ?>
-        <li class="d-flex align-items-baseline mb-2">
-            <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->vcards_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-            <div class="<?= $data->plan_settings->vcards_limit ? null : 'text-muted' ?>">
-                <?= sprintf(l('global.plan_settings.vcards_limit'), ($data->plan_settings->vcards_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->vcards_limit))) ?>
-            </div>
-        </li>
-    <?php endif ?>
-
     <?php if(settings()->links->events_is_enabled): ?>
         <li class="d-flex align-items-baseline mb-2">
             <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->events_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>

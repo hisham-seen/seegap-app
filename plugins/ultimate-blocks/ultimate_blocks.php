@@ -38,15 +38,6 @@ return [
         'display_dynamic_name' => false,
         'category' => 'embeds',
     ],
-    'discord' => [
-        'type' => 'ultimate',
-        'icon' => 'fab fa-discord',
-        'color' => '#7289D9',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'category' => 'embeds',
-    ],
     'facebook' => [
         'type' => 'ultimate',
         'icon' => 'fab fa-facebook',

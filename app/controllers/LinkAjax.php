@@ -406,11 +406,6 @@ class LinkAjax extends Controller {
                         $biolink_block->settings->background = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                         break;
 
-                    case 'vcard':
-                        $biolink_block->settings->vcard_avatar = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->vcard_avatar, 'avatars/', 'avatars/', 'json_error');
-                        $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
-                        break;
-
                     case 'image':
                     case 'image_grid':
                         $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'block_images/', 'block_images/', 'json_error');
@@ -499,84 +494,6 @@ class LinkAjax extends Controller {
             'sensitive_content' => false,
             'clicks_limit' => null,
             'expiration_url' => null,
-        ]);
-
-        /* Generate random url if not specified */
-        while(db()->where('url', $url)->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
-            $url = mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
-        }
-
-        $this->check_url($_POST['url']);
-
-        /* Insert to database */
-        $link_id = db()->insert('links', [
-            'user_id' => $this->user->user_id,
-            'domain_id' => $domain_id,
-            'type' => $type,
-            'url' => $url,
-            'settings' => $settings,
-            'datetime' => get_date(),
-        ]);
-
-        /* Clear the cache */
-        cache()->deleteItem($type . '_links_total?user_id=' . $this->user->user_id);
-        cache()->deleteItem('links_total?user_id=' . $this->user->user_id);
-        cache()->deleteItem('links?user_id=' . $this->user->user_id);
-
-        Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
-    }
-
-    private function create_vcard() {
-        if(!settings()->links->vcards_is_enabled) {
-            Response::json(l('global.error_message.basic'), 'error');
-        }
-
-        $_POST['url'] = !empty($_POST['url']) && $this->user->plan_settings->custom_url ? get_slug($_POST['url'], '-', false) : null;
-
-        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
-            Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
-        }
-
-        /* Check if custom domain is set */
-        $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
-
-        /* Make sure that the user didn't exceed the limit */
-        $user_total_vcards = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'vcard'")->fetch_object()->total;
-        if($this->user->plan_settings->vcards_limit != -1 && $user_total_vcards >= $this->user->plan_settings->vcards_limit) {
-            Response::json(l('global.info_message.plan_feature_limit'), 'error');
-        }
-
-        /* Check for duplicate url if needed */
-        if($_POST['url']) {
-            if(db()->where('url', $_POST['url'])->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
-                Response::json(l('link.error_message.url_exists'), 'error');
-            }
-        }
-
-        /* Start the creation process */
-        $url = $_POST['url'] ?? mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
-        $type = 'vcard';
-        $settings = json_encode([
-            'password' => null,
-            'sensitive_content' => false,
-            'clicks_limit' => null,
-            'expiration_url' => null,
-            'vcard_avatar' => null,
-            'vcard_first_name' => null,
-            'vcard_last_name' => null,
-            'vcard_email' => null,
-            'vcard_url' => null,
-            'vcard_company' => null,
-            'vcard_job_title' => null,
-            'vcard_birthday' => null,
-            'vcard_street' => null,
-            'vcard_city' => null,
-            'vcard_zip' => null,
-            'vcard_region' => null,
-            'vcard_country' => null,
-            'vcard_note' => null,
-            'vcard_socials' => [],
-            'vcard_phone_numbers' => [],
         ]);
 
         /* Generate random url if not specified */
@@ -1987,191 +1904,6 @@ class LinkAjax extends Controller {
         Response::json(l('global.success_message.update2'), 'success', ['url' => $url]);
     }
 
-    private function update_vcard() {
-        if(!settings()->links->vcards_is_enabled) {
-            Response::json(l('global.error_message.basic'), 'error');
-        }
-
-        $_POST['link_id'] = (int) $_POST['link_id'];
-        $_POST['project_id'] = empty($_POST['project_id']) ? null : (int) $_POST['project_id'];
-        $_POST['url'] = !empty($_POST['url']) ? get_slug($_POST['url'], '-', false) : false;
-        $_POST['schedule'] = (int) isset($_POST['schedule']);
-        if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
-            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-        } else {
-            $_POST['start_date'] = $_POST['end_date'] = null;
-        }
-        $_POST['expiration_url'] = get_url($_POST['expiration_url']);
-        $_POST['clicks_limit'] = empty($_POST['clicks_limit']) ? null : (int) $_POST['clicks_limit'];
-        $this->check_location_url($_POST['expiration_url'], true);
-        $_POST['sensitive_content'] = (int) isset($_POST['sensitive_content']);
-
-        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
-            Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
-        }
-
-        /* Get domains */
-        $domains = (new Domain())->get_available_domains_by_user($this->user);
-
-        /* Check if custom domain is set */
-        $domain_id = isset($domains[$_POST['domain_id']]) ? $_POST['domain_id'] : 0;
-
-        /* Exclusivity check */
-        $_POST['is_main_link'] = isset($_POST['is_main_link']) && $domain_id && $domains[$_POST['domain_id']]->type == 0;
-
-        /* Existing pixels */
-        $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
-        $_POST['pixels_ids'] = isset($_POST['pixels_ids']) ? array_map(
-            function($pixel_id) {
-                return (int) $pixel_id;
-            },
-            array_filter($_POST['pixels_ids'], function($pixel_id) use($pixels) {
-                return array_key_exists($pixel_id, $pixels);
-            })
-        ) : [];
-        $_POST['pixels_ids'] = json_encode($_POST['pixels_ids']);
-
-        /* Check for any errors */
-        $required_fields = [];
-        foreach($required_fields as $field) {
-            if(!isset($_POST[$field]) || (isset($_POST[$field]) && empty($_POST[$field]) && $_POST[$field] != '0')) {
-                Response::json(l('global.error_message.empty_fields'), 'error');
-                break 1;
-            }
-        }
-
-        $this->check_url($_POST['url']);
-
-        if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
-            die();
-        }
-
-        /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
-        $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
-
-        /* Existing splash pages */
-        $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
-        $_POST['splash_page_id'] = !empty($_POST['splash_page_id']) && array_key_exists($_POST['splash_page_id'], $splash_pages) ? (int) $_POST['splash_page_id'] : null;
-
-        $link->settings = json_decode($link->settings ?? '');
-
-        /* Check for a password set */
-        $_POST['password'] = !empty($_POST['qweasdzxc']) ?
-            ($_POST['qweasdzxc'] != $link->settings->password ? password_hash($_POST['qweasdzxc'], PASSWORD_DEFAULT) : $link->settings->password)
-            : null;
-
-
-        /* Check for duplicate url if needed */
-        if($_POST['url'] && ($_POST['url'] != $link->url || $domain_id != $link->domain_id)) {
-
-            if(db()->where('url', $_POST['url'])->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
-                Response::json(l('link.error_message.url_exists'), 'error');
-            }
-
-        }
-
-        $url = $_POST['url'];
-
-        if(empty($_POST['url'])) {
-            /* Generate random url if not specified */
-            $url = mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
-
-            while(db()->where('url', $url)->where('domain_id', $domain_id)->getValue('links', 'link_id')) {
-                $url = mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
-            }
-        }
-
-        /* File upload */
-        $db_vcard_avatar = \Altum\Uploads::process_upload($link->settings->vcard_avatar, 'vcards_avatars', 'vcard_avatar', 'vcard_avatar_remove', 0.75, 'json_error');
-        $vcard_avatar_url = $db_vcard_avatar ? \Altum\Uploads::get_full_url('avatars') . $db_vcard_avatar : null;
-
-        $settings = [
-            'vcard_avatar' => $db_vcard_avatar,
-            'schedule' => $_POST['schedule'],
-            'clicks_limit' => $_POST['clicks_limit'],
-            'expiration_url' => $_POST['expiration_url'],
-            'password' => $_POST['password'],
-            'sensitive_content' => $_POST['sensitive_content'],
-        ];
-
-        /* Process vcard */
-        $settings['vcard_first_name'] = $_POST['vcard_first_name'] = mb_substr(input_clean($_POST['vcard_first_name']), 0, $this->links_types['vcard']['fields']['first_name']['max_length']);
-        $settings['vcard_last_name'] = $_POST['vcard_last_name'] = mb_substr(input_clean($_POST['vcard_last_name']), 0, $this->links_types['vcard']['fields']['last_name']['max_length']);
-        $settings['vcard_email'] = $_POST['vcard_email'] = mb_substr(input_clean($_POST['vcard_email']), 0, $this->links_types['vcard']['fields']['email']['max_length']);
-        $settings['vcard_url'] = $_POST['vcard_url'] = mb_substr(input_clean($_POST['vcard_url']), 0, $this->links_types['vcard']['fields']['url']['max_length']);
-        $settings['vcard_company'] = $_POST['vcard_company'] = mb_substr(input_clean($_POST['vcard_company']), 0, $this->links_types['vcard']['fields']['company']['max_length']);
-        $settings['vcard_job_title'] = $_POST['vcard_job_title'] = mb_substr(input_clean($_POST['vcard_job_title']), 0, $this->links_types['vcard']['fields']['job_title']['max_length']);
-        $settings['vcard_birthday'] = $_POST['vcard_birthday'] = mb_substr(input_clean($_POST['vcard_birthday']), 0, $this->links_types['vcard']['fields']['birthday']['max_length']);
-        $settings['vcard_street'] = $_POST['vcard_street'] = mb_substr(input_clean($_POST['vcard_street']), 0, $this->links_types['vcard']['fields']['street']['max_length']);
-        $settings['vcard_city'] = $_POST['vcard_city'] = mb_substr(input_clean($_POST['vcard_city']), 0, $this->links_types['vcard']['fields']['city']['max_length']);
-        $settings['vcard_zip'] = $_POST['vcard_zip'] = mb_substr(input_clean($_POST['vcard_zip']), 0, $this->links_types['vcard']['fields']['zip']['max_length']);
-        $settings['vcard_region'] = $_POST['vcard_region'] = mb_substr(input_clean($_POST['vcard_region']), 0, $this->links_types['vcard']['fields']['region']['max_length']);
-        $settings['vcard_country'] = $_POST['vcard_country'] = mb_substr(input_clean($_POST['vcard_country']), 0, $this->links_types['vcard']['fields']['country']['max_length']);
-        $settings['vcard_note'] = $_POST['vcard_note'] = mb_substr(input_clean($_POST['vcard_note']), 0, $this->links_types['vcard']['fields']['note']['max_length']);
-
-        /* Phone numbers */
-        if(!isset($_POST['vcard_phone_number_label'])) {
-            $_POST['vcard_phone_number_label'] = [];
-            $_POST['vcard_phone_number_value'] = [];
-        }
-        $vcard_phone_numbers = [];
-        foreach($_POST['vcard_phone_number_label'] as $key => $value) {
-            if($key >= 20) continue;
-
-            $vcard_phone_numbers[] = [
-                'label' => mb_substr(input_clean($value), 0, $this->links_types['vcard']['fields']['phone_number_value']['max_length']),
-                'value' => mb_substr(input_clean($_POST['vcard_phone_number_value'][$key]), 0, $this->links_types['vcard']['fields']['phone_number_value']['max_length'])
-            ];
-        }
-        $settings['vcard_phone_numbers'] = $vcard_phone_numbers;
-
-        /* Socials */
-        if(!isset($_POST['vcard_social_label'])) {
-            $_POST['vcard_social_label'] = [];
-            $_POST['vcard_social_value'] = [];
-        }
-
-        $vcard_socials = [];
-        foreach($_POST['vcard_social_label'] as $key => $value) {
-            if(empty(trim($value))) continue;
-            if($key >= 20) continue;
-
-            $vcard_socials[] = [
-                'label' => mb_substr(input_clean($value), 0, $this->links_types['vcard']['fields']['social_value']['max_length']),
-                'value' => mb_substr(input_clean($_POST['vcard_social_value'][$key]), 0, $this->links_types['vcard']['fields']['social_value']['max_length'])
-            ];
-        }
-        $settings['vcard_socials'] = $vcard_socials;
-
-        $settings = json_encode($settings);
-
-        db()->where('link_id', $_POST['link_id'])->update('links', [
-            'project_id' => $_POST['project_id'],
-            'splash_page_id' => $_POST['splash_page_id'],
-            'domain_id' => $domain_id,
-            'pixels_ids' => $_POST['pixels_ids'],
-            'url' => $url,
-            'start_date' => $_POST['start_date'],
-            'end_date' => $_POST['end_date'],
-            'settings' => $settings,
-            'last_datetime' => get_date(),
-        ]);
-
-        $this->process_is_main_link_domain($link, $domains);
-
-        $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
-
-        /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
-        cache()->deleteItem('link?link_id=' . $link->link_id);
-        cache()->deleteItemsByTag('link_id=' . $link->link_id);
-        cache()->deleteItem('links?user_id=' . $this->user->user_id);
-
-        Response::json(l('global.success_message.update2'), 'success', ['url' => $url, 'images' => ['vcard_avatar' => $vcard_avatar_url]]);
-    }
-
     private function update_event() {
         if(!settings()->links->events_is_enabled) {
             Response::json(l('global.error_message.basic'), 'error');
@@ -2393,17 +2125,6 @@ class LinkAjax extends Controller {
             }
         }
 
-        elseif($link->type == 'vcard') {
-            if(!settings()->links->vcards_is_enabled) {
-                Response::json(l('global.error_message.basic'), 'error');
-            }
-
-            $user_total_vcards = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'vcard'")->fetch_object()->total;
-            if($this->user->plan_settings->vcards_limit != -1 && $user_total_vcards >= $this->user->plan_settings->vcards_limit) {
-                Alerts::add_error(l('global.info_message.plan_feature_limit'));
-            }
-        }
-
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Duplicate the link */
@@ -2414,10 +2135,6 @@ class LinkAjax extends Controller {
                 $link->settings->favicon = \Altum\Uploads::copy_uploaded_file($link->settings->favicon, 'favicons/', 'favicons/', 'json_error');
                 if($link->settings->background_type == 'image') $link->settings->background = \Altum\Uploads::copy_uploaded_file($link->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                 $link->settings->pwa_is_enabled = false;
-            }
-
-            if($link->type == 'vcard') {
-                $link->settings->vcard_avatar = \Altum\Uploads::copy_uploaded_file($link->settings->vcard_avatar, \Altum\Uploads::get_path('vcards_avatars'), \Altum\Uploads::get_path('vcards_avatars'), 'json_error');
             }
 
             if($link->type == 'file') {
@@ -2483,10 +2200,6 @@ class LinkAjax extends Controller {
                         case 'header':
                             $biolink_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
                             $biolink_block->settings->background = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
-                            break;
-
-                        case 'vcard':
-                            $biolink_block->settings->vcard_avatar = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->vcard_avatar, 'avatars/', 'avatars/', 'json_error');
                             break;
 
                         case 'image':

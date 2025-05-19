@@ -56,13 +56,6 @@
         </li>
     <?php endif ?>
 
-    <?php if(settings()->links->vcards_is_enabled): ?>
-        <li>
-            <div><?= sprintf(l('global.plan_settings.vcards_limit'), ($data->plan_settings->vcards_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->vcards_limit))) ?></div>
-            <i class="fas fa-fw fa-sm <?= $data->plan_settings->vcards_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-        </li>
-    <?php endif ?>
-
     <?php if(settings()->links->events_is_enabled): ?>
         <li>
             <div><?= sprintf(l('global.plan_settings.events_limit'), ($data->plan_settings->events_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->events_limit))) ?></div>

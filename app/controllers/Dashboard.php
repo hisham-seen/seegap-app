@@ -122,12 +122,6 @@ class Dashboard extends Controller {
             });
         }
 
-        if(settings()->links->vcards_is_enabled) {
-            $vcard_links_total = \Altum\Cache::cache_function_result('vcard_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
-                return db()->where('user_id', $this->user->user_id)->where('type', 'vcard')->getValue('links', 'count(*)');
-            });
-        }
-
         if(settings()->links->biolinks_is_enabled) {
             $biolink_links_total = \Altum\Cache::cache_function_result('biolink_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
                 return db()->where('user_id', $this->user->user_id)->where('type', 'biolink')->getValue('links', 'count(*)');
@@ -180,7 +174,6 @@ class Dashboard extends Controller {
             /* Widgets stats */
             'event_links_total'         => $event_links_total ?? null,
             'static_links_total'        => $static_links_total ?? null,
-            'vcard_links_total'         => $vcard_links_total ?? null,
             'link_links_total'          => $link_links_total ?? null,
             'file_links_total'          => $file_links_total ?? null,
             'biolink_links_total'       => $biolink_links_total ?? null,

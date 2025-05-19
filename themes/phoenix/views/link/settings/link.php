@@ -2,7 +2,7 @@
 
 <?php ob_start() ?>
 
-<div class="card">
+<div class="card col-4">
     <div class="card-body">
 
         <form name="update_link" action="" method="post" role="form" enctype="multipart/form-data">
@@ -62,7 +62,7 @@
                 </div>
             <?php endif ?>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#app_linking_container" aria-expanded="false" aria-controls="app_linking_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#app_linking_container" aria-expanded="false" aria-controls="app_linking_container">
                 <i class="fas fa-fw fa-mobile-button fa-sm mr-1"></i> <?= l('link.settings.app_linking_header') ?>
             </button>
 
@@ -139,7 +139,7 @@
             </div>
 
             <?php if(settings()->links->pixels_is_enabled): ?>
-                <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#pixels_container" aria-expanded="false" aria-controls="pixels_container">
+                <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#pixels_container" aria-expanded="false" aria-controls="pixels_container">
                     <i class="fas fa-fw fa-adjust fa-sm mr-1"></i> <?= l('link.settings.pixels_header') ?>
                 </button>
 
@@ -170,7 +170,7 @@
                 </div>
             <?php endif ?>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#temporary_url_container" aria-expanded="false" aria-controls="temporary_url_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#temporary_url_container" aria-expanded="false" aria-controls="temporary_url_container">
                 <i class="fas fa-fw fa-clock fa-sm mr-1"></i> <?= l('link.settings.temporary_url_header') ?>
             </button>
 
@@ -247,7 +247,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#utm_container" aria-expanded="false" aria-controls="utm_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#utm_container" aria-expanded="false" aria-controls="utm_container">
                 <i class="fas fa-fw fa-keyboard fa-sm mr-1"></i> <?= l('link.settings.utm_header') ?>
             </button>
 
@@ -278,7 +278,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#protection_container" aria-expanded="false" aria-controls="protection_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#protection_container" aria-expanded="false" aria-controls="protection_container">
                 <i class="fas fa-fw fa-user-shield fa-sm mr-1"></i> <?= l('link.settings.protection_header') ?>
             </button>
 
@@ -311,7 +311,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#targeting_container" aria-expanded="false" aria-controls="targeting_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#targeting_container" aria-expanded="false" aria-controls="targeting_container">
                 <i class="fas fa-fw fa-bullseye fa-sm mr-1"></i> <?= l('link.settings.targeting_header') ?>
             </button>
 
@@ -589,7 +589,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#cloaking_container" aria-expanded="false" aria-controls="cloaking_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#cloaking_container" aria-expanded="false" aria-controls="cloaking_container">
                 <i class="fas fa-fw fa-eye fa-sm mr-1"></i> <?= l('link.settings.cloaking_header') ?>
             </button>
 
@@ -647,7 +647,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#http_container" aria-expanded="false" aria-controls="http_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#http_container" aria-expanded="false" aria-controls="http_container">
                 <i class="fas fa-fw fa-laptop-code fa-sm mr-1"></i> <?= l('link.settings.http_header') ?>
             </button>
 
@@ -675,7 +675,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#advanced_container" aria-expanded="false" aria-controls="advanced_container">
+            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#advanced_container" aria-expanded="false" aria-controls="advanced_container">
                 <i class="fas fa-fw fa-user-tie fa-sm mr-1"></i> <?= l('link.settings.advanced_header') ?>
             </button>
 

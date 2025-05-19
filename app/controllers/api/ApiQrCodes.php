@@ -352,50 +352,6 @@ class ApiQrCodes extends Controller {
                 $settings['crypto_amount'] = $_POST['crypto_amount'] = isset($_POST['crypto_amount']) ? (float)$_POST['crypto_amount'] : null;
                 break;
 
-            case 'vcard':
-                $settings['vcard_first_name'] = $_POST['vcard_first_name'] = input_clean($_POST['vcard_first_name'] ?? null, $available_qr_codes['vcard']['first_name']['max_length']);
-                $settings['vcard_last_name'] = $_POST['vcard_last_name'] = input_clean($_POST['vcard_last_name'] ?? null, $available_qr_codes['vcard']['last_name']['max_length']);
-                $settings['vcard_email'] = $_POST['vcard_email'] = input_clean($_POST['vcard_email'] ?? null, $available_qr_codes['vcard']['email']['max_length']);
-                $settings['vcard_url'] = $_POST['vcard_url'] = input_clean($_POST['vcard_url'] ?? null, $available_qr_codes['vcard']['url']['max_length']);
-                $settings['vcard_company'] = $_POST['vcard_company'] = input_clean($_POST['vcard_company'] ?? null, $available_qr_codes['vcard']['company']['max_length']);
-                $settings['vcard_job_title'] = $_POST['vcard_job_title'] = input_clean($_POST['vcard_job_title'] ?? null, $available_qr_codes['vcard']['job_title']['max_length']);
-                $settings['vcard_birthday'] = $_POST['vcard_birthday'] = input_clean($_POST['vcard_birthday'] ?? null, $available_qr_codes['vcard']['birthday']['max_length']);
-                $settings['vcard_street'] = $_POST['vcard_street'] = input_clean($_POST['vcard_street'] ?? null, $available_qr_codes['vcard']['street']['max_length']);
-                $settings['vcard_city'] = $_POST['vcard_city'] = input_clean($_POST['vcard_city'] ?? null, $available_qr_codes['vcard']['city']['max_length']);
-                $settings['vcard_zip'] = $_POST['vcard_zip'] = input_clean($_POST['vcard_zip'] ?? null, $available_qr_codes['vcard']['zip']['max_length']);
-                $settings['vcard_region'] = $_POST['vcard_region'] = input_clean($_POST['vcard_region'] ?? null, $available_qr_codes['vcard']['region']['max_length']);
-                $settings['vcard_country'] = $_POST['vcard_country'] = input_clean($_POST['vcard_country'] ?? null, $available_qr_codes['vcard']['country']['max_length']);
-                $settings['vcard_note'] = $_POST['vcard_note'] = input_clean($_POST['vcard_note'] ?? null, $available_qr_codes['vcard']['note']['max_length']);
-
-                if(!isset($_POST['vcard_phone_number_label'])) {
-                    $_POST['vcard_phone_number_label'] = [];
-                    $_POST['vcard_phone_number_value'] = [];
-                }
-                $vcard_phone_numbers = [];
-                foreach ($_POST['vcard_phone_number_label'] as $key => $value) {
-                    if($key >= 20) continue;
-                    $vcard_phone_numbers[] = [
-                        'label' => input_clean($value, $available_qr_codes['vcard']['phone_number_value']['max_length']),
-                        'value' => input_clean($_POST['vcard_phone_number_value'][$key], $available_qr_codes['vcard']['phone_number_value']['max_length']),
-                    ];
-                }
-                $settings['vcard_phone_numbers'] = $vcard_phone_numbers;
-
-                if(!isset($_POST['vcard_social_label'])) {
-                    $_POST['vcard_social_label'] = [];
-                    $_POST['vcard_social_value'] = [];
-                }
-                $vcard_socials = [];
-                foreach ($_POST['vcard_social_label'] as $key => $value) {
-                    if(empty(trim($value)) || $key >= 20) continue;
-                    $vcard_socials[] = [
-                        'label' => input_clean($value, $available_qr_codes['vcard']['social_value']['max_length']),
-                        'value' => input_clean($_POST['vcard_social_value'][$key], $available_qr_codes['vcard']['social_value']['max_length']),
-                    ];
-                }
-                $settings['vcard_socials'] = $vcard_socials;
-                break;
-
             case 'paypal':
                 $required_fields[] = 'paypal_email';
                 $required_fields[] = 'paypal_title';
@@ -958,50 +914,6 @@ class ApiQrCodes extends Controller {
                 $settings['crypto_coin'] = $_POST['crypto_coin'] = isset($_POST['crypto_coin']) && array_key_exists($_POST['crypto_coin'], $available_qr_codes['crypto']['coins']) ? $_POST['crypto_coin'] : $qr_code->settings->crypto_coin;
                 $settings['crypto_address'] = $_POST['crypto_address'] = input_clean($_POST['crypto_address'] ?? $qr_code->settings->crypto_address, $available_qr_codes['crypto']['address']['max_length']);
                 $settings['crypto_amount'] = $_POST['crypto_amount'] = isset($_POST['crypto_amount']) ? (float)$_POST['crypto_amount'] : $qr_code->settings->crypto_amount;
-                break;
-
-            case 'vcard':
-                $settings['vcard_first_name'] = $_POST['vcard_first_name'] = input_clean($_POST['vcard_first_name'] ?? $qr_code->settings->vcard_first_name, $available_qr_codes['vcard']['first_name']['max_length']);
-                $settings['vcard_last_name'] = $_POST['vcard_last_name'] = input_clean($_POST['vcard_last_name'] ?? $qr_code->settings->vcard_last_name, $available_qr_codes['vcard']['last_name']['max_length']);
-                $settings['vcard_email'] = $_POST['vcard_email'] = input_clean($_POST['vcard_email'] ?? $qr_code->settings->vcard_email, $available_qr_codes['vcard']['email']['max_length']);
-                $settings['vcard_url'] = $_POST['vcard_url'] = input_clean($_POST['vcard_url'] ?? $qr_code->settings->vcard_url, $available_qr_codes['vcard']['url']['max_length']);
-                $settings['vcard_company'] = $_POST['vcard_company'] = input_clean($_POST['vcard_company'] ?? $qr_code->settings->vcard_company, $available_qr_codes['vcard']['company']['max_length']);
-                $settings['vcard_job_title'] = $_POST['vcard_job_title'] = input_clean($_POST['vcard_job_title'] ?? $qr_code->settings->vcard_job_title, $available_qr_codes['vcard']['job_title']['max_length']);
-                $settings['vcard_birthday'] = $_POST['vcard_birthday'] = input_clean($_POST['vcard_birthday'] ?? $qr_code->settings->vcard_birthday, $available_qr_codes['vcard']['birthday']['max_length']);
-                $settings['vcard_street'] = $_POST['vcard_street'] = input_clean($_POST['vcard_street'] ?? $qr_code->settings->vcard_street, $available_qr_codes['vcard']['street']['max_length']);
-                $settings['vcard_city'] = $_POST['vcard_city'] = input_clean($_POST['vcard_city'] ?? $qr_code->settings->vcard_city, $available_qr_codes['vcard']['city']['max_length']);
-                $settings['vcard_zip'] = $_POST['vcard_zip'] = input_clean($_POST['vcard_zip'] ?? $qr_code->settings->vcard_zip, $available_qr_codes['vcard']['zip']['max_length']);
-                $settings['vcard_region'] = $_POST['vcard_region'] = input_clean($_POST['vcard_region'] ?? $qr_code->settings->vcard_region, $available_qr_codes['vcard']['region']['max_length']);
-                $settings['vcard_country'] = $_POST['vcard_country'] = input_clean($_POST['vcard_country'] ?? $qr_code->settings->vcard_country, $available_qr_codes['vcard']['country']['max_length']);
-                $settings['vcard_note'] = $_POST['vcard_note'] = input_clean($_POST['vcard_note'] ?? $qr_code->settings->vcard_note, $available_qr_codes['vcard']['note']['max_length']);
-
-                if(!isset($_POST['vcard_phone_number_label'])) {
-                    $_POST['vcard_phone_number_label'] = [];
-                    $_POST['vcard_phone_number_value'] = [];
-                }
-                $vcard_phone_numbers = [];
-                foreach ($_POST['vcard_phone_number_label'] as $key => $value) {
-                    if($key >= 20) continue;
-                    $vcard_phone_numbers[] = [
-                        'label' => input_clean($value, $available_qr_codes['vcard']['phone_number_value']['max_length']),
-                        'value' => input_clean($_POST['vcard_phone_number_value'][$key], $available_qr_codes['vcard']['phone_number_value']['max_length']),
-                    ];
-                }
-                $settings['vcard_phone_numbers'] = $vcard_phone_numbers;
-
-                if(!isset($_POST['vcard_social_label'])) {
-                    $_POST['vcard_social_label'] = [];
-                    $_POST['vcard_social_value'] = [];
-                }
-                $vcard_socials = [];
-                foreach ($_POST['vcard_social_label'] as $key => $value) {
-                    if(empty(trim($value)) || $key >= 20) continue;
-                    $vcard_socials[] = [
-                        'label' => input_clean($value, $available_qr_codes['vcard']['social_value']['max_length']),
-                        'value' => input_clean($_POST['vcard_social_value'][$key], $available_qr_codes['vcard']['social_value']['max_length']),
-                    ];
-                }
-                $settings['vcard_socials'] = $vcard_socials;
                 break;
 
             case 'paypal':

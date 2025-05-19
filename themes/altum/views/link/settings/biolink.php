@@ -946,39 +946,6 @@
         </div>
     </div>
 </div>
-
-<template id="template_vcard_social">
-    <div class="mb-4">
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_label') ?></label>
-            <input id="" type="text" name="vcard_social_label[]" class="form-control" maxlength="<?= $data->biolink_blocks['vcard']['fields']['social_label']['max_length'] ?>" required="required" />
-        </div>
-
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_value') ?></label>
-            <input id="" type="url" name="vcard_social_value[]" class="form-control" maxlength="<?= $data->biolink_blocks['vcard']['fields']['social_value']['max_length'] ?>" required="required" />
-        </div>
-
-        <button type="button" data-remove="vcard_social" class="btn btn-sm btn-block btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('global.delete') ?></button>
-    </div>
-</template>
-
-<template id="template_vcard_phone_numbers">
-    <div class="mb-4">
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_label') ?></label>
-            <input id="" type="text" name="vcard_phone_number_label[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_label']['max_length'] ?>" />
-            <small class="form-text text-muted"><?= l('biolink_vcard.vcard_phone_number_label_help') ?></small>
-        </div>
-
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-phone-square-alt fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_value') ?></label>
-            <input id="" type="text" name="vcard_phone_number_value[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_value']['max_length'] ?>" required="required" />
-        </div>
-
-        <button type="button" data-remove="vcard_phone_numbers" class="btn btn-sm btn-block btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('global.delete') ?></button>
-    </div>
-</template>
 <?php $html = ob_get_clean() ?>
 
 
@@ -1537,7 +1504,6 @@
                 case 'email_collector':
                 case 'phone_collector':
                 case 'paypal':
-                case 'vcard':
                 case 'donation':
                 case 'service':
                 case 'product':
@@ -1964,84 +1930,6 @@
         block_expanded_content_init();
     })
 
-</script>
-
-<script>
-    /* Vcard Social Script */
-    'use strict';
-
-    /* add new */
-    let vcard_social_add = event => {
-        let biolink_block_id = event.currentTarget.getAttribute('data-biolink-block-id');
-        let clone = document.querySelector(`#template_vcard_social`).content.cloneNode(true);
-        let count = document.querySelectorAll(`[id="vcard_socials_${biolink_block_id}"] .mb-4`).length;
-
-        if(count >= 20) return;
-
-        clone.querySelector(`input[name="vcard_social_label[]"`).setAttribute('name', `vcard_social_label[${count}]`);
-        clone.querySelector(`input[name="vcard_social_value[]"`).setAttribute('name', `vcard_social_value[${count}]`);
-
-        document.querySelector(`[id="vcard_socials_${biolink_block_id}"]`).appendChild(clone);
-
-        vcard_social_remove_initiator();
-    };
-
-    document.querySelectorAll('[data-add="vcard_social"]').forEach(element => {
-        element.addEventListener('click', vcard_social_add);
-    })
-
-    /* remove */
-    let vcard_social_remove = event => {
-        event.currentTarget.closest('.mb-4').remove();
-    };
-
-    let vcard_social_remove_initiator = () => {
-        document.querySelectorAll('[id^="vcard_socials_"] [data-remove]').forEach(element => {
-            element.removeEventListener('click', vcard_social_remove);
-            element.addEventListener('click', vcard_social_remove)
-        })
-    };
-
-    vcard_social_remove_initiator();
-</script>
-
-<script>
-    /* Vcard Phone Numbers */
-    'use strict';
-
-    /* add new */
-    let vcard_phone_number_add = event => {
-        let biolink_block_id = event.currentTarget.getAttribute('data-biolink-block-id');
-        let clone = document.querySelector(`#template_vcard_phone_numbers`).content.cloneNode(true);
-        let count = document.querySelectorAll(`[id="vcard_phone_numbers_${biolink_block_id}"] .mb-4`).length;
-
-        if(count >= 20) return;
-
-        clone.querySelector(`input[name="vcard_phone_number_label[]"`).setAttribute('name', `vcard_phone_number_label[${count}]`);
-        clone.querySelector(`input[name="vcard_phone_number_value[]"`).setAttribute('name', `vcard_phone_number_value[${count}]`);
-
-        document.querySelector(`[id="vcard_phone_numbers_${biolink_block_id}"]`).appendChild(clone);
-
-        vcard_phone_number_remove_initiator();
-    };
-
-    document.querySelectorAll('[data-add="vcard_phone_numbers"]').forEach(element => {
-        element.addEventListener('click', vcard_phone_number_add);
-    })
-
-    /* remove */
-    let vcard_phone_number_remove = event => {
-        event.currentTarget.closest('.mb-4').remove();
-    };
-
-    let vcard_phone_number_remove_initiator = () => {
-        document.querySelectorAll('[id^="vcard_phone_numbers_"] [data-remove]').forEach(element => {
-            element.removeEventListener('click', vcard_phone_number_remove);
-            element.addEventListener('click', vcard_phone_number_remove)
-        })
-    };
-
-    vcard_phone_number_remove_initiator();
 </script>
 
 <script>

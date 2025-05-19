@@ -60,12 +60,6 @@
                     </li>
                 <?php endif ?>
 
-                <?php if(settings()->links->vcards_is_enabled): ?>
-                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'vcard') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'vcard') ? 'active' : null ?>">
-                        <a href="<?= url('links?type=vcard') ?>"><i class="fas fa-fw fa-sm fa-id-card mr-2"></i> <?= l('links.menu.vcard') ?></a>
-                    </li>
-                <?php endif ?>
-
                 <?php if(settings()->links->events_is_enabled): ?>
                     <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'event') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'event') ? 'active' : null ?>">
                         <a href="<?= url('links?type=event') ?>"><i class="fas fa-fw fa-sm fa-calendar mr-2"></i> <?= l('links.menu.event') ?></a>

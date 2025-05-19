@@ -133,12 +133,6 @@
         </div>
 
         <div class="form-group custom-control custom-switch">
-            <input id="vcards_is_enabled" name="vcards_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->vcards_is_enabled ? 'checked="checked"' : null?>>
-            <label class="custom-control-label" for="vcards_is_enabled"><?= l('admin_settings.links.vcards_is_enabled') ?></label>
-            <small class="form-text text-muted"><?= l('admin_settings.links.vcards_is_enabled_help') ?></small>
-        </div>
-
-        <div class="form-group custom-control custom-switch">
             <input id="events_is_enabled" name="events_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->events_is_enabled ? 'checked="checked"' : null?>>
             <label class="custom-control-label" for="events_is_enabled"><?= l('admin_settings.links.events_is_enabled') ?></label>
             <small class="form-text text-muted"><?= l('admin_settings.links.events_is_enabled_help') ?></small>
@@ -159,7 +153,7 @@
         <div class="form-group">
             <label for="claim_url_type"><?= l('admin_settings.links.claim_url_type') ?></label>
             <select id="claim_url_type" name="claim_url_type" class="custom-select">
-                <?php foreach(['link', 'biolink', 'file', 'vcard', 'event', 'static'] as $type): ?>
+                <?php foreach(['link', 'biolink', 'file', 'event', 'static'] as $type): ?>
                 <option value="<?= $type ?>" <?= settings()->links->claim_url_type == $type ? 'selected="selected"' : null ?>><?= l('link.breadcrumb.' . $type) ?></option>
                 <?php endforeach ?>
             </select>

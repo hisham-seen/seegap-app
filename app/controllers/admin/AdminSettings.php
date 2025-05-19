@@ -1780,11 +1780,10 @@ class AdminSettings extends Controller {
             $_POST['default_biolink_theme_id'] = $_POST['default_biolink_theme_id'] ? (int) $_POST['default_biolink_theme_id'] : null;
             $_POST['default_biolink_template_id'] = $_POST['default_biolink_template_id'] ? (int) $_POST['default_biolink_template_id'] : null;
             $_POST['files_is_enabled'] = (int) isset($_POST['files_is_enabled']);
-            $_POST['vcards_is_enabled'] = (int) isset($_POST['vcards_is_enabled']);
             $_POST['events_is_enabled'] = (int) isset($_POST['events_is_enabled']);
             $_POST['static_is_enabled'] = (int) isset($_POST['static_is_enabled']);
             $_POST['claim_url_is_enabled'] = (int) isset($_POST['claim_url_is_enabled']);
-            $_POST['claim_url_type'] = in_array($_POST['claim_url_type'], ['link', 'biolink', 'file', 'vcard', 'event', 'static']) ? $_POST['claim_url_type'] : 'link';
+            $_POST['claim_url_type'] = in_array($_POST['claim_url_type'], ['link', 'biolink', 'file', 'event', 'static']) ? $_POST['claim_url_type'] : 'link';
             $_POST['pixels_is_enabled'] = (int) isset($_POST['pixels_is_enabled']);
             $_POST['splash_page_is_enabled'] = (int) isset($_POST['splash_page_is_enabled']);
             $_POST['splash_page_auto_redirect'] = (int) isset($_POST['splash_page_auto_redirect']);
@@ -1833,7 +1832,6 @@ class AdminSettings extends Controller {
                 'default_biolink_theme_id' => $_POST['default_biolink_theme_id'],
                 'default_biolink_template_id' => $_POST['default_biolink_template_id'],
                 'files_is_enabled' => $_POST['files_is_enabled'],
-                'vcards_is_enabled' => $_POST['vcards_is_enabled'],
                 'events_is_enabled' => $_POST['events_is_enabled'],
                 'static_is_enabled' => $_POST['static_is_enabled'],
                 'claim_url_is_enabled' => $_POST['claim_url_is_enabled'],

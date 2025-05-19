@@ -74,29 +74,6 @@
                 </div>
             <?php endif ?>
 
-            <?php if(settings()->links->vcards_is_enabled): ?>
-                <div class="col-12 col-sm-6 col-xl-4 p-3">
-                    <div class="card h-100 position-relative">
-                        <div class="card-body d-flex">
-                            <div>
-                                <div class="card border-0 mr-3 position-static" style="background: #ecfeff;">
-                                    <div class="p-3 d-flex align-items-center justify-content-between">
-                                        <a href="<?= url('links?type=vcard') ?>" class="stretched-link" style="color: #06b6d4;">
-                                            <i class="fas fa-fw fa-id-card fa-lg"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="card-title h4 m-0"><?= nr($data->vcard_links_total) ?></div>
-                                <span class="text-muted"><?= l('dashboard.vcard_links') ?></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endif ?>
-
             <?php if(settings()->links->events_is_enabled): ?>
                 <div class="col-12 col-sm-6 col-xl-4 p-3">
                     <div class="card h-100 position-relative">

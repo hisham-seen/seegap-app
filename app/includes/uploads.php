@@ -111,12 +111,6 @@ return [
         'inside_zip_whitelisted_file_extensions' => ['css', 'js', 'html', 'jpg', 'jpeg', 'png', 'ico', 'svg', 'gif', 'webp', 'ttf', 'woff', 'woff2', 'eot', 'otf', 'xml', 'json', 'mp3', 'wav', 'mp4', 'webm', 'pdf', 'txt', 'avif'],
     ],
 
-    /* Vcard avatars */
-    'vcards_avatars' => [
-        'whitelisted_file_extensions' => ['png', 'jpg', 'jpeg'],
-        'path' => 'avatars/',
-    ],
-
     /* Splash pages */
     'splash_pages' => [
         'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],

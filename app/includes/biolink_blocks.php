@@ -181,6 +181,16 @@ $default_blocks = [
         'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
         'category' => 'advanced',
     ],
+    'feedback_collector' => [
+        'type' => 'default',
+        'icon' => 'fas fa-address-book',
+        'color' => '#7136c0',
+        'has_statistics' => false,
+        'themable' => true,
+        'display_dynamic_name' => 'name',
+        'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
+        'category' => 'advanced',
+    ],
 ];
 
 if(settings()->links->google_static_maps_is_enabled) {

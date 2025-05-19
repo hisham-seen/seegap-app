@@ -160,8 +160,7 @@ class Link {
             case 'big_link':
             case 'email_collector':
             case 'contact_collector':
-            case 'rss_feed':
-            case 'vcard':
+            case 'feedback_collector':
             case 'file':
             case 'pdf_document':
             case 'powerpoint_presentation':

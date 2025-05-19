@@ -278,80 +278,6 @@ class Link extends Controller {
                 if($this->link->type == 'link') {
                     /* Process short url redirection */
                     $this->process_link();
-                } elseif($this->link->type == 'vcard') {
-                    /* For vcard biolink blocks, we still need to process them */
-                    foreach(['vcard_first_name', 'vcard_last_name', 'vcard_email', 'vcard_url', 'vcard_company', 'vcard_job_title', 'vcard_birthday', 'vcard_street', 'vcard_city', 'vcard_zip', 'vcard_region', 'vcard_country', 'vcard_note'] as $key) {
-                        $this->link->settings->{$key} = htmlspecialchars_decode($this->link->settings->{$key}, ENT_QUOTES);
-                    }
-
-                    /* Check for vcard download link */
-                    $vcard = new \JeroenDesloovere\VCard\VCard();
-
-                    /* Check if we should try to add the image to the vcard */
-                    if($this->link->settings->vcard_avatar) {
-                        $vcard->addPhoto(\Altum\Uploads::get_full_url('avatars') . $this->link->settings->vcard_avatar);
-                    }
-
-                    $vcard->addName($this->link->settings->vcard_last_name, $this->link->settings->vcard_first_name);
-                    $vcard->addEmail($this->link->settings->vcard_email);
-                    $vcard->addURL($this->link->settings->vcard_url);
-                    $vcard->addCompany($this->link->settings->vcard_company);
-                    $vcard->addJobtitle($this->link->settings->vcard_job_title);
-                    $vcard->addBirthday($this->link->settings->vcard_birthday);
-                    $vcard->addNote($this->link->settings->vcard_note);
-
-                    /* Address */
-                    if($this->link->settings->vcard_street || $this->link->settings->vcard_city || $this->link->settings->vcard_region || $this->link->settings->vcard_zip || $this->link->settings->vcard_country) {
-                        $vcard->addAddress(null, null, $this->link->settings->vcard_street, $this->link->settings->vcard_city, $this->link->settings->vcard_region, $this->link->settings->vcard_zip, $this->link->settings->vcard_country);
-                    }
-
-                    /* Phone numbers */
-                    foreach($this->link->settings->vcard_phone_numbers as $key => $phone_number) {
-
-                        /* If old format (just a string) */
-                        if(is_string($phone_number)) {
-                            $vcard->addPhoneNumber(htmlspecialchars_decode($phone_number, ENT_QUOTES));
-                            continue;
-                        }
-
-                        /* New format */
-                        $phone_number->value = htmlspecialchars_decode($phone_number->value, ENT_QUOTES);
-                        $phone_number->label = htmlspecialchars_decode($phone_number->label, ENT_QUOTES);
-
-                        /* Custom label */
-                        if($phone_number->label) {
-                            $vcard->setProperty(
-                                'item' . $key . '.TEL',
-                                'item' . $key . '.TEL',
-                                $phone_number->value
-                            );
-                            $vcard->setProperty(
-                                'item' . $key . '.X-ABLabel',
-                                'item' . $key . '.X-ABLabel',
-                                $phone_number->label
-                            );
-                        }
-
-                        /* Default label */
-                        else {
-                            $vcard->addPhoneNumber($phone_number->value);
-                        }
-                    }
-
-                    /* Socials */
-                    foreach($this->link->settings->vcard_socials as $social) {
-                        $social->value = htmlspecialchars_decode($social->value, ENT_QUOTES);
-                        $social->label = htmlspecialchars_decode($social->label, ENT_QUOTES);
-
-                        $vcard->addURL(
-                            $social->value,
-                            'TYPE=' . $social->label
-                        );
-                    }
-
-                    $vcard->setFilename($this->link->settings->vcard_last_name . ' ' . $this->link->settings->vcard_first_name);
-                    $vcard->download();
-                    die();
                 }
             }
 
@@ -1256,6 +1182,129 @@ class Link extends Controller {
                 'email' => $_POST['email'],
                 'message' => $_POST['message'],
             ]);
+        }
+
+        Response::json($biolink_block->settings->success_text, 'success', ['thank_you_url' => $biolink_block->settings->thank_you_url]);
+    }
+
+    public function feedback_collector() {
+        if(empty($_POST)) {
+            die();
+        }
+
+        $_POST['biolink_block_id'] = (int) $_POST['biolink_block_id'];
+        $_POST['phone'] = input_clean($_POST['phone'], 32);
+        $_POST['name'] = input_clean($_POST['name'], 32);
+        $_POST['email'] = input_clean($_POST['email'], 320);
+        $_POST['message'] = isset($_POST['message']) ? input_clean($_POST['message'], 512) : null;
+
+        if(settings()->captcha->biolink_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
+            Response::json(l('global.error_message.invalid_captcha'), 'error');
+        }
+
+        /* Get the link data */
+        $biolink_block = db()->where('biolink_block_id', $_POST['biolink_block_id'])->where('type', 'feedback_collector')->getOne('biolinks_blocks', ['biolink_block_id', 'link_id', 'type', 'settings']);
+
+        if(!$biolink_block) {
+            die();
+        }
+
+        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+
+        /* Get biolink data */
+        $link = db()->where('link_id', $biolink_block->link_id)->getOne('links');
+
+        /* Get the user data */
+        $user = db()->where('user_id', $link->user_id)->getOne('users');
+
+        $data = [
+            'phone' => $_POST['phone'],
+            'email' => $_POST['email'],
+            'name' => $_POST['name'],
+        ];
+
+        /* Process custom questions if they exist */
+        if(isset($biolink_block->settings->questions) && is_array($biolink_block->settings->questions)) {
+            $answers = [];
+            
+            foreach($biolink_block->settings->questions as $question_index => $question) {
+                $question_key = 'question_' . $question_index;
+                
+                /* Get the answer based on question type */
+                if(in_array($question->type, ['checkbox'])) {
+                    $answer = isset($_POST[$question_key]) ? $_POST[$question_key] : [];
+                } else {
+                    $answer = isset($_POST[$question_key]) ? $_POST[$question_key] : null;
+                }
+                
+                $answers[] = [
+                    'question' => $question->question,
+                    'type' => $question->type,
+                    'answer' => $answer
+                ];
+            }
+            
+            $data['answers'] = $answers;
+        } else {
+            /* If no custom questions, use the message field */
+            $data['message'] = $_POST['message'];
+        }
+
+        /* Store the data */
+        db()->insert('data', [
+            'biolink_block_id' => $biolink_block->biolink_block_id,
+            'link_id' => $link->link_id,
+            'project_id' => $link->project_id,
+            'user_id' => $link->user_id,
+            'type' => $biolink_block->type,
+            'data' => json_encode($data),
+            'datetime' => get_date(),
+        ]);
+
+        /* Send email notifications if needed to the owner */
+        if($biolink_block->settings->email_notification) {
+            /* Prepare the email content */
+            $email_data = [
+                '{{NAME}}' => $user->name,
+                '{{DATA_PHONE}}' => $_POST['phone'],
+                '{{DATA_NAME}}' => $_POST['name'],
+                '{{DATA_EMAIL}}' => $_POST['email'],
+                '{{DATA_LINK}}' => url('data'),
+            ];
+            
+            /* Add message if it exists */
+            if(isset($data['message'])) {
+                $email_data['{{DATA_MESSAGE}}'] = $data['message'];
+            }
+            
+            /* Add custom questions data if they exist */
+            if(isset($data['answers'])) {
+                $answers_text = '';
+                foreach($data['answers'] as $answer_data) {
+                    $answer_value = is_array($answer_data['answer']) 
+                        ? implode(', ', $answer_data['answer']) 
+                        : $answer_data['answer'];
+                    
+                    $answers_text .= '<strong>' . $answer_data['question'] . ':</strong> ' . $answer_value . '<br />';
+                }
+                $email_data['{{DATA_ANSWERS}}'] = $answers_text;
+            }
+            
+            $email_template = get_email_template(
+                [
+                    '{{BLOCK_TITLE}}' => $biolink_block->settings->name,
+                ],
+                l('global.emails.user_data_collected.subject', $user->language),
+                $email_data,
+                l('global.emails.user_data_collected_feedback_collector.body', $user->language)
+            );
+
+            send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+        }
+
+        /* Send the webhook */
+        if($biolink_block->settings->webhook_url) {
+            fire_and_forget('post', $biolink_block->settings->webhook_url, $data);
         }
 
         Response::json($biolink_block->settings->success_text, 'success', ['thank_you_url' => $biolink_block->settings->thank_you_url]);

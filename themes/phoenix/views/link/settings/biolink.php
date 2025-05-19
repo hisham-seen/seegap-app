@@ -4,7 +4,7 @@
 
 <div class="row link-settings">
     <!-- Left Column - Blocks -->
-    <div class="col-12 col-lg-3">
+    <div class="col-12 col-lg-4">
         <div class="card mb-3 shadow-sm">
             <div class="card-body p-2">
                 <div class="d-flex justify-content-between align-items-center mb-1">
@@ -13,12 +13,12 @@
                         <span><?= l('link.header.blocks_tab') ?></span>
                     </h6>
                     <div class="d-flex">
-                        <form id="update_biolink_canvas_form" name="update_biolink" action="" method="post" role="form" enctype="multipart/form-data" class="mr-1">
+                        <form id="update_biolink_canvas_form" name="update_biolink_canvas" action="" method="post" role="form" enctype="multipart/form-data" class="mr-1">
                             <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
                             <input type="hidden" name="request_type" value="update" />
                             <input type="hidden" name="type" value="biolink" />
                             <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
-                            <button type="submit" name="submit" class="btn btn-xs btn-success" data-is-ajax><i class="fas fa-fw fa-save fa-sm"></i></button>
+                            <button type="submit" name="submit" class="btn btn-xs btn-success" data-is-ajax><i class="fas fa-fw fa-save fa-sm"></i> <?= l('global.save') ?></button>
                         </form>
                         <button type="button" data-toggle="modal" data-target="#biolink_link_create_modal" class="btn btn-xs btn-primary">
                             <i class="fas fa-fw fa-plus fa-sm"></i>
@@ -127,7 +127,7 @@
                                                         <a href="<?= url('guests-payments-statistics?biolink_block_id=' . $row->biolink_block_id) ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-chart-pie mr-2"></i> <?= l('guests_payments_statistics.link') ?></a>
                                                     <?php endif ?>
 
-                                                    <?php if(in_array($row->type, ['email_collector', 'phone_collector', 'contact_collector'])): ?>
+                                                    <?php if(in_array($row->type, ['email_collector', 'phone_collector', 'contact_collector', 'feedback_collector'])): ?>
                                                         <a href="<?= url('data?biolink_block_id=' . $row->biolink_block_id) ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-database mr-2"></i> <?= l('data.link') ?></a>
                                                     <?php endif ?>
 
@@ -163,7 +163,7 @@
     </div>
 
     <!-- Middle Column - Canvas/Preview -->
-    <div class="col-12 col-lg-5">
+    <div class="col-12 col-lg-4">
         <div class="d-flex justify-content-center mb-3">
             <div class="biolink-preview">
                 <div class="biolink-preview-iframe-container">
@@ -926,38 +926,6 @@
     </div>
 </div>
 
-<template id="template_vcard_social">
-    <div class="mb-4">
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_label') ?></label>
-            <input id="" type="text" name="vcard_social_label[]" class="form-control" maxlength="<?= $data->biolink_blocks['vcard']['fields']['social_label']['max_length'] ?>" required="required" />
-        </div>
-
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_value') ?></label>
-            <input id="" type="url" name="vcard_social_value[]" class="form-control" maxlength="<?= $data->biolink_blocks['vcard']['fields']['social_value']['max_length'] ?>" required="required" />
-        </div>
-
-        <button type="button" data-remove="vcard_social" class="btn btn-sm btn-block btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('global.delete') ?></button>
-    </div>
-</template>
-
-<template id="template_vcard_phone_numbers">
-    <div class="mb-4">
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_label') ?></label>
-            <input id="" type="text" name="vcard_phone_number_label[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_label']['max_length'] ?>" />
-            <small class="form-text text-muted"><?= l('biolink_vcard.vcard_phone_number_label_help') ?></small>
-        </div>
-
-        <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-phone-square-alt fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_value') ?></label>
-            <input id="" type="text" name="vcard_phone_number_value[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_value']['max_length'] ?>" required="required" />
-        </div>
-
-        <button type="button" data-remove="vcard_phone_numbers" class="btn btn-sm btn-block btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('global.delete') ?></button>
-    </div>
-</template>
 <?php $html = ob_get_clean() ?>
 
 
@@ -1288,12 +1256,27 @@
     });
 
     /* Form handling update */
-    $('form[name="update_biolink"],form[name="update_biolink_"]').on('submit', event => {
+    $('form[name="update_biolink"],form[name="update_biolink_"],form[name="update_biolink_canvas"]').on('submit', event => {
         let form = $(event.currentTarget)[0];
         let data = new FormData(form);
-        let notification_container = event.currentTarget.querySelector('.notification-container');
+        
+        // If this is the canvas form (floppy disk button), also include all fields from the main settings form
+        if(event.currentTarget.getAttribute('name') == 'update_biolink_canvas') {
+            let mainForm = document.getElementById('update_biolink');
+            let mainFormData = new FormData(mainForm);
+            
+            // Append all fields from the main form to the canvas form data
+            for(let pair of mainFormData.entries()) {
+                data.append(pair[0], pair[1]);
+            }
+            
+            // Use the notification container from the main form
+            var notification_container = mainForm.querySelector('.notification-container');
+        } else {
+            var notification_container = event.currentTarget.querySelector('.notification-container');
+        }
+        
         notification_container.innerHTML = '';
-
         pause_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
 
         $.ajax({
@@ -1350,30 +1333,52 @@
 
                     if(data.details?.images) {
                         for(const [key, value] of Object.entries(data.details.images)) {
-                            event.currentTarget.querySelector(`input[name="${key}"]`).value = null;
-
-                            if(event.currentTarget.querySelector(`[name="${key}_remove"]`) && event.currentTarget.querySelector(`[name="${key}_remove"]`).checked) {
-                                event.currentTarget.querySelector(`[name="${key}_remove"]`).click();
+                            const inputElement = event.currentTarget.querySelector(`input[name="${key}"]`);
+                            if(inputElement) {
+                                inputElement.value = null;
                             }
 
+                            const removeElement = event.currentTarget.querySelector(`[name="${key}_remove"]`);
+                            if(removeElement && removeElement.checked) {
+                                removeElement.click();
+                            }
+
+                            const imgContainer = event.currentTarget.querySelector(`[data-image-container="${key}"] img`);
+                            const linkElement = event.currentTarget.querySelector(`[data-image-container="${key}"] a`);
+                            const containers = event.currentTarget.querySelectorAll(`[data-image-container="${key}"]`);
+
                             if(value) {
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] img`).setAttribute('src', value);
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] img`).classList.remove('d-none');
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] a`).setAttribute('href', value);
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] a`).classList.remove('d-none');
-                                event.currentTarget.querySelectorAll(`[data-image-container="${key}"]`).forEach(element => element.classList.remove('d-none'));
+                                if(imgContainer) {
+                                    imgContainer.setAttribute('src', value);
+                                    imgContainer.classList.remove('d-none');
+                                }
+                                if(linkElement) {
+                                    linkElement.setAttribute('href', value);
+                                    linkElement.classList.remove('d-none');
+                                }
+                                containers.forEach(element => element.classList.remove('d-none'));
                             } else {
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] img`).setAttribute('src', '');
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] img`).classList.add('d-none');
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] a`).setAttribute('href', '');
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] a`).classList.add('d-none');
-                                event.currentTarget.querySelectorAll(`[data-image-container="${key}"]`).forEach(element => element.classList.add('d-none'));
+                                if(imgContainer) {
+                                    imgContainer.setAttribute('src', '');
+                                    imgContainer.classList.add('d-none');
+                                }
+                                if(linkElement) {
+                                    linkElement.setAttribute('href', '');
+                                    linkElement.classList.add('d-none');
+                                }
+                                containers.forEach(element => element.classList.add('d-none'));
                             }
 
                             if(key == 'background') {
-                                event.currentTarget.querySelector('#background_type_image_input').value = '';
+                                const backgroundInput = event.currentTarget.querySelector('#background_type_image_input');
+                                if(backgroundInput) {
+                                    backgroundInput.value = '';
+                                }
                             } else {
-                                event.currentTarget.querySelector(`#${key}`).value = '';
+                                const keyInput = event.currentTarget.querySelector(`#${key}`);
+                                if(keyInput) {
+                                    keyInput.value = '';
+                                }
                             }
                         }
                     }
@@ -1516,11 +1521,9 @@
                 case 'email_collector':
                 case 'phone_collector':
                 case 'paypal':
-                case 'vcard':
                 case 'donation':
                 case 'service':
                 case 'product':
-                case 'rss_feed':
                 case 'youtube_feed':
                     extra_updating_and_potentially_color_inputs = ['name'];
                     break;
@@ -1943,84 +1946,6 @@
         block_expanded_content_init();
     })
 
-</script>
-
-<script>
-    /* Vcard Social Script */
-    'use strict';
-
-    /* add new */
-    let vcard_social_add = event => {
-        let biolink_block_id = event.currentTarget.getAttribute('data-biolink-block-id');
-        let clone = document.querySelector(`#template_vcard_social`).content.cloneNode(true);
-        let count = document.querySelectorAll(`[id="vcard_socials_${biolink_block_id}"] .mb-4`).length;
-
-        if(count >= 20) return;
-
-        clone.querySelector(`input[name="vcard_social_label[]"`).setAttribute('name', `vcard_social_label[${count}]`);
-        clone.querySelector(`input[name="vcard_social_value[]"`).setAttribute('name', `vcard_social_value[${count}]`);
-
-        document.querySelector(`[id="vcard_socials_${biolink_block_id}"]`).appendChild(clone);
-
-        vcard_social_remove_initiator();
-    };
-
-    document.querySelectorAll('[data-add="vcard_social"]').forEach(element => {
-        element.addEventListener('click', vcard_social_add);
-    })
-
-    /* remove */
-    let vcard_social_remove = event => {
-        event.currentTarget.closest('.mb-4').remove();
-    };
-
-    let vcard_social_remove_initiator = () => {
-        document.querySelectorAll('[id^="vcard_socials_"] [data-remove]').forEach(element => {
-            element.removeEventListener('click', vcard_social_remove);
-            element.addEventListener('click', vcard_social_remove)
-        })
-    };
-
-    vcard_social_remove_initiator();
-</script>
-
-<script>
-    /* Vcard Phone Numbers */
-    'use strict';
-
-    /* add new */
-    let vcard_phone_number_add = event => {
-        let biolink_block_id = event.currentTarget.getAttribute('data-biolink-block-id');
-        let clone = document.querySelector(`#template_vcard_phone_numbers`).content.cloneNode(true);
-        let count = document.querySelectorAll(`[id="vcard_phone_numbers_${biolink_block_id}"] .mb-4`).length;
-
-        if(count >= 20) return;
-
-        clone.querySelector(`input[name="vcard_phone_number_label[]"`).setAttribute('name', `vcard_phone_number_label[${count}]`);
-        clone.querySelector(`input[name="vcard_phone_number_value[]"`).setAttribute('name', `vcard_phone_number_value[${count}]`);
-
-        document.querySelector(`[id="vcard_phone_numbers_${biolink_block_id}"]`).appendChild(clone);
-
-        vcard_phone_number_remove_initiator();
-    };
-
-    document.querySelectorAll('[data-add="vcard_phone_numbers"]').forEach(element => {
-        element.addEventListener('click', vcard_phone_number_add);
-    })
-
-    /* remove */
-    let vcard_phone_number_remove = event => {
-        event.currentTarget.closest('.mb-4').remove();
-    };
-
-    let vcard_phone_number_remove_initiator = () => {
-        document.querySelectorAll('[id^="vcard_phone_numbers_"] [data-remove]').forEach(element => {
-            element.removeEventListener('click', vcard_phone_number_remove);
-            element.addEventListener('click', vcard_phone_number_remove)
-        })
-    };
-
-    vcard_phone_number_remove_initiator();
 </script>
 
 <script>

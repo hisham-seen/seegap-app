@@ -166,6 +166,93 @@
             <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
             <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
 
+            <div class="row link-settings col-4">
+                <!-- Left Column - QR Code Types -->
+                <div class="col-12 col-lg-3">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 d-flex align-items-center">
+                                    <i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> 
+                                    <span><?= l('qr_codes.types') ?></span>
+                                </h6>
+                            </div>
+
+                            <!-- QR Code Types List -->
+                            <div id="qr_code_types" class="mt-3">
+                                <?php foreach(array_keys((require APP_PATH . 'includes/enabled_qr_codes.php')) as $type): ?>
+                                    <div class="qr_code_type card shadow-sm mb-2" data-qr-code-type="<?= $type ?>">
+                                        <div class="card-body p-2">
+                                            <div class="d-flex align-items-center">
+                                                <div class="mr-2">
+                                                    <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 24px; height: 24px; background-color: <?= $data->available_qr_codes[$type]['color'] ?? '#0e1a2f' ?>;">
+                                                        <i class="<?= $data->available_qr_codes[$type]['icon'] ?> fa-fw fa-xs text-white"></i>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex flex-column">
+                                                        <div class="text-truncate">
+                                                            <a href="#" class="text-truncate small font-weight-bold qr-code-type-select" data-type="<?= $type ?>">
+                                                                <?= $data->available_qr_codes[$type]['emoji'] . ' ' . l('qr_codes.type.' . $type) ?>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Column - QR Code Settings -->
+                <div class="col-12 col-lg-5">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 d-flex align-items-center">
+                                    <i class="fas fa-fw fa-wrench fa-sm text-muted mr-1"></i> 
+                                    <span><?= l('qr_codes.settings') ?></span>
+                                </h6>
+                            </div>
+
+                            <!-- QR Code Settings Content -->
+                            <div id="qr_code_settings" class="mt-3">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-fw fa-info-circle mr-1"></i>
+                                    <?= l('qr_codes.select_type_first') ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - QR Code Preview -->
+                <div class="col-12 col-lg-4">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 d-flex align-items-center">
+                                    <i class="fas fa-fw fa-eye fa-sm text-muted mr-1"></i> 
+                                    <span><?= l('qr_codes.preview') ?></span>
+                                </h6>
+                            </div>
+
+                            <!-- QR Code Preview Content -->
+                            <div id="qr_code_preview" class="mt-3 text-center">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-fw fa-info-circle mr-1"></i>
+                                    <?= l('qr_codes.preview_available_after_settings') ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="table-responsive table-custom-container">
                 <table class="table table-custom">
                     <thead>
@@ -291,7 +378,77 @@
 
 </section>
 
-<?php require THEME_PATH . 'views/qr-codes/js_qr_codes.php' ?>
-<?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_download_modal.php'), 'modals'); ?>
+<!-- Add JavaScript for QR code type selection and interaction -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle QR code type selection
+    document.querySelectorAll('.qr-code-type-select').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Highlight the selected type
+            document.querySelectorAll('.qr_code_type').forEach(el => {
+                el.classList.remove('bg-light');
+            });
+            this.closest('.qr_code_type').classList.add('bg-light');
+            
+            // Get the selected type
+            const type = this.getAttribute('data-type');
+            
+            // Update the settings panel
+            loadQrCodeSettings(type);
+        });
+    });
+    
+    // Function to load QR code settings based on type
+    function loadQrCodeSettings(type) {
+        const settingsContainer = document.getElementById('qr_code_settings');
+        
+        // Here you would typically load the settings form for the selected QR code type
+        // For now, we'll just show a placeholder
+        settingsContainer.innerHTML = `
+            <div class="form-group">
+                <label for="qr_name" class="small mb-1"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('global.name') ?></label>
+                <input id="qr_name" type="text" class="form-control form-control-sm" name="name" placeholder="<?= l('global.name') ?>" />
+            </div>
+            
+            <div class="form-group">
+                <label for="qr_content" class="small mb-1"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('qr_codes.content') ?></label>
+                <textarea id="qr_content" class="form-control form-control-sm" name="content" placeholder="<?= l('qr_codes.content_placeholder') ?>"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <button type="button" id="generate_qr_code" class="btn btn-sm btn-block btn-primary"><?= l('qr_codes.generate') ?></button>
+            </div>
+        `;
+        
+        // Add event listener for the generate button
+        document.getElementById('generate_qr_code').addEventListener('click', function() {
+            generateQrCodePreview(type);
+        });
+    }
+    
+    // Function to generate QR code preview
+    function generateQrCodePreview(type) {
+        const previewContainer = document.getElementById('qr_code_preview');
+        const name = document.getElementById('qr_name').value || 'Sample QR Code';
+        const content = document.getElementById('qr_content').value || 'https://example.com';
+        
+        // In a real implementation, you would generate the QR code on the server
+        // For now, we'll just show a placeholder
+        previewContainer.innerHTML = `
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-3">${name}</h6>
+                    <div class="qr-code-preview-image mb-3">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(content)}" class="img-fluid" alt="QR Code Preview" />
+                    </div>
+                    <div class="small text-muted">${content}</div>
+                </div>
+            </div>
+        `;
+    }
+});
+</script>
+
+<?

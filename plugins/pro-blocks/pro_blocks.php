@@ -21,16 +21,6 @@ return [
         'whitelisted_hosts' => ['music.apple.com'],
         'category' => 'embeds',
     ],
-    'tidal' => [
-        'type' => 'pro',
-        'icon' => 'fas fa-braille',
-        'color' => '#000000',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['tidal.com'],
-        'category' => 'embeds',
-    ],
     'mixcloud' => [
         'type' => 'default',
         'icon' => 'fab fa-mixer',
@@ -49,16 +39,6 @@ return [
         'themable' => false,
         'display_dynamic_name' => false,
         'whitelisted_hosts' => ['kick.com'],
-        'category' => 'embeds',
-    ],
-    'anchor' => [
-        'type' => 'pro',
-        'icon' => 'fas fa-anchor',
-        'color' => '#8940FA',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['anchor.fm'],
         'category' => 'embeds',
     ],
     'twitter_profile' => [
@@ -121,15 +101,6 @@ return [
         'whitelisted_hosts' => ['www.snapchat.com', 'snapchat.com'],
         'category' => 'embeds',
     ],
-    'rss_feed' => [
-        'type' => 'pro',
-        'icon' => 'fas fa-rss',
-        'color' => '#ee802f',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => false,
-        'category' => 'advanced',
-    ],
     'custom_html' => [
         'type' => 'pro',
         'icon' => 'fas fa-code',
@@ -138,69 +109,6 @@ return [
         'themable' => false,
         'display_dynamic_name' => false,
         'max_length' => 16384,
-        'category' => 'advanced',
-    ],
-    'vcard' => [
-        'type' => 'pro',
-        'icon' => 'fas fa-id-card',
-        'color' => '#FAB005',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'fields' => [
-            'first_name' => [
-                'max_length' => 64,
-            ],
-            'last_name' => [
-                'max_length' => 64,
-            ],
-            'email' => [
-                'max_length' => 320,
-            ],
-            'url' => [
-                'max_length' => 1024,
-            ],
-            'company' => [
-                'max_length' => 64,
-            ],
-            'job_title' => [
-                'max_length' => 64,
-            ],
-            'birthday' => [
-                'max_length' => 16,
-            ],
-            'street' => [
-                'max_length' => 128,
-            ],
-            'city' => [
-                'max_length' => 64,
-            ],
-            'zip' => [
-                'max_length' => 32,
-            ],
-            'region' => [
-                'max_length' => 32,
-            ],
-            'country' => [
-                'max_length' => 32,
-            ],
-            'note' => [
-                'max_length' => 512,
-            ],
-            'phone_number_label' => [
-                'max_length' => 32,
-            ],
-            'phone_number_value' => [
-                'max_length' => 32,
-            ],
-            'social_label' => [
-                'max_length' => 32
-            ],
-            'social_value' => [
-                'max_length' => 1024
-            ]
-        ],
         'category' => 'advanced',
     ],
     'image_grid' => [
@@ -250,15 +158,4 @@ return [
         'whitelisted_hosts' => ['www.tiktok.com'],
         'category' => 'embeds',
     ],
-    'vk_video' => [
-        'type' => 'pro',
-        'icon' => 'fab fa-vk',
-        'color' => '#0a70ff',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['vk.com'],
-        'category' => 'embeds',
-    ],
 ];
-
