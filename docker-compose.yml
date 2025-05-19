@@ -1,7 +1,17 @@
 version: '3'
 
+# Superset user and volumes definitions
+x-superset-user: &superset-user root
+x-superset-volumes: &superset-volumes
+  - ./visualisation/superset/docker:/app/docker
+  - ./visualisation/superset/superset:/app/superset
+  - ./visualisation/superset/superset-frontend:/app/superset-frontend
+  - superset_home:/app/superset_home
+  - ./visualisation/superset/tests:/app/tests
+
 services:
-  nginx:
+  # Your original application services
+  app-nginx:
     build:
       context: ./docker/nginx
     ports:
@@ -44,10 +54,211 @@ services:
     networks:
       - app-network
 
+  # Superset services
+  superset-nginx:
+    image: nginx:latest
+    container_name: superset_nginx
+    restart: unless-stopped
+    ports:
+      - "8089:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./visualisation/superset/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./visualisation/superset/docker/nginx/templates:/etc/nginx/templates:ro
+    networks:
+      - app-network
+      - superset-network
+    depends_on:
+      - superviz
+
+  redis:
+    image: redis:7
+    container_name: superset_cache
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6380:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - superset-network
+
+  superset-db:
+    image: postgres:16
+    container_name: superset_db
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - db_home:/var/lib/postgresql/data
+      - ./visualisation/superset/docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - superset-network
+    environment:
+      - POSTGRES_USER=superset
+      - POSTGRES_PASSWORD=superset
+      - POSTGRES_DB=superset
+
+  superviz:
+    build:
+      context: ./visualisation
+      dockerfile: Dockerfile
+    container_name: superviz_app
+    command: ["/app/docker/docker-bootstrap.sh", "app"]
+    restart: unless-stopped
+    ports:
+      - 8088:8088
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    user: *superset-user
+    depends_on:
+      - superset-db
+      - redis
+    volumes:
+      - ./visualisation/superset/docker:/app/docker
+      - ./visualisation/config:/app/pythonpath
+      - superset_home:/app/superset_home
+    networks:
+      - app-network
+      - superset-network
+    environment:
+      - SUPERSET_LOG_LEVEL=info
+      - DATABASE_DIALECT=postgresql
+      - DATABASE_HOST=superset-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=superset
+      - DATABASE_PASSWORD=superset
+      - DATABASE_DB=superset
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  superset-websocket:
+    container_name: superset_websocket
+    build: ./visualisation/superset/superset-websocket
+    ports:
+      - 8080:8080
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - redis
+    volumes:
+      - ./visualisation/superset/superset-websocket:/home/superset-websocket
+      - /home/superset-websocket/node_modules
+      - /home/superset-websocket/dist
+      - ./visualisation/superset/docker/superset-websocket/config.json:/home/superset-websocket/config.json
+    networks:
+      - superset-network
+    environment:
+      - PORT=8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_SSL=false
+
+  superset-init:
+    build:
+      context: ./visualisation
+      dockerfile: Dockerfile
+    container_name: superset_init
+    command: ["/app/docker/docker-init.sh"]
+    depends_on:
+      - superset-db
+      - redis
+    user: *superset-user
+    volumes:
+      - ./visualisation/superset/docker:/app/docker
+      - ./visualisation/config:/app/pythonpath
+      - superset_home:/app/superset_home
+    networks:
+      - superset-network
+    environment:
+      - SUPERSET_LOAD_EXAMPLES=yes
+      - SUPERSET_LOG_LEVEL=info
+      - DATABASE_DIALECT=postgresql
+      - DATABASE_HOST=superset-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=superset
+      - DATABASE_PASSWORD=superset
+      - DATABASE_DB=superset
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    healthcheck:
+      disable: true
+
+  superset-worker:
+    build:
+      context: ./visualisation
+      dockerfile: Dockerfile
+    container_name: superset_worker
+    command: ["/app/docker/docker-bootstrap.sh", "worker"]
+    environment:
+      - CELERYD_CONCURRENCY=2
+      - SUPERSET_LOG_LEVEL=info
+      - DATABASE_DIALECT=postgresql
+      - DATABASE_HOST=superset-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=superset
+      - DATABASE_PASSWORD=superset
+      - DATABASE_DB=superset
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    restart: unless-stopped
+    depends_on:
+      - superset-db
+      - redis
+    user: *superset-user
+    volumes:
+      - ./visualisation/superset/docker:/app/docker
+      - ./visualisation/config:/app/pythonpath
+      - superset_home:/app/superset_home
+    networks:
+      - superset-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A superset.tasks.celery_app:app inspect ping -d celery@$$HOSTNAME"]
+
+  superset-worker-beat:
+    build:
+      context: ./visualisation
+      dockerfile: Dockerfile
+    container_name: superset_worker_beat
+    command: ["/app/docker/docker-bootstrap.sh", "beat"]
+    restart: unless-stopped
+    depends_on:
+      - superset-db
+      - redis
+    user: *superset-user
+    volumes:
+      - ./visualisation/superset/docker:/app/docker
+      - ./visualisation/config:/app/pythonpath
+      - superset_home:/app/superset_home
+    networks:
+      - superset-network
+    healthcheck:
+      disable: true
+    environment:
+      - SUPERSET_LOG_LEVEL=info
+      - DATABASE_DIALECT=postgresql
+      - DATABASE_HOST=superset-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=superset
+      - DATABASE_PASSWORD=superset
+      - DATABASE_DB=superset
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
 networks:
   app-network:
+    driver: bridge
+  superset-network:
     driver: bridge
 
 volumes:
   mysql-data:
     driver: local
+  superset_home:
+    external: false
+  db_home:
+    external: false
+  redis:
+    external: false
