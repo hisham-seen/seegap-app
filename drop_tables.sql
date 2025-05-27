@@ -4,6 +4,7 @@
 DROP TABLE IF EXISTS tools_ratings;
 DROP TABLE IF EXISTS tools_usage;
 DROP TABLE IF EXISTS data;
+DROP TABLE IF EXISTS gs1_links;
 DROP TABLE IF EXISTS qr_codes;
 DROP TABLE IF EXISTS biolinks_blocks;
 DROP TABLE IF EXISTS track_links;

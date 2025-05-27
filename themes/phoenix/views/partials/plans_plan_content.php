@@ -80,6 +80,11 @@
             <div><?= sprintf(l('global.plan_settings.qr_codes_bulk_limit'), ($data->plan_settings->qr_codes_bulk_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->qr_codes_bulk_limit))) ?></div>
             <i class="fas fa-fw fa-sm <?= $data->plan_settings->qr_codes_bulk_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
         </li>
+
+        <li>
+            <div><?= sprintf(l('global.plan_settings.gs1_links_limit'), ($data->plan_settings->gs1_links_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->gs1_links_limit))) ?></div>
+            <i class="fas fa-fw fa-sm <?= $data->plan_settings->gs1_links_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+        </li>
     <?php endif ?>
 
     <?php if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>

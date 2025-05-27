@@ -175,6 +175,15 @@ class QrCodeCreate extends Controller {
                         unset($_POST['link_id']);
                         unset($_POST['url_dynamic']);
                     }
+
+                    if(isset($_POST['gs1_link_id']) && isset($_POST['url_dynamic'])) {
+                        $gs1_link = db()->where('gs1_link_id', $_POST['gs1_link_id'])->where('user_id', $this->user->user_id)->getOne('gs1_links', ['gs1_link_id']);
+                        if(!$gs1_link) {
+                            unset($_POST['gs1_link_id']);
+                        }
+                    } else {
+                        unset($_POST['gs1_link_id']);
+                    }
                     break;
 
                 case 'phone':

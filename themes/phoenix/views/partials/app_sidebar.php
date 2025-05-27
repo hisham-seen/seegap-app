@@ -78,6 +78,10 @@
                     </li>
                 <?php endif ?>
 
+                <li class="<?= in_array(\Altum\Router::$controller, ['Gs1Links', 'Gs1LinkCreate', 'Gs1Link']) ? 'active' : null ?>">
+                    <a href="<?= url('gs1-links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('gs1_links.menu') ?></a>
+                </li>
+
                 <?php if(\Altum\Plugin::is_active('aix')): ?>
                     <div class="divider-wrapper">
                         <div class="divider"></div>

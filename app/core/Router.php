@@ -264,6 +264,30 @@ class Router {
                 ]
             ],
 
+            'gs1-links' => [
+                'controller' => 'Gs1Links',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
+            'gs1-link-create' => [
+                'controller' => 'Gs1LinkCreate',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
+            'gs1-link' => [
+                'controller' => 'Gs1Link',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
             'link' => [
                 'controller' => 'Link',
                 'settings' => [
@@ -1010,6 +1034,15 @@ class Router {
                     'no_browser_language_detection' => true,
                 ]
             ],
+
+            'gs1-link-redirect' => [
+                'controller' => 'Gs1LinkRedirect',
+                'settings' => [
+                    'no_authentication_check' => true,
+                    'has_view' => false,
+                    'no_browser_language_detection' => true,
+                ]
+            ],
         ],
 
         'api' => [
@@ -1079,6 +1112,14 @@ class Router {
             ],
             'signatures' => [
                 'controller' => 'ApiSignatures',
+                'settings' => [
+                    'no_authentication_check' => true,
+                    'has_view' => false,
+                    'allow_indexing' => false,
+                ]
+            ],
+            'gs1-links' => [
+                'controller' => 'ApiGs1Links',
                 'settings' => [
                     'no_authentication_check' => true,
                     'has_view' => false,
@@ -1257,6 +1298,10 @@ class Router {
 
             'qr-codes' => [
                 'controller' => 'AdminQrCodes'
+            ],
+
+            'gs1-links' => [
+                'controller' => 'AdminGs1Links'
             ],
 
             'domains' => [
@@ -1682,16 +1727,24 @@ class Router {
 
                 } else {
 
-                    /* Check for a custom domain 404 redirect */
-                    if(isset(self::$data['domain']) && self::$data['domain']->custom_not_found_url) {
-                        header('Location: ' . self::$data['domain']->custom_not_found_url);
-                        die();
-                    }
-
-                    else {
-                        /* Not found controller */
+                    /* Check if this might be a GS1 Digital Link */
+                    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+                    if(function_exists('parse_gs1_digital_link') && parse_gs1_digital_link($request_uri)) {
+                        self::$controller_key = 'gs1-link-redirect';
+                        self::$controller = 'Gs1LinkRedirect';
                         self::$path = '';
-                        self::$controller_key = 'not-found';
+                    } else {
+                        /* Check for a custom domain 404 redirect */
+                        if(isset(self::$data['domain']) && self::$data['domain']->custom_not_found_url) {
+                            header('Location: ' . self::$data['domain']->custom_not_found_url);
+                            die();
+                        }
+
+                        else {
+                            /* Not found controller */
+                            self::$path = '';
+                            self::$controller_key = 'not-found';
+                        }
                     }
 
                 }

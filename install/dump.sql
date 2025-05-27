@@ -71,7 +71,7 @@ PRIMARY KEY (`code_id`)
 -- SEPARATOR --
 
 INSERT INTO `users` (`user_id`, `email`, `password`, `api_key`, `referral_key`, `name`, `type`, `status`, `plan_id`, `plan_expiration_date`, `plan_settings`, `datetime`, `ip`, `last_activity`, `preferences`)
-VALUES (1,'admin','$2y$10$uFNO0pQKEHSFcus1zSFlveiPCB3EvG9ZlES7XKgJFTAl5JbRGFCWy', md5(rand()), md5(rand()), 'AltumCode',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"biolinks_templates":[],"biolinks_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"password":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"biolink_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"biolinks_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_biolink_blocks":{"link":true,"heading":true,"paragraph":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"threads":true,"soundcloud":true,"spotify":true,"youtube":true,"twitch":true,"vimeo":true,"tiktok_video":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"twitter_profile":true,"twitter_tweet":true,"twitter_video":true,"pinterest_profile":true,"instagram_media":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"alert":true,"tiktok_profile":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"facebook":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"cta":true,"external_item":true,"share":true,"coupon":true,"youtube_feed":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"telegram":true,"donation":true,"product":true,"service":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_biolink":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}');
+VALUES (1,'admin','$2y$10$uFNO0pQKEHSFcus1zSFlveiPCB3EvG9ZlES7XKgJFTAl5JbRGFCWy', md5(rand()), md5(rand()), 'AltumCode',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"biolinks_templates":[],"biolinks_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"password":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"biolink_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"biolinks_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"gs1_links_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_biolink_blocks":{"link":true,"heading":true,"paragraph":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"threads":true,"soundcloud":true,"spotify":true,"youtube":true,"twitch":true,"vimeo":true,"tiktok_video":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"twitter_profile":true,"twitter_tweet":true,"twitter_video":true,"pinterest_profile":true,"instagram_media":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"alert":true,"tiktok_profile":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"facebook":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"cta":true,"external_item":true,"share":true,"coupon":true,"youtube_feed":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"telegram":true,"donation":true,"product":true,"service":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_biolink":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}');
 
 -- SEPARATOR --
 
@@ -603,11 +603,38 @@ CONSTRAINT `data_ibfk_4` FOREIGN KEY (`biolink_block_id`) REFERENCES `biolinks_b
 
 -- SEPARATOR --
 
+CREATE TABLE `gs1_links` (
+  `gs1_link_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `domain_id` int DEFAULT '0',
+  `pixels_ids` text,
+  `gtin` varchar(14) NOT NULL,
+  `target_url` varchar(2048) NOT NULL,
+  `title` varchar(256) DEFAULT NULL,
+  `description` text,
+  `clicks` int NOT NULL DEFAULT '0',
+  `settings` text,
+  `is_enabled` tinyint NOT NULL DEFAULT '1',
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`gs1_link_id`),
+  UNIQUE KEY `gtin_domain` (`gtin`, `domain_id`),
+  KEY `user_id` (`user_id`),
+  KEY `project_id` (`project_id`),
+  KEY `gtin` (`gtin`),
+  CONSTRAINT `gs1_links_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `gs1_links_projects_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SEPARATOR --
+
 CREATE TABLE `qr_codes` (
   `qr_code_id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `project_id` int DEFAULT NULL,
   `link_id` int DEFAULT NULL,
+  `gs1_link_id` int DEFAULT NULL,
   `name` varchar(64) NOT NULL,
   `type` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `qr_code_logo` varchar(64) DEFAULT NULL,
@@ -622,9 +649,11 @@ CREATE TABLE `qr_codes` (
   KEY `user_id` (`user_id`),
   KEY `project_id` (`project_id`),
   KEY `qr_codes_links_link_id_fk` (`link_id`),
+  KEY `qr_codes_gs1_links_gs1_link_id_fk` (`gs1_link_id`),
   CONSTRAINT `qr_codes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `qr_codes_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `qr_codes_links_link_id_fk` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `qr_codes_links_link_id_fk` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `qr_codes_gs1_links_gs1_link_id_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- SEPARATOR --
@@ -665,4 +694,35 @@ CREATE TABLE `payments` (
   KEY `user_id` (`user_id`),
   KEY `plan_id` (`plan_id`),
   CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SEPARATOR --
+
+CREATE TABLE `track_gs1_links` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `gs1_link_id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `gtin` varchar(14) NOT NULL,
+  `country_code` varchar(8) DEFAULT NULL,
+  `continent_code` varchar(8) DEFAULT NULL,
+  `city_name` varchar(128) DEFAULT NULL,
+  `os_name` varchar(16) DEFAULT NULL,
+  `browser_name` varchar(32) DEFAULT NULL,
+  `referrer_host` varchar(256) DEFAULT NULL,
+  `referrer_path` varchar(1024) DEFAULT NULL,
+  `device_type` varchar(16) DEFAULT NULL,
+  `browser_language` varchar(16) DEFAULT NULL,
+  `utm_source` varchar(128) DEFAULT NULL,
+  `utm_medium` varchar(128) DEFAULT NULL,
+  `utm_campaign` varchar(128) DEFAULT NULL,
+  `is_unique` tinyint DEFAULT '0',
+  `datetime` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gs1_link_id` (`gs1_link_id`),
+  KEY `gtin` (`gtin`),
+  KEY `user_id` (`user_id`),
+  KEY `track_gs1_links_date_index` (`datetime`),
+  CONSTRAINT `track_gs1_links_gs1_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `track_gs1_links_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

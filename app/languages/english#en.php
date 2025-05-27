@@ -4216,4 +4216,44 @@ return [
 
     'synthesis_update.breadcrumb' => 'Edit AI synthesis',
     'synthesis_update.title' => 'Edit AI synthesis - %s',
+
+
+    'gs1_links.breadcrumb' => 'GS1 Digital Links',
+    'gs1_links.title' => 'GS1 Digital Links',
+    'gs1_links.menu' => 'GS1 Digital Links',
+    'gs1_links.header' => 'GS1 Digital Links',
+    'gs1_links.subheader' => 'Create & manage GS1 Digital Links for product identification and traceability.',
+    'gs1_links.create' => 'Create GS1 link',
+    'gs1_links.gs1_link' => 'GS1 Digital Link',
+    'gs1_links.is_enabled_tooltip' => 'Change status',
+    'gs1_links.no_data' => 'No GS1 links created yet',
+    'gs1_links.no_data_help' => 'Start by creating your first GS1 digital link.',
+
+    'gs1_links.table.gtin' => 'GTIN',
+    'gs1_links.table.target_url' => 'Target URL',
+    'gs1_links.table.clicks' => 'Clicks',
+
+    'gs1_link_create.breadcrumb' => 'Create GS1 link',
+    'gs1_link_create.title' => 'Create GS1 link',
+    'gs1_link_create.header' => 'Create a new GS1 digital link',
+
+    'gs1_link.breadcrumb' => 'GS1 link',
+    'gs1_link.title' => 'GS1 Link - %s',
+    'gs1_link.header' => 'GS1 Digital Link - %s',
+    'gs1_link.subheader' => 'Your GS1 link is %s',
+
+    'gs1_link.settings.header' => 'Settings',
+    'gs1_link.settings.breadcrumb' => 'Settings',
+    'gs1_link.settings.gtin' => 'GTIN (Global Trade Item Number)',
+    'gs1_link.settings.gtin_help' => 'A 14-digit unique identifier for your product. Leave empty for auto-generation.',
+    'gs1_link.settings.target_url' => 'Target URL',
+    'gs1_link.settings.target_url_help' => 'The URL where users will be redirected when scanning the GS1 digital link.',
+    'gs1_link.settings.is_enabled' => 'Link is active',
+
+    'gs1_link.statistics.breadcrumb' => 'Statistics',
+    'gs1_link.statistics.header' => 'Statistics',
+    'gs1_link.statistics.link' => 'Statistics',
+
+    'gs1_link_delete_modal.header' => 'Delete GS1 link',
+    'gs1_link_delete_modal.subheader' => 'All data related to the GS1 link will be completely deleted. This action cannot be undone.',
 ];

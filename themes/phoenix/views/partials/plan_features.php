@@ -174,10 +174,18 @@
 
     <?php if(settings()->links->additional_domains_is_enabled): ?>
         <li class="d-flex align-items-baseline mb-2">
-            <i class="fas fa-fw fa-sm mr-3 <?= count($data->plan_settings->additional_domains ?? []) ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-            <div class="<?= count($data->plan_settings->additional_domains ?? []) ? null : 'text-muted' ?>">
-                <?= sprintf(l('global.plan_settings.additional_domains'), '<strong>' . nr(count($data->plan_settings->additional_domains ?? [])) . '</strong>') ?>
-                <span class="mr-1" data-toggle="tooltip" title="<?= sprintf(l('global.plan_settings.additional_domains_help'), implode(', ', array_map(function($domain_id) use($additional_domains) { return $additional_domains[$domain_id]->host ?? null; }, $data->plan_settings->additional_domains ?? []))) ?>"><i class="fas fa-fw fa-xs fa-circle-question text-gray-500"></i></span>
+            <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->qr_codes_bulk_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+
+            <div class="<?= $data->plan_settings->qr_codes_bulk_limit ? null : 'text-muted' ?>">
+                <?= sprintf(l('global.plan_settings.qr_codes_bulk_limit'), ($data->plan_settings->qr_codes_bulk_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->qr_codes_bulk_limit))) ?>
+            </div>
+        </li>
+
+        <li class="d-flex align-items-baseline mb-2">
+            <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->gs1_links_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+
+            <div class="<?= $data->plan_settings->gs1_links_limit ? null : 'text-muted' ?>">
+                <?= sprintf(l('global.plan_settings.gs1_links_limit'), ($data->plan_settings->gs1_links_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->gs1_links_limit))) ?>
             </div>
         </li>
     <?php endif ?>

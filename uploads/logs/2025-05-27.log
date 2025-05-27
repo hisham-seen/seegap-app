@@ -1,28 +1,134 @@
-[27-May-2025 08:19:13 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/core/CustomHooks.php on line 270
-[27-May-2025 08:19:13 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
-[27-May-2025 08:19:13 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
-[27-May-2025 08:19:13 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
-[27-May-2025 08:19:13 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
-[27-May-2025 08:19:13 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
-[27-May-2025 08:19:13 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 335
-[27-May-2025 08:19:13 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 144
-[27-May-2025 08:19:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
-[27-May-2025 08:19:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 80
-[27-May-2025 08:19:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 144
-[27-May-2025 08:19:16 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
-[27-May-2025 08:19:16 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-code-create/index.php on line 72
-[27-May-2025 08:19:16 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 144
-[27-May-2025 08:21:52 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
-[27-May-2025 08:21:52 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-code-create/index.php on line 72
-[27-May-2025 08:21:52 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 144
-[27-May-2025 08:22:48 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
-[27-May-2025 08:22:48 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-code-create/index.php on line 72
-[27-May-2025 08:22:48 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 144
-[27-May-2025 08:41:04 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
-[27-May-2025 08:41:04 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-code-create/index.php on line 72
-[27-May-2025 08:41:04 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 144
-[27-May-2025 08:45:11 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
-[27-May-2025 08:45:12 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-code-create/index.php on line 72
-[27-May-2025 08:45:12 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 144
-[27-May-2025 08:45:23 UTC] PHP Warning:  Undefined property: stdClass::$access in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
-[27-May-2025 08:45:23 UTC] PHP Warning:  Undefined property: stdClass::$access in /var/www/html/themes/phoenix/views/partials/menu.php on line 42
+[27-May-2025 17:15:13 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/admin/partials/footer.php on line 107
+[27-May-2025 17:15:13 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/admin/partials/footer.php on line 107
+[27-May-2025 17:15:13 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/admin/wrapper.php on line 42
+[27-May-2025 17:15:13 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/admin/wrapper.php on line 42
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[27-May-2025 17:15:15 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 335
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 148
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[27-May-2025 17:15:15 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[27-May-2025 17:15:17 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:15:17 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:15:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Altum\Filters::get_filters() in /var/www/html/app/controllers/Gs1Links.php:37
+Stack trace:
+#0 [internal function]: Altum\Controllers\Gs1Links->index()
+#1 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#2 /var/www/html/index.php(22): Altum\App->__construct()
+#3 {main}
+  thrown in /var/www/html/app/controllers/Gs1Links.php on line 37
+[27-May-2025 17:15:18 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:15:18 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:15:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Altum\Filters::get_filters() in /var/www/html/app/controllers/Gs1Links.php:37
+Stack trace:
+#0 [internal function]: Altum\Controllers\Gs1Links->index()
+#1 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#2 /var/www/html/index.php(22): Altum\App->__construct()
+#3 {main}
+  thrown in /var/www/html/app/controllers/Gs1Links.php on line 37
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$tools in /var/www/html/app/core/CustomHooks.php on line 195
+[27-May-2025 17:19:39 UTC] PHP Warning:  Attempt to read property "is_enabled" on null in /var/www/html/app/core/CustomHooks.php on line 195
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/core/CustomHooks.php on line 267
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[27-May-2025 17:19:39 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 335
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 148
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[27-May-2025 17:19:39 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[27-May-2025 17:19:40 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:19:40 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:19:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Altum\Filters::get_filters() in /var/www/html/app/controllers/Gs1Links.php:37
+Stack trace:
+#0 [internal function]: Altum\Controllers\Gs1Links->index()
+#1 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#2 /var/www/html/index.php(22): Altum\App->__construct()
+#3 {main}
+  thrown in /var/www/html/app/controllers/Gs1Links.php on line 37
+[27-May-2025 17:19:42 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:19:42 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:19:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Altum\Filters::get_filters() in /var/www/html/app/controllers/Gs1Links.php:37
+Stack trace:
+#0 [internal function]: Altum\Controllers\Gs1Links->index()
+#1 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#2 /var/www/html/index.php(22): Altum\App->__construct()
+#3 {main}
+  thrown in /var/www/html/app/controllers/Gs1Links.php on line 37
+[27-May-2025 17:21:28 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:21:28 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:21:28 UTC] PHP Warning:  require(/var/www/html/themes/phoenix/views/gs1-links/gs1_link_delete_modal.php): Failed to open stream: No such file or directory in /var/www/html/app/core/View.php on line 37
+[27-May-2025 17:21:28 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/var/www/html/themes/phoenix/views/gs1-links/gs1_link_delete_modal.php' (include_path='.:/usr/local/lib/php') in /var/www/html/app/core/View.php:37
+Stack trace:
+#0 /var/www/html/app/controllers/Gs1Links.php(73): Altum\View->run()
+#1 [internal function]: Altum\Controllers\Gs1Links->index()
+#2 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#3 /var/www/html/index.php(22): Altum\App->__construct()
+#4 {main}
+  thrown in /var/www/html/app/core/View.php on line 37
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[27-May-2025 17:21:30 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 335
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/partials/app_sidebar.php on line 148
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/partials/footer.php on line 107
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[27-May-2025 17:21:30 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 71
+[27-May-2025 17:21:32 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:21:32 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:21:32 UTC] PHP Warning:  require(/var/www/html/themes/phoenix/views/gs1-links/gs1_link_delete_modal.php): Failed to open stream: No such file or directory in /var/www/html/app/core/View.php on line 37
+[27-May-2025 17:21:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/var/www/html/themes/phoenix/views/gs1-links/gs1_link_delete_modal.php' (include_path='.:/usr/local/lib/php') in /var/www/html/app/core/View.php:37
+Stack trace:
+#0 /var/www/html/app/controllers/Gs1Links.php(73): Altum\View->run()
+#1 [internal function]: Altum\Controllers\Gs1Links->index()
+#2 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#3 /var/www/html/index.php(22): Altum\App->__construct()
+#4 {main}
+  thrown in /var/www/html/app/core/View.php on line 37
+[27-May-2025 17:22:50 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:22:50 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:22:51 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
+[27-May-2025 17:22:51 UTC] PHP Warning:  Undefined property: stdClass::$gs1_links_limit in /var/www/html/themes/phoenix/views/gs1-links/index.php on line 19
+[27-May-2025 17:22:51 UTC] PHP Fatal error:  Uncaught Error: Cannot use object of type stdClass as array in /var/www/html/themes/phoenix/views/gs1-links/index.php:19
+Stack trace:
+#0 /var/www/html/app/core/View.php(37): require()
+#1 /var/www/html/app/controllers/Gs1Links.php(91): Altum\View->run(Object(stdClass))
+#2 [internal function]: Altum\Controllers\Gs1Links->index()
+#3 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#4 /var/www/html/index.php(22): Altum\App->__construct()
+#5 {main}
+  thrown in /var/www/html/themes/phoenix/views/gs1-links/index.php on line 19
+[27-May-2025 17:22:53 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
+[27-May-2025 17:22:53 UTC] PHP Warning:  Undefined property: stdClass::$maintenance_is_enabled in /var/www/html/app/core/App.php on line 231
+[27-May-2025 17:22:53 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/app/models/Projects.php on line 17
+[27-May-2025 17:22:53 UTC] PHP Warning:  Undefined property: stdClass::$gs1_links_limit in /var/www/html/themes/phoenix/views/gs1-links/index.php on line 19
+[27-May-2025 17:22:53 UTC] PHP Fatal error:  Uncaught Error: Cannot use object of type stdClass as array in /var/www/html/themes/phoenix/views/gs1-links/index.php:19
+Stack trace:
+#0 /var/www/html/app/core/View.php(37): require()
+#1 /var/www/html/app/controllers/Gs1Links.php(91): Altum\View->run(Object(stdClass))
+#2 [internal function]: Altum\Controllers\Gs1Links->index()
+#3 /var/www/html/app/core/App.php(279): call_user_func_array(Array, Array)
+#4 /var/www/html/index.php(22): Altum\App->__construct()
+#5 {main}
+  thrown in /var/www/html/themes/phoenix/views/gs1-links/index.php on line 19
