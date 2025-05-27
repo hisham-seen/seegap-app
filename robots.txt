@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
 
-User-agent: GPTBot
-User-agent: Google-Extended
-Disallow: /
+Sitemap: http://localhost/sitemap

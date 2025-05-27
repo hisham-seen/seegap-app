@@ -237,6 +237,90 @@ class QrCodeGenerator extends Controller {
 
                 break;
 
+            case 'vcard':
+                $_POST['vcard_email'] = filter_var($_POST['vcard_email'], FILTER_SANITIZE_EMAIL);
+                $_POST['vcard_url'] = get_url($_POST['vcard_url']);
+
+                if(!isset($_POST['vcard_phone_number_label'])) {
+                    $_POST['vcard_phone_number_label'] = [];
+                    $_POST['vcard_phone_number_value'] = [];
+                }
+
+                if(!isset($_POST['vcard_social_label'])) {
+                    $_POST['vcard_social_label'] = [];
+                    $_POST['vcard_social_value'] = [];
+                }
+
+                $vcard = new \JeroenDesloovere\VCard\VCard();
+                $vcard->addName($_POST['vcard_last_name'], $_POST['vcard_first_name']);
+                if($_POST['vcard_email']) $vcard->addEmail($_POST['vcard_email']);
+                if($_POST['vcard_url']) $vcard->addURL($_POST['vcard_url']);
+                if($_POST['vcard_company']) $vcard->addCompany($_POST['vcard_company']);
+                if($_POST['vcard_job_title']) $vcard->addJobtitle($_POST['vcard_job_title']);
+                if($_POST['vcard_birthday']) $vcard->addBirthday($_POST['vcard_birthday']);
+                if($_POST['vcard_note']) $vcard->addNote($_POST['vcard_note']);
+
+                /* Address */
+                if($_POST['vcard_street'] || $_POST['vcard_city'] || $_POST['vcard_region'] || $_POST['vcard_zip'] || $_POST['vcard_country']) {
+                    $vcard->addAddress(null, null, $_POST['vcard_street'], $_POST['vcard_city'], $_POST['vcard_region'], $_POST['vcard_zip'], $_POST['vcard_country']);
+                }
+
+                /* Phone numbers */
+                if(isset($_POST['vcard_phone_numbers'])) {
+                    foreach($_POST['vcard_phone_numbers'] as $key => $phone_number) {
+                        $_POST['vcard_phone_number_label'][$key] = $phone_number['label'];
+                        $_POST['vcard_phone_number_value'][$key] = $phone_number['value'];
+                    }
+                }
+
+                foreach($_POST['vcard_phone_number_label'] as $key => $value) {
+                    $label = mb_substr($value, 0, $available_qr_codes['vcard']['phone_number_value']['max_length']);
+                    $value = mb_substr($_POST['vcard_phone_number_value'][$key], 0, $available_qr_codes['vcard']['phone_number_value']['max_length']);
+
+                    /* Custom label */
+                    if($label) {
+                        $vcard->setProperty(
+                            'item' . $key . '.TEL',
+                            'item' . $key . '.TEL',
+                            $value
+                        );
+                        $vcard->setProperty(
+                            'item' . $key . '.X-ABLabel',
+                            'item' . $key . '.X-ABLabel',
+                            $label
+                        );
+                    }
+
+                    /* Default label */
+                    else {
+                        $vcard->addPhoneNumber($value);
+                    }
+                }
+
+                /* Socials */
+                if(isset($_POST['vcard_socials'])) {
+                    foreach($_POST['vcard_socials'] as $key => $social) {
+                        $_POST['vcard_social_label'][$key] = $social['label'];
+                        $_POST['vcard_social_value'][$key] = $social['value'];
+                    }
+                }
+
+                foreach($_POST['vcard_social_label'] as $key => $value) {
+                    if(empty(trim($value))) continue;
+                    if($key >= 20) continue;
+
+                    $label = mb_substr($value, 0, $available_qr_codes['vcard']['social_value']['max_length']);
+                    $value = mb_substr($_POST['vcard_social_value'][$key], 0, $available_qr_codes['vcard']['social_value']['max_length']);
+
+                    $vcard->addURL(
+                        $value,
+                        'TYPE=' . $label
+                    );
+                }
+
+                $data = $vcard->buildVCard();
+                break;
+
             case 'paypal':
                 $_POST['paypal_type'] = isset($_POST['paypal_type']) && array_key_exists($_POST['paypal_type'], $available_qr_codes['paypal']['type']) ? $_POST['paypal_type'] : array_key_first($available_qr_codes['paypal']['type']);;
                 //$_POST['paypal_email'] = filter_var($_POST['paypal_email'], FILTER_SANITIZE_EMAIL);

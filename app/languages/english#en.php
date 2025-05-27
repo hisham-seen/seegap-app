@@ -2150,7 +2150,6 @@ return [
     'link.biolink.blocks.map' => 'Map',
     'link.biolink.blocks.typeform' => 'Typeform',
     'link.biolink.blocks.calendly' => 'Calendly',
-    'link.biolink.blocks.rumble' => 'Rumble video',
     'link.biolink.blocks.telegram' => 'Telegram post',
     'link.biolink.blocks.iframe' => 'Iframe embed',
 
@@ -2330,8 +2329,6 @@ return [
     'biolink_socials.threads.placeholder' => 'Threads username',
     'biolink_socials.reddit.name' => 'Reddit',
     'biolink_socials.reddit.placeholder' => 'Reddit page / username',
-    'biolink_socials.rumble.name' => 'Rumble',
-    'biolink_socials.rumble.placeholder' => 'Rumble channel / video',
     'biolink_socials.signal.name' => 'Signal',
     'biolink_socials.signal.placeholder' => 'Signal link',
     'biolink_socials.onlyfans.name' => 'Onlyfans',
@@ -2881,10 +2878,6 @@ return [
     'biolink_calendly.location_url_placeholder' => 'https://calendly.com/username/calendar-name',
 
 
-    'biolink_rumble.header' => 'Add a Rumble video',
-    'biolink_rumble.subheader' => 'Display a Rumble post widget on your page with ease.',
-    'biolink_rumble.location_url' => 'Rumble Video Embed URL',
-    'biolink_rumble.location_url_placeholder' => 'https://rumble.com/embed/v4oja79',
 
 
     'biolink_telegram.header' => 'Add a Telegram post',

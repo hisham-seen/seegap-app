@@ -160,12 +160,6 @@ return [
         'max_length' => 256,
         'icon' => 'fab fa-mastodon'
     ],
-    'rumble' => [
-        'format' => 'https://rumble.com/%s',
-        'input_group' => true,
-        'max_length' => 128,
-        'icon' => 'fas fa-play-circle',
-    ],
     'vk'=> [
         'format' => 'https://vk.me/%s',
         'input_group' => true,

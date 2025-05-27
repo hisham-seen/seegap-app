@@ -575,7 +575,6 @@ class Link {
             case 'timeline':
             case 'review':
             case 'markdown':
-            case 'rumble':
             case 'iframe':
 
                 $view_path = \Altum\Plugin::get('ultimate-blocks')->path . 'views/l/biolink_blocks/' . $link->type . '.php';

@@ -838,6 +838,8 @@
                             <div class="text-center">
                                 <img id="qr_code" src="<?= settings()->codes->qr_codes_default_image ? \Altum\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg' ?>" class="img-fluid qr-code" loading="lazy" />
                             </div>
+                        </div>
+                    </div>
 
                     <div class="row mb-4 d-print-none">
                         <div class="col-12 col-lg-6 mb-3 mb-lg-0">

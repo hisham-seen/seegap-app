@@ -227,16 +227,6 @@ return [
         'display_dynamic_name' => false,
         'category' => 'advanced',
     ],
-    'rumble' => [
-        'type' => 'ultimate',
-        'icon' => 'fas fa-play',
-        'color' => '#85C742',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['rumble.com'],
-        'category' => 'embeds',
-    ],
     'telegram' => [
         'type' => 'ultimate',
         'icon' => 'fab fa-telegram',
