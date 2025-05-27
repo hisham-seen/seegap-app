@@ -28,39 +28,19 @@
         <input type="hidden" name="reload" value="" data-reload-qr-code />
         <input type="hidden" name="is_readable" value="" />
 
-
-        <div class="row">
-        <!-- Left Column - QR Code Types -->
-        <div class="col-12 col-lg-2">
-            <div>
-                <div>
-                    <div class="btn-group-toggle d-lg-flex flex-column" data-toggle="buttons">
-                        <?php foreach($data->available_qr_codes as $key => $value): ?>
-                            <label class="btn btn-light btn-block text-truncate mb-2 <?= $data->values['type'] == $key ? 'active' : null ?>" data-toggle="tooltip" title="<?= l('qr_codes.type.' . $key . '_description') ?>" data-tooltip-hide-on-click>
-                                <input type="radio" name="type" value="<?= $key ?>" class="custom-control-input" <?= $data->values['type'] == $key ? 'checked="checked"' : null ?> required="required" data-reload-qr-code />
-                                <i class="<?= $value['icon'] ?> fa-fw fa-sm mr-1"></i> <?= l('qr_codes.type.' . $key) ?>
-                            </label>
-                        <?php endforeach ?>
-                    </div>
-
-                    <div class="d-lg-none mt-3">
-                        <div class="form-group">
-                            <label for="type"><i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.type') ?></label>
-                            <select id="type" name="type" class="custom-select">
-                                <?php foreach(array_keys($data->available_qr_codes) as $type): ?>
-                                    <option value="<?= $type ?>" <?= ($data->values['type'] ?? null) == $type ? 'selected="selected"' : null ?>><?= $data->available_qr_codes[$type]['emoji'] . ' ' . l('qr_codes.type.' . $type) ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="flex-wrap mb-4 btn-group-toggle d-none d-lg-flex" data-toggle="buttons">
+            <?php foreach($data->available_qr_codes as $key => $value): ?>
+                <label class="mr-3 mb-3 btn btn-light font-size-small font-weight-500 <?= $data->values['type'] == $key ? 'active' : null ?>" data-toggle="tooltip" title="<?= l('qr_codes.type.' . $key . '_description') ?>" data-tooltip-hide-on-click>
+                    <input type="radio" name="type" value="<?= $key ?>" class="custom-control-input" <?= $data->values['type'] == $key ? 'checked="checked"' : null ?> required="required" data-reload-qr-code />
+                    <i class="<?= $value['icon'] ?> fa-fw fa-sm mr-1"></i> <?= l('qr_codes.type.' . $key) ?>
+                </label>
+            <?php endforeach ?>
         </div>
 
-        <!-- Right Column - QR Code Settings -->
-        <div class="col-12 col-lg-4">
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body p-3">
+        <div class="row">
+            <div class="col-12 col-lg-6 d-print-none mb-5 mb-lg-0">
+                <div class="card">
+                    <div class="card-body">
                         <div class="notification-container"></div>
 
                         <div class="form-group">
@@ -830,12 +810,11 @@
                 </div>
             </div>
 
-            <!-- Third Column - QR Code Preview -->
             <div class="col-12 col-lg-6">
                 <div class="sticky">
-                    <div>
-                        <div>
-                            <div class="text-center">
+                    <div class="mb-4">
+                        <div class="card">
+                            <div class="card-body">
                                 <img id="qr_code" src="<?= settings()->codes->qr_codes_default_image ? \Altum\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg' ?>" class="img-fluid qr-code" loading="lazy" />
                             </div>
                         </div>
