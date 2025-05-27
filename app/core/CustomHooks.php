@@ -219,9 +219,6 @@ class CustomHooks {
             $prefixes = array_values(array_filter($prefixes, fn($item) => $item !== 'pay.'));
         }
 
-        if(!settings()->links->directory_is_enabled) {
-            $prefixes = array_merge($prefixes, ['directory.']);
-        }
 
         if(!settings()->links->domains_is_enabled) {
             $prefixes = array_merge($prefixes, ['domains.', 'domain_create.', 'domain_update.', 'domain_delete_modal.']);

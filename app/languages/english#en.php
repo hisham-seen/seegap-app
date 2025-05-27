@@ -1376,11 +1376,6 @@ return [
     'not_found.button' => 'Go back home',
 
 
-    'directory.breadcrumb' => 'Directory',
-    'directory.title' => 'Directory',
-    'directory.menu' => 'Directory',
-    'directory.header' => 'Explore our bio pages community',
-    'directory.subheader' => 'Discover and meet creative people that our using our platform.',
 
 
     'biolinks_templates.title' => 'Biolinks templates',

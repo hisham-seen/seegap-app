@@ -575,7 +575,6 @@ class BiolinkHandler extends BaseLinkHandler {
         $_POST['leap_link'] = get_url($_POST['leap_link'] ?? null);
         $_POST['share_is_enabled'] = (int) isset($_POST['share_is_enabled']);
         $_POST['scroll_buttons_is_enabled'] = (int) isset($_POST['scroll_buttons_is_enabled']);
-        $_POST['directory_is_enabled'] = (int) isset($_POST['directory_is_enabled']);
         $this->check_location_url($_POST['leap_link'], true);
 
         /* Make sure the font is ok */
@@ -744,7 +743,6 @@ class BiolinkHandler extends BaseLinkHandler {
             'url' => $url,
             'settings' => $settings,
             'additional' => $additional,
-            'directory_is_enabled' => $_POST['directory_is_enabled'],
             'last_datetime' => get_date(),
         ]);
 

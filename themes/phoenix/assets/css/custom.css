@@ -1163,12 +1163,6 @@ input[type="radio"]:checked ~ .link-background-type-preset {
 	opacity: .25;
 }
 
-/* Biolink directory */
-.link-directory-avatar {
-	width: 60px;
-	height: 60px;
-	object-fit: cover;
-}
 
 /* Biolink theme */
 .link-biolink-theme {

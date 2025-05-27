@@ -86,12 +86,6 @@ class Router {
                 ]
             ],
 
-            'directory' => [
-                'controller' => 'Directory',
-                'settings' => [
-                    'ads' => true,
-                ]
-            ],
 
             'biolinks-templates' => [
                 'controller' => 'BiolinksTemplates',

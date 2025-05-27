@@ -61,7 +61,7 @@ class Controller {
             }
 
             /* Custom wrapper conditions */
-            if(in_array(\Altum\Router::$controller_key, ['directory', 'tools'])) {
+            if(in_array(\Altum\Router::$controller_key, ['tools'])) {
                 \Altum\Router::$controller_settings['wrapper'] = is_logged_in() ? 'app_wrapper' : 'wrapper';
             }
 
