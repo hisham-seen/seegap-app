@@ -27,7 +27,7 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
-        $_POST['title'] = mb_substr(input_clean($_POST['title']), 0, 128);
+        $_POST['name'] = mb_substr(input_clean($_POST['name']), 0, 128);
         $_POST['description'] = mb_substr(input_clean($_POST['description']), 0, 256);
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
@@ -35,14 +35,44 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
         }
 
         $type = 'feedback_collector';
+        
+        // Process questions
+        $questions = [];
+        if(isset($_POST['question_type']) && is_array($_POST['question_type'])) {
+            foreach($_POST['question_type'] as $key => $question_type) {
+                if(!empty($_POST['question_text'][$key])) {
+                    $question = [
+                        'type' => in_array($question_type, ['text', 'textarea', 'rating_star', 'rating_number', 'rating_emoji', 'checkbox', 'radio', 'dropdown']) ? $question_type : 'text',
+                        'question' => mb_substr(input_clean($_POST['question_text'][$key]), 0, 256),
+                        'required' => isset($_POST['question_required'][$key]) ? true : false,
+                        'options' => new \stdClass()
+                    ];
+                    
+                    // Add specific options based on question type
+                    if(in_array($question_type, ['rating_star', 'rating_number'])) {
+                        $question['options']->max_rating = isset($_POST['question_max_rating'][$key]) ? (int) $_POST['question_max_rating'][$key] : 5;
+                    }
+                    
+                    if(in_array($question_type, ['checkbox', 'radio', 'dropdown'])) {
+                        $choices = isset($_POST['question_choices'][$key]) ? explode("\n", $_POST['question_choices'][$key]) : [];
+                        $question['options']->choices = array_filter(array_map('trim', $choices));
+                    }
+                    
+                    $questions[] = $question;
+                }
+            }
+        }
+
         $settings = json_encode([
-            'title' => $_POST['title'],
+            'name' => $_POST['name'],
             'description' => $_POST['description'],
-            'name_placeholder' => 'Your name',
-            'email_placeholder' => 'Your email',
-            'feedback_placeholder' => 'Your feedback',
+            'questions' => $questions,
             'button_text' => 'Submit Feedback',
             'success_text' => 'Thank you for your feedback!',
+            'thank_you_url' => '',
+            'show_agreement' => false,
+            'agreement_text' => '',
+            'agreement_url' => '',
             'email_notification' => '',
             'webhook_url' => '',
             'text_color' => '#ffffff',
@@ -83,13 +113,13 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['biolink_block_id'] = (int) $_POST['biolink_block_id'];
-        $_POST['title'] = mb_substr(input_clean($_POST['title']), 0, 128);
+        $_POST['name'] = mb_substr(input_clean($_POST['name']), 0, 128);
         $_POST['description'] = mb_substr(input_clean($_POST['description']), 0, 256);
-        $_POST['name_placeholder'] = mb_substr(input_clean($_POST['name_placeholder']), 0, 64);
-        $_POST['email_placeholder'] = mb_substr(input_clean($_POST['email_placeholder']), 0, 64);
-        $_POST['feedback_placeholder'] = mb_substr(input_clean($_POST['feedback_placeholder']), 0, 128);
-        $_POST['button_text'] = mb_substr(input_clean($_POST['button_text']), 0, 32);
+        $_POST['button_text'] = mb_substr(input_clean($_POST['button_text']), 0, 64);
         $_POST['success_text'] = mb_substr(input_clean($_POST['success_text']), 0, 128);
+        $_POST['thank_you_url'] = get_url($_POST['thank_you_url']);
+        $_POST['agreement_text'] = mb_substr(input_clean($_POST['agreement_text']), 0, 256);
+        $_POST['agreement_url'] = get_url($_POST['agreement_url']);
         $_POST['email_notification'] = mb_substr(filter_var($_POST['email_notification'], FILTER_SANITIZE_EMAIL), 0, 320);
         $_POST['webhook_url'] = get_url($_POST['webhook_url']);
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
@@ -107,7 +137,7 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
         }
 
         /* Check for any errors */
-        $required_fields = ['title'];
+        $required_fields = ['name'];
 
         /* Check for any errors */
         foreach($required_fields as $field) {
@@ -117,22 +147,65 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
             }
         }
 
+        // Process questions
+        $questions = [];
+        if(isset($_POST['question_type']) && is_array($_POST['question_type'])) {
+            foreach($_POST['question_type'] as $key => $question_type) {
+                if(!empty($_POST['question_text'][$key])) {
+                    $question = [
+                        'type' => in_array($question_type, ['text', 'textarea', 'rating_star', 'rating_number', 'rating_emoji', 'checkbox', 'radio', 'dropdown']) ? $question_type : 'text',
+                        'question' => mb_substr(input_clean($_POST['question_text'][$key]), 0, 256),
+                        'required' => isset($_POST['question_required'][$key]) ? true : false,
+                        'options' => new \stdClass()
+                    ];
+                    
+                    // Add specific options based on question type
+                    if(in_array($question_type, ['rating_star', 'rating_number'])) {
+                        $question['options']->max_rating = isset($_POST['question_max_rating'][$key]) ? (int) $_POST['question_max_rating'][$key] : 5;
+                    }
+                    
+                    if(in_array($question_type, ['checkbox', 'radio', 'dropdown'])) {
+                        $choices = isset($_POST['question_choices'][$key]) ? explode("\n", $_POST['question_choices'][$key]) : [];
+                        $question['options']->choices = array_filter(array_map('trim', $choices));
+                    }
+                    
+                    $questions[] = $question;
+                }
+            }
+        }
+
         $settings = json_encode([
-            'title' => $_POST['title'],
+            'name' => $_POST['name'],
             'description' => $_POST['description'],
-            'name_placeholder' => $_POST['name_placeholder'],
-            'email_placeholder' => $_POST['email_placeholder'],
-            'feedback_placeholder' => $_POST['feedback_placeholder'],
+            'questions' => $questions,
             'button_text' => $_POST['button_text'],
             'success_text' => $_POST['success_text'],
+            'thank_you_url' => $_POST['thank_you_url'],
+            'show_agreement' => isset($_POST['show_agreement']),
+            'agreement_text' => $_POST['agreement_text'],
+            'agreement_url' => $_POST['agreement_url'],
             'email_notification' => $_POST['email_notification'],
             'webhook_url' => $_POST['webhook_url'],
+            'icon' => $_POST['icon'] ?? '',
+            'image' => $_POST['image'] ?? '',
+            'image_display' => $_POST['image_display'] ?? 'icon',
+            'image_fit' => $_POST['image_fit'] ?? 'cover',
+            'mega_button_height' => $_POST['mega_button_height'] ?? '200',
+            'show_text' => isset($_POST['show_text']),
             'text_color' => $_POST['text_color'],
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
             'background_color' => $_POST['background_color'],
             'border_radius' => $_POST['border_radius'],
             'border_width' => $_POST['border_width'],
             'border_style' => $_POST['border_style'],
             'border_color' => $_POST['border_color'],
+            'border_shadow_offset_x' => $_POST['border_shadow_offset_x'] ?? 0,
+            'border_shadow_offset_y' => $_POST['border_shadow_offset_y'] ?? 0,
+            'border_shadow_blur' => $_POST['border_shadow_blur'] ?? 0,
+            'border_shadow_spread' => $_POST['border_shadow_spread'] ?? 0,
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#000000',
+            'animation' => $_POST['animation'] ?? false,
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

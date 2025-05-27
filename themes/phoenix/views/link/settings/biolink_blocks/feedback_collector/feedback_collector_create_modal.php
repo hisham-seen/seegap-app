@@ -1,32 +1,58 @@
 <?php defined('ALTUMCODE') || die() ?>
 
 <div class="modal fade" id="create_biolink_feedback_collector" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
 
             <div class="modal-header">
+                <button type="button" data-toggle="modal" data-target="#biolink_link_create_modal" data-dismiss="modal" class="btn btn-sm btn-link"><i class="fas fa-fw fa-chevron-circle-left text-muted"></i></button>
                 <h5 class="modal-title"><?= l('biolink_feedback_collector.header') ?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="<?= l('global.close') ?>">
+                <button type="button" class="close" data-dismiss="modal" title="<?= l('global.close') ?>">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add question button
-    document.getElementById('add_question').addEventListener('click', function() {
-        addNewQuestion();
-    });
-});
+            <div class="modal-body">
+                <form name="create_biolink_feedback_collector" method="post" role="form">
+                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="request_type" value="create" />
+                    <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
+                    <input type="hidden" name="block_type" value="feedback_collector" />
 
-function addNewQuestion() {
-    const questionsContainer = document.getElementById('feedback_collector_questions_container');
-    const questionCount = questionsContainer.querySelectorAll('.question-item').length;
-    
-    // Create new question item
-    const questionItem = document.createElement('div');
-    questionItem.className = 'card mb-3 question-item';
-    questionItem.innerHTML = `
+                    <div class="notification-container"></div>
+
+                    <div class="form-group">
+                        <label for="feedback_collector_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('biolink_link.name') ?></label>
+                        <input id="feedback_collector_name" type="text" name="name" maxlength="128" class="form-control" required="required" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="feedback_collector_description"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('biolink_link.description') ?></label>
+                        <textarea id="feedback_collector_description" name="description" class="form-control" maxlength="256"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?= l('biolink_feedback_collector.questions') ?></label>
+                        <p class="text-muted"><?= l('biolink_feedback_collector.questions_help') ?></p>
+                        <div id="<?= 'feedback_collector_questions_create' ?>" data-biolink-block-id="create"></div>
+
+                        <div class="mb-3">
+                            <button data-add="feedback_question" data-biolink-block-id="create" type="button" class="btn btn-outline-success btn-block"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('biolink_feedback_collector.add_question') ?></button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.submit') ?></button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<template id="template_feedback_question">
+    <div class="card mb-3">
         <div class="card-body">
             <div class="form-group">
                 <label><?= l('biolink_feedback_collector.question_type') ?></label>
@@ -44,13 +70,13 @@ function addNewQuestion() {
             
             <div class="form-group">
                 <label><?= l('biolink_feedback_collector.question_text') ?></label>
-                <input type="text" class="form-control question-text" name="question_text[]" placeholder="<?= l('biolink_feedback_collector.question_text_placeholder') ?>">
+                <input type="text" class="form-control question-text" name="question_text[]" placeholder="<?= l('biolink_feedback_collector.question_text_placeholder') ?>" required="required">
             </div>
             
             <div class="form-group">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input question-required" id="question_required_${questionCount}" name="question_required[]" value="1">
-                    <label class="custom-control-label" for="question_required_${questionCount}"><?= l('biolink_feedback_collector.question_required') ?></label>
+                    <input type="checkbox" class="custom-control-input question-required" name="question_required[]" value="1">
+                    <label class="custom-control-label"><?= l('biolink_feedback_collector.question_required') ?></label>
                 </div>
             </div>
             
@@ -58,101 +84,104 @@ function addNewQuestion() {
                 <!-- Will be populated based on question type -->
             </div>
             
-            <button type="button" class="btn btn-sm btn-outline-danger mt-3 remove-question">
-                <i class="fas fa-trash fa-sm mr-1"></i> <?= l('biolink_feedback_collector.remove_question') ?>
-            </button>
-        </div>
-    `;
-    
-    questionsContainer.appendChild(questionItem);
-    
-    // Add event listeners
-    const questionType = questionItem.querySelector('.question-type');
-    questionType.addEventListener('change', function() {
-        updateQuestionOptions(questionItem);
-    });
-    
-    const removeButton = questionItem.querySelector('.remove-question');
-    removeButton.addEventListener('click', function() {
-        questionItem.remove();
-    });
-    
-    // Initialize options based on default type
-    updateQuestionOptions(questionItem);
-}
-
-function updateQuestionOptions(questionItem) {
-    const type = questionItem.querySelector('.question-type').value;
-    const optionsContainer = questionItem.querySelector('.question-options-container');
-    
-    optionsContainer.innerHTML = '';
-    
-    switch(type) {
-        case 'rating_star':
-        case 'rating_number':
-            optionsContainer.innerHTML = `
-                <div class="form-group">
-                    <label><?= l('biolink_feedback_collector.max_rating') ?></label>
-                    <select class="form-control option-max-rating" name="question_max_rating[]" style="min-width: 80px;">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                    </select>
-                </div>
-            `;
-            break;
-            
-        case 'checkbox':
-        case 'radio':
-        case 'dropdown':
-            optionsContainer.innerHTML = `
-                <div class="form-group">
-                    <label><?= l('biolink_feedback_collector.choices') ?></label>
-                    <textarea class="form-control option-choices" name="question_choices[]" rows="4"></textarea>
-                    <small class="form-text text-muted"><?= l('biolink_feedback_collector.choices_help') ?></small>
-                </div>
-            `;
-            break;
-    }
-}
-</script>
-
-            <div class="modal-body">
-                <form name="create_biolink_feedback_collector" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
-                    <input type="hidden" name="request_type" value="create" />
-                    <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
-                    <input type="hidden" name="block_type" value="feedback_collector" />
-
-                    <div class="notification-container"></div>
-
-                    <div class="form-group">
-                        <label for="feedback_collector_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('biolink_link.name') ?></label>
-                        <input id="feedback_collector_name" type="text" name="name" maxlength="128" class="form-control" required="required" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="feedback_collector_image"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('biolink_link.image') ?></label>
-                        <div data-file-image-input="image" class="form-group" data-file-input-wrapper-size-limit="<?= settings()->links->thumbnail_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->thumbnail_image_size_limit) ?>">
-                            <input id="feedback_collector_image" type="file" name="image" accept="<?= \Altum\Uploads::array_to_list_format($data->biolink_blocks['feedback_collector']['whitelisted_thumbnail_image_extensions']) ?>" class="form-control-file altum-file-input" />
-                            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format($data->biolink_blocks['feedback_collector']['whitelisted_thumbnail_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->thumbnail_image_size_limit) ?></small>
-                        </div>
-                    </div>
-
-                    <div id="image_fit_container" class="form-group" style="display: none;">
-                        <label for="feedback_collector_image_fit"><i class="fas fa-fw fa-expand fa-sm text-muted mr-1"></i> <?= l('biolink_link.image_fit') ?></label>
-                        <select id="feedback_collector_image_fit" name="image_fit" class="custom-select">
-                            <option value="contain" selected="selected"><?= l('biolink_link.image_fit_contain') ?></option>
-                            <option value="cover"><?= l('biolink_link.image_fit_cover') ?></option>
-                            <option value="fill"><?= l('biolink_link.image_fit_fill') ?></option>
-                        </select>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.create') ?></button>
-                    </div>
-                </form>
-            </div>
-
+            <button type="button" data-remove="question" class="btn btn-sm btn-block btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('biolink_feedback_collector.remove_question') ?></button>
         </div>
     </div>
-</div>
+</template>
+
+<?php ob_start() ?>
+    <script>
+        'use strict';
+
+        $('#create_biolink_feedback_collector').on('shown.bs.modal', event => {
+            $(event.currentTarget).find('button[data-add]').click();
+        })
+    </script>
+<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+
+<?php ob_start() ?>
+<script>
+    /* Feedback Collector Questions Script */
+    'use strict';
+
+    /* add new question */
+    let feedback_question_add = event => {
+        let biolink_block_id = event.currentTarget.getAttribute('data-biolink-block-id');
+        let clone = document.querySelector(`#template_feedback_question`).content.cloneNode(true);
+        let count = document.querySelectorAll(`[id="feedback_collector_questions_${biolink_block_id}"] .card`).length;
+
+        if(count >= 20) return;
+
+        // Set unique IDs for form elements
+        let questionRequiredCheckbox = clone.querySelector(`input[name="question_required[]"]`);
+        let questionRequiredLabel = clone.querySelector(`.custom-control-label`);
+        let uniqueId = `question_required_${biolink_block_id}_${count}`;
+        
+        questionRequiredCheckbox.setAttribute('id', uniqueId);
+        questionRequiredLabel.setAttribute('for', uniqueId);
+
+        document.querySelector(`[id="feedback_collector_questions_${biolink_block_id}"]`).appendChild(clone);
+
+        // Add event listener for question type change
+        let questionTypeSelect = document.querySelector(`[id="feedback_collector_questions_${biolink_block_id}"] .card:last-child .question-type`);
+        questionTypeSelect.addEventListener('change', function() {
+            updateQuestionOptions(this.closest('.card'));
+        });
+
+        feedback_question_remove_initiator();
+    };
+
+    document.querySelectorAll('[data-add="feedback_question"]').forEach(element => {
+        element.addEventListener('click', feedback_question_add);
+    })
+
+    /* remove question */
+    let feedback_question_remove = event => {
+        event.currentTarget.closest('.card').remove();
+    };
+
+    let feedback_question_remove_initiator = () => {
+        document.querySelectorAll('[id^="feedback_collector_questions_"] [data-remove]').forEach(element => {
+            element.removeEventListener('click', feedback_question_remove);
+            element.addEventListener('click', feedback_question_remove)
+        })
+    };
+
+    /* Update question options based on type */
+    function updateQuestionOptions(questionCard) {
+        const type = questionCard.querySelector('.question-type').value;
+        const optionsContainer = questionCard.querySelector('.question-options-container');
+        
+        optionsContainer.innerHTML = '';
+        
+        switch(type) {
+            case 'rating_star':
+            case 'rating_number':
+                optionsContainer.innerHTML = `
+                    <div class="form-group">
+                        <label><?= l('biolink_feedback_collector.max_rating') ?></label>
+                        <select class="form-control option-max-rating" name="question_max_rating[]" style="min-width: 80px;">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                `;
+                break;
+                
+            case 'checkbox':
+            case 'radio':
+            case 'dropdown':
+                optionsContainer.innerHTML = `
+                    <div class="form-group">
+                        <label><?= l('biolink_feedback_collector.choices') ?></label>
+                        <textarea class="form-control option-choices" name="question_choices[]" rows="4"></textarea>
+                        <small class="form-text text-muted"><?= l('biolink_feedback_collector.choices_help') ?></small>
+                    </div>
+                `;
+                break;
+        }
+    }
+
+    feedback_question_remove_initiator();
+</script>
+<?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'feedback_collector_block') ?>

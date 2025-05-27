@@ -212,33 +212,6 @@
         </div>
     </div>
 
-    <button class="btn btn-block btn-gray-200 mb-4" type="button" data-toggle="collapse" data-target="#directory_container" aria-expanded="false" aria-controls="directory_container">
-        <i class="fas fa-fw fa-sitemap fa-sm mr-1"></i> <?= l('admin_settings.links.directory') ?>
-    </button>
-
-    <div class="collapse" id="directory_container">
-        <div class="form-group custom-control custom-switch">
-            <input id="directory_is_enabled" name="directory_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->directory_is_enabled ? 'checked="checked"' : null?>>
-            <label class="custom-control-label" for="directory_is_enabled"><?= l('admin_settings.links.directory_is_enabled') ?></label>
-            <small class="form-text text-muted"><?= l('admin_settings.links.directory_is_enabled_help') ?></small>
-        </div>
-
-        <div class="form-group">
-            <label for="directory_access"><?= l('admin_settings.links.directory_access') ?></label>
-            <select id="directory_access" name="directory_access" class="custom-select">
-                <option value="everyone" <?= settings()->links->directory_access == 'everyone' ? 'selected="selected"' : null ?>><?= l('admin_settings.links.directory_access_everyone') ?></option>
-                <option value="users" <?= settings()->links->directory_access == 'users' ? 'selected="selected"' : null ?>><?= l('admin_settings.links.directory_access_users') ?></option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="directory_display"><?= l('admin_settings.links.directory_display') ?></label>
-            <select id="directory_display" name="directory_display" class="custom-select">
-                <option value="all" <?= settings()->links->directory_display == 'all' ? 'selected="selected"' : null ?>><?= l('global.all') ?></option>
-                <option value="verified" <?= settings()->links->directory_display == 'verified' ? 'selected="selected"' : null ?>><?= l('admin_settings.links.directory_display_verified') ?></option>
-            </select>
-        </div>
-    </div>
 
     <button class="btn btn-block btn-gray-200 mb-4" type="button" data-toggle="collapse" data-target="#domains_container" aria-expanded="false" aria-controls="domains_container">
         <i class="fas fa-fw fa-globe fa-sm mr-1"></i> <?= l('admin_settings.links.domains') ?>
