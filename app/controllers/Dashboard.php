@@ -84,6 +84,20 @@ class Dashboard extends Controller {
                     AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
                 GROUP BY
                     `formatted_date`
+                
+                UNION ALL
+                
+                SELECT
+                    COUNT(`id`) AS `pageviews`,
+                    SUM(`is_unique`) AS `visitors`,
+                    DATE_FORMAT({$convert_tz_sql}, '%Y-%m-%d') AS `formatted_date`
+                FROM
+                    `track_gs1_links`
+                WHERE   
+                    `user_id` = {$this->user->user_id} 
+                    AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                GROUP BY
+                    `formatted_date`
                 ORDER BY
                     `formatted_date`
             ";
@@ -140,6 +154,292 @@ class Dashboard extends Controller {
             });
         }
 
+        /* GS1 Links statistics */
+        $gs1_links_total = null;
+        if(settings()->gs1_links->gs1_links_is_enabled ?? false) {
+            $gs1_links_total = \Altum\Cache::cache_function_result('gs1_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+                return db()->where('user_id', $this->user->user_id)->getValue('gs1_links', 'count(*)');
+            });
+        }
+
+        /* QR Codes statistics */
+        $qr_codes_total = null;
+        if(settings()->codes->qr_codes_is_enabled ?? false) {
+            $qr_codes_total = \Altum\Cache::cache_function_result('qr_codes_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+                return db()->where('user_id', $this->user->user_id)->getValue('qr_codes', 'count(*)');
+            });
+        }
+
+        /* Data submissions statistics */
+        $data_submissions_total = null;
+        if(settings()->links->microsites_is_enabled) {
+            $data_submissions_total = \Altum\Cache::cache_function_result('data_submissions_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+                return db()->where('user_id', $this->user->user_id)->getValue('data', 'count(*)');
+            });
+        }
+
+        /* Geographic and traffic analytics */
+        $analytics_data = [];
+        // Always try to get analytics data, not just when links exist
+        if(true) {
+            $start_date_query = (new \DateTime())->modify('-' . (settings()->main->chart_days ?? 30) . ' day')->format('Y-m-d');
+            $end_date_query = (new \DateTime())->modify('+1 day')->format('Y-m-d');
+            $convert_tz_sql = get_convert_tz_sql('`datetime`', $this->user->timezone);
+
+            /* Top countries */
+            $countries_query = "
+                SELECT
+                    `country_code`,
+                    SUM(`count`) AS `count`
+                FROM (
+                    SELECT
+                        `country_code`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `country_code` IS NOT NULL
+                        AND `country_code` != ''
+                    GROUP BY
+                        `country_code`
+                    
+                    UNION ALL
+                    
+                    SELECT
+                        `country_code`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_gs1_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `country_code` IS NOT NULL
+                        AND `country_code` != ''
+                    GROUP BY
+                        `country_code`
+                ) AS combined_data
+                GROUP BY
+                    `country_code`
+                ORDER BY
+                    `count` DESC
+                LIMIT 10
+            ";
+
+            $analytics_data['countries'] = \Altum\Cache::cache_function_result('dashboard_countries?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($countries_query) {
+                $countries = [];
+                $countries_result = database()->query($countries_query);
+                while($row = $countries_result->fetch_object()) {
+                    $countries[] = $row;
+                }
+                return $countries;
+            }, 60 * 60);
+
+            /* Top cities */
+            $cities_query = "
+                SELECT
+                    `city_name`,
+                    `country_code`,
+                    SUM(`count`) AS `count`
+                FROM (
+                    SELECT
+                        `city_name`,
+                        `country_code`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `city_name` IS NOT NULL
+                        AND `city_name` != ''
+                    GROUP BY
+                        `city_name`, `country_code`
+                    
+                    UNION ALL
+                    
+                    SELECT
+                        `city_name`,
+                        `country_code`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_gs1_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `city_name` IS NOT NULL
+                        AND `city_name` != ''
+                    GROUP BY
+                        `city_name`, `country_code`
+                ) AS combined_data
+                GROUP BY
+                    `city_name`, `country_code`
+                ORDER BY
+                    `count` DESC
+                LIMIT 10
+            ";
+
+            $analytics_data['cities'] = \Altum\Cache::cache_function_result('dashboard_cities?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($cities_query) {
+                $cities = [];
+                $cities_result = database()->query($cities_query);
+                while($row = $cities_result->fetch_object()) {
+                    $cities[] = $row;
+                }
+                return $cities;
+            }, 60 * 60);
+
+            /* Top referrers */
+            $referrers_query = "
+                SELECT
+                    `referrer_host`,
+                    SUM(`count`) AS `count`
+                FROM (
+                    SELECT
+                        `referrer_host`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `referrer_host` IS NOT NULL
+                        AND `referrer_host` != ''
+                    GROUP BY
+                        `referrer_host`
+                    
+                    UNION ALL
+                    
+                    SELECT
+                        `referrer_host`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_gs1_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `referrer_host` IS NOT NULL
+                        AND `referrer_host` != ''
+                    GROUP BY
+                        `referrer_host`
+                ) AS combined_data
+                GROUP BY
+                    `referrer_host`
+                ORDER BY
+                    `count` DESC
+                LIMIT 10
+            ";
+
+            $analytics_data['referrers'] = \Altum\Cache::cache_function_result('dashboard_referrers?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($referrers_query) {
+                $referrers = [];
+                $referrers_result = database()->query($referrers_query);
+                while($row = $referrers_result->fetch_object()) {
+                    $referrers[] = $row;
+                }
+                return $referrers;
+            }, 60 * 60);
+
+            /* UTM sources */
+            $utm_sources_query = "
+                SELECT
+                    `utm_source`,
+                    SUM(`count`) AS `count`
+                FROM (
+                    SELECT
+                        `utm_source`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `utm_source` IS NOT NULL
+                        AND `utm_source` != ''
+                    GROUP BY
+                        `utm_source`
+                    
+                    UNION ALL
+                    
+                    SELECT
+                        `utm_source`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_gs1_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `utm_source` IS NOT NULL
+                        AND `utm_source` != ''
+                    GROUP BY
+                        `utm_source`
+                ) AS combined_data
+                GROUP BY
+                    `utm_source`
+                ORDER BY
+                    `count` DESC
+                LIMIT 10
+            ";
+
+            $analytics_data['utm_sources'] = \Altum\Cache::cache_function_result('dashboard_utm_sources?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($utm_sources_query) {
+                $utm_sources = [];
+                $utm_sources_result = database()->query($utm_sources_query);
+                while($row = $utm_sources_result->fetch_object()) {
+                    $utm_sources[] = $row;
+                }
+                return $utm_sources;
+            }, 60 * 60);
+
+            /* UTM campaigns */
+            $utm_campaigns_query = "
+                SELECT
+                    `utm_campaign`,
+                    SUM(`count`) AS `count`
+                FROM (
+                    SELECT
+                        `utm_campaign`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `utm_campaign` IS NOT NULL
+                        AND `utm_campaign` != ''
+                    GROUP BY
+                        `utm_campaign`
+                    
+                    UNION ALL
+                    
+                    SELECT
+                        `utm_campaign`,
+                        COUNT(*) AS `count`
+                    FROM
+                        `track_gs1_links`
+                    WHERE   
+                        `user_id` = {$this->user->user_id} 
+                        AND ({$convert_tz_sql} BETWEEN '{$start_date_query}' AND '{$end_date_query}')
+                        AND `utm_campaign` IS NOT NULL
+                        AND `utm_campaign` != ''
+                    GROUP BY
+                        `utm_campaign`
+                ) AS combined_data
+                GROUP BY
+                    `utm_campaign`
+                ORDER BY
+                    `count` DESC
+                LIMIT 10
+            ";
+
+            $analytics_data['utm_campaigns'] = \Altum\Cache::cache_function_result('dashboard_utm_campaigns?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($utm_campaigns_query) {
+                $utm_campaigns = [];
+                $utm_campaigns_result = database()->query($utm_campaigns_query);
+                while($row = $utm_campaigns_result->fetch_object()) {
+                    $utm_campaigns[] = $row;
+                }
+                return $utm_campaigns;
+            }, 60 * 60);
+        }
+
         /* Delete Modal */
         $view = new \Altum\View('links/link_delete_modal', (array) $this);
         \Altum\Event::add_content($view->run(), 'modals');
@@ -176,7 +476,13 @@ class Dashboard extends Controller {
             'static_links_total'        => $static_links_total ?? null,
             'link_links_total'          => $link_links_total ?? null,
             'file_links_total'          => $file_links_total ?? null,
-            'microsite_links_total'       => $microsite_links_total ?? null,
+            'microsite_links_total'     => $microsite_links_total ?? null,
+            'gs1_links_total'           => $gs1_links_total ?? null,
+            'qr_codes_total'            => $qr_codes_total ?? null,
+            'data_submissions_total'    => $data_submissions_total ?? null,
+
+            /* Analytics data */
+            'analytics_data'            => $analytics_data ?? [],
         ];
 
         $view = new \Altum\View('dashboard/index', (array) $this);

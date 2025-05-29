@@ -1,7 +1,7 @@
 <?php defined('ALTUMCODE') || die() ?>
 
-<div class="admin-sidebar">
-    <div class="admin-sidebar-title text-truncate">
+<div class="app-sidebar">
+    <div class="app-sidebar-title text-truncate">
         <a
                 href="<?= url('admin') ?>"
                 data-logo
@@ -20,8 +20,8 @@
         </a>
     </div>
 
-    <div class="admin-sidebar-links-wrapper flex-grow-1">
-        <ul class="admin-sidebar-links">
+    <div class="app-sidebar-links-wrapper flex-grow-1">
+        <ul class="app-sidebar-links">
             <li class="<?= \Altum\Router::$controller == 'AdminIndex' ? 'active' : null ?>">
                 <a href="<?= url('admin/') ?>"><i class="fas fa-fw fa-sm fa-fingerprint mr-2"></i> <?= l('admin_index.menu') ?></a>
             </li>
@@ -206,8 +206,9 @@
                 </li>
             <?php endif ?>
         </ul>
+    </div>
 
-        <div class="app-sidebar-footer dropdown">
+    <div class="app-sidebar-footer dropdown">
             <a href="#" class="dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="d-flex align-items-center app-sidebar-footer-block">
                     <img src="<?= get_gravatar($this->user->email) ?>" class="app-sidebar-avatar mr-3" loading="lazy" />
@@ -258,11 +259,11 @@
                 <a class="dropdown-item" href="<?= url('logout') ?>"><i class="fas fa-fw fa-sm fa-sign-out-alt mr-2"></i> <?= l('global.menu.logout') ?></a>
             </div>
         </div>
-    </div>
+
 </div>
 
 <?php ob_start() ?>
 <script>
-    document.querySelector('ul[class="admin-sidebar-links"] li.active') && document.querySelector('ul[class="admin-sidebar-links"] li.active').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelector('ul[class="app-sidebar-links"] li.active') && document.querySelector('ul[class="app-sidebar-links"] li.active').scrollIntoView({ behavior: 'smooth', block: 'center' });
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
