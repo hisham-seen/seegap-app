@@ -1,7 +1,6 @@
 <?php defined('ALTUMCODE') || die() ?>
 
 <div>
-    <div class="alert alert-info mb-3"><?= sprintf(l('admin_settings.documentation'), '<a href="' . PRODUCT_DOCUMENTATION_URL . '#captchas" target="_blank">', '</a>') ?></div>
 
     <div class="form-group">
         <label for="type"><i class="fas fa-fw fa-sm fa-fingerprint text-muted mr-1"></i> <?= l('admin_settings.captcha.type') ?></label>

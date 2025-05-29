@@ -78,9 +78,11 @@
                     </li>
                 <?php endif ?>
 
-                <li class="<?= in_array(\Altum\Router::$controller, ['Gs1Links', 'Gs1LinkManager']) ? 'active' : null ?>">
-                    <a href="<?= url('gs1-links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('gs1_links.menu') ?></a>
-                </li>
+                <?php if(settings()->gs1_links->gs1_links_is_enabled): ?>
+                    <li class="<?= in_array(\Altum\Router::$controller, ['Gs1Links', 'Gs1LinkManager']) ? 'active' : null ?>">
+                        <a href="<?= url('gs1-links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('gs1_links.menu') ?></a>
+                    </li>
+                <?php endif ?>
 
                 <?php if(\Altum\Plugin::is_active('aix')): ?>
                     <div class="divider-wrapper">

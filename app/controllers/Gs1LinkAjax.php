@@ -19,6 +19,11 @@ class Gs1LinkAjax extends Controller {
     public function index() {
         \Altum\Authentication::guard();
 
+        /* Check if GS1 links feature is enabled */
+        if(!settings()->gs1_links->gs1_links_is_enabled) {
+            die();
+        }
+
         if(!empty($_POST) && (\Altum\Csrf::check('token') || \Altum\Csrf::check('global_token')) && isset($_POST['request_type'])) {
 
             switch($_POST['request_type']) {

@@ -21,6 +21,11 @@ class Gs1Links extends Controller {
 
         \Altum\Authentication::guard();
 
+        /* Check if GS1 links feature is enabled */
+        if(!settings()->gs1_links->gs1_links_is_enabled) {
+            redirect('dashboard');
+        }
+
         /* Team checks */
         if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('read.gs1_links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));

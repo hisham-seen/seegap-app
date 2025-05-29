@@ -22,6 +22,13 @@ class AdminSettings extends Controller {
     }
 
     private function process() {
+        /* Block access to disabled settings sections */
+        $disabled_methods = ['affiliate', 'push_notifications', 'offload', 'pwa', 'image_optimizer', 'dynamic_og_images', 'license', 'support'];
+        
+        if(isset(\Altum\Router::$method) && in_array(\Altum\Router::$method, $disabled_methods)) {
+            redirect('admin/settings/main');
+        }
+        
         $method	= (isset(\Altum\Router::$method) && file_exists(THEME_PATH . 'views/admin/settings/partials/' . \Altum\Router::$method . '.php')) ? \Altum\Router::$method : 'main';
         $payment_processors = require APP_PATH . 'includes/payment_processors.php';
 
@@ -675,44 +682,7 @@ class AdminSettings extends Controller {
         }
     }
 
-    public function affiliate() {
-        $this->process();
 
-        if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            if(!\Altum\Plugin::is_active('affiliate')) {
-                redirect('admin/settings/affiliate');
-            }
-
-            /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-            $_POST['commission_type'] = in_array($_POST['commission_type'], ['once', 'forever']) ? input_clean($_POST['commission_type']) : 'once';
-            $_POST['tracking_type'] = in_array($_POST['tracking_type'], ['first', 'last']) ? input_clean($_POST['tracking_type']) : 'first';
-            $_POST['tracking_duration'] = (int) $_POST['tracking_duration'] >= 1 ? (int) $_POST['tracking_duration'] : 30;
-            $_POST['minimum_withdrawal_amount'] = (float) $_POST['minimum_withdrawal_amount'];
-
-            /* Translations */
-            foreach($_POST['translations'] as $language_name => $array) {
-                if(!array_key_exists($language_name, \Altum\Language::$active_languages)) {
-                    unset($_POST['translations'][$language_name]);
-                }
-            }
-
-            $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'commission_type' => $_POST['commission_type'],
-                'tracking_type' => $_POST['tracking_type'],
-                'tracking_duration' => $_POST['tracking_duration'],
-                'minimum_withdrawal_amount' => $_POST['minimum_withdrawal_amount'],
-                'withdrawal_notes' => $_POST['withdrawal_notes'],
-
-                'translations' => $_POST['translations'],
-            ]);
-
-            $this->update_settings('affiliate', $value);
-        }
-    }
 
     public function business() {
         $this->process();
@@ -1297,36 +1267,7 @@ class AdminSettings extends Controller {
         }
     }
 
-    public function push_notifications() {
-        $this->process();
 
-        if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            if(!\Altum\Plugin::is_active('push-notifications')) {
-                redirect('admin/settings/push_notifications');
-            }
-
-            /* Uploads processing */
-            settings()->push_notifications->icon = \Altum\Uploads::process_upload(settings()->push_notifications->icon, 'push_notifications_icon', 'icon', 'icon' . '_remove', null);
-
-            $value = json_encode([
-                'is_enabled' => isset($_POST['is_enabled']),
-                'guests_is_enabled' => isset($_POST['guests_is_enabled']),
-                'ask_to_subscribe_is_enabled' => isset($_POST['ask_to_subscribe_is_enabled']),
-                'ask_to_subscribe_delay' => (int) $_POST['ask_to_subscribe_delay'],
-                'ask_to_subscribe_delay_minimum_pageviews_count' => (int) $_POST['ask_to_subscribe_delay_minimum_pageviews_count'],
-                'icon' => settings()->push_notifications->icon ?? '',
-                'public_key' => settings()->push_notifications->public_key,
-                'private_key' => settings()->push_notifications->private_key,
-                'notifications_per_cron' => (int) $_POST['notifications_per_cron'],
-                'notifications_per_cron_batch' => (int) $_POST['notifications_per_cron_batch'],
-                'notifications_per_cron_batch_concurrently' => (int) $_POST['notifications_per_cron_batch_concurrently'],
-            ]);
-
-            $this->update_settings('push_notifications', $value);
-        }
-    }
 
     public function webhooks() {
         $this->process();
@@ -1363,187 +1304,11 @@ class AdminSettings extends Controller {
         }
     }
 
-    public function offload() {
-        $this->process();
 
-        if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Plugin::is_active('offload')) {
-                redirect('admin/settings/offload');
-            }
 
-            /* :) */
-            $_POST['assets_url'] = trim(input_clean($_POST['assets_url']));
 
-            $value = json_encode([
-                'cdn_uploads_url' => $_POST['cdn_uploads_url'],
-                'cdn_assets_url' => $_POST['cdn_assets_url'],
-                'assets_url' => $_POST['assets_url'],
-                'provider' => $_POST['provider'],
-                'endpoint_url' => $_POST['endpoint_url'],
-                'uploads_url' => $_POST['uploads_url'],
-                'access_key' => $_POST['access_key'],
-                'secret_access_key' => $_POST['secret_access_key'],
-                'storage_name' => $_POST['storage_name'],
-                'region' => $_POST['region'],
-            ]);
 
-            $this->update_settings('offload', $value);
-        }
-    }
-
-    public function pwa() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            if(!\Altum\Plugin::is_active('pwa')) {
-                redirect('admin/settings/pwa');
-            }
-
-            if(!is_writable(UPLOADS_PATH . \Altum\Uploads::get_path('pwa'))) {
-                Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . \Altum\Uploads::get_path('pwa')));
-            }
-
-            /* :) */
-            $_POST['app_name'] = input_clean($_POST['app_name']);
-            $_POST['short_app_name'] = input_clean($_POST['short_app_name']);
-            $_POST['app_description'] = input_clean($_POST['app_description']);
-            $_POST['theme_color'] = !verify_hex_color($_POST['theme_color']) ? '#ffffff' : $_POST['theme_color'];
-            $_POST['app_start_url'] = get_url($_POST['app_start_url']);
-            if(empty($_POST['app_start_url']) || !string_starts_with(SITE_URL, $_POST['app_start_url'])) {
-                $_POST['app_start_url'] = SITE_URL;
-            }
-
-            $parsed_url = parse_url($_POST['app_start_url']);
-            parse_str($parsed_url['query'] ?? '', $query);
-
-            if(
-                empty($query['utm_source']) &&
-                empty($query['utm_medium']) &&
-                empty($query['utm_campaign'])
-            ) {
-                $query['utm_source'] = 'pwa';
-                $query['utm_medium'] = 'web-app';
-                $query['utm_campaign'] = 'install-or-pwa-launch';
-
-                $base = $parsed_url['scheme'] . '://' . $parsed_url['host'] . ($parsed_url['path'] ?? '');
-                $_POST['app_start_url'] = $base . '?' . http_build_query($query);
-            }
-
-            /* App icons */
-            settings()->pwa->app_icon = \Altum\Uploads::process_upload(settings()->pwa->app_icon, 'app_icon', 'app_icon', 'app_icon_remove', null);
-            settings()->pwa->app_icon_maskable = \Altum\Uploads::process_upload(settings()->pwa->app_icon_maskable, 'app_icon', 'app_icon_maskable', 'app_icon_maskable_remove', null);
-
-            $value = [
-                'is_enabled' => isset($_POST['is_enabled']),
-                'display_install_bar' => isset($_POST['display_install_bar']),
-                'display_install_bar_for_guests' => isset($_POST['display_install_bar_for_guests']),
-                'display_install_bar_delay' => (int) $_POST['display_install_bar_delay'],
-                'display_install_bar_minimum_pageviews_count' => (int) $_POST['display_install_bar_minimum_pageviews_count'],
-                'app_name' => $_POST['app_name'],
-                'short_app_name' => $_POST['short_app_name'],
-                'app_description' => $_POST['app_description'],
-                'theme_color' => $_POST['theme_color'],
-                'app_start_url' => $_POST['app_start_url'],
-                'app_icon' => settings()->pwa->app_icon ?? '',
-                'app_icon_maskable' => settings()->pwa->app_icon_maskable ?? '',
-            ];
-
-            /* Screenshots */
-            $mobile_screenshots = [];
-            $desktop_screenshots = [];
-            foreach([1, 2, 3, 4, 5, 6] as $key) {
-                /* Mobile */
-                settings()->pwa->{'mobile_screenshot_' .  $key} = \Altum\Uploads::process_upload(settings()->pwa->{'mobile_screenshot_' .  $key}, 'app_screenshots', 'mobile_screenshot_' .  $key, 'mobile_screenshot_' .  $key . '_remove', null);
-                $value['mobile_screenshot_' .  $key] = settings()->pwa->{'mobile_screenshot_' .  $key};
-
-                if($value['mobile_screenshot_' .  $key]) {
-                    $mobile_screenshots[] = \Altum\Uploads::get_full_url('app_screenshots') . $value['mobile_screenshot_' .  $key];
-                }
-
-                /* Desktop */
-                settings()->pwa->{'desktop_screenshot_' .  $key} = \Altum\Uploads::process_upload(settings()->pwa->{'desktop_screenshot_' .  $key}, 'app_screenshots', 'desktop_screenshot_' .  $key, 'desktop_screenshot_' .  $key . '_remove', null);
-                $value['desktop_screenshot_' .  $key] = settings()->pwa->{'desktop_screenshot_' .  $key};
-
-                if($value['desktop_screenshot_' .  $key]) {
-                    $desktop_screenshots[] = \Altum\Uploads::get_full_url('app_screenshots') . $value['desktop_screenshot_' .  $key];
-                }
-            }
-
-            /* Shortcuts */
-            $shortcuts = [];
-            foreach([1, 2, 3] as $key) {
-                $value['shortcut_name_' . $key] = input_clean($_POST['shortcut_name_' . $key]);
-                $value['shortcut_description_' . $key] = input_clean($_POST['shortcut_description_' . $key]);
-
-                if(empty($_POST['shortcut_url_' . $key]) || !string_starts_with(SITE_URL, $_POST['shortcut_url_' . $key])) {
-                    $_POST['shortcut_url_' . $key] = SITE_URL;
-                }
-                $value['shortcut_url_' . $key] = get_url($_POST['shortcut_url_' . $key]);
-
-                settings()->pwa->{'shortcut_icon_' .  $key} = \Altum\Uploads::process_upload(settings()->pwa->{'shortcut_icon_' .  $key}, 'app_screenshots', 'shortcut_icon_' .  $key, 'shortcut_icon_' .  $key . '_remove', null);
-                $value['shortcut_icon_' .  $key] = settings()->pwa->{'shortcut_icon_' .  $key};
-
-                if($value['shortcut_icon_' .  $key]) {
-                    $desktop_screenshots[] = \Altum\Uploads::get_full_url('app_screenshots') . $value['shortcut_icon_' .  $key];
-                }
-
-                $shortcuts[] = [
-                    'name' => $value['shortcut_name_' . $key],
-                    'description' => $value['shortcut_description_' . $key],
-                    'url' => $value['shortcut_url_' . $key],
-                    'icon_url' => $value['shortcut_icon_' .  $key] ? \Altum\Uploads::get_full_url('app_screenshots') . $value['shortcut_icon_' .  $key] : null,
-                ];
-            }
-
-            /* Generate the manifest file */
-            $manifest = pwa_generate_manifest([
-                'name' => $_POST['app_name'],
-                'short_name' => $_POST['short_app_name'],
-                'description' => $_POST['app_description'],
-                'theme_color' => $_POST['theme_color'],
-                'app_icon_url' => settings()->pwa->app_icon ? \Altum\Uploads::get_full_url('app_icon') . settings()->pwa->app_icon : null,
-                'app_icon_maskable_url' => settings()->pwa->app_icon_maskable ? \Altum\Uploads::get_full_url('app_icon') . settings()->pwa->app_icon_maskable : null,
-                'start_url' => $_POST['app_start_url'],
-                'mobile_screenshots' => $mobile_screenshots,
-                'desktop_screenshots' => $desktop_screenshots,
-                'shortcuts' => $shortcuts,
-            ]);
-            pwa_save_manifest($manifest);
-
-            $this->update_settings('pwa', json_encode($value));
-        }
-    }
-
-    public function image_optimizer() {
-        $this->process();
-
-        if(!empty($_POST)) {
-
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            if(!\Altum\Plugin::is_active('image-optimizer')) {
-                redirect('admin/settings/image_optimizer');
-            }
-
-            /* :) */
-            $_POST['provider'] = isset($_POST['provider']) && in_array($_POST['provider'], ['local', 'resmushit', 'imagerypro']) ? $_POST['provider'] : 'local';
-            $_POST['imagerypro_api_key'] = input_clean($_POST['imagerypro_api_key']);
-            $_POST['quality'] = isset($_POST['quality']) & $_POST['quality'] >= 50 && $_POST['quality'] <= 100 ? (int) $_POST['quality'] : 75;
-
-            $value = [
-                'is_enabled' => isset($_POST['is_enabled']),
-                'provider' => $_POST['provider'],
-                'imagerypro_api_key' => $_POST['imagerypro_api_key'],
-                'quality' => $_POST['quality'],
-            ];
-
-            $this->update_settings('image_optimizer', json_encode($value));
-        }
-    }
 
     public function dynamic_og_images() {
         $this->process();
@@ -1883,6 +1648,51 @@ class AdminSettings extends Controller {
             ]);
 
             $this->update_settings('signatures', $value);
+        }
+    }
+
+
+
+    public function gs1_links() {
+        $this->process();
+
+        if(!empty($_POST)) {
+            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+
+            /* :) */
+            $_POST['gs1_links_is_enabled'] = (int) isset($_POST['gs1_links_is_enabled']);
+            $_POST['gtin_validation_is_enabled'] = (int) isset($_POST['gtin_validation_is_enabled']);
+            $_POST['gtin_format_validation'] = in_array($_POST['gtin_format_validation'], ['strict', 'lenient', 'disabled']) ? $_POST['gtin_format_validation'] : 'strict';
+            $_POST['require_target_url'] = (int) isset($_POST['require_target_url']);
+            $_POST['default_target_url'] = input_clean($_POST['default_target_url']);
+            $_POST['domains_is_enabled'] = (int) isset($_POST['domains_is_enabled']);
+            $_POST['projects_is_enabled'] = (int) isset($_POST['projects_is_enabled']);
+            $_POST['pixels_is_enabled'] = (int) isset($_POST['pixels_is_enabled']);
+            $_POST['analytics_is_enabled'] = (int) isset($_POST['analytics_is_enabled']);
+            $_POST['auto_generate_qr_codes'] = (int) isset($_POST['auto_generate_qr_codes']);
+            $_POST['branding'] = trim($_POST['branding']);
+            $_POST['random_gtin_length'] = in_array($_POST['random_gtin_length'], ['8', '12', '13', '14']) ? $_POST['random_gtin_length'] : '13';
+            $_POST['blacklisted_gtins'] = array_filter(array_map('trim', explode(',', $_POST['blacklisted_gtins'])));
+            $_POST['allowed_gtin_prefixes'] = array_filter(array_map('trim', explode(',', $_POST['allowed_gtin_prefixes'])));
+
+            $value = json_encode([
+                'gs1_links_is_enabled' => $_POST['gs1_links_is_enabled'],
+                'gtin_validation_is_enabled' => $_POST['gtin_validation_is_enabled'],
+                'gtin_format_validation' => $_POST['gtin_format_validation'],
+                'require_target_url' => $_POST['require_target_url'],
+                'default_target_url' => $_POST['default_target_url'],
+                'domains_is_enabled' => $_POST['domains_is_enabled'],
+                'projects_is_enabled' => $_POST['projects_is_enabled'],
+                'pixels_is_enabled' => $_POST['pixels_is_enabled'],
+                'analytics_is_enabled' => $_POST['analytics_is_enabled'],
+                'auto_generate_qr_codes' => $_POST['auto_generate_qr_codes'],
+                'branding' => $_POST['branding'],
+                'random_gtin_length' => $_POST['random_gtin_length'],
+                'blacklisted_gtins' => $_POST['blacklisted_gtins'],
+                'allowed_gtin_prefixes' => $_POST['allowed_gtin_prefixes'],
+            ]);
+
+            $this->update_settings('gs1_links', $value);
         }
     }
 

@@ -186,3 +186,50 @@ function get_gtin_type($gtin) {
             return 'GTIN-14';
     }
 }
+
+/**
+ * Generate a random GTIN with proper check digit
+ *
+ * @param int|null $length The desired GTIN length (8, 12, 13, or 14). Uses admin setting if not provided.
+ * @return string The generated GTIN
+ */
+function generate_random_gtin($length = null) {
+    // Use admin setting if length not provided
+    if ($length === null) {
+        $length = (int)(settings()->gs1_links->random_gtin_length ?? 13);
+    }
+    
+    // Ensure valid length
+    if (!in_array($length, [8, 12, 13, 14])) {
+        $length = 13;
+    }
+    
+    // Generate random digits (length - 1 for check digit)
+    $digits = '';
+    for ($i = 0; $i < $length - 1; $i++) {
+        // First digit should not be 0 for shorter GTINs
+        if ($i === 0 && $length < 14) {
+            $digits .= mt_rand(1, 9);
+        } else {
+            $digits .= mt_rand(0, 9);
+        }
+    }
+    
+    // Pad to 13 digits for check digit calculation
+    $gtin_for_check = str_pad($digits, 13, '0', STR_PAD_LEFT);
+    
+    // Calculate check digit
+    $check_digit = calculate_gtin_check_digit($gtin_for_check);
+    
+    // Return GTIN with proper length
+    $full_gtin = $digits . $check_digit;
+    
+    // For GTIN-8 and GTIN-12, return the appropriate length
+    if ($length === 8) {
+        return substr($full_gtin, -8);
+    } elseif ($length === 12) {
+        return substr($full_gtin, -12);
+    }
+    
+    return $full_gtin;
+}

@@ -533,17 +533,9 @@ class Router {
                 'controller' => 'Affiliate'
             ],
 
-            'pages' => [
-                'controller' => 'Pages'
-            ],
 
-            'page' => [
-                'controller' => 'Page'
-            ],
 
-            'blog' => [
-                'controller' => 'Blog'
-            ],
+
 
             'api-documentation' => [
                 'controller' => 'ApiDocumentation',
@@ -587,6 +579,9 @@ class Router {
 
             'not-found' => [
                 'controller' => 'NotFound',
+                'settings' => [
+                    'wrapper' => 'basic_wrapper',
+                ]
             ],
 
             'maintenance' => [
@@ -1335,53 +1330,9 @@ class Router {
                 'controller' => 'AdminRedeemedCodes',
             ],
 
-            'blog-posts' => [
-                'controller' => 'AdminBlogPosts'
-            ],
 
-            'blog-post-create' => [
-                'controller' => 'AdminBlogPostCreate'
-            ],
 
-            'blog-post-update' => [
-                'controller' => 'AdminBlogPostUpdate'
-            ],
 
-            'blog-posts-categories' => [
-                'controller' => 'AdminBlogPostsCategories'
-            ],
-
-            'blog-posts-category-create' => [
-                'controller' => 'AdminBlogPostsCategoryCreate'
-            ],
-
-            'blog-posts-category-update' => [
-                'controller' => 'AdminBlogPostsCategoryUpdate'
-            ],
-
-            'pages' => [
-                'controller' => 'AdminPages'
-            ],
-
-            'page-create' => [
-                'controller' => 'AdminPageCreate'
-            ],
-
-            'page-update' => [
-                'controller' => 'AdminPageUpdate'
-            ],
-
-            'pages-categories' => [
-                'controller' => 'AdminPagesCategories'
-            ],
-
-            'pages-category-create' => [
-                'controller' => 'AdminPagesCategoryCreate'
-            ],
-
-            'pages-category-update' => [
-                'controller' => 'AdminPagesCategoryUpdate'
-            ],
 
             'plans' => [
                 'controller' => 'AdminPlans'
@@ -1429,10 +1380,6 @@ class Router {
 
             'statistics' => [
                 'controller' => 'AdminStatistics'
-            ],
-
-            'plugins' => [
-                'controller' => 'AdminPlugins',
             ],
 
             'languages' => [

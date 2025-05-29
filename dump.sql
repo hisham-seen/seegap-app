@@ -71,7 +71,7 @@ PRIMARY KEY (`code_id`)
 -- SEPARATOR --
 
 INSERT INTO `users` (`user_id`, `email`, `password`, `api_key`, `referral_key`, `name`, `type`, `status`, `plan_id`, `plan_expiration_date`, `plan_settings`, `datetime`, `ip`, `last_activity`, `preferences`)
-VALUES (1,'admin','$2y$10$uFNO0pQKEHSFcus1zSFlveiPCB3EvG9ZlES7XKgJFTAl5JbRGFCWy', md5(rand()), md5(rand()), 'AltumCode',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"microsites_templates":[],"microsites_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"password":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"microsite_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"microsites_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_microsite_blocks":{"link":true,"heading":true,"paragraph":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"threads":true,"soundcloud":true,"spotify":true,"youtube":true,"twitch":true,"vimeo":true,"tiktok_video":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"twitter_profile":true,"twitter_tweet":true,"twitter_video":true,"pinterest_profile":true,"instagram_media":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"alert":true,"tiktok_profile":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"facebook":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"cta":true,"external_item":true,"share":true,"coupon":true,"youtube_feed":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"rumble":true,"telegram":true,"donation":true,"product":true,"service":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_microsite":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}');
+VALUES (1,'admin','$2y$10$uFNO0pQKEHSFcus1zSFlveiPCB3EvG9ZlES7XKgJFTAl5JbRGFCWy', md5(rand()), md5(rand()), 'AltumCode',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"microsites_templates":[],"microsites_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"password":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"microsite_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"microsites_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"gs1_links_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_microsite_blocks":{"link":true,"heading":true,"paragraph":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"threads":true,"soundcloud":true,"spotify":true,"youtube":true,"twitch":true,"vimeo":true,"tiktok_video":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"twitter_profile":true,"twitter_tweet":true,"twitter_video":true,"pinterest_profile":true,"instagram_media":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"alert":true,"tiktok_profile":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"facebook":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"cta":true,"external_item":true,"share":true,"coupon":true,"youtube_feed":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"rumble":true,"telegram":true,"donation":true,"product":true,"service":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_microsite":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}');
 
 -- SEPARATOR --
 
@@ -131,119 +131,9 @@ PRIMARY KEY (`plan_id`)
 
 -- SEPARATOR --
 
-CREATE TABLE `pages_categories` (
-`pages_category_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`icon` varchar(32) DEFAULT NULL,
-`order` int NOT NULL DEFAULT '0',
-`language` varchar(32) DEFAULT NULL,
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`pages_category_id`),
-KEY `url` (`url`),
-KEY `pages_categories_url_language_index` (`url`,`language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-
--- SEPARATOR --
-
-CREATE TABLE `pages` (
-`page_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`pages_category_id` bigint unsigned DEFAULT NULL,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`icon` varchar(32) DEFAULT NULL,
-`keywords` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-`editor` varchar(16) DEFAULT NULL,
-`content` longtext,
-`type` varchar(16) DEFAULT '',
-`position` varchar(16) NOT NULL DEFAULT '',
-`language` varchar(32) DEFAULT NULL,
-`open_in_new_tab` tinyint DEFAULT '1',
-`order` int DEFAULT '0',
-`total_views` bigint unsigned DEFAULT '0',
-`is_published` tinyint DEFAULT '1',
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`page_id`),
-KEY `pages_pages_category_id_index` (`pages_category_id`),
-KEY `pages_url_index` (`url`),
-KEY `pages_is_published_index` (`is_published`),
-KEY `pages_language_index` (`language`),
-CONSTRAINT `pages_ibfk_1` FOREIGN KEY (`pages_category_id`) REFERENCES `pages_categories` (`pages_category_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- SEPARATOR --
 
-INSERT INTO `pages` (`pages_category_id`, `url`, `title`, `description`, `content`, `type`, `position`, `order`, `total_views`, `datetime`, `last_datetime`) VALUES
-(NULL, 'https://altumcode.com/', 'Software by AltumCode', '', '', 'external', 'bottom', 1, 0, NOW(), NOW()),
-(NULL, 'https://altumco.de/66microsites', 'Built with 66microsites', '', '', 'external', 'bottom', 0, 0, NOW(), NOW());
-
--- SEPARATOR --
-
-CREATE TABLE `blog_posts_categories` (
-`blog_posts_category_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`order` int NOT NULL DEFAULT '0',
-`language` varchar(32) DEFAULT NULL,
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`blog_posts_category_id`),
-KEY `url` (`url`),
-KEY `blog_posts_categories_url_language_index` (`url`,`language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-
--- SEPARATOR --
-
-CREATE TABLE `blog_posts` (
-`blog_post_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`blog_posts_category_id` bigint unsigned DEFAULT NULL,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`keywords` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-`image` varchar(40) CHARACTER SET utf8mb4 DEFAULT NULL,
-`image_description` varchar(256) DEFAULT NULL,
-`editor` varchar(16) DEFAULT NULL,
-`content` longtext,
-`language` varchar(32) DEFAULT NULL,
-`total_views` bigint unsigned DEFAULT '0',
-`average_rating` float unsigned NOT NULL DEFAULT '0',
-`total_ratings` bigint unsigned NOT NULL DEFAULT '0',
-`is_published` tinyint DEFAULT '1',
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`blog_post_id`),
-KEY `blog_post_id_index` (`blog_post_id`),
-KEY `blog_post_url_index` (`url`),
-KEY `blog_posts_category_id` (`blog_posts_category_id`),
-KEY `blog_posts_is_published_index` (`is_published`),
-KEY `blog_posts_language_index` (`language`),
-CONSTRAINT `blog_posts_ibfk_1` FOREIGN KEY (`blog_posts_category_id`) REFERENCES `blog_posts_categories` (`blog_posts_category_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- SEPARATOR --
-
-CREATE TABLE `blog_posts_ratings` (
-`id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`blog_post_id` bigint unsigned DEFAULT NULL,
-`user_id` int DEFAULT NULL,
-`ip_binary` varbinary(16) DEFAULT NULL,
-`rating` tinyint(1) DEFAULT NULL,
-`datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`id`),
-UNIQUE KEY `blog_posts_ratings_blog_post_id_ip_binary_idx` (`blog_post_id`,`ip_binary`) USING BTREE,
-KEY `user_id` (`user_id`),
-CONSTRAINT `blog_posts_ratings_ibfk_1` FOREIGN KEY (`blog_post_id`) REFERENCES `blog_posts` (`blog_post_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-CONSTRAINT `blog_posts_ratings_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- SEPARATOR --
 
 CREATE TABLE `broadcasts` (
 `broadcast_id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -342,7 +232,7 @@ VALUES
 ('cron', concat('{\"key\":\"', @cron_key, '\"}')),
 ('email_notifications', '{"emails":"","new_user":false,"delete_user":false,"new_payment":false,"new_domain":false,"new_affiliate_withdrawal":false,"contact":false}'),
 ('internal_notifications', '{"users_is_enabled":true,"admins_is_enabled":true,"new_user":true,"delete_user":true,"new_newsletter_subscriber":true,"new_payment":true,"new_affiliate_withdrawal":true}'),
-('content', '{"blog_is_enabled":true,"blog_share_is_enabled":true,"blog_search_widget_is_enabled":false,"blog_categories_widget_is_enabled":true,"blog_popular_widget_is_enabled":true,"blog_views_is_enabled":true,"pages_is_enabled":true,"pages_share_is_enabled":true,"pages_popular_widget_is_enabled":true,"pages_views_is_enabled":true}'),
+('content', '{}'),
 ('sso', '{"is_enabled":true,"display_menu_items":true,"websites":{}}'),
 ('facebook', '{"is_enabled":false,"app_id":"","app_secret":""}'),
 ('google', '{"is_enabled":false,"client_id":"","client_secret":""}'),
@@ -380,6 +270,7 @@ VALUES
 ('cookie_consent', '{"is_enabled":false,"logging_is_enabled":false,"necessary_is_enabled":true,"analytics_is_enabled":true,"targeting_is_enabled":true,"layout":"bar","position_y":"middle","position_x":"center"}'),
 ('links', '{"available_microsite_blocks":{"link":true,"heading":true,"paragraph":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"threads":true,"soundcloud":true,"spotify":true,"youtube":true,"twitch":true,"vimeo":true,"tiktok_video":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"map":true,"applemusic":true,"tidal":true,"anchor":true,"twitter_profile":true,"twitter_tweet":true,"twitter_video":true,"pinterest_profile":true,"instagram_media":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"alert":true,"tiktok_profile":true,"big_link":true,"faq":true,"typeform":true,"facebook":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"cta":true,"external_item":true,"share":true,"youtube_feed":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"markdown":true,"rumble":true,"telegram":true,"donation":true,"product":true,"service":true},"example_url":"","random_url_length":5,"branding":"Powered by Seegap","shortener_is_enabled":1,"microsites_is_enabled":1,"microsites_templates_is_enabled":1,"microsites_themes_is_enabled":"on","microsites_new_blocks_position":"bottom","microsites_default_active_tab":"settings","default_microsite_theme_id":null,"default_microsite_template_id":null,"files_is_enabled":1,"events_is_enabled":1,"static_is_enabled":1,"pixels_is_enabled":1,"splash_page_is_enabled":1,"splash_page_auto_redirect":1,"splash_page_link_unlock_seconds":3,"directory_is_enabled":1,"directory_access":"everyone","directory_display":"all","domains_is_enabled":1,"additional_domains_is_enabled":1,"main_domain_is_enabled":1,"domains_custom_main_ip":"","blacklisted_domains":[],"blacklisted_keywords":[],"google_safe_browsing_is_enabled":0,"google_safe_browsing_api_key":"","google_static_maps_is_enabled":0,"google_static_maps_api_key":"","avatar_size_limit":2,"background_size_limit":2,"favicon_size_limit":2,"seo_image_size_limit":2,"thumbnail_image_size_limit":2,"image_size_limit":2,"audio_size_limit":2,"video_size_limit":2,"file_size_limit":2,"product_file_size_limit":2,"static_size_limit":2}'),
 ('codes', '{"qr_codes_is_enabled":1,"logo_size_limit":1,"background_size_limit":1,"available_qr_codes":{"text":true,"url":true,"phone":true,"sms":true,"email":true,"whatsapp":true,"facetime":true,"location":true,"wifi":true,"event":true,"crypto":true,"paypal":true,"upi":true,"epc":true,"pix":true},"qr_codes_branding_logo":"","qr_codes_default_image":""}'),
+('gs1_links', '{"gs1_links_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_target_url":false,"default_target_url":"","domains_is_enabled":true,"projects_is_enabled":true,"pixels_is_enabled":true,"analytics_is_enabled":true,"auto_generate_qr_codes":false,"branding":"","random_gtin_length":"14","blacklisted_gtins":[],"allowed_gtin_prefixes":[]}'),
 ('license', '{\"license\":\"BYPASSED-LICENSE\",\"type\":\"SPECIAL\"}'),
 ('product_info', '{\"version\":\"56.0.0\", \"code\":\"5600\"}'),
 ('support', '{\"key\":\"BYPASSED-SUPPORT\",\"expiry_datetime\":\"2099-12-31 23:59:59\"}');
@@ -609,6 +500,7 @@ CREATE TABLE `qr_codes` (
   `user_id` int NOT NULL,
   `project_id` int DEFAULT NULL,
   `link_id` int DEFAULT NULL,
+  `gs1_link_id` int DEFAULT NULL,
   `name` varchar(64) NOT NULL,
   `type` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `qr_code_logo` varchar(64) DEFAULT NULL,
@@ -623,9 +515,11 @@ CREATE TABLE `qr_codes` (
   KEY `user_id` (`user_id`),
   KEY `project_id` (`project_id`),
   KEY `qr_codes_links_link_id_fk` (`link_id`),
+  KEY `qr_codes_gs1_links_gs1_link_id_fk` (`gs1_link_id`),
   CONSTRAINT `qr_codes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `qr_codes_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `qr_codes_links_link_id_fk` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `qr_codes_links_link_id_fk` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `qr_codes_gs1_links_gs1_link_id_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- SEPARATOR --
@@ -639,6 +533,63 @@ INSERT INTO `microsites_blocks` (`user_id`, `link_id`, `type`, `location_url`, `
 -- SEPARATOR --
 
 INSERT INTO `microsites_blocks` (`user_id`, `link_id`, `type`, `location_url`, `clicks`, `settings`, `order`, `start_date`, `end_date`, `is_enabled`, `datetime`) VALUES (1, 1, 'paragraph', NULL, 0, '{\"text\":\"This is an example description.\",\"text_color\":\"white\"}', 1, NULL, NULL, 1, '2021-12-20 18:06:09');
+
+-- SEPARATOR --
+
+CREATE TABLE `gs1_links` (
+  `gs1_link_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `domain_id` int DEFAULT '0',
+  `pixels_ids` text,
+  `gtin` varchar(14) NOT NULL,
+  `target_url` varchar(2048) NOT NULL,
+  `title` varchar(256) DEFAULT NULL,
+  `description` text,
+  `clicks` int NOT NULL DEFAULT '0',
+  `settings` text,
+  `is_enabled` tinyint NOT NULL DEFAULT '1',
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`gs1_link_id`),
+  UNIQUE KEY `gtin_domain` (`gtin`, `domain_id`),
+  KEY `user_id` (`user_id`),
+  KEY `project_id` (`project_id`),
+  KEY `gtin` (`gtin`),
+  CONSTRAINT `gs1_links_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `gs1_links_projects_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SEPARATOR --
+
+CREATE TABLE `track_gs1_links` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `gs1_link_id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `gtin` varchar(14) NOT NULL,
+  `country_code` varchar(8) DEFAULT NULL,
+  `continent_code` varchar(8) DEFAULT NULL,
+  `city_name` varchar(128) DEFAULT NULL,
+  `os_name` varchar(16) DEFAULT NULL,
+  `browser_name` varchar(32) DEFAULT NULL,
+  `referrer_host` varchar(256) DEFAULT NULL,
+  `referrer_path` varchar(1024) DEFAULT NULL,
+  `device_type` varchar(16) DEFAULT NULL,
+  `browser_language` varchar(16) DEFAULT NULL,
+  `utm_source` varchar(128) DEFAULT NULL,
+  `utm_medium` varchar(128) DEFAULT NULL,
+  `utm_campaign` varchar(128) DEFAULT NULL,
+  `is_unique` tinyint DEFAULT '0',
+  `datetime` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gs1_link_id` (`gs1_link_id`),
+  KEY `gtin` (`gtin`),
+  KEY `user_id` (`user_id`),
+  KEY `track_gs1_links_date_index` (`datetime`),
+  CONSTRAINT `track_gs1_links_gs1_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `track_gs1_links_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- SEPARATOR --
 

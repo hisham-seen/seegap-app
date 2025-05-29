@@ -56,41 +56,11 @@
                 </li>
             <?php endif ?>
 
-            <li class="<?= \Altum\Router::$controller == 'AdminPlugins' ? 'active' : null ?>">
-                <a href="<?= url('admin/plugins') ?>"><i class="fas fa-fw fa-sm fa-puzzle-piece mr-2"></i> <?= l('admin_plugins.menu') ?></a>
-            </li>
+
 
             <li class="<?= \Altum\Router::$controller == 'AdminStatistics' ? 'active' : null ?>">
                 <a href="<?= url('admin/statistics') ?>"><i class="fas fa-fw fa-sm fa-chart-bar mr-2"></i> <?= l('admin_statistics.menu') ?></a>
             </li>
-
-            <li class="<?= in_array(\Altum\Router::$controller, ['AdminPages', 'AdminPageCreate', 'AdminPageUpdate', 'AdminPagesCategories', 'AdminPagesCategoryCreate', 'AdminPagesCategoryUpdate']) ? 'active' : null ?>">
-                <a href="#admin_sidebar_resources_container" data-toggle="collapse" role="button" aria-expanded="false"><i class="fas fa-fw fa-sm fa-info-circle mr-2"></i> <?= l('admin_resources.menu') ?> <i class="fas fa-fw fa-sm fa-caret-down"></i></a>
-            </li>
-
-            <div id="admin_sidebar_resources_container" class="mt-1 collapse bg-gray-200 rounded <?= in_array(\Altum\Router::$controller, ['AdminPages', 'AdminPageCreate', 'AdminPageUpdate', 'AdminPagesCategories', 'AdminPagesCategoryCreate', 'AdminPagesCategoryUpdate']) ? 'show' : null ?>">
-                <li class="<?= in_array(\Altum\Router::$controller, ['AdminPagesCategories', 'AdminPagesCategoryCreate', 'AdminPagesCategoryUpdate']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/pages-categories') ?>"><i class="fas fa-fw fa-sm fa-book mr-2"></i> <?= l('admin_pages_categories.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\Altum\Router::$controller, ['AdminPages', 'AdminPageCreate', 'AdminPageUpdate']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/pages') ?>"><i class="fas fa-fw fa-sm fa-copy mr-2"></i> <?= l('admin_pages.menu') ?></a>
-                </li>
-            </div>
-
-            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBlogPosts', 'AdminBlogPostCreate', 'AdminBlogPostUpdate', 'AdminBlogPostsCategories', 'AdminBlogPostsCategoryCreate', 'AdminBlogPostsCategoryUpdate']) ? 'active' : null ?>">
-                <a href="#admin_sidebar_blog_container" data-toggle="collapse" role="button" aria-expanded="false"><i class="fas fa-fw fa-sm fa-blog mr-2"></i> <?= l('admin_blog.menu') ?> <i class="fas fa-fw fa-sm fa-caret-down"></i></a>
-            </li>
-
-            <div id="admin_sidebar_blog_container" class="mt-1 collapse bg-gray-200 rounded <?= in_array(\Altum\Router::$controller, ['AdminBlogPosts', 'AdminBlogPostCreate', 'AdminBlogPostUpdate', 'AdminBlogPostsCategories', 'AdminBlogPostsCategoryCreate', 'AdminBlogPostsCategoryUpdate']) ? 'show' : null ?>">
-                <li class="<?= in_array(\Altum\Router::$controller, ['AdminBlogPostsCategories', 'AdminBlogPostsCategoryCreate', 'AdminBlogPostsCategoryUpdate']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/blog-posts-categories') ?>"><i class="fas fa-fw fa-sm fa-map mr-2"></i> <?= l('admin_blog_posts_categories.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\Altum\Router::$controller, ['AdminBlogPosts', 'AdminBlogPostCreate', 'AdminBlogPostUpdate']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/blog-posts') ?>"><i class="fas fa-fw fa-sm fa-paste mr-2"></i> <?= l('admin_blog_posts.menu') ?></a>
-                </li>
-            </div>
 
             <li class="<?= \Altum\Router::$controller == 'AdminApiDocumentation' ? 'active' : null ?>">
                 <a href="<?= url('admin/api-documentation') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('admin_api_documentation.menu') ?></a>

@@ -108,6 +108,57 @@ class Gs1Link extends Model {
             return false;
         }
         
+        // Apply default target URL if not provided and not required
+        if(empty($data['target_url']) && !settings()->gs1_links->require_target_url && !empty(settings()->gs1_links->default_target_url)) {
+            $data['target_url'] = settings()->gs1_links->default_target_url;
+        }
+        
+        // Check if target URL is required by admin settings
+        if(settings()->gs1_links->require_target_url && empty($data['target_url'])) {
+            return false; // Target URL is required but not provided
+        }
+        
+        // Apply GTIN validation based on format validation setting
+        if(settings()->gs1_links->gtin_validation_is_enabled && settings()->gs1_links->gtin_format_validation !== 'disabled') {
+            $gtin_length = strlen($gtin);
+            $valid_lengths = [8, 12, 13, 14];
+            
+            // Length validation for both lenient and strict modes
+            if(!in_array($gtin_length, $valid_lengths)) {
+                return false; // Invalid length
+            }
+            
+            // Strict validation includes checksum validation
+            if(settings()->gs1_links->gtin_format_validation === 'strict') {
+                if(!$this->validate_gtin_checksum($gtin)) {
+                    return false; // Invalid checksum
+                }
+            }
+            // Lenient mode only does length validation (already done above)
+        }
+        
+        // Apply additional validation rules if GTIN validation is enabled
+        if(settings()->gs1_links->gtin_validation_is_enabled) {
+            // Check blacklisted GTINs
+            if(!empty(settings()->gs1_links->blacklisted_gtins) && in_array($gtin, settings()->gs1_links->blacklisted_gtins)) {
+                return false; // Blacklisted GTIN
+            }
+            
+            // Check allowed GTIN prefixes
+            if(!empty(settings()->gs1_links->allowed_gtin_prefixes)) {
+                $prefix_allowed = false;
+                foreach(settings()->gs1_links->allowed_gtin_prefixes as $prefix) {
+                    if(str_starts_with($gtin, $prefix)) {
+                        $prefix_allowed = true;
+                        break;
+                    }
+                }
+                if(!$prefix_allowed) {
+                    return false; // Prefix not allowed
+                }
+            }
+        }
+        
         // Check if GTIN already exists for this domain
         if ($this->get_gs1_link_by_gtin($gtin, $data['domain_id'] ?? 0)) {
             return false; // GTIN already exists
@@ -272,5 +323,25 @@ class Gs1Link extends Model {
         }
         
         return implode(' AND ', $where_parts);
+    }
+    
+    /**
+     * Validate GTIN checksum using the standard algorithm
+     */
+    private function validate_gtin_checksum($gtin) {
+        $gtin = str_pad($gtin, 14, '0', STR_PAD_LEFT);
+        
+        if (strlen($gtin) !== 14) {
+            return false;
+        }
+        
+        $sum = 0;
+        for ($i = 0; $i < 13; $i++) {
+            $digit = (int) $gtin[$i];
+            $sum += ($i % 2 === 0) ? $digit : $digit * 3;
+        }
+        
+        $checksum = (10 - ($sum % 10)) % 10;
+        return $checksum === (int) $gtin[13];
     }
 }

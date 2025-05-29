@@ -12,8 +12,10 @@
             <select name="settings_menu" class="custom-select">
                 <option value="<?= url('admin/settings/main') ?>" class="nav-link" <?= $data->method == 'main' ? 'selected="selected"' : null ?>>🏠 <?= l('admin_settings.main.tab') ?></option>
                 <option value="<?= url('admin/settings/users') ?>" class="nav-link" <?= $data->method == 'users' ? 'selected="selected"' : null ?>>👥 <?= l('admin_settings.users.tab') ?></option>
-                <option value="<?= url('admin/settings/content') ?>" class="nav-link" <?= $data->method == 'content' ? 'selected="selected"' : null ?>>📝 <?= l('admin_settings.content.tab') ?></option>
+
                 <option value="<?= url('admin/settings/links') ?>" class="nav-link" <?= $data->method == 'links' ? 'selected="selected"' : null ?>>🔗 <?= l('admin_settings.links.tab') ?></option>
+                
+                <option value="<?= url('admin/settings/gs1_links') ?>" class="nav-link" <?= $data->method == 'gs1_links' ? 'selected="selected"' : null ?>>📊 <?= l('admin_settings.gs1_links.tab') ?></option>
                 
                 <option value="<?= url('admin/settings/codes') ?>" class="nav-link" <?= $data->method == 'codes' ? 'selected="selected"' : null ?>>💻 <?= l('admin_settings.codes.tab') ?></option>
                 <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
@@ -27,7 +29,7 @@
                 <?php foreach($data->payment_processors as $key => $value): ?>
                     <option value="<?= url('admin/settings/' . $key) ?>" class="nav-link" <?= $data->method == $key ? 'selected="selected"' : null ?>>💲 <?= l('admin_settings.' . $key . '.tab') ?></option>
                 <?php endforeach ?>
-                <option value="<?= url('admin/settings/affiliate') ?>" class="nav-link" <?= $data->method == 'affiliate' ? 'selected="selected"' : null ?>>🤝 <?= l('admin_settings.affiliate.tab') ?></option>
+
                 <option value="<?= url('admin/settings/captcha') ?>" class="nav-link" <?= $data->method == 'captcha' ? 'selected="selected"' : null ?>>🧠 <?= l('admin_settings.captcha.tab') ?></option>
                 <option value="<?= url('admin/settings/facebook') ?>" class="nav-link" <?= $data->method == 'facebook' ? 'selected="selected"' : null ?>>📘 <?= l('admin_settings.facebook.tab') ?></option>
                 <option value="<?= url('admin/settings/google') ?>" class="nav-link" <?= $data->method == 'google' ? 'selected="selected"' : null ?>>🔍 <?= l('admin_settings.google.tab') ?></option>
@@ -44,18 +46,16 @@
                 <option value="<?= url('admin/settings/announcements') ?>" class="nav-link" <?= $data->method == 'announcements' ? 'selected="selected"' : null ?>>📣 <?= l('admin_settings.announcements.tab') ?></option>
                 <option value="<?= url('admin/settings/internal_notifications') ?>" class="nav-link" <?= $data->method == 'internal_notifications' ? 'selected="selected"' : null ?>>🔔 <?= l('admin_settings.internal_notifications.tab') ?></option>
                 <option value="<?= url('admin/settings/email_notifications') ?>" class="nav-link" <?= $data->method == 'email_notifications' ? 'selected="selected"' : null ?>>📧 <?= l('admin_settings.email_notifications.tab') ?></option>
-                <option value="<?= url('admin/settings/push_notifications') ?>" class="nav-link" <?= $data->method == 'push_notifications' ? 'selected="selected"' : null ?>>📲 <?= l('admin_settings.push_notifications.tab') ?></option>
+
                 <option value="<?= url('admin/settings/webhooks') ?>" class="nav-link" <?= $data->method == 'webhooks' ? 'selected="selected"' : null ?>>🪝 <?= l('admin_settings.webhooks.tab') ?></option>
-                <option value="<?= url('admin/settings/offload') ?>" class="nav-link" <?= $data->method == 'offload' ? 'selected="selected"' : null ?>>📤 <?= l('admin_settings.offload.tab') ?></option>
-                <option value="<?= url('admin/settings/pwa') ?>" class="nav-link" <?= $data->method == 'pwa' ? 'selected="selected"' : null ?>>📱 <?= l('admin_settings.pwa.tab') ?></option>
-                <option value="<?= url('admin/settings/image_optimizer') ?>" class="nav-link" <?= $data->method == 'image_optimizer' ? 'selected="selected"' : null ?>>🖼️ <?= l('admin_settings.image_optimizer.tab') ?></option>
-                <option value="<?= url('admin/settings/dynamic_og_images') ?>" class="nav-link" <?= $data->method == 'dynamic_og_images' ? 'selected="selected"' : null ?>>🧷 <?= l('admin_settings.dynamic_og_images.tab') ?></option>
+
+
+
                 <option value="<?= url('admin/settings/sso') ?>" class="nav-link" <?= $data->method == 'sso' ? 'selected="selected"' : null ?>>🔐 <?= l('admin_settings.sso.tab') ?></option>
                 <option value="<?= url('admin/settings/cron') ?>" class="nav-link" <?= $data->method == 'cron' ? 'selected="selected"' : null ?>>⏰ <?= l('admin_settings.cron.tab') ?></option>
                 <option value="<?= url('admin/settings/health') ?>" class="nav-link" <?= $data->method == 'health' ? 'selected="selected"' : null ?>>💊 <?= l('admin_settings.health.tab') ?></option>
                 <option value="<?= url('admin/settings/cache') ?>" class="nav-link" <?= $data->method == 'cache' ? 'selected="selected"' : null ?>>🧊 <?= l('admin_settings.cache.tab') ?></option>
-                <option value="<?= url('admin/settings/license') ?>" class="nav-link" <?= $data->method == 'license' ? 'selected="selected"' : null ?>>📄 <?= l('admin_settings.license.tab') ?></option>
-                <option value="<?= url('admin/settings/support') ?>" class="nav-link" <?= $data->method == 'support' ? 'selected="selected"' : null ?>>🆘 <?= l('admin_settings.support.tab') ?></option>
+
             </select>
         </div>
 
@@ -72,8 +72,10 @@
                 <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
                     <a class="nav-link <?= $data->method == 'main' ? 'active' : null ?>" href="<?= url('admin/settings/main') ?>"><i class="fas fa-fw fa-sm fa-home mr-2"></i> <?= l('admin_settings.main.tab') ?></a>
                     <a class="nav-link <?= $data->method == 'users' ? 'active' : null ?>" href="<?= url('admin/settings/users') ?>"><i class="fas fa-fw fa-sm fa-users mr-2"></i> <?= l('admin_settings.users.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'content' ? 'active' : null ?>" href="<?= url('admin/settings/content') ?>"><i class="fas fa-fw fa-sm fa-blog mr-2"></i> <?= l('admin_settings.content.tab') ?></a>
+
                     <a class="nav-link <?= $data->method == 'links' ? 'active' : null ?>" href="<?= url('admin/settings/links') ?>"><i class="fas fa-fw fa-sm fa-link mr-2"></i> <?= l('admin_settings.links.tab') ?></a>
+                    
+                    <a class="nav-link <?= $data->method == 'gs1_links' ? 'active' : null ?>" href="<?= url('admin/settings/gs1_links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('admin_settings.gs1_links.tab') ?></a>
                     
                     <a class="nav-link <?= $data->method == 'codes' ? 'active' : null ?>" href="<?= url('admin/settings/codes') ?>"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('admin_settings.codes.tab') ?></a>
                     <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
@@ -96,7 +98,7 @@
                         </div>
                     </div>
 
-                    <a class="nav-link <?= $data->method == 'affiliate' ? 'active' : null ?>" href="<?= url('admin/settings/affiliate') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('admin_settings.affiliate.tab') ?></a>
+
                     <a class="nav-link <?= $data->method == 'captcha' ? 'active' : null ?>" href="<?= url('admin/settings/captcha') ?>"><i class="fas fa-fw fa-sm fa-low-vision mr-2"></i> <?= l('admin_settings.captcha.tab') ?></a>
 
                     <a class="nav-link <?= in_array($data->method, ['facebook', 'google', 'twitter', 'discord', 'linkedin', 'microsoft']) ? 'active' : null ?>" data-toggle="collapse" href="#social_logins_collapse">
@@ -122,18 +124,16 @@
                     <a class="nav-link <?= $data->method == 'announcements' ? 'active' : null ?>" href="<?= url('admin/settings/announcements') ?>"><i class="fas fa-fw fa-sm fa-bullhorn mr-2"></i> <?= l('admin_settings.announcements.tab') ?></a>
                     <a class="nav-link <?= $data->method == 'internal_notifications' ? 'active' : null ?>" href="<?= url('admin/settings/internal_notifications') ?>"><i class="fas fa-fw fa-sm fa-bell mr-2"></i> <?= l('admin_settings.internal_notifications.tab') ?></a>
                     <a class="nav-link <?= $data->method == 'email_notifications' ? 'active' : null ?>" href="<?= url('admin/settings/email_notifications') ?>"><i class="fas fa-fw fa-sm fa-envelope mr-2"></i> <?= l('admin_settings.email_notifications.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'push_notifications' ? 'active' : null ?>" href="<?= url('admin/settings/push_notifications') ?>"><i class="fas fa-fw fa-sm fa-bolt-lightning mr-2"></i> <?= l('admin_settings.push_notifications.tab') ?></a>
+
                     <a class="nav-link <?= $data->method == 'webhooks' ? 'active' : null ?>" href="<?= url('admin/settings/webhooks') ?>"><i class="fas fa-fw fa-sm fa-code-branch mr-2"></i> <?= l('admin_settings.webhooks.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'offload' ? 'active' : null ?>" href="<?= url('admin/settings/offload') ?>"><i class="fas fa-fw fa-sm fa-cloud mr-2"></i> <?= l('admin_settings.offload.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'pwa' ? 'active' : null ?>" href="<?= url('admin/settings/pwa') ?>"><i class="fas fa-fw fa-sm fa-mobile-alt mr-2"></i> <?= l('admin_settings.pwa.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'image_optimizer' ? 'active' : null ?>" href="<?= url('admin/settings/image_optimizer') ?>"><i class="fas fa-fw fa-sm fa-image mr-2"></i> <?= l('admin_settings.image_optimizer.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'dynamic_og_images' ? 'active' : null ?>" href="<?= url('admin/settings/dynamic_og_images') ?>"><i class="fas fa-fw fa-sm fa-x-ray mr-2"></i> <?= l('admin_settings.dynamic_og_images.tab') ?></a>
+
+
+
                     <a class="nav-link <?= $data->method == 'sso' ? 'active' : null ?>" href="<?= url('admin/settings/sso') ?>"><i class="fas fa-fw fa-sm fa-random mr-2"></i> <?= l('admin_settings.sso.tab') ?></a>
                     <a class="nav-link <?= $data->method == 'cron' ? 'active' : null ?>" href="<?= url('admin/settings/cron') ?>"><i class="fas fa-fw fa-sm fa-sync mr-2"></i> <?= l('admin_settings.cron.tab') ?></a>
                     <a class="nav-link <?= $data->method == 'health' ? 'active' : null ?>" href="<?= url('admin/settings/health') ?>"><i class="fas fa-fw fa-sm fa-heartbeat mr-2"></i> <?= l('admin_settings.health.tab') ?></a>
                     <a class="nav-link <?= $data->method == 'cache' ? 'active' : null ?>" href="<?= url('admin/settings/cache') ?>"><i class="fas fa-fw fa-sm fa-database mr-2"></i> <?= l('admin_settings.cache.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'license' ? 'active' : null ?>" href="<?= url('admin/settings/license') ?>"><i class="fas fa-fw fa-sm fa-key mr-2"></i> <?= l('admin_settings.license.tab') ?></a>
-                    <a class="nav-link <?= $data->method == 'support' ? 'active' : null ?>" href="<?= url('admin/settings/support') ?>"><i class="fas fa-fw fa-sm fa-life-ring mr-2"></i> <?= l('admin_settings.support.tab') ?></a>
+
                 </div>
             </div>
         </div>

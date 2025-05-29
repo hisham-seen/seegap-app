@@ -131,119 +131,9 @@ PRIMARY KEY (`plan_id`)
 
 -- SEPARATOR --
 
-CREATE TABLE `pages_categories` (
-`pages_category_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`icon` varchar(32) DEFAULT NULL,
-`order` int NOT NULL DEFAULT '0',
-`language` varchar(32) DEFAULT NULL,
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`pages_category_id`),
-KEY `url` (`url`),
-KEY `pages_categories_url_language_index` (`url`,`language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-
--- SEPARATOR --
-
-CREATE TABLE `pages` (
-`page_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`pages_category_id` bigint unsigned DEFAULT NULL,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`icon` varchar(32) DEFAULT NULL,
-`keywords` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-`editor` varchar(16) DEFAULT NULL,
-`content` longtext,
-`type` varchar(16) DEFAULT '',
-`position` varchar(16) NOT NULL DEFAULT '',
-`language` varchar(32) DEFAULT NULL,
-`open_in_new_tab` tinyint DEFAULT '1',
-`order` int DEFAULT '0',
-`total_views` bigint unsigned DEFAULT '0',
-`is_published` tinyint DEFAULT '1',
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`page_id`),
-KEY `pages_pages_category_id_index` (`pages_category_id`),
-KEY `pages_url_index` (`url`),
-KEY `pages_is_published_index` (`is_published`),
-KEY `pages_language_index` (`language`),
-CONSTRAINT `pages_ibfk_1` FOREIGN KEY (`pages_category_id`) REFERENCES `pages_categories` (`pages_category_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- SEPARATOR --
 
-INSERT INTO `pages` (`pages_category_id`, `url`, `title`, `description`, `content`, `type`, `position`, `order`, `total_views`, `datetime`, `last_datetime`) VALUES
-(NULL, 'https://altumcode.com/', 'Software by AltumCode', '', '', 'external', 'bottom', 1, 0, NOW(), NOW()),
-(NULL, 'https://altumco.de/66microsites', 'Built with 66microsites', '', '', 'external', 'bottom', 0, 0, NOW(), NOW());
-
--- SEPARATOR --
-
-CREATE TABLE `blog_posts_categories` (
-`blog_posts_category_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`order` int NOT NULL DEFAULT '0',
-`language` varchar(32) DEFAULT NULL,
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`blog_posts_category_id`),
-KEY `url` (`url`),
-KEY `blog_posts_categories_url_language_index` (`url`,`language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-
--- SEPARATOR --
-
-CREATE TABLE `blog_posts` (
-`blog_post_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`blog_posts_category_id` bigint unsigned DEFAULT NULL,
-`url` varchar(256) NOT NULL,
-`title` varchar(256) NOT NULL DEFAULT '',
-`description` varchar(256) DEFAULT NULL,
-`keywords` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-`image` varchar(40) CHARACTER SET utf8mb4 DEFAULT NULL,
-`image_description` varchar(256) DEFAULT NULL,
-`editor` varchar(16) DEFAULT NULL,
-`content` longtext,
-`language` varchar(32) DEFAULT NULL,
-`total_views` bigint unsigned DEFAULT '0',
-`average_rating` float unsigned NOT NULL DEFAULT '0',
-`total_ratings` bigint unsigned NOT NULL DEFAULT '0',
-`is_published` tinyint DEFAULT '1',
-`datetime` datetime DEFAULT NULL,
-`last_datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`blog_post_id`),
-KEY `blog_post_id_index` (`blog_post_id`),
-KEY `blog_post_url_index` (`url`),
-KEY `blog_posts_category_id` (`blog_posts_category_id`),
-KEY `blog_posts_is_published_index` (`is_published`),
-KEY `blog_posts_language_index` (`language`),
-CONSTRAINT `blog_posts_ibfk_1` FOREIGN KEY (`blog_posts_category_id`) REFERENCES `blog_posts_categories` (`blog_posts_category_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- SEPARATOR --
-
-CREATE TABLE `blog_posts_ratings` (
-`id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`blog_post_id` bigint unsigned DEFAULT NULL,
-`user_id` int DEFAULT NULL,
-`ip_binary` varbinary(16) DEFAULT NULL,
-`rating` tinyint(1) DEFAULT NULL,
-`datetime` datetime DEFAULT NULL,
-PRIMARY KEY (`id`),
-UNIQUE KEY `blog_posts_ratings_blog_post_id_ip_binary_idx` (`blog_post_id`,`ip_binary`) USING BTREE,
-KEY `user_id` (`user_id`),
-CONSTRAINT `blog_posts_ratings_ibfk_1` FOREIGN KEY (`blog_post_id`) REFERENCES `blog_posts` (`blog_post_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-CONSTRAINT `blog_posts_ratings_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- SEPARATOR --
 
 CREATE TABLE `broadcasts` (
 `broadcast_id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -342,7 +232,7 @@ VALUES
 ('cron', concat('{\"key\":\"', @cron_key, '\"}')),
 ('email_notifications', '{"emails":"","new_user":false,"delete_user":false,"new_payment":false,"new_domain":false,"new_affiliate_withdrawal":false,"contact":false}'),
 ('internal_notifications', '{"users_is_enabled":true,"admins_is_enabled":true,"new_user":true,"delete_user":true,"new_newsletter_subscriber":true,"new_payment":true,"new_affiliate_withdrawal":true}'),
-('content', '{"blog_is_enabled":true,"blog_share_is_enabled":true,"blog_search_widget_is_enabled":false,"blog_categories_widget_is_enabled":true,"blog_popular_widget_is_enabled":true,"blog_views_is_enabled":true,"pages_is_enabled":true,"pages_share_is_enabled":true,"pages_popular_widget_is_enabled":true,"pages_views_is_enabled":true}'),
+('content', '{}'),
 ('sso', '{"is_enabled":true,"display_menu_items":true,"websites":{}}'),
 ('facebook', '{"is_enabled":false,"app_id":"","app_secret":""}'),
 ('google', '{"is_enabled":false,"client_id":"","client_secret":""}'),
@@ -380,6 +270,7 @@ VALUES
 ('cookie_consent', '{"is_enabled":false,"logging_is_enabled":false,"necessary_is_enabled":true,"analytics_is_enabled":true,"targeting_is_enabled":true,"layout":"bar","position_y":"middle","position_x":"center"}'),
 ('links', '{"available_microsite_blocks":{"link":true,"heading":true,"paragraph":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"threads":true,"soundcloud":true,"spotify":true,"youtube":true,"twitch":true,"vimeo":true,"tiktok_video":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"map":true,"applemusic":true,"tidal":true,"anchor":true,"twitter_profile":true,"twitter_tweet":true,"twitter_video":true,"pinterest_profile":true,"instagram_media":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"alert":true,"tiktok_profile":true,"big_link":true,"faq":true,"typeform":true,"facebook":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"cta":true,"external_item":true,"share":true,"youtube_feed":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"markdown":true,"telegram":true,"donation":true,"product":true,"service":true},"example_url":"","random_url_length":5,"branding":"Powered by Seegap","shortener_is_enabled":1,"microsites_is_enabled":1,"microsites_templates_is_enabled":1,"microsites_themes_is_enabled":"on","microsites_new_blocks_position":"bottom","microsites_default_active_tab":"settings","default_microsite_theme_id":null,"default_microsite_template_id":null,"files_is_enabled":1,"events_is_enabled":1,"static_is_enabled":1,"pixels_is_enabled":1,"splash_page_is_enabled":1,"splash_page_auto_redirect":1,"splash_page_link_unlock_seconds":3,"directory_is_enabled":1,"directory_access":"everyone","directory_display":"all","domains_is_enabled":1,"additional_domains_is_enabled":1,"main_domain_is_enabled":1,"domains_custom_main_ip":"","blacklisted_domains":[],"blacklisted_keywords":[],"google_safe_browsing_is_enabled":0,"google_safe_browsing_api_key":"","google_static_maps_is_enabled":0,"google_static_maps_api_key":"","avatar_size_limit":2,"background_size_limit":2,"favicon_size_limit":2,"seo_image_size_limit":2,"thumbnail_image_size_limit":2,"image_size_limit":2,"audio_size_limit":2,"video_size_limit":2,"file_size_limit":2,"product_file_size_limit":2,"static_size_limit":2}'),
 ('codes', '{"qr_codes_is_enabled":1,"logo_size_limit":1,"background_size_limit":1,"available_qr_codes":{"text":true,"url":true,"phone":true,"sms":true,"email":true,"whatsapp":true,"facetime":true,"location":true,"wifi":true,"event":true,"vcard":true,"crypto":true,"paypal":true,"upi":true,"epc":true,"pix":true},"qr_codes_branding_logo":"","qr_codes_default_image":""}'),
+('gs1_links', '{"gs1_links_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_target_url":false,"default_target_url":"","domains_is_enabled":true,"projects_is_enabled":true,"pixels_is_enabled":true,"analytics_is_enabled":true,"auto_generate_qr_codes":false,"branding":"","random_gtin_length":"14","blacklisted_gtins":[],"allowed_gtin_prefixes":[]}'),
 ('license', '{\"license\":\"BYPASSED-LICENSE\",\"type\":\"SPECIAL\"}'),
 ('product_info', '{\"version\":\"56.0.0\", \"code\":\"5600\"}'),
 ('support', '{\"key\":\"BYPASSED-SUPPORT\",\"expiry_datetime\":\"2099-12-31 23:59:59\"}');

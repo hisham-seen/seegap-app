@@ -52,14 +52,16 @@ class Gs1LinkRedirect extends Controller {
             redirect();
         }
         
-        /* Track the click */
-        $this->track_gs1_click($gs1_link);
+        /* Track the click only if analytics is enabled */
+        if(settings()->gs1_links->analytics_is_enabled ?? true) {
+            $this->track_gs1_click($gs1_link);
+            
+            /* Increment click counter */
+            $gs1_link_model->increment_click($gs1_link->gs1_link_id);
+        }
         
-        /* Increment click counter */
-        $gs1_link_model->increment_click($gs1_link->gs1_link_id);
-        
-        /* Handle pixels if any */
-        if (!empty($gs1_link->pixels_ids)) {
+        /* Handle pixels if enabled and any exist */
+        if (settings()->gs1_links->pixels_is_enabled && !empty($gs1_link->pixels_ids)) {
             foreach ($gs1_link->pixels_ids as $pixel_id) {
                 /* Get pixel details and fire it */
                 $pixel = database()->query("SELECT * FROM `pixels` WHERE `pixel_id` = {$pixel_id}")->fetch_object();

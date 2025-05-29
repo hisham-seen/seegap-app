@@ -98,7 +98,7 @@
                             <label class="custom-control-label" for="is_enabled"><?= l('link.settings.is_enabled') ?></label>
                         </div>
 
-                        <?php if(settings()->links->pixels_is_enabled): ?>
+                        <?php if(settings()->links->pixels_is_enabled && settings()->gs1_links->pixels_is_enabled): ?>
                             <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#pixels_container" aria-expanded="false" aria-controls="pixels_container">
                                 <i class="fas fa-fw fa-adjust fa-sm mr-1"></i> <?= l('link.settings.pixels_header') ?>
                             </button>
@@ -574,7 +574,7 @@
                         </button>
 
                         <div class="collapse" id="advanced_container">
-                            <?php if(settings()->links->projects_is_enabled): ?>
+                            <?php if(settings()->links->projects_is_enabled && settings()->gs1_links->projects_is_enabled): ?>
                                 <div class="form-group">
                                     <div class="d-flex flex-column flex-xl-row justify-content-between">
                                         <label for="project_id"><i class="fas fa-fw fa-sm fa-project-diagram text-muted mr-1"></i> <?= l('projects.project_id') ?></label>

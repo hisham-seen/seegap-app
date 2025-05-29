@@ -9,7 +9,7 @@
 
 namespace Altum\Controllers;
 
-use Altum\Models\Page;
+
 use Altum\Traits\Paramsable;
 
 defined('ALTUMCODE') || die();
@@ -50,10 +50,10 @@ class Controller {
             \Altum\Meta::set_robots(implode(', ', $meta_content));
 
             /* Get the top menu custom pages */
-            $top_pages = settings()->content->pages_is_enabled ? (new Page())->get_pages('top') : [];
+            $top_pages = [];
 
             /* Get the footer pages */
-            $bottom_pages = settings()->content->pages_is_enabled ? (new Page())->get_pages('bottom') : [];
+            $bottom_pages = [];
 
             /* Custom wrapper condition for plan pages */
             if(in_array(\Altum\Router::$controller_key, ['plan', 'contact', 'affiliate', 'api-documentation'])) {

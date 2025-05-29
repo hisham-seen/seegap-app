@@ -144,13 +144,9 @@ class CustomHooks {
             $prefixes = array_merge($prefixes, ['ad_blocker_detector_modal.']);
         }
 
-        if(!settings()->content->blog_is_enabled) {
-            $prefixes = array_merge($prefixes, ['blog.']);
-        }
 
-        if(!settings()->content->pages_is_enabled) {
-            $prefixes = array_merge($prefixes, ['page.', 'pages.']);
-        }
+
+
 
         if(!settings()->users->register_is_enabled) {
             $prefixes = array_merge($prefixes, ['register.']);

@@ -22,6 +22,11 @@ class Gs1LinkManager extends Controller {
 
         \Altum\Authentication::guard();
 
+        /* Check if GS1 links feature is enabled */
+        if(!settings()->gs1_links->gs1_links_is_enabled) {
+            redirect('dashboard');
+        }
+
         /* Detect mode from URL parameters */
         $mode = isset($this->params[0]) && in_array($this->params[0], ['create', 'edit']) ? $this->params[0] : 'create';
         $gs1_link_id = $mode === 'edit' && isset($this->params[1]) ? (int) $this->params[1] : null;
@@ -60,14 +65,23 @@ class Gs1LinkManager extends Controller {
             }
         }
 
-        /* Get available domains */
-        $domains = (new Domain())->get_available_domains_by_user($this->user);
+        /* Get available domains (only if enabled in admin settings) */
+        $domains = [];
+        if(settings()->gs1_links->domains_is_enabled) {
+            $domains = (new Domain())->get_available_domains_by_user($this->user);
+        }
 
-        /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        /* Get available projects (only if enabled in admin settings) */
+        $projects = [];
+        if(settings()->gs1_links->projects_is_enabled) {
+            $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        }
 
-        /* Get available pixels */
-        $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
+        /* Get available pixels (only if enabled in admin settings) */
+        $pixels = [];
+        if(settings()->gs1_links->pixels_is_enabled) {
+            $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
+        }
 
         /* Get available splash pages */
         $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
@@ -109,18 +123,70 @@ class Gs1LinkManager extends Controller {
             //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
-            $required_fields = ['gtin', 'target_url'];
+            $required_fields = ['gtin'];
+            
+            /* Add target_url as required field if admin setting requires it */
+            if(settings()->gs1_links->require_target_url) {
+                $required_fields[] = 'target_url';
+            }
+            
             foreach($required_fields as $field) {
                 if(!isset($_POST[$field]) || (isset($_POST[$field]) && empty($_POST[$field]) && $_POST[$field] != '0')) {
                     Alerts::add_field_error($field, l('global.error_message.empty_field'));
                 }
             }
 
-            /* Format GTIN - just clean it up (no validation like create) */
+            /* Format and validate GTIN according to admin settings */
             $_POST['gtin'] = preg_replace('/[^0-9]/', '', $_POST['gtin']);
+            
+            /* Apply GTIN validation based on format validation setting */
+            if(settings()->gs1_links->gtin_validation_is_enabled && settings()->gs1_links->gtin_format_validation !== 'disabled') {
+                $gtin_length = strlen($_POST['gtin']);
+                $valid_lengths = [8, 12, 13, 14];
+                
+                /* Length validation for both lenient and strict modes */
+                if(!in_array($gtin_length, $valid_lengths)) {
+                    Alerts::add_field_error('gtin', l('gs1_link_create.error_message.gtin_invalid_length'));
+                } else {
+                    /* Strict validation includes checksum validation */
+                    if(settings()->gs1_links->gtin_format_validation === 'strict') {
+                        if(!$this->validate_gtin_checksum($_POST['gtin'])) {
+                            Alerts::add_field_error('gtin', l('gs1_link_create.error_message.gtin_invalid_checksum'));
+                        }
+                    }
+                    /* Lenient mode only does length validation (already done above) */
+                }
+            }
+            
+            /* Apply additional validation rules if GTIN validation is enabled */
+            if(settings()->gs1_links->gtin_validation_is_enabled) {
+                /* Check blacklisted GTINs */
+                if(!empty(settings()->gs1_links->blacklisted_gtins) && in_array($_POST['gtin'], settings()->gs1_links->blacklisted_gtins)) {
+                    Alerts::add_field_error('gtin', l('gs1_link_create.error_message.gtin_blacklisted'));
+                }
+                
+                /* Check allowed GTIN prefixes */
+                if(!empty(settings()->gs1_links->allowed_gtin_prefixes)) {
+                    $prefix_allowed = false;
+                    foreach(settings()->gs1_links->allowed_gtin_prefixes as $prefix) {
+                        if(str_starts_with($_POST['gtin'], $prefix)) {
+                            $prefix_allowed = true;
+                            break;
+                        }
+                    }
+                    if(!$prefix_allowed) {
+                        Alerts::add_field_error('gtin', l('gs1_link_create.error_message.gtin_prefix_not_allowed'));
+                    }
+                }
+            }
 
-            /* Validate target URL */
-            if(!filter_var($_POST['target_url'], FILTER_VALIDATE_URL)) {
+            /* Apply default target URL if not provided and not required */
+            if(empty($_POST['target_url']) && !settings()->gs1_links->require_target_url && !empty(settings()->gs1_links->default_target_url)) {
+                $_POST['target_url'] = settings()->gs1_links->default_target_url;
+            }
+            
+            /* Validate target URL if provided */
+            if(!empty($_POST['target_url']) && !filter_var($_POST['target_url'], FILTER_VALIDATE_URL)) {
                 Alerts::add_field_error('target_url', l('global.error_message.invalid_url'));
             }
 
@@ -216,6 +282,11 @@ class Gs1LinkManager extends Controller {
                     ]);
 
                     if($gs1_link_id) {
+                        /* Auto-generate QR code if enabled in admin settings */
+                        if(settings()->gs1_links->auto_generate_qr_codes) {
+                            $this->auto_generate_qr_code($gs1_link_id, $_POST['gtin'], $_POST['domain_id']);
+                        }
+                        
                         /* Set a nice success message */
                         Alerts::add_success(sprintf(l('global.success_message.create1'), '<strong>' . $_POST['gtin'] . '</strong>'));
 
@@ -341,6 +412,75 @@ class Gs1LinkManager extends Controller {
         $view = new \Altum\View('gs1-link-manager/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
 
+    }
+
+    /**
+     * Auto-generate QR code for GS1 link
+     */
+    private function auto_generate_qr_code($gs1_link_id, $gtin, $domain_id) {
+        try {
+            /* Get the GS1 link to generate the full URL */
+            $gs1_link_model = new Gs1Link();
+            $gs1_link = $gs1_link_model->get_gs1_link_by_id($gs1_link_id, $this->user->user_id);
+            
+            if (!$gs1_link) {
+                return false;
+            }
+            
+            /* Generate QR code data */
+            $qr_code_data = [
+                'user_id' => $this->user->user_id,
+                'project_id' => $gs1_link->project_id,
+                'name' => 'GS1 QR - ' . $gtin,
+                'type' => 'text',
+                'text' => $gs1_link->full_url,
+                'settings' => json_encode([
+                    'size' => 500,
+                    'margin' => 1,
+                    'ecc' => 'M',
+                    'foreground_type' => 'color',
+                    'foreground_color' => '#000000',
+                    'background_color' => '#ffffff',
+                    'custom_eyes_color' => false,
+                    'eyes_inner_color' => '#000000',
+                    'eyes_outer_color' => '#000000',
+                    'qr_code_logo' => '',
+                    'qr_code_logo_size' => 25,
+                    'qr_code_background' => '',
+                    'qr_code_foreground' => ''
+                ]),
+                'is_enabled' => 1,
+                'datetime' => date('Y-m-d H:i:s')
+            ];
+            
+            /* Insert QR code into database */
+            $qr_code_id = database()->insert('qr_codes', $qr_code_data);
+            
+            return $qr_code_id;
+        } catch (Exception $e) {
+            /* Silently fail - QR code generation is optional */
+            return false;
+        }
+    }
+    
+    /**
+     * Validate GTIN checksum using the standard algorithm
+     */
+    private function validate_gtin_checksum($gtin) {
+        $gtin = str_pad($gtin, 14, '0', STR_PAD_LEFT);
+        
+        if (strlen($gtin) !== 14) {
+            return false;
+        }
+        
+        $sum = 0;
+        for ($i = 0; $i < 13; $i++) {
+            $digit = (int) $gtin[$i];
+            $sum += ($i % 2 === 0) ? $digit : $digit * 3;
+        }
+        
+        $checksum = (10 - ($sum % 10)) % 10;
+        return $checksum === (int) $gtin[13];
     }
 
 }
