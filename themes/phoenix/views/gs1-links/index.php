@@ -21,7 +21,7 @@
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('gs1_links.create') ?>
                     </button>
                 <?php else: ?>
-                    <a href="<?= url('gs1-link-create') ?>" class="btn btn-primary">
+                    <a href="<?= url('gs1-link-manager/create') ?>" class="btn btn-primary">
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('gs1_links.create') ?>
                     </a>
                 <?php endif ?>
@@ -161,7 +161,7 @@
 
                                 <div class="text-truncate">
                                     <div>
-                                        <a href="<?= url('gs1-link/' . $row->gs1_link_id) ?>" class="font-weight-bold"><?= $row->gtin ?></a>
+                                        <a href="<?= url('gs1-link-manager/edit/' . $row->gs1_link_id) ?>" class="font-weight-bold"><?= $row->gtin ?></a>
                                     </div>
 
                                     <?php if(!empty($row->title)): ?>
@@ -206,7 +206,7 @@
                         <td class="text-nowrap">
                             <div class="d-flex align-items-center justify-content-end">
 
-                                <div class="custom-control custom-switch" data-toggle="tooltip" title="<?= l('gs1_links.is_enabled_tooltip') ?>">
+                                <div class="custom-control custom-switch mr-3" data-toggle="tooltip" title="<?= l('gs1_links.is_enabled_tooltip') ?>">
                                     <input
                                             type="checkbox"
                                             class="custom-control-input"
@@ -218,10 +218,23 @@
                                     <label class="custom-control-label" for="gs1_link_is_enabled_<?= $row->gs1_link_id ?>"></label>
                                 </div>
 
+                                <a href="<?= url('gs1-link-manager/edit/' . $row->gs1_link_id) ?>" class="btn btn-sm btn-outline-primary mr-2" data-toggle="tooltip" title="<?= l('global.edit') ?>">
+                                    <i class="fas fa-fw fa-sm fa-pencil-alt"></i>
+                                </a>
+
+                                <a href="<?= url('gs1-link/' . $row->gs1_link_id . '/statistics') ?>" class="btn btn-sm btn-outline-info mr-2" data-toggle="tooltip" title="<?= l('link.statistics.link') ?>">
+                                    <i class="fas fa-fw fa-sm fa-chart-bar"></i>
+                                </a>
+
+                                <?php if(settings()->codes->qr_codes_is_enabled): ?>
+                                    <a href="<?= url('qr-code-create?name=' . $row->gtin . '&type=url&url=' . url('01/' . $row->gtin) . '&gs1_link_id=' . $row->gs1_link_id . '&url_dynamic=1') ?>" class="btn btn-sm btn-outline-secondary mr-2" data-toggle="tooltip" title="<?= l('qr_codes.create') ?>">
+                                        <i class="fas fa-fw fa-sm fa-qrcode"></i>
+                                    </a>
+                                <?php endif ?>
+
                                 <button
-                                        id="url_copy"
                                         type="button"
-                                        class="btn btn-link text-secondary"
+                                        class="btn btn-sm btn-outline-secondary mr-2"
                                         data-toggle="tooltip"
                                         title="<?= l('global.clipboard_copy') ?>"
                                         aria-label="<?= l('global.clipboard_copy') ?>"
@@ -232,7 +245,18 @@
                                     <i class="fas fa-fw fa-sm fa-copy"></i>
                                 </button>
 
-                                <?= include_view(THEME_PATH . 'views/gs1-links/gs1_link_dropdown_button.php', ['id' => $row->gs1_link_id, 'resource_name' => $row->gtin]) ?>
+                                <button type="button" class="btn btn-sm btn-outline-success mr-2" data-toggle="modal" data-target="#gs1_link_duplicate_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" title="<?= l('global.duplicate') ?>">
+                                    <i class="fas fa-fw fa-sm fa-clone"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#gs1_link_reset_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" title="<?= l('global.reset') ?>">
+                                    <i class="fas fa-fw fa-sm fa-redo"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" data-resource-name="<?= $row->gtin ?>" title="<?= l('global.delete') ?>">
+                                    <i class="fas fa-fw fa-sm fa-trash-alt"></i>
+                                </button>
+
                             </div>
                         </td>
                     </tr>

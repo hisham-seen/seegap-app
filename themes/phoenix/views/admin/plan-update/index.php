@@ -294,6 +294,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="gs1_links_limit"><?= l('admin_plans.plan.gs1_links_limit') ?></label>
+                    <input type="number" id="gs1_links_limit" name="gs1_links_limit" min="-1" class="form-control" value="<?= $data->plan->settings->gs1_links_limit ?? 0 ?>" />
+                    <small class="form-text text-muted"><?= l('admin_plans.plan.unlimited') ?></small>
+                </div>
+
+                <div class="form-group">
                     <label for="microsites_limit"><?= l('admin_plans.plan.microsites_limit') ?></label>
                     <input type="number" id="microsites_limit" name="microsites_limit" min="-1" class="form-control" value="<?= $data->plan->settings->microsites_limit ?>" />
                     <small class="form-text text-muted"><?= l('admin_plans.plan.microsites_limit_help') ?></small>

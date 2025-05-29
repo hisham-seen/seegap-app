@@ -6,7 +6,7 @@
     </button>
 
     <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" href="<?= url('gs1-link/' . $data->id) ?>">
+        <a class="dropdown-item" href="<?= url('gs1-link-manager/edit/' . $data->id) ?>">
             <i class="fas fa-fw fa-sm fa-pencil-alt mr-2"></i> <?= l('global.edit') ?>
         </a>
 

@@ -16,24 +16,48 @@ use Altum\Title;
 
 defined('ALTUMCODE') || die();
 
-class Gs1LinkCreate extends Controller {
+class Gs1LinkManager extends Controller {
 
     public function index() {
 
         \Altum\Authentication::guard();
 
+        /* Detect mode from URL parameters */
+        $mode = isset($this->params[0]) && in_array($this->params[0], ['create', 'edit']) ? $this->params[0] : 'create';
+        $gs1_link_id = $mode === 'edit' && isset($this->params[1]) ? (int) $this->params[1] : null;
+        $gs1_link = null;
+
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.gs1_links')) {
-            Alerts::add_info(l('global.info_message.team_no_access'));
-            redirect('gs1-links');
-        }
+        if($mode === 'create') {
+            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.gs1_links')) {
+                Alerts::add_info(l('global.info_message.team_no_access'));
+                redirect('gs1-links');
+            }
 
-        /* Check for the plan limit */
-        $total_rows = (new Gs1Link())->get_gs1_links_count_by_user_id($this->user->user_id);
+            /* Check for the plan limit */
+            $total_rows = (new Gs1Link())->get_gs1_links_count_by_user_id($this->user->user_id);
 
-        if($this->user->plan_settings->gs1_links_limit != -1 && $total_rows >= $this->user->plan_settings->gs1_links_limit) {
-            Alerts::add_info(l('global.info_message.plan_feature_limit'));
-            redirect('gs1-links');
+            if($this->user->plan_settings->gs1_links_limit != -1 && $total_rows >= $this->user->plan_settings->gs1_links_limit) {
+                Alerts::add_info(l('global.info_message.plan_feature_limit'));
+                redirect('gs1-links');
+            }
+        } else {
+            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('read.gs1_links')) {
+                Alerts::add_info(l('global.info_message.team_no_access'));
+                redirect('dashboard');
+            }
+
+            /* Make sure the GS1 link exists and is accessible to the user */
+            $gs1_link_model = new Gs1Link();
+            if(!$gs1_link = $gs1_link_model->get_gs1_link_by_id($gs1_link_id, $this->user->user_id)) {
+                redirect('gs1-links');
+            }
+
+            /* Team checks for editing */
+            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.gs1_links')) {
+                Alerts::add_info(l('global.info_message.team_no_access'));
+                redirect('gs1-links');
+            }
         }
 
         /* Get available domains */
@@ -51,8 +75,8 @@ class Gs1LinkCreate extends Controller {
         if(!empty($_POST)) {
             $_POST['gtin'] = input_clean($_POST['gtin']);
             $_POST['target_url'] = input_clean($_POST['target_url']);
-            $_POST['title'] = input_clean($_POST['title'], 256);
-            $_POST['description'] = input_clean($_POST['description']);
+            $_POST['title'] = input_clean($_POST['title'] ?? '', 256);
+            $_POST['description'] = input_clean($_POST['description'] ?? '');
             $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
             $_POST['domain_id'] = isset($_POST['domain_id']) && array_key_exists($_POST['domain_id'], $domains) ? (int) $_POST['domain_id'] : 0;
             $_POST['pixels_ids'] = array_map(
@@ -92,7 +116,7 @@ class Gs1LinkCreate extends Controller {
                 }
             }
 
-            /* Format GTIN - just clean it up */
+            /* Format GTIN - just clean it up (no validation like create) */
             $_POST['gtin'] = preg_replace('/[^0-9]/', '', $_POST['gtin']);
 
             /* Validate target URL */
@@ -102,8 +126,17 @@ class Gs1LinkCreate extends Controller {
 
             /* Check if GTIN already exists for this domain */
             $gs1_link_model = new Gs1Link();
-            if($gs1_link_model->get_gs1_link_by_gtin($_POST['gtin'], $_POST['domain_id'])) {
-                Alerts::add_field_error('gtin', l('gs1_link_create.error_message.gtin_exists'));
+            if($mode === 'create') {
+                if($gs1_link_model->get_gs1_link_by_gtin($_POST['gtin'], $_POST['domain_id'])) {
+                    Alerts::add_field_error('gtin', l('gs1_link_create.error_message.gtin_exists'));
+                }
+            } else {
+                /* For edit, check if GTIN already exists for this domain (excluding current link) */
+                if($_POST['gtin'] != $gs1_link->gtin || $_POST['domain_id'] != $gs1_link->domain_id) {
+                    if($gs1_link_model->get_gs1_link_by_gtin($_POST['gtin'], $_POST['domain_id'])) {
+                        Alerts::add_field_error('gtin', l('gs1_link.error_message.gtin_exists'));
+                    }
+                }
             }
 
             if(!\Altum\Csrf::check()) {
@@ -167,44 +200,72 @@ class Gs1LinkCreate extends Controller {
                     'forward_query_parameters_is_enabled' => $_POST['forward_query_parameters_is_enabled'],
                 ];
 
-                /* Create the GS1 link */
-                $gs1_link_id = $gs1_link_model->create_gs1_link([
-                    'user_id' => $this->user->user_id,
-                    'project_id' => $_POST['project_id'],
-                    'domain_id' => $_POST['domain_id'],
-                    'gtin' => $_POST['gtin'],
-                    'target_url' => $_POST['target_url'],
-                    'title' => $_POST['title'],
-                    'description' => $_POST['description'],
-                    'settings' => $settings,
-                    'pixels_ids' => $_POST['pixels_ids'],
-                    'is_enabled' => $_POST['is_enabled'],
-                ]);
+                if($mode === 'create') {
+                    /* Create the GS1 link */
+                    $gs1_link_id = $gs1_link_model->create_gs1_link([
+                        'user_id' => $this->user->user_id,
+                        'project_id' => $_POST['project_id'],
+                        'domain_id' => $_POST['domain_id'],
+                        'gtin' => $_POST['gtin'],
+                        'target_url' => $_POST['target_url'],
+                        'title' => $_POST['title'],
+                        'description' => $_POST['description'],
+                        'settings' => $settings,
+                        'pixels_ids' => $_POST['pixels_ids'],
+                        'is_enabled' => $_POST['is_enabled'],
+                    ]);
 
-                if($gs1_link_id) {
-                    /* Set a nice success message */
-                    Alerts::add_success(sprintf(l('global.success_message.create1'), '<strong>' . $_POST['gtin'] . '</strong>'));
+                    if($gs1_link_id) {
+                        /* Set a nice success message */
+                        Alerts::add_success(sprintf(l('global.success_message.create1'), '<strong>' . $_POST['gtin'] . '</strong>'));
 
-                    /* Clear the cache */
-                    cache()->deleteItem('gs1_links_total?user_id=' . $this->user->user_id);
+                        /* Clear the cache */
+                        cache()->deleteItem('gs1_links_total?user_id=' . $this->user->user_id);
 
-                    redirect('gs1-link/' . $gs1_link_id);
+                        redirect('gs1-link-manager/edit/' . $gs1_link_id);
+                    } else {
+                        Alerts::add_error(l('global.error_message.create'));
+                    }
                 } else {
-                    Alerts::add_error(l('global.error_message.create'));
+                    /* Update the GS1 link */
+                    $updated = $gs1_link_model->update_gs1_link($gs1_link->gs1_link_id, [
+                        'gtin' => $_POST['gtin'],
+                        'target_url' => $_POST['target_url'],
+                        'title' => $_POST['title'],
+                        'description' => $_POST['description'],
+                        'project_id' => $_POST['project_id'],
+                        'domain_id' => $_POST['domain_id'],
+                        'is_enabled' => $_POST['is_enabled'],
+                        'settings' => $settings,
+                        'pixels_ids' => $_POST['pixels_ids'],
+                    ], $this->user->user_id);
+
+                    if($updated) {
+                        /* Set a nice success message */
+                        Alerts::add_success(l('global.success_message.update2'));
+
+                        /* Clear the cache */
+                        cache()->deleteItem('gs1_links_total?user_id=' . $this->user->user_id);
+
+                        /* Refresh the page */
+                        redirect('gs1-link-manager/edit/' . $gs1_link->gs1_link_id);
+                    } else {
+                        Alerts::add_error(l('global.error_message.update'));
+                    }
                 }
             }
         }
 
         /* Set a custom title */
-        Title::set(l('gs1_link_create.title'));
+        if($mode === 'create') {
+            Title::set(l('gs1_link_create.title'));
+        } else {
+            Title::set(sprintf(l('gs1_link.title'), $gs1_link->gtin));
+        }
 
-        /* Prepare the View */
-        $data = [
-            'domains' => $domains,
-            'projects' => $projects,
-            'pixels' => $pixels,
-            'splash_pages' => $splash_pages,
-            'values' => [
+        /* Prepare default values */
+        if($mode === 'create') {
+            $values = [
                 'gtin' => $_POST['gtin'] ?? '',
                 'target_url' => $_POST['target_url'] ?? '',
                 'title' => $_POST['title'] ?? '',
@@ -229,10 +290,55 @@ class Gs1LinkCreate extends Controller {
                 'splash_page_id' => $_POST['splash_page_id'] ?? '',
                 'forward_query_parameters_is_enabled' => $_POST['forward_query_parameters_is_enabled'] ?? 0,
                 'http_status_code' => '302', // Default for GS1 links
-            ]
+            ];
+        } else {
+            $values = [
+                'gtin' => $gs1_link->gtin,
+                'target_url' => $gs1_link->target_url,
+                'title' => $gs1_link->title,
+                'description' => $gs1_link->description,
+                'domain_id' => $gs1_link->domain_id,
+                'project_id' => $gs1_link->project_id,
+                'pixels_ids' => $gs1_link->pixels_ids ?? [],
+                'is_enabled' => $gs1_link->is_enabled,
+                'schedule' => $gs1_link->settings->schedule ?? 0,
+                'start_date' => $gs1_link->settings->start_date ?? '',
+                'end_date' => $gs1_link->settings->end_date ?? '',
+                'clicks_limit' => $gs1_link->settings->clicks_limit ?? '',
+                'expiration_url' => $gs1_link->settings->expiration_url ?? '',
+                'targeting_type' => $gs1_link->settings->targeting_type ?? 'false',
+                'utm_source' => $gs1_link->settings->utm->source ?? '',
+                'utm_medium' => $gs1_link->settings->utm->medium ?? '',
+                'utm_campaign' => $gs1_link->settings->utm->campaign ?? '',
+                'cloaking_is_enabled' => $gs1_link->settings->cloaking_is_enabled ?? 0,
+                'cloaking_title' => $gs1_link->settings->cloaking_title ?? '',
+                'cloaking_meta_description' => $gs1_link->settings->cloaking_meta_description ?? '',
+                'cloaking_custom_js' => $gs1_link->settings->cloaking_custom_js ?? '',
+                'splash_page_id' => $gs1_link->settings->splash_page_id ?? '',
+                'forward_query_parameters_is_enabled' => $gs1_link->settings->forward_query_parameters_is_enabled ?? 0,
+            ];
+
+            /* Load existing targeting data */
+            if($gs1_link->settings->targeting_type && $gs1_link->settings->targeting_type !== 'false') {
+                $targeting_key = 'targeting_' . $gs1_link->settings->targeting_type;
+                if(isset($gs1_link->settings->{$targeting_key})) {
+                    $values[$targeting_key] = $gs1_link->settings->{$targeting_key};
+                }
+            }
+        }
+
+        /* Prepare the View */
+        $data = [
+            'mode' => $mode,
+            'gs1_link' => $gs1_link,
+            'domains' => $domains,
+            'projects' => $projects,
+            'pixels' => $pixels,
+            'splash_pages' => $splash_pages,
+            'values' => $values,
         ];
 
-        $view = new \Altum\View('gs1-link-create/index', (array) $this);
+        $view = new \Altum\View('gs1-link-manager/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
 
     }

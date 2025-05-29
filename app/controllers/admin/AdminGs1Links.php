@@ -7,10 +7,9 @@
  *
  */
 
-namespace Altum\Controllers\Admin;
+namespace Altum\Controllers;
 
 use Altum\Alerts;
-use Altum\Database\Database;
 use Altum\Date;
 use Altum\Models\User;
 use Altum\Response;
@@ -27,12 +26,12 @@ class AdminGs1Links extends \Altum\Controllers\Controller {
         $filters->set_default_results_per_page(settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
-        $total_rows = Database::$database->query("SELECT COUNT(*) AS `total` FROM `gs1_links` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
+        $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `gs1_links` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
         $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/gs1-links?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $gs1_links = [];
-        $gs1_links_result = Database::$database->query("
+        $gs1_links_result = database()->query("
             SELECT
                 `gs1_links`.*, `users`.`name` AS `user_name`, `users`.`email` AS `user_email`
             FROM
@@ -54,7 +53,7 @@ class AdminGs1Links extends \Altum\Controllers\Controller {
         process_export_json($gs1_links, 'include', ['gs1_link_id', 'user_id', 'gtin', 'target_url', 'title', 'clicks', 'is_enabled', 'datetime'], sprintf(l('admin_gs1_links.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Delete Modal */
         $view = new \Altum\View('admin/gs1-links/gs1_link_delete_modal', (array) $this);
@@ -95,14 +94,14 @@ class AdminGs1Links extends \Altum\Controllers\Controller {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
-        if(!$gs1_link = Database::$database->query("SELECT * FROM `gs1_links` WHERE `gs1_link_id` = {$gs1_link_id}")->fetch_object()) {
+        if(!$gs1_link = database()->query("SELECT * FROM `gs1_links` WHERE `gs1_link_id` = {$gs1_link_id}")->fetch_object()) {
             redirect('admin/gs1-links');
         }
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Delete the gs1_link */
-            Database::$database->query("DELETE FROM `gs1_links` WHERE `gs1_link_id` = {$gs1_link->gs1_link_id}");
+            database()->query("DELETE FROM `gs1_links` WHERE `gs1_link_id` = {$gs1_link->gs1_link_id}");
 
             /* Clear cache */
             cache()->deleteItemsByTag('gs1_link_id=' . $gs1_link_id);

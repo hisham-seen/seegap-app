@@ -140,8 +140,10 @@ class Gs1Link extends Model {
         $set_clauses = [];
         
         if (isset($data['gtin'])) {
-            $gtin = format_gtin($data['gtin']);
-            if (!$gtin || !validate_gtin($gtin)) {
+            // Clean GTIN - just remove non-numeric characters
+            $gtin = preg_replace('/[^0-9]/', '', $data['gtin']);
+            
+            if (empty($gtin)) {
                 return false;
             }
             

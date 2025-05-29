@@ -157,7 +157,7 @@ class Gs1LinkAjax extends Controller {
             Alerts::add_success(l('global.success_message.create2'));
 
             /* Redirect */
-            redirect('gs1-link/' . $gs1_link_id);
+            redirect('gs1-link-manager/edit/' . $gs1_link_id);
         }
 
         redirect('gs1-links');

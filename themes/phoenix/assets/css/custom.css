@@ -2,6 +2,32 @@ html {
 	scroll-behavior: smooth;
 }
 
+/* Icon Loading Improvements */
+/* Prevent icon flash during loading */
+i[class*="fa-"] {
+	display: inline-block;
+	min-width: 1em;
+	text-align: center;
+}
+
+/* Loading state for icons */
+.icon-loading {
+	opacity: 0.5;
+	animation: icon-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+	0% { opacity: 0.5; }
+	50% { opacity: 0.8; }
+	100% { opacity: 0.5; }
+}
+
+/* Ensure icons have proper spacing */
+.fa-fw {
+	width: 1.25em !important;
+	text-align: center;
+}
+
 b, strong {
 	font-weight: 500;
 }
@@ -2530,4 +2556,121 @@ input[type="range"] {
 .reset-password-background .container {
   position: relative;
   z-index: 1;
+}
+
+/* GS1 Link Create Styles */
+.gs1-link-create .card {
+    height: fit-content;
+}
+
+/* GS1 Link Settings Styles */
+.gs1-link-settings .card {
+    height: fit-content;
+}
+
+/* Flow Visualization Styles */
+.gs1-flow-visualization {
+    padding: 1rem 0;
+}
+
+.flow-step {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.flow-step:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.flow-icon {
+    margin-right: 1rem;
+    min-width: 60px;
+    text-align: center;
+}
+
+.flow-content {
+    flex: 1;
+}
+
+.flow-content h6 {
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.flow-arrow {
+    text-align: center;
+    margin: 0.5rem 0;
+}
+
+.flow-arrow i {
+    font-size: 1.2rem;
+}
+
+/* Mobile Preview Styles */
+.mobile-preview {
+    position: relative;
+	margin: 0 auto;
+	height: auto;
+	width: auto;
+	display: inline-block;
+	text-align: left;
+}
+
+.mobile-frame {
+    overflow: hidden;
+	width: 300px;
+	height: 625px;
+	border-radius: 2.5rem;
+	border: 10px solid black;
+	position: relative;
+	box-shadow: 0 0 30px rgba(0,0,0,0.20);
+}
+
+.mobile-screen {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.mobile-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-url-display {
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+    max-width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .mobile-frame {
+        width: 240px;
+        height: 480px;
+        padding: 15px 12px;
+    }
+    
+    .flow-step {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .flow-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
 }

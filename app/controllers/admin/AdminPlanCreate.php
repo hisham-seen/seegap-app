@@ -94,6 +94,7 @@ class AdminPlanCreate extends Controller {
                 'pixels_limit' => (int) $_POST['pixels_limit'],
                 'qr_codes_limit' => (int) $_POST['qr_codes_limit'],
                 'qr_codes_bulk_limit' => (int) $_POST['qr_codes_bulk_limit'],
+                'gs1_links_limit' => (int) $_POST['gs1_links_limit'],
                 'microsites_limit' => (int) $_POST['microsites_limit'],
                 'links_limit' => (int) $_POST['links_limit'],
                 'links_bulk_limit'                  => (int) $_POST['links_bulk_limit'],

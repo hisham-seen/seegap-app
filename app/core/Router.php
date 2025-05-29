@@ -272,16 +272,10 @@ class Router {
                 ]
             ],
 
-            'gs1-link-create' => [
-                'controller' => 'Gs1LinkCreate',
-                'settings' => [
-                    'wrapper' => 'app_wrapper',
-                    'ads' => true,
-                ]
-            ],
 
-            'gs1-link' => [
-                'controller' => 'Gs1Link',
+
+            'gs1-link-manager' => [
+                'controller' => 'Gs1LinkManager',
                 'settings' => [
                     'wrapper' => 'app_wrapper',
                     'ads' => true,

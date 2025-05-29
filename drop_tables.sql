@@ -1,11 +1,12 @@
--- Drop tables in the correct order to avoid foreign key constraint issues
+-- Disable foreign key checks to avoid constraint issues
+SET FOREIGN_KEY_CHECKS = 0;
 
--- First, drop tables with foreign key dependencies
+-- Drop all tables
 DROP TABLE IF EXISTS tools_ratings;
 DROP TABLE IF EXISTS tools_usage;
 DROP TABLE IF EXISTS data;
-DROP TABLE IF EXISTS gs1_links;
 DROP TABLE IF EXISTS qr_codes;
+DROP TABLE IF EXISTS gs1_links;
 DROP TABLE IF EXISTS microsites_blocks;
 DROP TABLE IF EXISTS track_links;
 DROP TABLE IF EXISTS microsites_templates;
@@ -29,7 +30,8 @@ DROP TABLE IF EXISTS payments;
 DROP TABLE IF EXISTS redeemed_codes;
 DROP TABLE IF EXISTS codes;
 DROP TABLE IF EXISTS taxes;
-
--- Finally, drop the users table which is referenced by many other tables
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS plans;
+
+-- Re-enable foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;

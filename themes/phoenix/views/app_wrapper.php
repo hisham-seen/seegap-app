@@ -42,6 +42,11 @@
         <link href="<?= settings()->main->favicon_full_url ?>" rel="icon" />
     <?php endif ?>
 
+    <!-- Preload critical FontAwesome files for better icon loading -->
+    <?php foreach(['libraries/fontawesome.min.js', 'libraries/fontawesome-solid.min.js', 'libraries/fontawesome-brands.min.js'] as $file): ?>
+        <link rel="preload" href="<?= ASSETS_FULL_URL ?>js/<?= $file ?>?v=<?= PRODUCT_CODE ?>" as="script">
+    <?php endforeach ?>
+
     <link href="<?= ASSETS_FULL_URL . 'css/' . \Altum\ThemeStyle::get_file() . '?v=' . PRODUCT_CODE ?>" id="css_theme_style" rel="stylesheet" media="screen,print">
     <?php foreach(['custom.css', 'libraries/select2.css'] as $file): ?>
         <link href="<?= ASSETS_FULL_URL . 'css/' . $file . '?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
@@ -116,7 +121,7 @@
     <?php endforeach ?>
 
     <?php foreach(['libraries/fontawesome.min.js', 'libraries/fontawesome-solid.min.js', 'libraries/fontawesome-brands.min.js'] as $file): ?>
-        <script src="<?= ASSETS_FULL_URL ?>js/<?= $file ?>?v=<?= PRODUCT_CODE ?>" defer></script>
+        <script src="<?= ASSETS_FULL_URL ?>js/<?= $file ?>?v=<?= PRODUCT_CODE ?>"></script>
     <?php endforeach ?>
 
     <?= \Altum\Event::get_content('javascript') ?>
@@ -155,6 +160,31 @@
             } else {
                 document.querySelector('#app_overlay').removeEventListener('click', toggle_app_sidebar);
             }
+        });
+
+        /* Icon loading enhancement */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading class to all FontAwesome icons initially
+            const icons = document.querySelectorAll('i[class*="fa-"]');
+            icons.forEach(icon => {
+                icon.classList.add('icon-loading');
+            });
+
+            // Remove loading class once FontAwesome is fully loaded
+            const checkFontAwesome = () => {
+                if (window.FontAwesome && window.FontAwesome.dom && window.FontAwesome.dom.i2svg) {
+                    // FontAwesome is loaded, remove loading classes
+                    icons.forEach(icon => {
+                        icon.classList.remove('icon-loading');
+                    });
+                } else {
+                    // Check again in 100ms
+                    setTimeout(checkFontAwesome, 100);
+                }
+            };
+            
+            // Start checking after a short delay
+            setTimeout(checkFontAwesome, 50);
         });
 
         /* Custom select implementation */

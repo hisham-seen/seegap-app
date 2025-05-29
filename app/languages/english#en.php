@@ -429,6 +429,7 @@ return [
     'global.plan_settings.pixels_limit' => '<strong>%s</strong> pixels',
     'global.plan_settings.qr_codes_limit' => '<strong>%s</strong> QR codes',
     'global.plan_settings.qr_codes_bulk_limit' => '<strong>%s</strong> bulk QR codes Limit',
+    'global.plan_settings.gs1_links_limit' => '<strong>%s</strong> GS1 digital links',
     'global.plan_settings.signatures_limit' => '<strong>%s</strong> email signatures',
     'global.plan_settings.microsites_limit' => '<strong>%s</strong> microsite pages',
     'global.plan_settings.links_limit' => '<strong>%s</strong> shortened links',
@@ -4221,7 +4222,7 @@ return [
     // GS1 Digital Links
     'gs1_links.breadcrumb' => 'GS1 Digital Links',
     'gs1_links.title' => 'GS1 Digital Links',
-    'gs1_links.menu' => 'GS1 Digital Links',
+    'gs1_links.menu' => 'GS1 Links',
     'gs1_links.header' => 'GS1 Digital Links',
     'gs1_links.subheader' => 'Create & manage GS1 Digital Links for product identification and traceability.',
     'gs1_links.create' => 'Create GS1 link',
@@ -4277,5 +4278,40 @@ return [
 
     'gs1_link_delete_modal.header' => 'Delete GS1 link',
     'gs1_link_delete_modal.subheader' => 'All data related to the GS1 link will be completely deleted. This action cannot be undone.',
+
+    // Admin GS1 Links
+    'admin_gs1_links.menu' => 'GS1 Links',
+    'admin_gs1_links.header' => 'GS1 Digital Links',
+    'admin_gs1_links.no_data' => 'No GS1 digital links found',
+
+    // User GS1 Links additional translations
+    'gs1_links.table.title' => 'Title',
+    'gs1_links.gtin' => 'GTIN',
+    'gs1_links.target_url' => 'Target URL',
+    'gs1_link_create.error_message.gtin_exists' => 'This GTIN already exists for the selected domain.',
+
+    // GS1 Link Create Flow
+    'gs1_link_create.flow_header' => 'GS1 Digital Link Flow',
+    'gs1_link_create.flow_step_scan' => 'QR Code Scan',
+    'gs1_link_create.flow_step_scan_description' => 'Consumer scans QR code',
+    'gs1_link_create.flow_step_gs1' => 'GS1 Digital Link',
+    'gs1_link_create.flow_step_gs1_description' => 'Resolves to GS1 format URL',
+    'gs1_link_create.flow_step_destination' => 'Final Destination',
+    'gs1_link_create.flow_step_destination_description' => 'Redirect to target URL',
+
+    // GS1 Link Create Preview
+    'gs1_link_create.preview_header' => 'Mobile Preview',
+    'gs1_link_create.preview_disabled' => 'Preview Disabled',
+    'gs1_link_create.preview_disabled_description' => 'Preview will be available after creating the link',
+    'gs1_link_create.preview_url_placeholder' => 'https://domain.com/01/{gtin}',
+
+    // GS1 Link Create Settings
+    'gs1_link_create.settings_header' => 'GS1 Link Settings',
+    'gs1_links.input.gtin' => 'GTIN (Global Trade Item Number)',
+    'gs1_links.input.gtin_placeholder' => '01234567890123',
+    'gs1_links.input.gtin_help' => 'A 14-digit unique identifier for your product.',
+    'gs1_links.input.target_url' => 'Target URL',
+    'link.settings.domain' => 'Domain',
+    'gs1_links.input.gtin_url_help' => 'The final GS1 digital link will be in the format: https://domain.com/01/{gtin}',
 
 ];

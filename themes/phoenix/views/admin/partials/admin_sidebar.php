@@ -25,14 +25,6 @@
             <li class="<?= \Altum\Router::$controller == 'AdminIndex' ? 'active' : null ?>">
                 <a href="<?= url('admin/') ?>"><i class="fas fa-fw fa-sm fa-fingerprint mr-2"></i> <?= l('admin_index.menu') ?></a>
             </li>
-            
-            <li>
-                <a href="<?= url() ?>"><i class="fas fa-fw fa-sm fa-globe mr-2"></i> <?= l('index.menu') ?></a>
-            </li>
-            
-            <li>
-                <a href="<?= url('dashboard') ?>"><i class="fas fa-fw fa-sm fa-th mr-2"></i> <?= l('dashboard.menu') ?></a>
-            </li>
 
             <li class="<?= in_array(\Altum\Router::$controller, ['AdminUsers', 'AdminUserUpdate', 'AdminUserCreate', 'AdminUserView']) ? 'active' : null ?>">
                 <a href="<?= url('admin/users') ?>"><i class="fas fa-fw fa-sm fa-users mr-2"></i> <?= l('admin_users.menu') ?></a>
@@ -279,6 +271,10 @@
                 <?php if(\Altum\Plugin::is_active('teams')): ?>
                     <a class="dropdown-item" href="<?= url('teams-system') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('teams_system.menu') ?></a>
                 <?php endif ?>
+
+                <div class="dropdown-divider"></div>
+
+                <a class="dropdown-item" href="<?= url('dashboard') ?>"><i class="fas fa-fw fa-sm fa-th mr-2"></i> <?= l('dashboard.menu') ?></a>
 
                 <?php if(settings()->sso->is_enabled && count((array) settings()->sso->websites)): ?>
                     <div class="dropdown-divider"></div>
