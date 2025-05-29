@@ -361,6 +361,10 @@ class Router {
                 'controller' => 'LinkAjax'
             ],
 
+            'gs1-link-ajax' => [
+                'controller' => 'Gs1LinkAjax'
+            ],
+
             /* Email signatures */
             'signature-create' => [
                 'controller' => 'SignatureCreate',

@@ -16,12 +16,12 @@
 
         <div class="col-12 col-lg-auto d-flex d-print-none">
             <div>
-                <?php if($this->user->plan_settings->gs1_links_limit != -1 && $data['total_gs1_links'] >= $this->user->plan_settings->gs1_links_limit): ?>
+                <?php if(($this->user->plan_settings->gs1_links_limit ?? -1) != -1 && count((array)$data->gs1_links) >= ($this->user->plan_settings->gs1_links_limit ?? 0)): ?>
                     <button type="button" class="btn btn-primary disabled" data-toggle="tooltip" title="<?= l('global.info_message.plan_feature_limit') ?>">
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('gs1_links.create') ?>
                     </button>
                 <?php else: ?>
-                    <a href="<?= url('gs1-link-create') ?>" class="btn btn-primary" data-toggle="tooltip" data-html="true" title="<?= get_plan_feature_limit_info($data['total_gs1_links'], $this->user->plan_settings->gs1_links_limit, isset($data['filters']) ? !$data['filters']->has_applied_filters() : true) ?>">
+                    <a href="<?= url('gs1-link-create') ?>" class="btn btn-primary">
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('gs1_links.create') ?>
                     </a>
                 <?php endif ?>
@@ -34,10 +34,10 @@
                     </button>
 
                     <div class="dropdown-menu dropdown-menu-right d-print-none">
-                        <a href="<?= url('gs1-links?' . $data['filters']->get_get() . '&export=csv')  ?>" target="_blank" class="dropdown-item">
+                        <a href="<?= url('gs1-links?' . $data->filters->get_get() . '&export=csv')  ?>" target="_blank" class="dropdown-item">
                             <i class="fas fa-fw fa-sm fa-file-csv mr-2"></i> <?= sprintf(l('global.export_to'), 'CSV') ?>
                         </a>
-                        <a href="<?= url('gs1-links?' . $data['filters']->get_get() . '&export=json') ?>" target="_blank" class="dropdown-item">
+                        <a href="<?= url('gs1-links?' . $data->filters->get_get() . '&export=json') ?>" target="_blank" class="dropdown-item">
                             <i class="fas fa-fw fa-sm fa-file-code mr-2"></i> <?= sprintf(l('global.export_to'), 'JSON') ?>
                         </a>
                     </div>
@@ -54,7 +54,7 @@
                         <div class="dropdown-header d-flex justify-content-between">
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
-                            <?php if($data['filters']->has_applied_filters()): ?>
+                            <?php if($data->filters->has_applied_filters): ?>
                                 <a href="<?= url('gs1-links') ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
@@ -64,15 +64,15 @@
                         <form action="" method="get" role="form">
                             <div class="form-group px-4">
                                 <label for="filters_search" class="small"><?= l('global.filters.search') ?></label>
-                                <input type="search" name="search" id="filters_search" value="<?= $data['filters']->get_search() ?>" class="form-control form-control-sm" />
+                                <input type="search" name="search" id="filters_search" value="<?= $data->filters->search ?>" class="form-control form-control-sm" />
                             </div>
 
                             <div class="form-group px-4">
                                 <label for="filters_search_by" class="small"><?= l('global.filters.search_by') ?></label>
                                 <select name="search_by" id="filters_search_by" class="custom-select custom-select-sm">
-                                    <option value="gtin" <?= $data['filters']->get_search_by() == 'gtin' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.gtin') ?></option>
-                                    <option value="target_url" <?= $data['filters']->get_search_by() == 'target_url' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.target_url') ?></option>
-                                    <option value="title" <?= $data['filters']->get_search_by() == 'title' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.title') ?></option>
+                                    <option value="gtin" <?= $data->filters->search_by == 'gtin' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.gtin') ?></option>
+                                    <option value="target_url" <?= $data->filters->search_by == 'target_url' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.target_url') ?></option>
+                                    <option value="title" <?= $data->filters->search_by == 'title' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.title') ?></option>
                                 </select>
                             </div>
 
@@ -89,7 +89,7 @@
                                 <label for="filters_project_id" class="small"><?= l('projects.project') ?></label>
                                 <select name="project_id" id="filters_project_id" class="custom-select custom-select-sm">
                                     <option value=""><?= l('global.filters.all') ?></option>
-                                    <?php foreach($data['projects'] as $project_id => $project): ?>
+                                    <?php foreach($data->projects as $project_id => $project): ?>
                                         <option value="<?= $project_id ?>" <?= isset($_GET['project_id']) && $_GET['project_id'] == $project_id ? 'selected="selected"' : null ?>><?= $project->name ?></option>
                                     <?php endforeach ?>
                                 </select>
@@ -98,18 +98,18 @@
                             <div class="form-group px-4">
                                 <label for="filters_order_by" class="small"><?= l('global.filters.order_by') ?></label>
                                 <select name="order_by" id="filters_order_by" class="custom-select custom-select-sm">
-                                    <option value="datetime" <?= $data['filters']->get_order_by() == 'datetime' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_datetime') ?></option>
-                                    <option value="last_datetime" <?= $data['filters']->get_order_by() == 'last_datetime' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_last_datetime') ?></option>
-                                    <option value="gtin" <?= $data['filters']->get_order_by() == 'gtin' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.gtin') ?></option>
-                                    <option value="clicks" <?= $data['filters']->get_order_by() == 'clicks' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.clicks') ?></option>
+                                    <option value="datetime" <?= $data->filters->order_by == 'datetime' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_datetime') ?></option>
+                                    <option value="last_datetime" <?= $data->filters->order_by == 'last_datetime' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_last_datetime') ?></option>
+                                    <option value="gtin" <?= $data->filters->order_by == 'gtin' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.gtin') ?></option>
+                                    <option value="clicks" <?= $data->filters->order_by == 'clicks' ? 'selected="selected"' : null ?>><?= l('gs1_links.table.clicks') ?></option>
                                 </select>
                             </div>
 
                             <div class="form-group px-4">
                                 <label for="filters_order_type" class="small"><?= l('global.filters.order_type') ?></label>
                                 <select name="order_type" id="filters_order_type" class="custom-select custom-select-sm">
-                                    <option value="ASC" <?= $data['filters']->get_order_type() == 'ASC' ? 'selected="selected"' : null ?>><?= l('global.filters.order_type_asc') ?></option>
-                                    <option value="DESC" <?= $data['filters']->get_order_type() == 'DESC' ? 'selected="selected"' : null ?>><?= l('global.filters.order_type_desc') ?></option>
+                                    <option value="ASC" <?= $data->filters->order_type == 'ASC' ? 'selected="selected"' : null ?>><?= l('global.filters.order_type_asc') ?></option>
+                                    <option value="DESC" <?= $data->filters->order_type == 'DESC' ? 'selected="selected"' : null ?>><?= l('global.filters.order_type_desc') ?></option>
                                 </select>
                             </div>
 
@@ -117,7 +117,7 @@
                                 <label for="filters_results_per_page" class="small"><?= l('global.filters.results_per_page') ?></label>
                                 <select name="results_per_page" id="filters_results_per_page" class="custom-select custom-select-sm">
                                     <?php foreach([10, 25, 50, 100, 250, 500] as $key): ?>
-                                        <option value="<?= $key ?>" <?= $data['filters']->get_results_per_page() == $key ? 'selected="selected"' : null ?>><?= $key ?></option>
+                                        <option value="<?= $key ?>" <?= $data->filters->results_per_page == $key ? 'selected="selected"' : null ?>><?= $key ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <?php if(count($data['gs1_links'])): ?>
+    <?php if(count((array)$data->gs1_links)): ?>
         <div class="table-responsive table-custom-container">
             <table class="table table-custom">
                 <thead>
@@ -148,7 +148,7 @@
                 </thead>
                 <tbody>
 
-                <?php foreach($data['gs1_links'] as $row): ?>
+                <?php foreach($data->gs1_links as $row): ?>
                     <tr>
                         <td class="text-nowrap">
                             <div class="d-flex align-items-center">
@@ -173,8 +173,8 @@
                                     <?php if($row->project_id): ?>
                                         <div>
                                             <a href="<?= url('gs1-links?project_id=' . $row->project_id) ?>" class="text-decoration-none">
-                                                <span class="py-1 px-2 border rounded small" style="border-color: <?= $data['projects'][$row->project_id]->color ?> !important; color: <?= $data['projects'][$row->project_id]->color ?> !important;">
-                                                    <?= $data['projects'][$row->project_id]->name ?>
+                                                <span class="py-1 px-2 border rounded small" style="border-color: <?= $data->projects[$row->project_id]->color ?> !important; color: <?= $data->projects[$row->project_id]->color ?> !important;">
+                                                    <?= $data->projects[$row->project_id]->name ?>
                                                 </span>
                                             </a>
                                         </div>
@@ -242,10 +242,10 @@
             </table>
         </div>
 
-        <div class="mt-3"><?= $data['pagination'] ?></div>
+        <div class="mt-3"><?= $data->pagination ?></div>
     <?php else: ?>
         <?= include_view(THEME_PATH . 'views/partials/no_data.php', [
-            'filters_get' => $data['filters']->get_get(),
+            'filters_get' => $data->filters->get ?? [],
             'name' => 'gs1_links',
             'has_secondary_text' => true,
         ]); ?>

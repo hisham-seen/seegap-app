@@ -45,6 +45,9 @@ class Gs1LinkCreate extends Controller {
         /* Get available pixels */
         $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
 
+        /* Get available splash pages */
+        $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
+
         if(!empty($_POST)) {
             $_POST['gtin'] = input_clean($_POST['gtin']);
             $_POST['target_url'] = input_clean($_POST['target_url']);
@@ -61,6 +64,24 @@ class Gs1LinkCreate extends Controller {
                 })
             );
 
+            /* Process advanced settings */
+            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
+            $_POST['schedule'] = (int) isset($_POST['schedule']);
+            $_POST['start_date'] = !empty($_POST['start_date']) ? \Altum\Date::get($_POST['start_date'], 2) : null;
+            $_POST['end_date'] = !empty($_POST['end_date']) ? \Altum\Date::get($_POST['end_date'], 2) : null;
+            $_POST['clicks_limit'] = !empty($_POST['clicks_limit']) ? (int) $_POST['clicks_limit'] : null;
+            $_POST['expiration_url'] = input_clean($_POST['expiration_url']);
+            $_POST['targeting_type'] = input_clean($_POST['targeting_type']);
+            $_POST['utm_source'] = input_clean($_POST['utm_source'], 128);
+            $_POST['utm_medium'] = input_clean($_POST['utm_medium'], 128);
+            $_POST['utm_campaign'] = input_clean($_POST['utm_campaign'], 128);
+            $_POST['cloaking_is_enabled'] = (int) isset($_POST['cloaking_is_enabled']);
+            $_POST['cloaking_title'] = input_clean($_POST['cloaking_title'], 70);
+            $_POST['cloaking_meta_description'] = input_clean($_POST['cloaking_meta_description'], 160);
+            $_POST['cloaking_custom_js'] = input_clean($_POST['cloaking_custom_js'], 10000);
+            $_POST['splash_page_id'] = !empty($_POST['splash_page_id']) && array_key_exists($_POST['splash_page_id'], $splash_pages) ? (int) $_POST['splash_page_id'] : null;
+            $_POST['forward_query_parameters_is_enabled'] = (int) isset($_POST['forward_query_parameters_is_enabled']);
+
             //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
@@ -71,13 +92,8 @@ class Gs1LinkCreate extends Controller {
                 }
             }
 
-            /* Validate GTIN */
-            if(!validate_gtin($_POST['gtin'])) {
-                Alerts::add_field_error('gtin', l('gs1_link_create.error_message.invalid_gtin'));
-            }
-
-            /* Format GTIN */
-            $_POST['gtin'] = format_gtin($_POST['gtin']);
+            /* Format GTIN - just clean it up */
+            $_POST['gtin'] = preg_replace('/[^0-9]/', '', $_POST['gtin']);
 
             /* Validate target URL */
             if(!filter_var($_POST['target_url'], FILTER_VALIDATE_URL)) {
@@ -94,6 +110,35 @@ class Gs1LinkCreate extends Controller {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
+            /* Process targeting settings */
+            $targeting = [];
+            if($_POST['targeting_type'] != 'false') {
+                switch($_POST['targeting_type']) {
+                    case 'continent_code':
+                    case 'country_code':
+                    case 'city_name':
+                    case 'device_type':
+                    case 'os_name':
+                    case 'browser_name':
+                    case 'browser_language':
+                    case 'rotation':
+                        $targeting_key = 'targeting_' . $_POST['targeting_type'] . '_key';
+                        $targeting_value = 'targeting_' . $_POST['targeting_type'] . '_value';
+                        
+                        if(isset($_POST[$targeting_key]) && isset($_POST[$targeting_value])) {
+                            foreach($_POST[$targeting_key] as $key => $value) {
+                                if(!empty($value) && !empty($_POST[$targeting_value][$key])) {
+                                    $targeting[] = [
+                                        'key' => input_clean($value),
+                                        'value' => input_clean($_POST[$targeting_value][$key])
+                                    ];
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
                 /* Prepare settings */
@@ -106,7 +151,20 @@ class Gs1LinkCreate extends Controller {
                         'source' => $_POST['utm_source'] ?? '',
                         'medium' => $_POST['utm_medium'] ?? '',
                         'campaign' => $_POST['utm_campaign'] ?? '',
-                    ]
+                    ],
+                    'schedule' => $_POST['schedule'],
+                    'start_date' => $_POST['start_date'],
+                    'end_date' => $_POST['end_date'],
+                    'clicks_limit' => $_POST['clicks_limit'],
+                    'expiration_url' => $_POST['expiration_url'],
+                    'targeting_type' => $_POST['targeting_type'],
+                    'targeting_' . $_POST['targeting_type'] => $targeting,
+                    'cloaking_is_enabled' => $_POST['cloaking_is_enabled'],
+                    'cloaking_title' => $_POST['cloaking_title'],
+                    'cloaking_meta_description' => $_POST['cloaking_meta_description'],
+                    'cloaking_custom_js' => $_POST['cloaking_custom_js'],
+                    'splash_page_id' => $_POST['splash_page_id'],
+                    'forward_query_parameters_is_enabled' => $_POST['forward_query_parameters_is_enabled'],
                 ];
 
                 /* Create the GS1 link */
@@ -120,6 +178,7 @@ class Gs1LinkCreate extends Controller {
                     'description' => $_POST['description'],
                     'settings' => $settings,
                     'pixels_ids' => $_POST['pixels_ids'],
+                    'is_enabled' => $_POST['is_enabled'],
                 ]);
 
                 if($gs1_link_id) {
@@ -139,11 +198,38 @@ class Gs1LinkCreate extends Controller {
         /* Set a custom title */
         Title::set(l('gs1_link_create.title'));
 
-        /* Main View */
+        /* Prepare the View */
         $data = [
             'domains' => $domains,
             'projects' => $projects,
             'pixels' => $pixels,
+            'splash_pages' => $splash_pages,
+            'values' => [
+                'gtin' => $_POST['gtin'] ?? '',
+                'target_url' => $_POST['target_url'] ?? '',
+                'title' => $_POST['title'] ?? '',
+                'description' => $_POST['description'] ?? '',
+                'domain_id' => $_POST['domain_id'] ?? '',
+                'project_id' => $_POST['project_id'] ?? '',
+                'pixels_ids' => $_POST['pixels_ids'] ?? [],
+                'is_enabled' => $_POST['is_enabled'] ?? 1,
+                'schedule' => $_POST['schedule'] ?? 0,
+                'start_date' => $_POST['start_date'] ?? '',
+                'end_date' => $_POST['end_date'] ?? '',
+                'clicks_limit' => $_POST['clicks_limit'] ?? '',
+                'expiration_url' => $_POST['expiration_url'] ?? '',
+                'targeting_type' => $_POST['targeting_type'] ?? 'false',
+                'utm_source' => $_POST['utm_source'] ?? '',
+                'utm_medium' => $_POST['utm_medium'] ?? '',
+                'utm_campaign' => $_POST['utm_campaign'] ?? '',
+                'cloaking_is_enabled' => $_POST['cloaking_is_enabled'] ?? 0,
+                'cloaking_title' => $_POST['cloaking_title'] ?? '',
+                'cloaking_meta_description' => $_POST['cloaking_meta_description'] ?? '',
+                'cloaking_custom_js' => $_POST['cloaking_custom_js'] ?? '',
+                'splash_page_id' => $_POST['splash_page_id'] ?? '',
+                'forward_query_parameters_is_enabled' => $_POST['forward_query_parameters_is_enabled'] ?? 0,
+                'http_status_code' => '302', // Default for GS1 links
+            ]
         ];
 
         $view = new \Altum\View('gs1-link-create/index', (array) $this);

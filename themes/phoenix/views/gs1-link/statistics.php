@@ -1,385 +1,180 @@
 <?php defined('ALTUMCODE') || die() ?>
 
-<div class="d-flex flex-column flex-md-row justify-content-between mb-4">
-    <div class="d-flex align-items-center mb-3 mb-md-0">
-        <h1 class="h4 m-0"><i class="fas fa-fw fa-chart-bar mr-1"></i> <?= l('link.statistics.header') ?></h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 text-truncate"><?= l('link.statistics.header') ?></h2>
 
-        <div class="ml-2">
-            <span data-toggle="tooltip" title="<?= l('link.statistics.subheader') ?>">
-                <i class="fas fa-fw fa-info-circle text-muted"></i>
+    <div class="d-flex align-items-center col-auto p-0">
+        <div data-toggle="tooltip" title="<?= l('statistics_reset_modal.header') ?>">
+            <button
+                    type="button"
+                    class="btn btn-link text-secondary"
+                    data-toggle="modal"
+                    data-target="#gs1_link_statistics_reset_modal"
+                    aria-label="<?= l('statistics_reset_modal.header') ?>"
+                    data-gs1-link-id="<?= $data->gs1_link->gs1_link_id ?>"
+                    data-start-date="<?= $data->datetime['start_date'] ?>"
+                    data-end-date="<?= $data->datetime['end_date'] ?>"
+            >
+                <i class="fas fa-fw fa-sm fa-eraser"></i>
+            </button>
+        </div>
+
+        <button
+                id="daterangepicker"
+                type="button"
+                class="btn btn-sm btn-light"
+                data-min-date="<?= \Altum\Date::get($data->gs1_link->datetime, 4) ?>"
+                data-max-date="<?= \Altum\Date::get('', 4) ?>"
+        >
+            <i class="fas fa-fw fa-calendar mr-lg-1"></i>
+            <span class="d-none d-lg-inline-block">
+                <?php if($data->datetime['start_date'] == $data->datetime['end_date']): ?>
+                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) ?>
+                <?php else: ?>
+                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) . ' - ' . \Altum\Date::get($data->datetime['end_date'], 6, \Altum\Date::$default_timezone) ?>
+                <?php endif ?>
             </span>
-        </div>
-    </div>
-
-    <div class="d-flex">
-        <div>
-            <div class="dropdown">
-                <button type="button" class="btn btn-light dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport" title="<?= l('global.export') ?>">
-                    <i class="fas fa-fw fa-sm fa-download"></i>
-                </button>
-
-                <div class="dropdown-menu dropdown-menu-right d-print-none">
-                    <a href="<?= url('gs1-link/' . $data['gs1_link']->gs1_link_id . '/statistics?' . $data['datetime']->get_get() . '&export=csv') ?>" target="_blank" class="dropdown-item">
-                        <i class="fas fa-fw fa-sm fa-file-csv mr-2"></i> <?= sprintf(l('global.export_to'), 'CSV') ?>
-                    </a>
-                    <a href="<?= url('gs1-link/' . $data['gs1_link']->gs1_link_id . '/statistics?' . $data['datetime']->get_get() . '&export=json') ?>" target="_blank" class="dropdown-item">
-                        <i class="fas fa-fw fa-sm fa-file-code mr-2"></i> <?= sprintf(l('global.export_to'), 'JSON') ?>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="ml-3">
-            <div class="dropdown">
-                <button type="button" class="btn btn-outline-secondary dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport" title="<?= l('global.date_range') ?>">
-                    <i class="fas fa-fw fa-calendar mr-1"></i>
-                    <span>
-                        <?php if($data['datetime']->start_date == $data['datetime']->end_date): ?>
-                            <?= \Altum\Date::get($data['datetime']->start_date, 2, \Altum\Date::$default_timezone) ?>
-                        <?php else: ?>
-                            <?= \Altum\Date::get($data['datetime']->start_date, 2, \Altum\Date::$default_timezone) . ' - ' . \Altum\Date::get($data['datetime']->end_date, 2, \Altum\Date::$default_timezone) ?>
-                        <?php endif ?>
-                    </span>
-                    <i class="fas fa-fw fa-caret-down ml-1"></i>
-                </button>
-
-                <div class="dropdown-menu dropdown-menu-right">
-                    <?php foreach(['today', 'yesterday', 'last_7_days', 'last_30_days', 'this_month', 'last_month', 'last_90_days', 'last_year'] as $date_key): ?>
-                        <a class="dropdown-item <?= $data['datetime']->type == $date_key ? 'active' : null ?>" href="<?= url('gs1-link/' . $data['gs1_link']->gs1_link_id . '/statistics?type=' . $date_key) ?>">
-                            <?= l('global.date.' . $date_key) ?>
-                        </a>
-                    <?php endforeach ?>
-
-                    <div class="dropdown-divider"></div>
-
-                    <div class="px-4">
-                        <small class="text-muted"><?= l('global.date.custom_range') ?></small>
-                        <form action="" method="get" role="form">
-                            <div class="row">
-                                <div class="col">
-                                    <input
-                                        type="date"
-                                        class="form-control form-control-sm"
-                                        name="start_date"
-                                        value="<?= $data['datetime']->start_date ?>"
-                                        max="<?= \Altum\Date::get('', 4) ?>"
-                                    />
-                                </div>
-                                <div class="col">
-                                    <input
-                                        type="date"
-                                        class="form-control form-control-sm"
-                                        name="end_date"
-                                        value="<?= $data['datetime']->end_date ?>"
-                                        max="<?= \Altum\Date::get('', 4) ?>"
-                                    />
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <button type="submit" class="btn btn-sm btn-primary btn-block"><?= l('global.submit') ?></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <i class="fas fa-fw fa-caret-down d-none d-lg-inline-block ml-lg-1"></i>
+        </button>
     </div>
 </div>
 
-<?php if(!count($data['pageviews'])): ?>
+<div class="row">
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'overview' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=overview&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-list mr-1"></i>
+            <?= l('link.statistics.overview') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'entries' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=entries&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-chart-bar mr-1"></i>
+            <?= l('link.statistics.entries') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'continent_code' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=continent_code&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-globe-europe mr-1"></i>
+            <?= l('global.continent') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'country' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=country&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-globe mr-1"></i>
+            <?= l('global.countries') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'city_name' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=city_name&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-city mr-1"></i>
+            <?= l('global.cities') ?>
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= in_array($data->type, ['referrer_host', 'referrer_path']) ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=referrer_host&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-random mr-1"></i>
+            <?= l('link.statistics.referrer_host') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'device' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=device&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-laptop mr-1"></i>
+            <?= l('link.statistics.device') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'os' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=os&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-server mr-1"></i>
+            <?= l('link.statistics.os') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'browser' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=browser&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-window-restore mr-1"></i>
+            <?= l('link.statistics.browser') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'language' ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=language&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-language mr-1"></i>
+            <?= l('link.statistics.language') ?>
+        </a>
+    </div>
+
+    <div class="col-lg p-1 p-lg-2 text-truncate">
+        <a class="btn btn-block btn-custom text-truncate <?= in_array($data->type, ['utm_source', 'utm_medium', 'utm_campaign']) ? 'active' : null ?>" href="<?= url('gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics?type=utm_source&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+            <i class="fas fa-fw fa-sm fa-link mr-1"></i>
+            <?= l('link.statistics.utms') ?>
+        </a>
+    </div>
+</div>
+
+<?php if(!$data->has_data): ?>
+
     <?= include_view(THEME_PATH . 'views/partials/no_data.php', [
-        'filters_get' => $data['datetime']->get_get(),
-        'name' => 'track_links',
-        'has_secondary_text' => false,
+        'filters_get' => $data->filters->get ?? [],
+        'name' => 'link.statistics',
+        'has_secondary_text' => true,
     ]); ?>
+
 <?php else: ?>
 
-    <div class="row justify-content-between mb-4">
-        <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0">
-                <div class="card-body d-flex">
-                    <div class="card-icon-container bg-primary-100 text-primary-600 border border-primary-200 rounded mr-3">
-                        <i class="fas fa-fw fa-chart-bar"></i>
-                    </div>
-
-                    <div class="card-text-container">
-                        <span class="card-title text-truncate h4 m-0"><?= nr($data['total']['pageviews']) ?></span>
-                        <span class="card-text text-truncate text-muted"><?= l('link.statistics.pageviews') ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0">
-                <div class="card-body d-flex">
-                    <div class="card-icon-container bg-gray-100 text-gray-600 border border-gray-200 rounded mr-3">
-                        <i class="fas fa-fw fa-eye"></i>
-                    </div>
-
-                    <div class="card-text-container">
-                        <span class="card-title text-truncate h4 m-0"><?= nr($data['total']['visitors']) ?></span>
-                        <span class="card-text text-truncate text-muted"><?= l('link.statistics.visitors') ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0">
-                <div class="card-body d-flex">
-                    <div class="card-icon-container bg-gray-100 text-gray-600 border border-gray-200 rounded mr-3">
-                        <i class="fas fa-fw fa-mouse-pointer"></i>
-                    </div>
-
-                    <div class="card-text-container">
-                        <span class="card-title text-truncate h4 m-0"><?= nr(get_percentage_between_two_numbers($data['total']['visitors'], $data['total']['pageviews'])) ?>%</span>
-                        <span class="card-text text-truncate text-muted"><?= l('link.statistics.visitors_percentage') ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0">
-                <div class="card-body d-flex">
-                    <div class="card-icon-container bg-gray-100 text-gray-600 border border-gray-200 rounded mr-3">
-                        <i class="fas fa-fw fa-redo"></i>
-                    </div>
-
-                    <div class="card-text-container">
-                        <span class="card-title text-truncate h4 m-0"><?= nr(get_percentage_between_two_numbers($data['total']['pageviews'] - $data['total']['visitors'], $data['total']['pageviews'])) ?>%</span>
-                        <span class="card-text text-truncate text-muted"><?= l('link.statistics.returning_visitors_percentage') ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="chart-container mb-5">
-        <canvas id="pageviews_chart"></canvas>
-    </div>
-
-    <?php if(count($data['top_countries'])): ?>
-        <div class="row mb-5">
-            <div class="col-12 col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <div class="card-title"><?= l('link.statistics.top_countries') ?></div>
-                    </div>
-
-                    <div class="card-body">
-                        <?php foreach($data['top_countries'] as $country => $pageviews): ?>
-                            <div class="mt-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <div class="text-truncate">
-                                        <span class="mr-2"><?= get_country_flag($country) ?></span>
-                                        <span class="align-middle"><?= get_country_from_country_code($country) ?></span>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted"><?= nr($pageviews) ?> <?= l('link.statistics.pageviews') ?></small>
-                                    </div>
-                                </div>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar" role="progressbar" style="width: <?= get_percentage_between_two_numbers($pageviews, $data['total']['pageviews']) ?>%"></div>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <div class="card-title"><?= l('link.statistics.top_referrers') ?></div>
-                    </div>
-
-                    <div class="card-body">
-                        <?php if(count($data['top_referrers'])): ?>
-                            <?php foreach($data['top_referrers'] as $referrer => $pageviews): ?>
-                                <div class="mt-4">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <div class="text-truncate">
-                                            <img src="https://external-content.duckduckgo.com/ip3/<?= parse_url($referrer)['host'] ?? $referrer ?>.ico" class="img-fluid icon-favicon mr-2" loading="lazy" />
-                                            <span class="align-middle"><?= $referrer ?></span>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted"><?= nr($pageviews) ?> <?= l('link.statistics.pageviews') ?></small>
-                                        </div>
-                                    </div>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar" role="progressbar" style="width: <?= get_percentage_between_two_numbers($pageviews, $data['total']['pageviews']) ?>%"></div>
-                                    </div>
-                                </div>
-                            <?php endforeach ?>
-                        <?php else: ?>
-                            <?= include_view(THEME_PATH . 'views/partials/no_data.php', [
-                                'filters_get' => $data['datetime']->get_get(),
-                                'name' => 'track_links',
-                                'has_secondary_text' => false,
-                            ]); ?>
-                        <?php endif ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif ?>
-
-    <?php if(count($data['top_os'])): ?>
-        <div class="row mb-5">
-            <div class="col-12 col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <div class="card-title"><?= l('link.statistics.top_os') ?></div>
-                    </div>
-
-                    <div class="card-body">
-                        <?php foreach($data['top_os'] as $os => $pageviews): ?>
-                            <div class="mt-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <div class="text-truncate">
-                                        <i class="fab fa-fw fa-<?= get_os_icon($os) ?> text-muted mr-1"></i>
-                                        <span class="align-middle"><?= $os ?></span>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted"><?= nr($pageviews) ?> <?= l('link.statistics.pageviews') ?></small>
-                                    </div>
-                                </div>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar" role="progressbar" style="width: <?= get_percentage_between_two_numbers($pageviews, $data['total']['pageviews']) ?>%"></div>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <div class="card-title"><?= l('link.statistics.top_browsers') ?></div>
-                    </div>
-
-                    <div class="card-body">
-                        <?php foreach($data['top_browsers'] as $browser => $pageviews): ?>
-                            <div class="mt-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <div class="text-truncate">
-                                        <i class="fab fa-fw fa-<?= get_browser_icon($browser) ?> text-muted mr-1"></i>
-                                        <span class="align-middle"><?= $browser ?></span>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted"><?= nr($pageviews) ?> <?= l('link.statistics.pageviews') ?></small>
-                                    </div>
-                                </div>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar" role="progressbar" style="width: <?= get_percentage_between_two_numbers($pageviews, $data['total']['pageviews']) ?>%"></div>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif ?>
-
-    <?php if(count($data['top_devices'])): ?>
-        <div class="row mb-5">
-            <div class="col-12 col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <div class="card-title"><?= l('link.statistics.top_devices') ?></div>
-                    </div>
-
-                    <div class="card-body">
-                        <?php foreach($data['top_devices'] as $device_type => $pageviews): ?>
-                            <div class="mt-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <div class="text-truncate">
-                                        <i class="fas fa-fw fa-<?= get_device_type_icon($device_type) ?> text-muted mr-1"></i>
-                                        <span class="align-middle"><?= l('global.device.' . $device_type) ?></span>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted"><?= nr($pageviews) ?> <?= l('link.statistics.pageviews') ?></small>
-                                    </div>
-                                </div>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar" role="progressbar" style="width: <?= get_percentage_between_two_numbers($pageviews, $data['total']['pageviews']) ?>%"></div>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <div class="card-title"><?= l('link.statistics.top_languages') ?></div>
-                    </div>
-
-                    <div class="card-body">
-                        <?php if(count($data['top_languages'])): ?>
-                            <?php foreach($data['top_languages'] as $language => $pageviews): ?>
-                                <div class="mt-4">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <div class="text-truncate">
-                                            <span class="align-middle"><?= get_language_from_locale($language) ?></span>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted"><?= nr($pageviews) ?> <?= l('link.statistics.pageviews') ?></small>
-                                        </div>
-                                    </div>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar" role="progressbar" style="width: <?= get_percentage_between_two_numbers($pageviews, $data['total']['pageviews']) ?>%"></div>
-                                    </div>
-                                </div>
-                            <?php endforeach ?>
-                        <?php else: ?>
-                            <?= include_view(THEME_PATH . 'views/partials/no_data.php', [
-                                'filters_get' => $data['datetime']->get_get(),
-                                'name' => 'track_links',
-                                'has_secondary_text' => false,
-                            ]); ?>
-                        <?php endif ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif ?>
+    <?= $this->views['statistics'] ?>
 
 <?php endif ?>
 
 <?php ob_start() ?>
+<script src="<?= ASSETS_FULL_URL . 'js/libraries/moment.min.js?v=' . PRODUCT_CODE ?>"></script>
+<script src="<?= ASSETS_FULL_URL . 'js/libraries/daterangepicker.min.js?v=' . PRODUCT_CODE ?>"></script>
+<script src="<?= ASSETS_FULL_URL . 'js/libraries/moment-timezone-with-data-10-year-range.min.js?v=' . PRODUCT_CODE ?>"></script>
+
 <script>
     'use strict';
 
-    let color = css.getPropertyValue('--primary');
-    let color_gradient = null;
+    moment.tz.setDefault(<?= json_encode($this->user->timezone) ?>);
 
-    /* Display chart */
-    let pageviews_chart = document.getElementById('pageviews_chart').getContext('2d');
-
-    color_gradient = pageviews_chart.createLinearGradient(0, 0, 0, 250);
-    color_gradient.addColorStop(0, 'rgba(63, 136, 253, .1)');
-    color_gradient.addColorStop(1, 'rgba(63, 136, 253, 0.025)');
-
-    new Chart(pageviews_chart, {
-        type: 'line',
-        data: {
-            labels: <?= $data['pageviews_chart']['labels'] ?>,
-            datasets: [
-                {
-                    label: <?= json_encode(l('link.statistics.pageviews')) ?>,
-                    data: <?= $data['pageviews_chart']['pageviews'] ?? '[]' ?>,
-                    backgroundColor: color_gradient,
-                    borderColor: color,
-                    fill: true
-                }
-            ]
+    /* Daterangepicker */
+    $('#daterangepicker').daterangepicker({
+        startDate: <?= json_encode($data->datetime['start_date']) ?>,
+        endDate: <?= json_encode($data->datetime['end_date']) ?>,
+        minDate: $('#daterangepicker').data('min-date'),
+        maxDate: $('#daterangepicker').data('max-date'),
+        ranges: {
+            <?= json_encode(l('global.date.today')) ?>: [moment(), moment()],
+            <?= json_encode(l('global.date.yesterday')) ?>: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            <?= json_encode(l('global.date.last_7_days')) ?>: [moment().subtract(6, 'days'), moment()],
+            <?= json_encode(l('global.date.last_30_days')) ?>: [moment().subtract(29, 'days'), moment()],
+            <?= json_encode(l('global.date.this_month')) ?>: [moment().startOf('month'), moment().endOf('month')],
+            <?= json_encode(l('global.date.last_month')) ?>: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            <?= json_encode(l('global.date.all_time')) ?>: [moment($('#daterangepicker').data('min-date')), moment()]
         },
-        options: chart_options
+        alwaysShowCalendars: true,
+        linkedCalendars: false,
+        singleCalendar: true,
+        locale: <?= json_encode(require APP_PATH . 'includes/daterangepicker_translations.php') ?>,
+    }, (start, end, label) => {
+
+        <?php
+        parse_str(\Altum\Router::$original_request_query, $original_request_query_array);
+        $modified_request_query_array = array_diff_key($original_request_query_array, ['start_date' => '', 'end_date' => '']);
+        ?>
+
+        /* Redirect */
+        redirect(`<?= url(\Altum\Router::$original_request . '?' . http_build_query($modified_request_query_array)) ?>&start_date=${start.format('YYYY-MM-DD')}&end_date=${end.format('YYYY-MM-DD')}`, true);
+
     });
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/statistics_reset_modal.php', ['modal_id' => 'gs1_link_statistics_reset_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics/reset']), 'modals'); ?>

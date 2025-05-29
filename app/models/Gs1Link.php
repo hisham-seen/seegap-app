@@ -65,7 +65,7 @@ class Gs1Link extends Model {
         
         $result = database()->query($query);
         
-        if ($gs1_link = $result->fetch_object()) {
+        if ($result && ($gs1_link = $result->fetch_object())) {
             $gs1_link->full_url = $this->get_full_gs1_url($gs1_link);
             $gs1_link->settings = json_decode($gs1_link->settings ?? '{}');
             $gs1_link->pixels_ids = json_decode($gs1_link->pixels_ids ?? '[]');
@@ -76,20 +76,21 @@ class Gs1Link extends Model {
     }
 
     public function get_gs1_link_by_gtin($gtin, $domain_id = 0) {
-        $gtin = format_gtin($gtin);
+        // Clean GTIN - just remove non-numeric characters
+        $gtin = preg_replace('/[^0-9]/', '', $gtin);
         
-        if (!$gtin) {
+        if (empty($gtin)) {
             return null;
         }
         
         $query = "SELECT `gs1_links`.*, `domains`.`scheme`, `domains`.`host` 
                   FROM `gs1_links` 
                   LEFT JOIN `domains` ON `gs1_links`.`domain_id` = `domains`.`domain_id` 
-                  WHERE `gtin` = '{$gtin}' AND `domain_id` = {$domain_id} AND `is_enabled` = 1";
+                  WHERE `gs1_links`.`gtin` = '{$gtin}' AND `gs1_links`.`domain_id` = {$domain_id} AND `gs1_links`.`is_enabled` = 1";
         
         $result = database()->query($query);
         
-        if ($gs1_link = $result->fetch_object()) {
+        if ($result && ($gs1_link = $result->fetch_object())) {
             $gs1_link->full_url = $this->get_full_gs1_url($gs1_link);
             $gs1_link->settings = json_decode($gs1_link->settings ?? '{}');
             $gs1_link->pixels_ids = json_decode($gs1_link->pixels_ids ?? '[]');
@@ -100,10 +101,10 @@ class Gs1Link extends Model {
     }
 
     public function create_gs1_link($data) {
-        // Validate and format GTIN
-        $gtin = format_gtin($data['gtin']);
+        // Clean GTIN - just remove non-numeric characters
+        $gtin = preg_replace('/[^0-9]/', '', $data['gtin']);
         
-        if (!$gtin || !validate_gtin($gtin)) {
+        if (empty($gtin)) {
             return false;
         }
         
@@ -116,7 +117,7 @@ class Gs1Link extends Model {
         $pixels_ids = json_encode($data['pixels_ids'] ?? []);
         
         $query = "INSERT INTO `gs1_links` 
-                  (`user_id`, `project_id`, `domain_id`, `gtin`, `target_url`, `title`, `description`, `settings`, `pixels_ids`, `datetime`) 
+                  (`user_id`, `project_id`, `domain_id`, `gtin`, `target_url`, `title`, `description`, `settings`, `pixels_ids`, `is_enabled`, `datetime`) 
                   VALUES 
                   ({$data['user_id']}, " . 
                   ($data['project_id'] ? $data['project_id'] : 'NULL') . ", " .
@@ -127,6 +128,7 @@ class Gs1Link extends Model {
                   "'" . db()->escape($data['description'] ?? '') . "', " .
                   "'{$settings}', " .
                   "'{$pixels_ids}', " .
+                  (int)($data['is_enabled'] ?? 1) . ", " .
                   "NOW())";
         
         database()->query($query);
@@ -261,9 +263,9 @@ class Gs1Link extends Model {
         
         foreach ($conditions as $key => $value) {
             if (is_null($value)) {
-                $where_parts[] = "`{$key}` IS NULL";
+                $where_parts[] = "`gs1_links`.`{$key}` IS NULL";
             } else {
-                $where_parts[] = "`{$key}` = '" . db()->escape($value) . "'";
+                $where_parts[] = "`gs1_links`.`{$key}` = '" . db()->escape($value) . "'";
             }
         }
         

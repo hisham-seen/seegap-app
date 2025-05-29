@@ -4218,6 +4218,7 @@ return [
     'synthesis_update.title' => 'Edit AI synthesis - %s',
 
 
+    // GS1 Digital Links
     'gs1_links.breadcrumb' => 'GS1 Digital Links',
     'gs1_links.title' => 'GS1 Digital Links',
     'gs1_links.menu' => 'GS1 Digital Links',
@@ -4236,6 +4237,26 @@ return [
     'gs1_link_create.breadcrumb' => 'Create GS1 link',
     'gs1_link_create.title' => 'Create GS1 link',
     'gs1_link_create.header' => 'Create a new GS1 digital link',
+
+    // GS1 Flow Visualization
+    'gs1_link_create.flow.header' => 'GS1 Digital Link Flow',
+    'gs1_link_create.flow.step1' => 'QR Code Scan',
+    'gs1_link_create.flow.step1_desc' => 'Consumer scans QR code',
+    'gs1_link_create.flow.step2' => 'GS1 Digital Link',
+    'gs1_link_create.flow.step2_desc' => 'Resolves to GS1 format URL',
+    'gs1_link_create.flow.step3' => 'Targeting Check',
+    'gs1_link_create.flow.step3_desc' => 'Apply targeting rules if configured',
+    'gs1_link_create.flow.step4' => 'Final Destination',
+    'gs1_link_create.flow.step4_desc' => 'Redirect to target URL',
+    'gs1_link_create.flow.url_format' => 'URL Format',
+    'gs1_link_create.flow.url_example' => 'https://domain.com/01/{gtin}',
+    'gs1_link_create.flow.targeting_enabled' => 'Targeting: Enabled',
+    'gs1_link_create.flow.targeting_disabled' => 'Targeting: Disabled',
+
+    // Mobile Preview
+    'gs1_link_create.preview.header' => 'Mobile Preview',
+    'gs1_link_create.preview.disabled' => 'Preview will be available after creating the link',
+    'gs1_link_create.preview.landing_page' => 'Final Landing Page',
 
     'gs1_link.breadcrumb' => 'GS1 link',
     'gs1_link.title' => 'GS1 Link - %s',
@@ -4256,4 +4277,5 @@ return [
 
     'gs1_link_delete_modal.header' => 'Delete GS1 link',
     'gs1_link_delete_modal.subheader' => 'All data related to the GS1 link will be completely deleted. This action cannot be undone.',
+
 ];

@@ -94,6 +94,7 @@ require_once APP_PATH . 'helpers/links.php';
 require_once APP_PATH . 'helpers/strings.php';
 require_once APP_PATH . 'helpers/email.php';
 require_once APP_PATH . 'helpers/66uptime.php';
+require_once APP_PATH . 'helpers/gs1.php';
 
 /* Autoload for vendor */
 require_once ROOT_PATH . 'vendor/autoload.php';

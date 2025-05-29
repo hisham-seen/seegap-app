@@ -135,7 +135,7 @@ class Gs1LinkRedirect extends Controller {
             $referrer_host ?: null,
             $referrer_path ?: null,
             get_device_type($_SERVER['HTTP_USER_AGENT'] ?? ''),
-            get_browser_language(),
+            $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null,
             $utm_source,
             $utm_medium,
             $utm_campaign,

@@ -91,15 +91,15 @@ function calculate_gtin_check_digit($gtin_without_check) {
  * @return array|false Array with parsed components or false if invalid
  */
 function parse_gs1_digital_link($url) {
-    // Remove domain and get path
+// Remove domain and get path
     $parsed = parse_url($url);
     $path = $parsed['path'] ?? '';
-    
+
     // Match GS1 Digital Link pattern: /01/{gtin}
-    if (preg_match('/^\/01\/(\d{13,14})(?:\/.*)?$/', $path, $matches)) {
-        $gtin = format_gtin($matches[1]);
-        
-        if ($gtin && validate_gtin($gtin)) {
+    if (preg_match('/^\/01\/(\d+)(?:\/.*)?$/', $path, $matches)) {
+        $gtin = preg_replace('/[^0-9]/', '', $matches[1]);
+
+        if (!empty($gtin)) {
             return [
                 'ai' => '01', // Application Identifier for GTIN
                 'gtin' => $gtin,
@@ -107,7 +107,7 @@ function parse_gs1_digital_link($url) {
             ];
         }
     }
-    
+
     return false;
 }
 
