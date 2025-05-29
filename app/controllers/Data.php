@@ -17,52 +17,52 @@ class Data extends Controller {
 
     public function index() {
 
-        if(!settings()->links->biolinks_is_enabled) {
+        if(!settings()->links->microsites_is_enabled) {
             redirect('not-found');
         }
 
         \Altum\Authentication::guard();
 
         /* Check if we're viewing a specific form's submissions */
-        $biolink_block_id = isset($_GET['biolink_block_id']) ? (int) $_GET['biolink_block_id'] : null;
+        $microsite_block_id = isset($_GET['microsite_block_id']) ? (int) $_GET['microsite_block_id'] : null;
         
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['biolink_block_id', 'link_id', 'project_id', 'user_id', 'type', 'is_enabled'], [], ['datum_id', 'datetime']));
+        $filters = (new \Altum\Filters(['microsite_block_id', 'link_id', 'project_id', 'user_id', 'type', 'is_enabled'], [], ['datum_id', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->data_default_order_by ?? 'datetime', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
-        /* First, get all biolink blocks to get their names */
-        $biolink_blocks_result = database()->query("
-            SELECT `biolink_block_id`, `settings`, `type` 
-            FROM `biolinks_blocks` 
+        /* First, get all microsite blocks to get their names */
+        $microsite_blocks_result = database()->query("
+            SELECT `microsite_block_id`, `settings`, `type` 
+            FROM `microsites_blocks` 
             WHERE `user_id` = {$this->user->user_id}
         ");
         
-        $biolink_blocks = [];
-        while($block = $biolink_blocks_result->fetch_object()) {
+        $microsite_blocks = [];
+        while($block = $microsite_blocks_result->fetch_object()) {
             $block->settings = json_decode($block->settings);
-            $biolink_blocks[$block->biolink_block_id] = $block;
+            $microsite_blocks[$block->microsite_block_id] = $block;
         }
         
         /* If viewing a specific form's submissions */
-        if($biolink_block_id) {
-            /* Make sure the biolink block exists and belongs to the user */
-            if(!isset($biolink_blocks[$biolink_block_id])) {
+        if($microsite_block_id) {
+            /* Make sure the microsite block exists and belongs to the user */
+            if(!isset($microsite_blocks[$microsite_block_id])) {
                 redirect('data');
             }
             
-            /* Add the biolink_block_id to the filters */
-            $_GET['biolink_block_id'] = $biolink_block_id;
-            // Add the biolink_block_id to the filters directly
-            $filters->filters['biolink_block_id'] = $biolink_block_id;
+            /* Add the microsite_block_id to the filters */
+            $_GET['microsite_block_id'] = $microsite_block_id;
+            // Add the microsite_block_id to the filters directly
+            $filters->filters['microsite_block_id'] = $microsite_block_id;
             
             /* Prepare the paginator */
-            $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} AND `biolink_block_id` = {$biolink_block_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-            $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?biolink_block_id=' . $biolink_block_id . '&' . $filters->get_get() . '&page=%d')));
+            $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} AND `microsite_block_id` = {$microsite_block_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
+            $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?microsite_block_id=' . $microsite_block_id . '&' . $filters->get_get() . '&page=%d')));
             
             /* Get the submissions for this form */
             $submissions = [];
-            $data_result = database()->query("SELECT * FROM `data` WHERE `user_id` = {$this->user->user_id} AND `biolink_block_id` = {$biolink_block_id} {$filters->get_sql_where()} {$filters->get_sql_order_by()} {$paginator->get_sql_limit()}");
+            $data_result = database()->query("SELECT * FROM `data` WHERE `user_id` = {$this->user->user_id} AND `microsite_block_id` = {$microsite_block_id} {$filters->get_sql_where()} {$filters->get_sql_order_by()} {$paginator->get_sql_limit()}");
             
             while($row = $data_result->fetch_object()) {
                 $row->data = json_decode($row->data);
@@ -71,9 +71,9 @@ class Data extends Controller {
             
             /* Get the form details */
             $form = [
-                'biolink_block_id' => $biolink_block_id,
-                'type' => $biolink_blocks[$biolink_block_id]->type,
-                'form_name' => $biolink_blocks[$biolink_block_id]->settings->name ?? 'Unknown Form',
+                'microsite_block_id' => $microsite_block_id,
+                'type' => $microsite_blocks[$microsite_block_id]->type,
+                'form_name' => $microsite_blocks[$microsite_block_id]->settings->name ?? 'Unknown Form',
                 'submissions_count' => $total_rows,
                 'submissions' => $submissions
             ];
@@ -111,7 +111,7 @@ class Data extends Controller {
             /* Prepare the view */
             $data = [
                 'form' => $form,
-                'biolink_blocks' => require APP_PATH . 'includes/biolink_blocks.php',
+                'microsite_blocks' => require APP_PATH . 'includes/microsite_blocks.php',
                 'projects' => $projects,
                 'pagination' => $pagination,
                 'filters' => $filters,
@@ -124,10 +124,10 @@ class Data extends Controller {
         /* Main data view showing all forms */
         else {
             /* Prepare the paginator for forms */
-            $total_forms = database()->query("SELECT COUNT(DISTINCT `biolink_block_id`) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
+            $total_forms = database()->query("SELECT COUNT(DISTINCT `microsite_block_id`) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
             $paginator = (new \Altum\Paginator($total_forms, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?' . $filters->get_get() . '&page=%d')));
             
-            /* Get distinct biolink_block_ids with their latest submission and count */
+            /* Get distinct microsite_block_ids with their latest submission and count */
             $forms = [];
             
             // Make sure we have a valid order_by field
@@ -136,7 +136,7 @@ class Data extends Controller {
             // Get all data entries for this user
             $data_result = database()->query("
                 SELECT 
-                    d.`biolink_block_id`, 
+                    d.`microsite_block_id`, 
                     d.`type`, 
                     d.`link_id`, 
                     d.`project_id`,
@@ -158,9 +158,9 @@ class Data extends Controller {
             
             if($data_result) {
                 while($row = $data_result->fetch_object()) {
-                    // Get form name from biolink blocks
-                    $form_name = isset($biolink_blocks[$row->biolink_block_id]) ? 
-                        $biolink_blocks[$row->biolink_block_id]->settings->name ?? 'Unknown Form' : 
+                    // Get form name from microsite blocks
+                    $form_name = isset($microsite_blocks[$row->microsite_block_id]) ? 
+                        $microsite_blocks[$row->microsite_block_id]->settings->name ?? 'Unknown Form' : 
                         'Unknown Form';
                     
                     // Create a unique key for the form
@@ -169,7 +169,7 @@ class Data extends Controller {
                     // Initialize form data if not exists
                     if(!isset($form_data[$form_key])) {
                         $form_data[$form_key] = [
-                            'biolink_block_id' => $row->biolink_block_id,
+                            'microsite_block_id' => $row->microsite_block_id,
                             'type' => $row->type,
                             'link_id' => $row->link_id,
                             'project_id' => $row->project_id,
@@ -179,8 +179,8 @@ class Data extends Controller {
                     }
                     
                     // Add this instance if not already added
-                    if(!in_array($row->biolink_block_id, $form_data[$form_key]['instances'])) {
-                        $form_data[$form_key]['instances'][] = $row->biolink_block_id;
+                    if(!in_array($row->microsite_block_id, $form_data[$form_key]['instances'])) {
+                        $form_data[$form_key]['instances'][] = $row->microsite_block_id;
                     }
                     
                     // Count submissions for this form
@@ -199,7 +199,7 @@ class Data extends Controller {
             // Create the forms array for display
             foreach($form_data as $form_key => $data) {
                 $forms[] = (object) [
-                    'biolink_block_id' => $data['biolink_block_id'],
+                    'microsite_block_id' => $data['microsite_block_id'],
                     'type' => $data['type'],
                     'link_id' => $data['link_id'],
                     'project_id' => $data['project_id'],
@@ -224,7 +224,7 @@ class Data extends Controller {
             $export_forms = [];
             foreach($forms as $form) {
                 $export_form = [
-                    'biolink_block_id' => $form->biolink_block_id,
+                    'microsite_block_id' => $form->microsite_block_id,
                     'type' => $form->type,
                     'link_id' => $form->link_id,
                     'project_id' => $form->project_id,
@@ -236,11 +236,11 @@ class Data extends Controller {
             }
             
             if(isset($_GET['export']) && $_GET['export'] == 'csv') {
-                process_export_csv($export_forms, 'include', ['biolink_block_id', 'type', 'link_id', 'project_id', 'submissions_count', 'last_submission_datetime', 'form_name'], sprintf(l('data.title')));
+                process_export_csv($export_forms, 'include', ['microsite_block_id', 'type', 'link_id', 'project_id', 'submissions_count', 'last_submission_datetime', 'form_name'], sprintf(l('data.title')));
             }
             
             if(isset($_GET['export']) && $_GET['export'] == 'json') {
-                process_export_json($export_forms, 'include', ['biolink_block_id', 'type', 'link_id', 'project_id', 'submissions_count', 'last_submission_datetime', 'form_name'], sprintf(l('data.title')));
+                process_export_json($export_forms, 'include', ['microsite_block_id', 'type', 'link_id', 'project_id', 'submissions_count', 'last_submission_datetime', 'form_name'], sprintf(l('data.title')));
             }
             
             /* Prepare the pagination view */
@@ -256,7 +256,7 @@ class Data extends Controller {
                 'projects' => $projects,
                 'pagination' => $pagination,
                 'filters' => $filters,
-                'biolink_blocks' => require APP_PATH . 'includes/biolink_blocks.php',
+                'microsite_blocks' => require APP_PATH . 'includes/microsite_blocks.php',
             ];
             
             $view = new \Altum\View('data/index', (array) $this);

@@ -25,7 +25,7 @@ class GuestsPayments extends Controller {
         \Altum\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['biolink_block_id', 'link_id', 'payment_processor_id', 'project_id', 'type', 'processor'], ['email', 'name'], ['guest_payment_id', 'total_amount', 'datetime']));
+        $filters = (new \Altum\Filters(['microsite_block_id', 'link_id', 'payment_processor_id', 'project_id', 'type', 'processor'], ['email', 'name'], ['guest_payment_id', 'total_amount', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->guests_payments_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
@@ -41,8 +41,8 @@ class GuestsPayments extends Controller {
         }
 
         /* Export handler */
-        process_export_csv($guests_payments, 'include', ['guest_payment_id', 'biolink_block_id', 'link_id', 'payment_processor_id', 'project_id', 'user_id', 'processor', 'payment_id', 'email', 'name', 'total_amount', 'currency', 'status', 'datetime'], sprintf(l('guests_payments.title')));
-        process_export_json($guests_payments, 'include', ['guest_payment_id', 'biolink_block_id', 'link_id', 'payment_processor_id', 'project_id', 'user_id', 'processor', 'payment_id', 'email', 'name', 'total_amount', 'currency', 'data', 'settings', 'status', 'datetime'], sprintf(l('guests_payments.title')));
+        process_export_csv($guests_payments, 'include', ['guest_payment_id', 'microsite_block_id', 'link_id', 'payment_processor_id', 'project_id', 'user_id', 'processor', 'payment_id', 'email', 'name', 'total_amount', 'currency', 'status', 'datetime'], sprintf(l('guests_payments.title')));
+        process_export_json($guests_payments, 'include', ['guest_payment_id', 'microsite_block_id', 'link_id', 'payment_processor_id', 'project_id', 'user_id', 'processor', 'payment_id', 'email', 'name', 'total_amount', 'currency', 'data', 'settings', 'status', 'datetime'], sprintf(l('guests_payments.title')));
 
         /* Prepare the pagination view */
         $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);

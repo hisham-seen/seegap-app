@@ -22,7 +22,7 @@ class AdminIndex extends Controller {
 
     public function index() {
 
-        $biolink_links = db()->where('type', 'biolink')->getValue('links', 'count(`link_id`)');
+        $microsite_links = db()->where('type', 'microsite')->getValue('links', 'count(`link_id`)');
         $shortened_links = db()->where('type', 'link')->getValue('links', 'count(`link_id`)');
         $track_links = db()->getValue('track_links', 'MAX(`id`)');
         $qr_codes = db()->getValue('qr_codes', 'count(`qr_code_id`)');
@@ -33,7 +33,7 @@ class AdminIndex extends Controller {
         extract(\Altum\Cache::cache_function_result('admin_dashboard_current_month', null, function() {
             return [
                 'domains_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('domains', 'count(*)'),
-                'biolink_links_current_month' => db()->where('type', 'biolink')->where('datetime', date('Y-m-01'), '>=')->getValue('links', 'count(*)'),
+                'microsite_links_current_month' => db()->where('type', 'microsite')->where('datetime', date('Y-m-01'), '>=')->getValue('links', 'count(*)'),
                 'shortened_links_current_month' => db()->where('type', 'link')->where('datetime', date('Y-m-01'), '>=')->getValue('links', 'count(*)'),
                 'track_links_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('track_links', 'count(*)'),
                 'qr_codes_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('qr_codes', 'count(*)'),
@@ -75,7 +75,7 @@ class AdminIndex extends Controller {
 
         /* Main View */
         $data = [
-            'biolink_links' => $biolink_links,
+            'microsite_links' => $microsite_links,
             'shortened_links' => $shortened_links,
             'track_links' => $track_links,
             'qr_codes' => $qr_codes,
@@ -85,7 +85,7 @@ class AdminIndex extends Controller {
             'payments' => $payments,
 
             'domains_current_month' => $domains_current_month,
-            'biolink_links_current_month' => $biolink_links_current_month,
+            'microsite_links_current_month' => $microsite_links_current_month,
             'shortened_links_current_month' => $shortened_links_current_month,
             'track_links_current_month' => $track_links_current_month,
             'qr_codes_current_month' => $qr_codes_current_month,

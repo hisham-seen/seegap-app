@@ -130,8 +130,8 @@ return [
         'path' => 'splash_pages/',
     ],
 
-    /* Biolink */
-    'biolink_seo_image' => [
+    /* Microsite */
+    'microsite_seo_image' => [
         'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
         'path' => 'block_images/',
     ],
@@ -141,7 +141,7 @@ return [
         'path' => 'favicons/',
     ],
 
-    'biolink_background' => [
+    'microsite_background' => [
         'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'mp4', 'avif'],
         'path' => 'backgrounds/',
     ],

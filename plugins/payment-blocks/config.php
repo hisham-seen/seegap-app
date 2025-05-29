@@ -4,9 +4,9 @@ defined('ALTUMCODE') || die();
 return (object) [
     'plugin_id' => 'payment-blocks',
     'name' => 'Payment Blocks',
-    'description' => 'The Payment Blocks plugin is meant to give you payment blocks for biolink pages with Stripe and Paypal integrations.',
+    'description' => 'The Payment Blocks plugin is meant to give you payment blocks for microsite pages with Stripe and Paypal integrations.',
     'version' => '2.1.0',
-    'url' => 'https://altumco.de/66biolinks-payment-blocks',
+    'url' => 'https://altumco.de/66microsites-payment-blocks',
     'author' => 'AltumCode',
     'author_url' => 'https://altumcode.com/',
     'status' => 'inexistent',

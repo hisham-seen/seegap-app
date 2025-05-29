@@ -195,7 +195,7 @@ abstract class BaseLinkHandler implements Interfaces\LinkHandlerInterface {
         cache()->deleteItem('links?user_id=' . $user_id);
         
         if($link_id) {
-            cache()->deleteItem('biolink_blocks?link_id=' . $link_id);
+            cache()->deleteItem('microsite_blocks?link_id=' . $link_id);
             cache()->deleteItem('link?link_id=' . $link_id);
             cache()->deleteItemsByTag('link_id=' . $link_id);
         }

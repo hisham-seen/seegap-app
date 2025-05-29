@@ -21,7 +21,7 @@ defined('ALTUMCODE') || die();
 class Directory extends Controller {
 
     public function index() {
-        if(!settings()->links->biolinks_is_enabled || !settings()->links->directory_is_enabled) {
+        if(!settings()->links->microsites_is_enabled || !settings()->links->directory_is_enabled) {
             redirect('not-found');
         }
 
@@ -38,7 +38,7 @@ class Directory extends Controller {
         $directory_display_where = settings()->links->directory_display == 'all' ? null : 'AND `is_verified` = 1';
 
         /* Prepare the paginator */
-        $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `type` = 'biolink' AND `is_enabled` = 1 AND `links`.`directory_is_enabled` = 1 {$directory_display_where} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
+        $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `type` = 'microsite' AND `is_enabled` = 1 AND `links`.`directory_is_enabled` = 1 {$directory_display_where} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
         $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('directory?' . $filters->get_get() . '&page=%d')));
 
         /* Get the links list for the project */
@@ -50,7 +50,7 @@ class Directory extends Controller {
             LEFT JOIN 
                 `domains` ON `links`.`domain_id` = `domains`.`domain_id`
             WHERE 
-                `links`.`type` = 'biolink'
+                `links`.`type` = 'microsite'
                 AND `links`.`is_enabled` = 1
                 AND `links`.`directory_is_enabled` = 1
                 {$directory_display_where}

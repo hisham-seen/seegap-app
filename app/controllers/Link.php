@@ -10,7 +10,7 @@
 namespace Altum\Controllers;
 
 use Altum\Alerts;
-use Altum\Models\BiolinksThemes;
+use Altum\Models\MicrositesThemes;
 use Altum\Models\Domain;
 use Altum\Title;
 
@@ -31,7 +31,7 @@ class Link extends Controller {
             redirect('dashboard');
         }
 
-        $biolink_blocks = require APP_PATH . 'includes/biolink_blocks.php';
+        $microsite_blocks = require APP_PATH . 'includes/microsite_blocks.php';
         $links_types = require APP_PATH . 'includes/links_types.php';
 
         $this->link->settings = json_decode($this->link->settings ?? '');
@@ -55,29 +55,29 @@ class Link extends Controller {
         switch($method) {
             case 'settings':
 
-                if($this->link->type == 'biolink') {
+                if($this->link->type == 'microsite') {
                     /* Get available themes */
-                    $biolinks_themes = (new BiolinksThemes())->get_biolinks_themes();
+                    $microsites_themes = (new MicrositesThemes())->get_microsites_themes();
 
-                    /* Get the links available for the biolink */
-                    $link_links_result = database()->query("SELECT * FROM `biolinks_blocks` WHERE `link_id` = {$this->link->link_id} ORDER BY `order` ASC");
+                    /* Get the links available for the microsite */
+                    $link_links_result = database()->query("SELECT * FROM `microsites_blocks` WHERE `link_id` = {$this->link->link_id} ORDER BY `order` ASC");
 
-                    /* Add the modals for creating the links inside the biolink */
-                    foreach($biolink_blocks as $key => $value) {
+                    /* Add the modals for creating the links inside the microsite */
+                    foreach($microsite_blocks as $key => $value) {
                         $data = [
                             'link' => $this->link,
-                            'biolink_blocks' => $biolink_blocks,
+                            'microsite_blocks' => $microsite_blocks,
                         ];
 
-                        $view = new \Altum\View('link/settings/biolink_blocks/' . $key . '/' . $key . '_create_modal', (array) $this);
+                        $view = new \Altum\View('link/settings/microsite_blocks/' . $key . '/' . $key . '_create_modal', (array) $this);
 
                         \Altum\Event::add_content($view->run($data), 'modals');
                     }
 
                     $data = [
-                        'biolink_blocks' => $biolink_blocks,
+                        'microsite_blocks' => $microsite_blocks,
                     ];
-                    $view = new \Altum\View('link/settings/biolink_link_create_modal', (array) $this);
+                    $view = new \Altum\View('link/settings/microsite_link_create_modal', (array) $this);
                     \Altum\Event::add_content($view->run($data), 'modals');
                 }
 
@@ -108,8 +108,8 @@ class Link extends Controller {
                     'splash_pages'      => $splash_pages,
                     'pixels'            => $pixels,
                     'payment_processors'=> $payment_processors ?? null,
-                    'biolink_blocks'    => $biolink_blocks,
-                    'biolinks_themes'   => $biolinks_themes ?? null,
+                    'microsite_blocks'    => $microsite_blocks,
+                    'microsites_themes'   => $microsites_themes ?? null,
                     'links_types'       => $links_types,
                 ];
 
@@ -567,7 +567,7 @@ class Link extends Controller {
         \Altum\Event::add_content($view->run(), 'modals');
 
         /* Delete Modal */
-        $view = new \Altum\View('biolink-block/biolink_block_delete_modal', (array) $this);
+        $view = new \Altum\View('microsite-block/microsite_block_delete_modal', (array) $this);
         \Altum\Event::add_content($view->run(), 'modals');
 
         /* Prepare the method View */

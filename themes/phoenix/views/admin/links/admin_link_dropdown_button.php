@@ -6,7 +6,7 @@
     </button>
 
     <div class="dropdown-menu dropdown-menu-right">
-        <?php if($data->type == 'biolink'): ?>
+        <?php if($data->type == 'microsite'): ?>
             <?php if($data->is_verified): ?>
                 <a href="<?= url('admin/links/is_verified/' . $data->id . '?' . \Altum\Csrf::get_url_query() . '&original_request=' . base64_encode(\Altum\Router::$original_request) . '&original_request_query=' . base64_encode(\Altum\Router::$original_request_query)) ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-user-alt-slash mr-2"></i> <?= l('admin_links.remove_verify') ?></a>
             <?php else: ?>

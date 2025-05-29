@@ -15,7 +15,7 @@ $features = [
     'removable_branding',
 ];
 
-if(settings()->links->biolinks_is_enabled) {
+if(settings()->links->microsites_is_enabled) {
     $features = array_merge($features, [
         'custom_branding',
         'dofollow_is_enabled',

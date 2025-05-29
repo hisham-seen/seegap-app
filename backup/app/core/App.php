@@ -76,7 +76,7 @@ class App {
             header("Strict-Transport-Security: max-age=31536000; preload");
         }
 
-        /* Check for Preflight requests for the tracking of submissions from biolink pages */
+        /* Check for Preflight requests for the tracking of submissions from microsite pages */
         if(in_array(\Altum\Router::$controller, ['Link'])) {
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, OPTIONS');

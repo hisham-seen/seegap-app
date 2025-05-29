@@ -29,18 +29,18 @@ class GuestsPaymentsStatistics extends Controller {
 
         \Altum\Authentication::guard();
 
-        $_GET['biolink_block_id'] = (int) $_GET['biolink_block_id'];
+        $_GET['microsite_block_id'] = (int) $_GET['microsite_block_id'];
 
-        if(!$biolink_block = db()->where('biolink_block_id', $_GET['biolink_block_id'])->where('user_id', $this->user->user_id)->getOne('biolinks_blocks')) {
+        if(!$microsite_block = db()->where('microsite_block_id', $_GET['microsite_block_id'])->where('user_id', $this->user->user_id)->getOne('microsites_blocks')) {
             redirect('guests-payments');
         }
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
         /* Statistics related variables */
         $datetime = \Altum\Date::get_start_end_dates_new();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['biolink_block_id', 'link_id', 'payment_processor_id', 'project_id', 'processor'], [], []));
+        $filters = (new \Altum\Filters(['microsite_block_id', 'link_id', 'payment_processor_id', 'project_id', 'processor'], [], []));
 
         /* Get the data list for the user */
         $guests_payments = [];
@@ -80,7 +80,7 @@ class GuestsPaymentsStatistics extends Controller {
 
         /* Prepare the view */
         $data = [
-            'biolink_block' => $biolink_block,
+            'microsite_block' => $microsite_block,
             'guests_payments' => $guests_payments,
             'guests_payments_chart' => $guests_payments_chart,
             'datetime' => $datetime,

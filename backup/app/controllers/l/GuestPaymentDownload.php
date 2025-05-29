@@ -39,18 +39,18 @@ class GuestPaymentDownload extends Controller {
             redirect();
         }
 
-        /* Get the biolink block */
-        if(!$biolink_block = db()->where('biolink_block_id', $guest_payment->biolink_block_id)->getOne('biolinks_blocks')) {
+        /* Get the microsite block */
+        if(!$microsite_block = db()->where('microsite_block_id', $guest_payment->microsite_block_id)->getOne('microsites_blocks')) {
             redirect();
         }
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-        if(!$biolink_block->settings->file) {
+        if(!$microsite_block->settings->file) {
             redirect();
         }
 
         /* Download the file */
-        $file_url = \Altum\Uploads::get_full_url('products_files') . $biolink_block->settings->file;
+        $file_url = \Altum\Uploads::get_full_url('products_files') . $microsite_block->settings->file;
         header('Content-Type: application/octet-stream');
         header('Content-Transfer-Encoding: Binary');
         header('Content-disposition: attachment; filename="' . basename($file_url) . '"');

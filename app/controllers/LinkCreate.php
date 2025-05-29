@@ -142,7 +142,7 @@ class LinkCreate extends Controller {
             $_POST['cloaking_meta_description'] = input_clean($_POST['cloaking_meta_description'], 160);
             $_POST['cloaking_custom_js'] = mb_substr(trim($_POST['cloaking_custom_js']), 0, 10000);
             $cloaking_favicon = \Altum\Uploads::process_upload(null, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
-            $cloaking_opengraph = \Altum\Uploads::process_upload(null, 'biolink_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
+            $cloaking_opengraph = \Altum\Uploads::process_upload(null, 'microsite_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
 
             /* HTTP */
             $_POST['http_status_code'] = in_array($_POST['http_status_code'], [301, 302, 307, 308]) ? (int) $_POST['http_status_code'] : 301;

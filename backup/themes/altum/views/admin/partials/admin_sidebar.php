@@ -212,21 +212,21 @@
                 </a>
             </li>
 
-            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBiolinksBlocks']) ? 'active' : null ?>">
-                <a class="nav-link text-truncate" href="<?= url('admin/biolinks-blocks') ?>">
-                    <i class="fas fa-fw fa-sm fa-table-cells-large mr-2"></i> <?= l('admin_biolinks_blocks.menu') ?>
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminMicrositesBlocks']) ? 'active' : null ?>">
+                <a class="nav-link text-truncate" href="<?= url('admin/microsites-blocks') ?>">
+                    <i class="fas fa-fw fa-sm fa-table-cells-large mr-2"></i> <?= l('admin_microsites_blocks.menu') ?>
                 </a>
             </li>
 
-            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBiolinksThemes', 'AdminBiolinkThemeCreate', 'AdminBiolinkThemeUpdate']) ? 'active' : null ?>">
-                <a class="nav-link text-truncate" href="<?= url('admin/biolinks-themes') ?>">
-                    <i class="fas fa-fw fa-sm fa-palette mr-2"></i> <?= l('admin_biolinks_themes.menu') ?>
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminMicrositesThemes', 'AdminMicrositeThemeCreate', 'AdminMicrositeThemeUpdate']) ? 'active' : null ?>">
+                <a class="nav-link text-truncate" href="<?= url('admin/microsites-themes') ?>">
+                    <i class="fas fa-fw fa-sm fa-palette mr-2"></i> <?= l('admin_microsites_themes.menu') ?>
                 </a>
             </li>
 
-            <li class="<?= in_array(\Altum\Router::$controller, ['AdminBiolinksTemplates', 'AdminBiolinkTemplateCreate', 'AdminBiolinkTemplateUpdate']) ? 'active' : null ?>">
-                <a class="nav-link text-truncate" href="<?= url('admin/biolinks-templates') ?>">
-                    <i class="fas fa-fw fa-sm fa-moon mr-2"></i> <?= l('admin_biolinks_templates.menu') ?>
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminMicrositesTemplates', 'AdminMicrositeTemplateCreate', 'AdminMicrositeTemplateUpdate']) ? 'active' : null ?>">
+                <a class="nav-link text-truncate" href="<?= url('admin/microsites-templates') ?>">
+                    <i class="fas fa-fw fa-sm fa-moon mr-2"></i> <?= l('admin_microsites_templates.menu') ?>
                 </a>
             </li>
 

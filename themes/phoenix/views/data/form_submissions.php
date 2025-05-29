@@ -14,8 +14,8 @@
 
             <div class="ml-2">
                 <span class="badge badge-light">
-                    <i class="<?= $data->biolink_blocks[$data->form['type']]['icon'] ?> fa-fw fa-sm mr-1"></i>
-                    <?= l('link.biolink.blocks.' . $data->form['type']) ?>
+                    <i class="<?= $data->microsite_blocks[$data->form['type']]['icon'] ?> fa-fw fa-sm mr-1"></i>
+                    <?= l('link.microsite.blocks.' . $data->form['type']) ?>
                 </span>
             </div>
         </div>
@@ -29,16 +29,16 @@
 
                     <div class="dropdown-menu dropdown-menu-right d-print-none">
                         <?php 
-                        // Create export URL without duplicate biolink_block_id
-                        $export_url_base = url('data?biolink_block_id=' . $data->form['biolink_block_id']);
-                        // Add any other filters except biolink_block_id
+                        // Create export URL without duplicate microsite_block_id
+                        $export_url_base = url('data?microsite_block_id=' . $data->form['microsite_block_id']);
+                        // Add any other filters except microsite_block_id
                         $filters_get = $data->filters->get_get();
                         if(!empty($filters_get)) {
                             $filters_array = [];
                             parse_str($filters_get, $filters_array);
-                            // Remove biolink_block_id if it exists
-                            if(isset($filters_array['biolink_block_id'])) {
-                                unset($filters_array['biolink_block_id']);
+                            // Remove microsite_block_id if it exists
+                            if(isset($filters_array['microsite_block_id'])) {
+                                unset($filters_array['microsite_block_id']);
                             }
                             // Rebuild the query string
                             $filters_get = http_build_query($filters_array);
@@ -71,14 +71,14 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url('data?biolink_block_id=' . $data->form['biolink_block_id']) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url('data?microsite_block_id=' . $data->form['microsite_block_id']) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
                         <div class="dropdown-divider"></div>
 
                         <form action="" method="get" role="form">
-                            <input type="hidden" name="biolink_block_id" value="<?= $data->form['biolink_block_id'] ?>" />
+                            <input type="hidden" name="microsite_block_id" value="<?= $data->form['microsite_block_id'] ?>" />
 
                             <div class="form-group px-4">
                                 <label for="filters_order_by" class="small"><?= l('global.filters.order_by') ?></label>
@@ -142,8 +142,8 @@
                 
                 <div>
                     <?php if(!empty($data->form['submissions'])): ?>
-                    <a href="<?= url('link/' . $data->form['submissions'][0]->link_id . '?tab=blocks') ?>" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" title="<?= l('data.biolink') ?>">
-                        <i class="fas fa-fw fa-hashtag mr-1"></i> <?= l('data.biolink') ?>
+                    <a href="<?= url('link/' . $data->form['submissions'][0]->link_id . '?tab=blocks') ?>" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" title="<?= l('data.microsite') ?>">
+                        <i class="fas fa-fw fa-hashtag mr-1"></i> <?= l('data.microsite') ?>
                     </a>
                     <?php endif; ?>
                 </div>

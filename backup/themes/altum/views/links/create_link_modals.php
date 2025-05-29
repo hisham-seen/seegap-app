@@ -73,8 +73,8 @@
 </div>
 <?php endif ?>
 
-<?php if(settings()->links->biolinks_is_enabled): ?>
-<div class="modal fade" id="create_biolink" role="dialog" aria-hidden="true">
+<?php if(settings()->links->microsites_is_enabled): ?>
+<div class="modal fade" id="create_microsite" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
@@ -82,23 +82,23 @@
                 <div class="d-flex justify-content-between mb-3">
                     <h5 class="modal-title">
                         <i class="fas fa-fw fa-sm fa-hashtag text-dark mr-2"></i>
-                        <?= l('biolink_modal.header') ?>
+                        <?= l('microsite_modal.header') ?>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" title="<?= l('global.close') ?>">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <form name="create_biolink" method="post" role="form">
+                <form name="create_microsite" method="post" role="form">
                     <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
-                    <input type="hidden" name="type" value="biolink" />
-                    <input type="hidden" name="biolink_template_id" value="" />
+                    <input type="hidden" name="type" value="microsite" />
+                    <input type="hidden" name="microsite_template_id" value="" />
 
                     <div class="notification-container"></div>
 
                     <div class="form-group">
-                        <label for="biolink_url"><i class="fas fa-fw fa-bolt fa-sm text-muted mr-1"></i> <?= l('link.settings.url') ?></label>
+                        <label for="microsite_url"><i class="fas fa-fw fa-bolt fa-sm text-muted mr-1"></i> <?= l('link.settings.url') ?></label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <?php if(count($data->domains)): ?>
@@ -116,7 +116,7 @@
                                 <?php endif ?>
                             </div>
                             <input
-                                id="biolink_url"
+                                id="microsite_url"
                                 type="text"
                                 class="form-control"
                                 name="url"
@@ -132,7 +132,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('biolink_modal.input.submit') ?></button>
+                        <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('microsite_modal.input.submit') ?></button>
                     </div>
                 </form>
             </div>
@@ -431,7 +431,7 @@
 
 <?php ob_start() ?>
 <script>
-    $('form[name="create_link"],form[name="create_biolink"],form[name="create_file"],form[name="create_vcard"],form[name="create_event"],form[name="create_static"]').on('submit', event => {
+    $('form[name="create_link"],form[name="create_microsite"],form[name="create_file"],form[name="create_vcard"],form[name="create_event"],form[name="create_static"]').on('submit', event => {
         let form = $(event.currentTarget)[0];
         let data = new FormData(form);
 

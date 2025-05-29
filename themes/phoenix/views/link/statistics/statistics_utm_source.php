@@ -51,7 +51,7 @@
                     <div class="d-flex justify-content-between mb-1">
                         <div class="text-truncate">
                             <?php if(!empty($row->utm_source)): ?>
-                                <a href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=utm_medium&utm_source=' . $row->utm_source . '&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><?= $row->utm_source ?></a>
+                                <a href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=utm_medium&utm_source=' . $row->utm_source . '&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><?= $row->utm_source ?></a>
                             <?php else: ?>
                                 <?= l('global.none') ?>
                             <?php endif ?>

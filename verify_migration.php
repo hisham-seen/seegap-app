@@ -2,8 +2,8 @@
 /**
  * Migration Verification Script
  * 
- * This script helps verify that the biolink to microsite migration was successful
- * by checking for any remaining biolink references and testing database integrity.
+ * This script helps verify that the microsite to microsite migration was successful
+ * by checking for any remaining microsite references and testing database integrity.
  */
 
 class MigrationVerifier {
@@ -19,7 +19,7 @@ class MigrationVerifier {
         echo "Migration Verification Report\n";
         echo "============================\n\n";
         
-        // Check for remaining biolink references in files
+        // Check for remaining microsite references in files
         $this->checkFileReferences();
         
         // Check database if config is available
@@ -32,7 +32,7 @@ class MigrationVerifier {
     }
     
     private function checkFileReferences() {
-        echo "1. Checking for remaining 'biolink' references in files...\n";
+        echo "1. Checking for remaining 'microsite' references in files...\n";
         echo "--------------------------------------------------------\n";
         
         $extensions = ['php', 'js', 'css', 'html', 'htm', 'json', 'xml', 'md', 'txt'];
@@ -42,7 +42,7 @@ class MigrationVerifier {
         
         $foundReferences = [];
         $excludePatterns = [
-            'biolink_to_microsite',
+            'microsite_to_microsite',
             'backup',
             'vendor',
             'node_modules',
@@ -71,9 +71,9 @@ class MigrationVerifier {
             }
             
             $content = file_get_contents($path);
-            if (stripos($content, 'biolink') !== false) {
+            if (stripos($content, 'microsite') !== false) {
                 // Count occurrences
-                $count = substr_count(strtolower($content), 'biolink');
+                $count = substr_count(strtolower($content), 'microsite');
                 $foundReferences[] = [
                     'file' => $path,
                     'count' => $count
@@ -82,9 +82,9 @@ class MigrationVerifier {
         }
         
         if (empty($foundReferences)) {
-            echo "✅ No biolink references found in files!\n";
+            echo "✅ No microsite references found in files!\n";
         } else {
-            echo "❌ Found biolink references in " . count($foundReferences) . " files:\n";
+            echo "❌ Found microsite references in " . count($foundReferences) . " files:\n";
             foreach ($foundReferences as $ref) {
                 echo "   - {$ref['file']} ({$ref['count']} occurrences)\n";
             }
@@ -132,27 +132,27 @@ class MigrationVerifier {
                 }
             }
             
-            // Check for remaining biolink tables
-            $stmt = $pdo->query("SHOW TABLES LIKE '%biolink%'");
-            $biolinkTables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            // Check for remaining microsite tables
+            $stmt = $pdo->query("SHOW TABLES LIKE '%microsite%'");
+            $micrositeTables = $stmt->fetchAll(PDO::FETCH_COLUMN);
             
-            if (empty($biolinkTables)) {
-                echo "✅ No biolink tables found\n";
+            if (empty($micrositeTables)) {
+                echo "✅ No microsite tables found\n";
             } else {
-                echo "❌ Found remaining biolink tables:\n";
-                foreach ($biolinkTables as $table) {
+                echo "❌ Found remaining microsite tables:\n";
+                foreach ($micrositeTables as $table) {
                     echo "   - $table\n";
                 }
             }
             
-            // Check settings table for biolink references
-            $stmt = $pdo->query("SELECT COUNT(*) FROM settings WHERE `key` LIKE '%biolink%' OR `value` LIKE '%biolink%'");
-            $biolinkSettings = $stmt->fetchColumn();
+            // Check settings table for microsite references
+            $stmt = $pdo->query("SELECT COUNT(*) FROM settings WHERE `key` LIKE '%microsite%' OR `value` LIKE '%microsite%'");
+            $micrositeSettings = $stmt->fetchColumn();
             
-            if ($biolinkSettings == 0) {
-                echo "✅ No biolink references in settings\n";
+            if ($micrositeSettings == 0) {
+                echo "✅ No microsite references in settings\n";
             } else {
-                echo "❌ Found $biolinkSettings biolink references in settings table\n";
+                echo "❌ Found $micrositeSettings microsite references in settings table\n";
             }
             
             // Check links table for microsite type
@@ -196,32 +196,32 @@ class MigrationVerifier {
         
         echo "\nFound $foundFiles out of " . count($expectedFiles) . " expected files.\n";
         
-        // Check for remaining biolink files
+        // Check for remaining microsite files
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->rootPath, RecursiveDirectoryIterator::SKIP_DOTS)
         );
         
-        $biolinkFiles = [];
+        $micrositeFiles = [];
         foreach ($iterator as $file) {
             $path = $file->getPathname();
             $name = $file->getFilename();
             
             // Skip our migration files and backups
-            if (strpos($path, 'biolink_to_microsite') !== false || 
+            if (strpos($path, 'microsite_to_microsite') !== false || 
                 strpos($path, 'backup') !== false) {
                 continue;
             }
             
-            if (stripos($name, 'biolink') !== false) {
-                $biolinkFiles[] = $path;
+            if (stripos($name, 'microsite') !== false) {
+                $micrositeFiles[] = $path;
             }
         }
         
-        if (empty($biolinkFiles)) {
-            echo "✅ No files with 'biolink' in filename found\n";
+        if (empty($micrositeFiles)) {
+            echo "✅ No files with 'microsite' in filename found\n";
         } else {
-            echo "❌ Found files with 'biolink' in filename:\n";
-            foreach ($biolinkFiles as $file) {
+            echo "❌ Found files with 'microsite' in filename:\n";
+            foreach ($micrositeFiles as $file) {
                 echo "   - $file\n";
             }
         }

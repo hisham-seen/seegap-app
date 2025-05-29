@@ -64,7 +64,7 @@
                             <select name="type" id="type" class="custom-select custom-select-sm">
                                 <option value=""><?= l('global.all') ?></option>
                                 <?php foreach(['donation', 'product', 'service',] as $value): ?>
-                                    <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.biolink.blocks.' . $value) ?></option>
+                                    <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.microsite.blocks.' . $value) ?></option>
                                 <?php endforeach ?>
                             </select>
                         </div>
@@ -193,8 +193,8 @@
                     </td>
 
                     <td class="text-nowrap">
-                        <a href="<?= url('admin/links?link_id=' . $row->link_id) ?>" class="mr-2" data-toggle="tooltip" title="<?= l('guests_payments.biolink') ?>">
-                            <?= l('link.biolink.blocks.' . $row->type) ?>
+                        <a href="<?= url('admin/links?link_id=' . $row->link_id) ?>" class="mr-2" data-toggle="tooltip" title="<?= l('guests_payments.microsite') ?>">
+                            <?= l('link.microsite.blocks.' . $row->type) ?>
                         </a>
                     </td>
 

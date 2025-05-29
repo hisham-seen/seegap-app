@@ -5,14 +5,14 @@
 
     <div class="mb-5">
         <div class="row m-n3 justify-content-between">
-            <?php if(settings()->links->biolinks_is_enabled): ?>
+            <?php if(settings()->links->microsites_is_enabled): ?>
                 <div class="col-12 col-sm-6 col-xl-4 p-3">
                     <div class="card h-100 position-relative">
                         <div class="card-body d-flex">
                             <div>
                                 <div class="card border-0 mr-3 position-static" style="background: #eff6ff;">
                                     <div class="p-3 d-flex align-items-center justify-content-between">
-                                        <a href="<?= url('links?type=biolink') ?>" class="stretched-link" style="color: #3b82f6;">
+                                        <a href="<?= url('links?type=microsite') ?>" class="stretched-link" style="color: #3b82f6;">
                                             <i class="fas fa-fw fa-hashtag fa-lg"></i>
                                         </a>
                                     </div>
@@ -20,8 +20,8 @@
                             </div>
 
                             <div>
-                                <div class="card-title h4 m-0"><?= nr($data->biolink_links_total) ?></div>
-                                <span class="text-muted"><?= l('dashboard.biolinks') ?></span>
+                                <div class="card-title h4 m-0"><?= nr($data->microsite_links_total) ?></div>
+                                <span class="text-muted"><?= l('dashboard.microsites') ?></span>
                             </div>
                         </div>
                     </div>

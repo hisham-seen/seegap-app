@@ -18,7 +18,7 @@ class AdminLinks extends Controller {
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled', 'link_id', 'user_id', 'project_id', 'domain_id', 'type', 'is_verified', 'biolink_theme_id'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'url', 'location_url', 'clicks']));
+        $filters = (new \Altum\Filters(['is_enabled', 'link_id', 'user_id', 'project_id', 'domain_id', 'type', 'is_verified', 'microsite_theme_id'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'url', 'location_url', 'clicks']));
         $filters->set_default_order_by($this->user->preferences->links_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
@@ -167,7 +167,7 @@ class AdminLinks extends Controller {
 
             /* Update the database */
             db()->where('link_id', $link->link_id)->update('links', ['user_id' => $new_user->user_id]);
-            db()->where('link_id', $link->link_id)->update('biolinks_blocks', ['user_id' => $new_user->user_id]);
+            db()->where('link_id', $link->link_id)->update('microsites_blocks', ['user_id' => $new_user->user_id]);
             db()->where('link_id', $link->link_id)->update('data', ['user_id' => $new_user->user_id]);
             db()->where('link_id', $link->link_id)->update('track_links', ['user_id' => $new_user->user_id]);
 
@@ -200,7 +200,7 @@ class AdminLinks extends Controller {
             redirect('admin/links');
         }
 
-        if($link->type != 'biolink') {
+        if($link->type != 'microsite') {
             redirect('admin/links');
         }
 
@@ -212,7 +212,7 @@ class AdminLinks extends Controller {
 
             /* Clear the cache */
             cache()->deleteItem('link?link_id=' . $link->link_id);
-            cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+            cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
             cache()->deleteItemsByTag('link_id=' . $link->link_id);
 
             /* Set a nice success message */

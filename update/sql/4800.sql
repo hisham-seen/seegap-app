@@ -2,7 +2,7 @@ UPDATE `settings` SET `value` = '{\"version\":\"48.0.0\", \"code\":\"4800\"}' WH
 
 -- SEPARATOR --
 
-alter table biolinks_blocks add last_datetime datetime null;
+alter table microsites_blocks add last_datetime datetime null;
 
 -- SEPARATOR --
 

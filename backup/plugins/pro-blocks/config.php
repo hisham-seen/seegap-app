@@ -4,9 +4,9 @@ defined('ALTUMCODE') || die();
 return (object) [
     'plugin_id' => 'pro-blocks',
     'name' => 'Pro Blocks',
-    'description' => 'The Pro Blocks plugin is meant to give you +20 extra new biolink blocks.',
+    'description' => 'The Pro Blocks plugin is meant to give you +20 extra new microsite blocks.',
     'version' => '6.0.0',
-    'url' => 'https://altumco.de/66biolinks-pro-blocks',
+    'url' => 'https://altumco.de/66microsites-pro-blocks',
     'author' => 'AltumCode',
     'author_url' => 'https://altumcode.com/',
     'status' => 'inexistent',

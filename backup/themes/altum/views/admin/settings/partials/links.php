@@ -1,15 +1,15 @@
 <?php defined('ALTUMCODE') || die() ?>
 
 <div>
-    <button class="btn btn-block btn-gray-200 mb-4" type="button" data-toggle="collapse" data-target="#biolinks_container" aria-expanded="false" aria-controls="biolinks_container">
-        <i class="fas fa-fw fa-hashtag fa-sm mr-1"></i> <?= l('admin_settings.links.biolinks') ?>
+    <button class="btn btn-block btn-gray-200 mb-4" type="button" data-toggle="collapse" data-target="#microsites_container" aria-expanded="false" aria-controls="microsites_container">
+        <i class="fas fa-fw fa-hashtag fa-sm mr-1"></i> <?= l('admin_settings.links.microsites') ?>
     </button>
 
-    <div class="collapse" id="biolinks_container">
+    <div class="collapse" id="microsites_container">
         <div class="form-group custom-control custom-switch">
-            <input id="biolinks_is_enabled" name="biolinks_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->biolinks_is_enabled ? 'checked="checked"' : null?>>
-            <label class="custom-control-label" for="biolinks_is_enabled"><?= l('admin_settings.links.biolinks_is_enabled') ?></label>
-            <small class="form-text text-muted"><?= l('admin_settings.links.biolinks_is_enabled_help') ?></small>
+            <input id="microsites_is_enabled" name="microsites_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->microsites_is_enabled ? 'checked="checked"' : null?>>
+            <label class="custom-control-label" for="microsites_is_enabled"><?= l('admin_settings.links.microsites_is_enabled') ?></label>
+            <small class="form-text text-muted"><?= l('admin_settings.links.microsites_is_enabled_help') ?></small>
         </div>
 
         <div class="form-group">
@@ -19,59 +19,59 @@
         </div>
 
         <div class="form-group custom-control custom-switch">
-            <input id="biolinks_templates_is_enabled" name="biolinks_templates_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->biolinks_templates_is_enabled ? 'checked="checked"' : null?>>
-            <label class="custom-control-label" for="biolinks_templates_is_enabled"><?= l('admin_settings.links.biolinks_templates_is_enabled') ?></label>
-            <small class="form-text text-muted"><?= l('admin_settings.links.biolinks_templates_is_enabled_help') ?></small>
+            <input id="microsites_templates_is_enabled" name="microsites_templates_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->microsites_templates_is_enabled ? 'checked="checked"' : null?>>
+            <label class="custom-control-label" for="microsites_templates_is_enabled"><?= l('admin_settings.links.microsites_templates_is_enabled') ?></label>
+            <small class="form-text text-muted"><?= l('admin_settings.links.microsites_templates_is_enabled_help') ?></small>
         </div>
 
         <div class="form-group custom-control custom-switch">
-            <input id="biolinks_themes_is_enabled" name="biolinks_themes_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->biolinks_themes_is_enabled ? 'checked="checked"' : null?>>
-            <label class="custom-control-label" for="biolinks_themes_is_enabled"><?= l('admin_settings.links.biolinks_themes_is_enabled') ?></label>
-            <small class="form-text text-muted"><?= l('admin_settings.links.biolinks_themes_is_enabled_help') ?></small>
+            <input id="microsites_themes_is_enabled" name="microsites_themes_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->microsites_themes_is_enabled ? 'checked="checked"' : null?>>
+            <label class="custom-control-label" for="microsites_themes_is_enabled"><?= l('admin_settings.links.microsites_themes_is_enabled') ?></label>
+            <small class="form-text text-muted"><?= l('admin_settings.links.microsites_themes_is_enabled_help') ?></small>
         </div>
 
         <div class="form-group custom-control custom-switch">
-            <input id="biolinks_report_is_enabled" name="biolinks_report_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->biolinks_report_is_enabled ? 'checked="checked"' : null?>>
-            <label class="custom-control-label" for="biolinks_report_is_enabled"><?= l('admin_settings.links.biolinks_report_is_enabled') ?></label>
-            <small class="form-text text-muted"><?= l('admin_settings.links.biolinks_report_is_enabled_help') ?></small>
+            <input id="microsites_report_is_enabled" name="microsites_report_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->links->microsites_report_is_enabled ? 'checked="checked"' : null?>>
+            <label class="custom-control-label" for="microsites_report_is_enabled"><?= l('admin_settings.links.microsites_report_is_enabled') ?></label>
+            <small class="form-text text-muted"><?= l('admin_settings.links.microsites_report_is_enabled_help') ?></small>
         </div>
 
         <div class="form-group">
-            <label for="biolinks_default_active_tab"><?= l('admin_settings.links.biolinks_default_active_tab') ?></label>
-            <select id="biolinks_default_active_tab" name="biolinks_default_active_tab" class="custom-select">
-                <option value="settings" <?= settings()->links->biolinks_default_active_tab == 'settings' ? 'selected="selected"' : null ?>><?= l('link.header.settings_tab') ?></option>
-                <option value="blocks" <?= settings()->links->biolinks_default_active_tab == 'blocks' ? 'selected="selected"' : null ?>><?= l('link.header.blocks_tab') ?></option>
+            <label for="microsites_default_active_tab"><?= l('admin_settings.links.microsites_default_active_tab') ?></label>
+            <select id="microsites_default_active_tab" name="microsites_default_active_tab" class="custom-select">
+                <option value="settings" <?= settings()->links->microsites_default_active_tab == 'settings' ? 'selected="selected"' : null ?>><?= l('link.header.settings_tab') ?></option>
+                <option value="blocks" <?= settings()->links->microsites_default_active_tab == 'blocks' ? 'selected="selected"' : null ?>><?= l('link.header.blocks_tab') ?></option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="default_biolink_theme_id"><?= l('admin_settings.links.default_biolink_theme_id') ?></label>
-            <select id="default_biolink_theme_id" name="default_biolink_theme_id" class="custom-select">
-                <option value="" <?= settings()->links->default_biolink_theme_id == '' ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
-                <?php foreach((new \Altum\Models\BiolinksThemes())->get_biolinks_themes() as $biolink_theme_id => $biolink_theme): ?>
-                    <option value="<?= $biolink_theme_id ?>" <?= settings()->links->default_biolink_theme_id == $biolink_theme_id ? 'selected="selected"' : null ?>><?= $biolink_theme->name ?></option>
+            <label for="default_microsite_theme_id"><?= l('admin_settings.links.default_microsite_theme_id') ?></label>
+            <select id="default_microsite_theme_id" name="default_microsite_theme_id" class="custom-select">
+                <option value="" <?= settings()->links->default_microsite_theme_id == '' ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
+                <?php foreach((new \Altum\Models\MicrositesThemes())->get_microsites_themes() as $microsite_theme_id => $microsite_theme): ?>
+                    <option value="<?= $microsite_theme_id ?>" <?= settings()->links->default_microsite_theme_id == $microsite_theme_id ? 'selected="selected"' : null ?>><?= $microsite_theme->name ?></option>
                 <?php endforeach ?>
             </select>
-            <small class="form-text text-muted"><?= l('admin_settings.links.default_biolink_theme_id_help') ?></small>
-            <small class="form-text text-muted"><?= l('admin_settings.links.default_biolink_theme_id_help2') ?></small>
+            <small class="form-text text-muted"><?= l('admin_settings.links.default_microsite_theme_id_help') ?></small>
+            <small class="form-text text-muted"><?= l('admin_settings.links.default_microsite_theme_id_help2') ?></small>
         </div>
 
         <div class="form-group">
-            <label for="default_biolink_template_id"><?= l('admin_settings.links.default_biolink_template_id') ?></label>
-            <select id="default_biolink_template_id" name="default_biolink_template_id" class="custom-select">
-                <option value="" <?= settings()->links->default_biolink_theme_id == '' ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
-                <?php foreach((new \Altum\Models\BiolinksTemplates())->get_biolinks_templates() as $biolink_template_id => $biolink_template): ?>
-                    <option value="<?= $biolink_template_id ?>" <?= settings()->links->default_biolink_template_id == $biolink_template_id ? 'selected="selected"' : null ?>><?= $biolink_template->name ?></option>
+            <label for="default_microsite_template_id"><?= l('admin_settings.links.default_microsite_template_id') ?></label>
+            <select id="default_microsite_template_id" name="default_microsite_template_id" class="custom-select">
+                <option value="" <?= settings()->links->default_microsite_theme_id == '' ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
+                <?php foreach((new \Altum\Models\MicrositesTemplates())->get_microsites_templates() as $microsite_template_id => $microsite_template): ?>
+                    <option value="<?= $microsite_template_id ?>" <?= settings()->links->default_microsite_template_id == $microsite_template_id ? 'selected="selected"' : null ?>><?= $microsite_template->name ?></option>
                 <?php endforeach ?>
             </select>
-            <small class="form-text text-muted"><?= l('admin_settings.links.default_biolink_template_id_help') ?></small>
+            <small class="form-text text-muted"><?= l('admin_settings.links.default_microsite_template_id_help') ?></small>
         </div>
 
         <div class="form-group">
-            <label for="biolinks_new_blocks_position"><?= l('admin_settings.links.biolinks_new_blocks_position') ?></label>
-            <select id="biolinks_new_blocks_position" name="biolinks_new_blocks_position" class="custom-select">
-                <option value="top" <?= settings()->links->biolinks_new_blocks_position == 'top' ? 'selected="selected"' : null ?>><?= l('admin_settings.links.biolinks_new_blocks_position.top') ?></option>
-                <option value="bottom" <?= settings()->links->biolinks_new_blocks_position == 'bottom' ? 'selected="selected"' : null ?>><?= l('admin_settings.links.biolinks_new_blocks_position.bottom') ?></option>
+            <label for="microsites_new_blocks_position"><?= l('admin_settings.links.microsites_new_blocks_position') ?></label>
+            <select id="microsites_new_blocks_position" name="microsites_new_blocks_position" class="custom-select">
+                <option value="top" <?= settings()->links->microsites_new_blocks_position == 'top' ? 'selected="selected"' : null ?>><?= l('admin_settings.links.microsites_new_blocks_position.top') ?></option>
+                <option value="bottom" <?= settings()->links->microsites_new_blocks_position == 'bottom' ? 'selected="selected"' : null ?>><?= l('admin_settings.links.microsites_new_blocks_position.bottom') ?></option>
             </select>
         </div>
 
@@ -83,24 +83,24 @@
         </div>
 
         <div class="form-group mt-5">
-            <?php $biolink_blocks = require APP_PATH . 'includes/biolink_blocks.php'; ?>
+            <?php $microsite_blocks = require APP_PATH . 'includes/microsite_blocks.php'; ?>
 
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="h5"><?= l('admin_settings.links.available_biolink_blocks') . ' (' . count($biolink_blocks) . ')' ?></h3>
+                <h3 class="h5"><?= l('admin_settings.links.available_microsite_blocks') . ' (' . count($microsite_blocks) . ')' ?></h3>
 
                 <div>
-                    <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.select_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='available_biolink_blocks[]']`).forEach(element => element.checked ? null : element.checked = true)"><i class="fas fa-fw fa-check-square"></i></button>
-                    <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.deselect_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='available_biolink_blocks[]']`).forEach(element => element.checked ? element.checked = false : null)"><i class="fas fa-fw fa-minus-square"></i></button>
+                    <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.select_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='available_microsite_blocks[]']`).forEach(element => element.checked ? null : element.checked = true)"><i class="fas fa-fw fa-check-square"></i></button>
+                    <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.deselect_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='available_microsite_blocks[]']`).forEach(element => element.checked ? element.checked = false : null)"><i class="fas fa-fw fa-minus-square"></i></button>
                 </div>
             </div>
 
             <div class="row">
-                <?php foreach($biolink_blocks as $key => $value): ?>
+                <?php foreach($microsite_blocks as $key => $value): ?>
                     <div class="col-12 col-lg-6">
                         <div class="custom-control custom-checkbox my-2">
-                            <input id="<?= 'available_biolink_blocks_' . $key ?>" name="available_biolink_blocks[]" value="<?= $key ?>" type="checkbox" class="custom-control-input" <?= settings()->links->available_biolink_blocks->{$key} ? 'checked="checked"' : null ?>>
-                            <label class="custom-control-label d-flex align-items-center" for="<?= 'available_biolink_blocks_' . $key ?>">
-                                <?= l('link.biolink.blocks.' . mb_strtolower($key)) ?>
+                            <input id="<?= 'available_microsite_blocks_' . $key ?>" name="available_microsite_blocks[]" value="<?= $key ?>" type="checkbox" class="custom-control-input" <?= settings()->links->available_microsite_blocks->{$key} ? 'checked="checked"' : null ?>>
+                            <label class="custom-control-label d-flex align-items-center" for="<?= 'available_microsite_blocks_' . $key ?>">
+                                <?= l('link.microsite.blocks.' . mb_strtolower($key)) ?>
                             </label>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
         <div class="form-group">
             <label for="claim_url_type"><?= l('admin_settings.links.claim_url_type') ?></label>
             <select id="claim_url_type" name="claim_url_type" class="custom-select">
-                <?php foreach(['link', 'biolink', 'file', 'vcard', 'event', 'static'] as $type): ?>
+                <?php foreach(['link', 'microsite', 'file', 'vcard', 'event', 'static'] as $type): ?>
                 <option value="<?= $type ?>" <?= settings()->links->claim_url_type == $type ? 'selected="selected"' : null ?>><?= l('link.breadcrumb.' . $type) ?></option>
                 <?php endforeach ?>
             </select>

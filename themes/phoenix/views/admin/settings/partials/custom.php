@@ -38,21 +38,21 @@
     <hr class="my-4">
 
     <div class="form-group">
-        <label for="head_js_biolink"><i class="fab fa-fw fa-sm fa-js text-muted mr-1"></i> <?= l('admin_settings.custom.head_js_biolink') ?></label>
-        <textarea id="head_js_biolink" name="head_js_biolink" class="form-control" data-code-editor data-mode="htmlmixed"><?= settings()->custom->head_js_biolink ?></textarea>
+        <label for="head_js_microsite"><i class="fab fa-fw fa-sm fa-js text-muted mr-1"></i> <?= l('admin_settings.custom.head_js_microsite') ?></label>
+        <textarea id="head_js_microsite" name="head_js_microsite" class="form-control" data-code-editor data-mode="htmlmixed"><?= settings()->custom->head_js_microsite ?></textarea>
         <small class="form-text text-muted"><?= l('admin_settings.custom.head_js_help') ?></small>
         <small class="form-text text-muted"><?= sprintf(l('global.variables'), '<code>' . implode('</code> , <code>',  ['{{WEBSITE_TITLE}}', '{{USER:NAME}}', '{{USER:EMAIL}}', '{{USER:CONTINENT_NAME}}', '{{USER:COUNTRY_NAME}}', '{{USER:CITY_NAME}}', '{{USER:DEVICE_TYPE}}', '{{USER:OS_NAME}}', '{{USER:BROWSER_NAME}}', '{{USER:BROWSER_LANGUAGE}}', '{{USER:USER_ID}}', '{{USER:PLAN_ID}}']) . '</code>') ?></small>
     </div>
 
     <div class="form-group">
-        <label for="head_css_biolink"><i class="fab fa-fw fa-sm fa-css3 text-muted mr-1"></i> <?= l('admin_settings.custom.head_css_biolink') ?></label>
-        <textarea id="head_css_biolink" name="head_css_biolink" class="form-control" data-code-editor data-mode="css"><?= settings()->custom->head_css_biolink ?></textarea>
+        <label for="head_css_microsite"><i class="fab fa-fw fa-sm fa-css3 text-muted mr-1"></i> <?= l('admin_settings.custom.head_css_microsite') ?></label>
+        <textarea id="head_css_microsite" name="head_css_microsite" class="form-control" data-code-editor data-mode="css"><?= settings()->custom->head_css_microsite ?></textarea>
         <small class="form-text text-muted"><?= l('admin_settings.custom.head_css_help') ?></small>
     </div>
 
     <div class="form-group">
-        <label for="body_content_biolink"><i class="fab fa-fw fa-sm fa-html5 text-muted mr-1"></i> <?= l('admin_settings.custom.body_content_biolink') ?></label>
-        <textarea id="body_content_biolink" name="body_content_biolink" class="form-control" data-code-editor data-mode="htmlmixed"><?= settings()->custom->body_content_biolink ?></textarea>
+        <label for="body_content_microsite"><i class="fab fa-fw fa-sm fa-html5 text-muted mr-1"></i> <?= l('admin_settings.custom.body_content_microsite') ?></label>
+        <textarea id="body_content_microsite" name="body_content_microsite" class="form-control" data-code-editor data-mode="htmlmixed"><?= settings()->custom->body_content_microsite ?></textarea>
         <small class="form-text text-muted"><?= l('admin_settings.custom.body_content_help') ?></small>
     </div>
 

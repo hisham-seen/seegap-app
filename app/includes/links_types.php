@@ -14,7 +14,7 @@ return [
         'icon' => 'fas fa-link',
         'color' => '#14b8a6',
     ],
-    'biolink' => [
+    'microsite' => [
         'icon' => 'fas fa-fw fa-hashtag',
         'color' => '#3b82f6',
     ],

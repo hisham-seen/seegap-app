@@ -32,7 +32,7 @@ app/controllers/link-handlers/
 │   └── LinkHandlerInterface.php        # Contract for all link handlers
 └── handlers/                           # Individual link type implementations (5 files)
     ├── LinkHandler.php                 # Standard URL shortener
-    ├── BiolinkHandler.php              # Biolink pages
+    ├── MicrositeHandler.php              # Microsite pages
     ├── FileHandler.php                 # File sharing
     ├── EventHandler.php                # Calendar events
     └── StaticHandler.php               # Static website hosting
@@ -119,7 +119,7 @@ class LinkHandler extends BaseLinkHandler {
   - Query parameter forwarding
 
 ### Content Hosting (3 handlers)
-- **BiolinkHandler**: Complete biolink page management
+- **MicrositeHandler**: Complete microsite page management
   - Theme and template support
   - PWA generation capabilities
   - Complex image and background handling

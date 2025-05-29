@@ -110,7 +110,7 @@
 <?php endforeach ?>
 
 <?php if(count($data->pixels) && settings()->cookie_consent->is_enabled): ?>
-    <?php if(isset($data->type) && $data->type != 'biolink'): ?>
+    <?php if(isset($data->type) && $data->type != 'microsite'): ?>
         <?php ob_start() ?>
         <link href="<?= ASSETS_FULL_URL . 'css/' . \Altum\ThemeStyle::get_file() . '?v=' . PRODUCT_CODE ?>" id="css_theme_style" rel="stylesheet" media="screen,print">
         <link href="<?= ASSETS_FULL_URL . 'css/custom?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">

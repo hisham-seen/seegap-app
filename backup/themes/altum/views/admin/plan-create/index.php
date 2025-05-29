@@ -213,14 +213,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="biolinks_limit"><?= l('admin_plans.plan.biolinks_limit') ?></label>
-                    <input type="number" id="biolinks_limit" name="biolinks_limit" min="-1" class="form-control" value="0" required="required" />
-                    <small class="form-text text-muted"><?= l('admin_plans.plan.biolinks_limit_help') ?></small>
+                    <label for="microsites_limit"><?= l('admin_plans.plan.microsites_limit') ?></label>
+                    <input type="number" id="microsites_limit" name="microsites_limit" min="-1" class="form-control" value="0" required="required" />
+                    <small class="form-text text-muted"><?= l('admin_plans.plan.microsites_limit_help') ?></small>
                 </div>
 
                 <div class="form-group">
-                    <label for="biolink_blocks_limit"><?= l('admin_plans.plan.biolink_blocks_limit') ?></label>
-                    <input type="number" id="biolink_blocks_limit" name="biolink_blocks_limit" min="-1" class="form-control" value="0" required="required" />
+                    <label for="microsite_blocks_limit"><?= l('admin_plans.plan.microsite_blocks_limit') ?></label>
+                    <input type="number" id="microsite_blocks_limit" name="microsite_blocks_limit" min="-1" class="form-control" value="0" required="required" />
                     <small class="form-text text-muted"><?= l('admin_plans.plan.unlimited') ?></small>
                 </div>
 
@@ -432,22 +432,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="biolinks_templates"><?= l('admin_plans.plan.biolinks_templates') ?></label>
-                    <select id="biolinks_templates" name="biolinks_templates[]" class="custom-select" multiple="multiple">
-                        <?php foreach($data->biolinks_templates as $biolink_template): ?>
-                            <option value="<?= $biolink_template->biolink_template_id ?>">
-                                <?= $biolink_template->name ?>
+                    <label for="microsites_templates"><?= l('admin_plans.plan.microsites_templates') ?></label>
+                    <select id="microsites_templates" name="microsites_templates[]" class="custom-select" multiple="multiple">
+                        <?php foreach($data->microsites_templates as $microsite_template): ?>
+                            <option value="<?= $microsite_template->microsite_template_id ?>">
+                                <?= $microsite_template->name ?>
                             </option>
                         <?php endforeach ?>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="biolinks_themes"><?= l('admin_plans.plan.biolinks_themes') ?></label>
-                    <select id="biolinks_themes" name="biolinks_themes[]" class="custom-select" multiple="multiple">
-                        <?php foreach($data->biolinks_themes as $biolink_theme): ?>
-                            <option value="<?= $biolink_theme->biolink_theme_id ?>">
-                                <?= $biolink_theme->name ?>
+                    <label for="microsites_themes"><?= l('admin_plans.plan.microsites_themes') ?></label>
+                    <select id="microsites_themes" name="microsites_themes[]" class="custom-select" multiple="multiple">
+                        <?php foreach($data->microsites_themes as $microsite_theme): ?>
+                            <option value="<?= $microsite_theme->microsite_theme_id ?>">
+                                <?= $microsite_theme->name ?>
                             </option>
                         <?php endforeach ?>
                     </select>
@@ -631,20 +631,20 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
-                    <h3 class="h5"><?= l('admin_plans.plan.enabled_biolink_blocks') ?></h3>
+                    <h3 class="h5"><?= l('admin_plans.plan.enabled_microsite_blocks') ?></h3>
 
                     <div>
-                        <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.select_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='enabled_biolink_blocks[]']`).forEach(element => element.checked ? null : element.checked = true)"><i class="fas fa-fw fa-check-square"></i></button>
-                        <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.deselect_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='enabled_biolink_blocks[]']`).forEach(element => element.checked ? element.checked = false : null)"><i class="fas fa-fw fa-minus-square"></i></button>
+                        <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.select_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='enabled_microsite_blocks[]']`).forEach(element => element.checked ? null : element.checked = true)"><i class="fas fa-fw fa-check-square"></i></button>
+                        <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.deselect_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='enabled_microsite_blocks[]']`).forEach(element => element.checked ? element.checked = false : null)"><i class="fas fa-fw fa-minus-square"></i></button>
                     </div>
                 </div>
 
                 <div class="row">
-                    <?php foreach(require APP_PATH . 'includes/biolink_blocks.php' as $key => $value): ?>
+                    <?php foreach(require APP_PATH . 'includes/microsite_blocks.php' as $key => $value): ?>
                         <div class="col-6 mb-3">
                             <div class="custom-control custom-checkbox">
-                                <input id="enabled_biolink_blocks_<?= $key ?>" name="enabled_biolink_blocks[]" value="<?= $key ?>" type="checkbox" class="custom-control-input">
-                                <label class="custom-control-label" for="enabled_biolink_blocks_<?= $key ?>"><?= l('link.biolink.blocks.' . mb_strtolower($key)) ?></label>
+                                <input id="enabled_microsite_blocks_<?= $key ?>" name="enabled_microsite_blocks[]" value="<?= $key ?>" type="checkbox" class="custom-control-input">
+                                <label class="custom-control-label" for="enabled_microsite_blocks_<?= $key ?>"><?= l('link.microsite.blocks.' . mb_strtolower($key)) ?></label>
                             </div>
                         </div>
                     <?php endforeach ?>

@@ -261,11 +261,11 @@
     </div>
 
     <div class="col-12 col-xl-6 mt-5 mt-xl-0 d-flex justify-content-center justify-content-xl-end">
-        <div class="biolink-preview-container">
-            <div class="biolink-preview sticky">
-                <div class="biolink-preview-iframe-container">
-                    <div id="biolink_preview_iframe_loading" class="biolink-preview-iframe-loading d-none"><div class="spinner-border bg-primary" role="status"></div></div>
-                    <iframe id="biolink_preview_iframe" class="biolink-preview-iframe container-disabled-simple" src="<?= SITE_URL . 'l/link?link_id=' . $data->link->link_id . '&preview=' . md5($data->link->user_id) ?>"></iframe>
+        <div class="microsite-preview-container">
+            <div class="microsite-preview sticky">
+                <div class="microsite-preview-iframe-container">
+                    <div id="microsite_preview_iframe_loading" class="microsite-preview-iframe-loading d-none"><div class="spinner-border bg-primary" role="status"></div></div>
+                    <iframe id="microsite_preview_iframe" class="microsite-preview-iframe container-disabled-simple" src="<?= SITE_URL . 'l/link?link_id=' . $data->link->link_id . '&preview=' . md5($data->link->user_id) ?>"></iframe>
                 </div>
             </div>
         </div>
@@ -345,23 +345,23 @@
     });
 
     let refresh_preview = () => {
-        if(!document.querySelector('#biolink_preview_iframe')) {
+        if(!document.querySelector('#microsite_preview_iframe')) {
             return;
         }
 
         /* Add loader */
-        document.querySelector('#biolink_preview_iframe_loading').classList.remove('d-none');
+        document.querySelector('#microsite_preview_iframe_loading').classList.remove('d-none');
 
         /* Refresh iframe */
-        let biolink_preview_iframe = document.querySelector('#biolink_preview_iframe');
+        let microsite_preview_iframe = document.querySelector('#microsite_preview_iframe');
 
         setTimeout(() => {
-            biolink_preview_iframe.setAttribute('src', biolink_preview_iframe.getAttribute('src'));
+            microsite_preview_iframe.setAttribute('src', microsite_preview_iframe.getAttribute('src'));
         }, 750)
 
-        biolink_preview_iframe.onload = () => {
-            document.querySelector('#biolink_preview_iframe').dispatchEvent(new Event('refreshed'));
-            document.querySelector('#biolink_preview_iframe_loading').classList.add('d-none');
+        microsite_preview_iframe.onload = () => {
+            document.querySelector('#microsite_preview_iframe').dispatchEvent(new Event('refreshed'));
+            document.querySelector('#microsite_preview_iframe_loading').classList.add('d-none');
         }
     }
 </script>

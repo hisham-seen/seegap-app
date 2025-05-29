@@ -57,8 +57,8 @@ class AdminPlanUpdate extends Controller {
         }
 
         $additional_domains = db()->where('is_enabled', 1)->where('type', 1)->get('domains');
-        $biolinks_templates = (new \Altum\Models\BiolinksTemplates())->get_biolinks_templates();
-        $biolinks_themes = (new \Altum\Models\BiolinksThemes())->get_biolinks_themes();
+        $microsites_templates = (new \Altum\Models\MicrositesTemplates())->get_microsites_templates();
+        $microsites_themes = (new \Altum\Models\MicrositesThemes())->get_microsites_themes();
 
         if(!empty($_POST)) {
 
@@ -68,11 +68,11 @@ class AdminPlanUpdate extends Controller {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
-            /* Determine the enabled biolink blocks */
-            $enabled_biolink_blocks = [];
+            /* Determine the enabled microsite blocks */
+            $enabled_microsite_blocks = [];
 
-            foreach(require APP_PATH . 'includes/biolink_blocks.php' as $key => $value) {
-                $enabled_biolink_blocks[$key] = isset($_POST['enabled_biolink_blocks']) && in_array($key, $_POST['enabled_biolink_blocks']);
+            foreach(require APP_PATH . 'includes/microsite_blocks.php' as $key => $value) {
+                $enabled_microsite_blocks[$key] = isset($_POST['enabled_microsite_blocks']) && in_array($key, $_POST['enabled_microsite_blocks']);
             }
 
             /* Translations */
@@ -92,8 +92,8 @@ class AdminPlanUpdate extends Controller {
                 'url_minimum_characters' => (int) $_POST['url_minimum_characters'],
                 'url_maximum_characters' => (int) $_POST['url_maximum_characters'],
                 'additional_domains' => $_POST['additional_domains'] ?? [],
-                'biolinks_templates' => $_POST['biolinks_templates'] ?? [],
-                'biolinks_themes' => $_POST['biolinks_themes'] ?? [],
+                'microsites_templates' => $_POST['microsites_templates'] ?? [],
+                'microsites_themes' => $_POST['microsites_themes'] ?? [],
                 'custom_url' => isset($_POST['custom_url']),
                 'deep_links' => isset($_POST['deep_links']),
                 'no_ads' => isset($_POST['no_ads']),
@@ -119,13 +119,13 @@ class AdminPlanUpdate extends Controller {
                 'api_is_enabled' => isset($_POST['api_is_enabled']),
                 'dofollow_is_enabled' => isset($_POST['dofollow_is_enabled']),
                 'custom_pwa_is_enabled' => isset($_POST['custom_pwa_is_enabled']),
-                'biolink_blocks_limit' => (int) $_POST['biolink_blocks_limit'],
+                'microsite_blocks_limit' => (int) $_POST['microsite_blocks_limit'],
                 'projects_limit' => (int) $_POST['projects_limit'],
                 'splash_pages_limit' => (int) $_POST['splash_pages_limit'],
                 'pixels_limit' => (int) $_POST['pixels_limit'],
                 'qr_codes_limit' => (int) $_POST['qr_codes_limit'],
                 'qr_codes_bulk_limit' => (int) $_POST['qr_codes_bulk_limit'],
-                'biolinks_limit' => (int) $_POST['biolinks_limit'],
+                'microsites_limit' => (int) $_POST['microsites_limit'],
                 'links_limit' => (int) $_POST['links_limit'],
                 'links_bulk_limit'                  => (int) $_POST['links_bulk_limit'],
                 'files_limit' => (int) $_POST['files_limit'],
@@ -140,7 +140,7 @@ class AdminPlanUpdate extends Controller {
                 'track_links_retention' => (int) $_POST['track_links_retention'],
                 'custom_css_is_enabled' => isset($_POST['custom_css_is_enabled']),
                 'custom_js_is_enabled' => isset($_POST['custom_js_is_enabled']),
-                'enabled_biolink_blocks' => $enabled_biolink_blocks,
+                'enabled_microsite_blocks' => $enabled_microsite_blocks,
                 'exclusive_personal_api_keys'       => isset($_POST['exclusive_personal_api_keys']),
                 'documents_model'                   => $_POST['documents_model'],
                 'documents_per_month_limit'         => (int) $_POST['documents_per_month_limit'],
@@ -357,8 +357,8 @@ class AdminPlanUpdate extends Controller {
             'plan' => $plan,
             'taxes' => $taxes ?? null,
             'additional_domains' => $additional_domains,
-            'biolinks_templates' => $biolinks_templates,
-            'biolinks_themes' => $biolinks_themes,
+            'microsites_templates' => $microsites_templates,
+            'microsites_themes' => $microsites_themes,
         ];
 
         $view = new \Altum\View('admin/plan-update/index', (array) $this);

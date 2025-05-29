@@ -74,7 +74,7 @@ class ApiData extends Controller {
             $row = [
                 'id' => (int) $row->datum_id,
                 'user_id' => (int) $row->user_id,
-                'biolink_block_id' => (int) $row->biolink_block_id,
+                'microsite_block_id' => (int) $row->microsite_block_id,
                 'link_id' => (int) $row->link_id,
                 'project_id' => (int) $row->project_id,
                 'type' => $row->type,
@@ -121,7 +121,7 @@ class ApiData extends Controller {
         $data = [
             'id' => (int) $datum->datum_id,
             'user_id' => (int) $datum->user_id,
-            'biolink_block_id' => (int) $datum->biolink_block_id,
+            'microsite_block_id' => (int) $datum->microsite_block_id,
             'link_id' => (int) $datum->link_id,
             'project_id' => (int) $datum->project_id,
             'type' => $datum->type,

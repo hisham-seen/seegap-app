@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <?php foreach(['login', 'register', 'lost_password', 'resend_activation', 'contact', 'biolink'] as $key): ?>
+    <?php foreach(['login', 'register', 'lost_password', 'resend_activation', 'contact', 'microsite'] as $key): ?>
         <div class="form-group custom-control custom-switch">
             <input id="<?= $key ?>_is_enabled" name="<?= $key ?>_is_enabled" type="checkbox" class="custom-control-input" <?= settings()->captcha->{$key . '_is_enabled'} ? 'checked="checked"' : null?>>
             <label class="custom-control-label" for="<?= $key ?>_is_enabled"><?= l('admin_settings.captcha.' . $key . '_is_enabled') ?></label>

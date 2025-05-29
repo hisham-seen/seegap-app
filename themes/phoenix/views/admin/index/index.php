@@ -8,7 +8,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col text-truncate">
-                        <small class="text-muted font-weight-bold"><?= l('admin_index.biolink_links') ?></small>
+                        <small class="text-muted font-weight-bold"><?= l('admin_index.microsite_links') ?></small>
                     </div>
 
                     <div class="col-auto">
@@ -19,10 +19,10 @@
                 </div>
 
                 <div class="mt-2 text-break">
-                    <a href="<?= url('admin/links?type=biolink') ?>" class="stretched-link text-reset text-decoration-none">
-                        <span class="h4"><?= nr($data->biolink_links) ?></span>
+                    <a href="<?= url('admin/links?type=microsite') ?>" class="stretched-link text-reset text-decoration-none">
+                        <span class="h4"><?= nr($data->microsite_links) ?></span>
                     </a>
-                    <div class="mt-1"><span class="small text-muted"><?= nr($data->biolink_links_current_month) ?> <?= mb_strtolower(l('global.date.this_month')) ?></span></div>
+                    <div class="mt-1"><span class="small text-muted"><?= nr($data->microsite_links_current_month) ?> <?= mb_strtolower(l('global.date.this_month')) ?></span></div>
                 </div>
             </div>
         </div>

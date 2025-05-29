@@ -6,7 +6,7 @@
 $product_info = \Altum\Cache::cache_function_result('admin_product_info', null, function() {
     try {
         \Unirest\Request::timeout(3);
-        $response = \Unirest\Request::get('https://66biolinks.com/info.php');
+        $response = \Unirest\Request::get('https://66microsites.com/info.php');
 
         if($response->code == 200) {
             return $response->body;

@@ -25,7 +25,7 @@ class AdminUserView extends Controller {
         }
 
         /* Get widget stats */
-        $biolink_links = db()->where('user_id', $user_id)->where('type', 'biolink')->getValue('links', 'count(`link_id`)');
+        $microsite_links = db()->where('user_id', $user_id)->where('type', 'microsite')->getValue('links', 'count(`link_id`)');
         $shortened_links = db()->where('user_id', $user_id)->where('type', 'link')->getValue('links', 'count(`link_id`)');
         $file_links = db()->where('user_id', $user_id)->where('type', 'file')->getValue('links', 'count(`link_id`)');
         $event_links = db()->where('user_id', $user_id)->where('type', 'event')->getValue('links', 'count(`link_id`)');
@@ -62,7 +62,7 @@ class AdminUserView extends Controller {
         /* Main View */
         $data = [
             'user' => $user,
-            'biolink_links' => $biolink_links,
+            'microsite_links' => $microsite_links,
             'shortened_links' => $shortened_links,
             'file_links' => $file_links,
             'event_links' => $event_links,

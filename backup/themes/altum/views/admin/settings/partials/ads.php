@@ -35,13 +35,13 @@
     </div>
 
     <div class="form-group">
-        <label for="header_biolink"><?= l('admin_settings.ads.header_biolink') ?></label>
-        <textarea id="header_biolink" name="header_biolink" class="form-control"><?= settings()->ads->header_biolink ?></textarea>
+        <label for="header_microsite"><?= l('admin_settings.ads.header_microsite') ?></label>
+        <textarea id="header_microsite" name="header_microsite" class="form-control"><?= settings()->ads->header_microsite ?></textarea>
     </div>
 
     <div class="form-group">
-        <label for="footer_biolink"><?= l('admin_settings.ads.footer_biolink') ?></label>
-        <textarea id="footer_biolink" name="footer_biolink" class="form-control"><?= settings()->ads->footer_biolink ?></textarea>
+        <label for="footer_microsite"><?= l('admin_settings.ads.footer_microsite') ?></label>
+        <textarea id="footer_microsite" name="footer_microsite" class="form-control"><?= settings()->ads->footer_microsite ?></textarea>
     </div>
 
     <div class="form-group">

@@ -15,14 +15,14 @@
 <?php endif ?>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 text-truncate m-0"><?= sprintf(l('guests_payments_statistics.header'), $data->biolink_block->settings->name) ?></h1>
+        <h1 class="h4 text-truncate m-0"><?= sprintf(l('guests_payments_statistics.header'), $data->microsite_block->settings->name) ?></h1>
 
         <div class="d-flex align-items-center col-auto p-0">
             <button
                     id="daterangepicker"
                     type="button"
                     class="btn btn-sm btn-light"
-                    data-min-date="<?= \Altum\Date::get($data->biolink_block->datetime, 4) ?>"
+                    data-min-date="<?= \Altum\Date::get($data->microsite_block->datetime, 4) ?>"
                     data-max-date="<?= \Altum\Date::get('', 4) ?>"
             >
                 <i class="fas fa-fw fa-calendar mr-lg-1"></i>

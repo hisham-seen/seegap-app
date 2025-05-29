@@ -286,17 +286,17 @@ class GuestPaymentWebhook extends Controller {
             http_response_code(400); die('user_id not existing.');
         }
 
-        /* Make sure the biolink block still exists */
-        $biolink_block = db()->where('biolink_block_id', $guest_payment->biolink_block_id)->getOne('biolinks_blocks');
+        /* Make sure the microsite block still exists */
+        $microsite_block = db()->where('microsite_block_id', $guest_payment->microsite_block_id)->getOne('microsites_blocks');
 
-        if(!$biolink_block) {
-            die('biolink_block_id not existing.');
+        if(!$microsite_block) {
+            die('microsite_block_id not existing.');
         }
 
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
         /* Get link */
-        $link = db()->where('link_id', $biolink_block->link_id)->getOne('links');
+        $link = db()->where('link_id', $microsite_block->link_id)->getOne('links');
 
         if(!$link) {
             die('link_id not existing.');
@@ -314,19 +314,19 @@ class GuestPaymentWebhook extends Controller {
         ]);
 
         /* Send notifications based on the type of block */
-        switch($biolink_block->type) {
+        switch($microsite_block->type) {
             case 'donation':
                 /* Send email notifications if needed to the owner */
-                if($biolink_block->settings->email_notification) {
+                if($microsite_block->settings->email_notification) {
                     $email_template = get_email_template(
                         [
-                            '{{DONATION_TITLE}}' => $biolink_block->settings->title,
+                            '{{DONATION_TITLE}}' => $microsite_block->settings->title,
                             '{{TOTAL_AMOUNT}}' => $payment_total_amount,
                             '{{CURRENCY}}' => $payment_currency,
                         ],
                         l('global.emails.user_guest_payment_donation.subject', $user->language),
                         [
-                            '{{DONATION_TITLE}}' => $biolink_block->settings->title,
+                            '{{DONATION_TITLE}}' => $microsite_block->settings->title,
                             '{{EMAIL}}' => $payer_email,
                             '{{NAME}}' => $payer_name,
                             '{{TOTAL_AMOUNT}}' => $payment_total_amount,
@@ -338,13 +338,13 @@ class GuestPaymentWebhook extends Controller {
                         l('global.emails.user_guest_payment_donation.body', $user->language)
                     );
 
-                    send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+                    send_mail($microsite_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
                 }
 
                 /* Send webhook notifications if needed to the owner */
-                if($biolink_block->settings->webhook_url) {
-                    fire_and_forget('post', $biolink_block->settings->webhook_url, [
-                        'biolink_block_id' => $biolink_block->biolink_block_id,
+                if($microsite_block->settings->webhook_url) {
+                    fire_and_forget('post', $microsite_block->settings->webhook_url, [
+                        'microsite_block_id' => $microsite_block->microsite_block_id,
                         'processor' => $payment_processor->processor,
                         'total_amount' => $payment_total_amount,
                         'currency' => $payment_currency,
@@ -357,16 +357,16 @@ class GuestPaymentWebhook extends Controller {
 
             case 'product':
                 /* Send email notifications if needed to the owner */
-                if($biolink_block->settings->email_notification) {
+                if($microsite_block->settings->email_notification) {
                     $email_template = get_email_template(
                         [
-                            '{{PRODUCT_TITLE}}' => $biolink_block->settings->title,
+                            '{{PRODUCT_TITLE}}' => $microsite_block->settings->title,
                             '{{TOTAL_AMOUNT}}' => $payment_total_amount,
                             '{{CURRENCY}}' => $payment_currency,
                         ],
                         l('global.emails.user_guest_payment_product.subject', $user->language),
                         [
-                            '{{PRODUCT_TITLE}}' => $biolink_block->settings->title,
+                            '{{PRODUCT_TITLE}}' => $microsite_block->settings->title,
                             '{{EMAIL}}' => $guest_payment->email,
                             '{{NAME}}' => $payer_name,
                             '{{TOTAL_AMOUNT}}' => $payment_total_amount,
@@ -377,13 +377,13 @@ class GuestPaymentWebhook extends Controller {
                         l('global.emails.user_guest_payment_product.body', $user->language)
                     );
 
-                    send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+                    send_mail($microsite_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
                 }
 
                 /* Send email notifications to the customer */
                 $email_template = get_email_template(
                     [
-                        '{{PRODUCT_TITLE}}' => $biolink_block->settings->title,
+                        '{{PRODUCT_TITLE}}' => $microsite_block->settings->title,
                     ],
                     l('global.emails.guest_guest_payment_product.subject', $user->language),
                     [
@@ -396,9 +396,9 @@ class GuestPaymentWebhook extends Controller {
                 send_mail($guest_payment->email, $email_template->subject, $email_template->body);
 
                 /* Send webhook notifications if needed to the owner */
-                if($biolink_block->settings->webhook_url) {
-                    fire_and_forget('post', $biolink_block->settings->webhook_url, [
-                        'biolink_block_id' => $biolink_block->biolink_block_id,
+                if($microsite_block->settings->webhook_url) {
+                    fire_and_forget('post', $microsite_block->settings->webhook_url, [
+                        'microsite_block_id' => $microsite_block->microsite_block_id,
                         'processor' => $payment_processor->processor,
                         'total_amount' => $payment_total_amount,
                         'currency' => $payment_currency,
@@ -410,16 +410,16 @@ class GuestPaymentWebhook extends Controller {
 
             case 'service':
                 /* Send email notifications if needed to the owner */
-                if($biolink_block->settings->email_notification) {
+                if($microsite_block->settings->email_notification) {
                     $email_template = get_email_template(
                         [
-                            '{{SERVICE_TITLE}}' => $biolink_block->settings->title,
+                            '{{SERVICE_TITLE}}' => $microsite_block->settings->title,
                             '{{TOTAL_AMOUNT}}' => $payment_total_amount,
                             '{{CURRENCY}}' => $payment_currency,
                         ],
                         l('global.emails.user_guest_payment_service.subject', $user->language),
                         [
-                            '{{SERVICE_TITLE}}' => $biolink_block->settings->title,
+                            '{{SERVICE_TITLE}}' => $microsite_block->settings->title,
                             '{{EMAIL}}' => $guest_payment->email,
                             '{{NAME}}' => $payer_name,
                             '{{TOTAL_AMOUNT}}' => $payment_total_amount,
@@ -431,13 +431,13 @@ class GuestPaymentWebhook extends Controller {
                         l('global.emails.user_guest_payment_service.body', $user->language)
                     );
 
-                    send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+                    send_mail($microsite_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
                 }
 
                 /* Send email notifications to the customer */
                 $email_template = get_email_template(
                     [
-                        '{{SERVICE_TITLE}}' => $biolink_block->settings->title,
+                        '{{SERVICE_TITLE}}' => $microsite_block->settings->title,
                     ],
                     l('global.emails.guest_guest_payment_service.subject', $user->language),
                     [
@@ -449,9 +449,9 @@ class GuestPaymentWebhook extends Controller {
                 send_mail($guest_payment->email, $email_template->subject, $email_template->body);
 
                 /* Send webhook notifications if needed to the owner */
-                if($biolink_block->settings->webhook_url) {
-                    fire_and_forget('post', $biolink_block->settings->webhook_url, [
-                        'biolink_block_id' => $biolink_block->biolink_block_id,
+                if($microsite_block->settings->webhook_url) {
+                    fire_and_forget('post', $microsite_block->settings->webhook_url, [
+                        'microsite_block_id' => $microsite_block->microsite_block_id,
                         'processor' => $payment_processor->processor,
                         'total_amount' => $payment_total_amount,
                         'currency' => $payment_currency,

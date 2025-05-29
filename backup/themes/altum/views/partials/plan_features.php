@@ -5,38 +5,38 @@
 <?php endif ?>
 
 <ul class="list-style-none m-0">
-    <?php if(settings()->links->biolinks_is_enabled): ?>
+    <?php if(settings()->links->microsites_is_enabled): ?>
         <li class="d-flex align-items-baseline mb-2">
-            <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->biolinks_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-            <div class="<?= $data->plan_settings->biolinks_limit ? null : 'text-muted' ?>">
-                <?= sprintf(l('global.plan_settings.biolinks_limit'), ($data->plan_settings->biolinks_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->biolinks_limit))) ?>
+            <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->microsites_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+            <div class="<?= $data->plan_settings->microsites_limit ? null : 'text-muted' ?>">
+                <?= sprintf(l('global.plan_settings.microsites_limit'), ($data->plan_settings->microsites_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->microsites_limit))) ?>
             </div>
         </li>
 
         <li class="d-flex align-items-baseline mb-2">
-            <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->biolink_blocks_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-            <div class="<?= $data->plan_settings->biolink_blocks_limit ? null : 'text-muted' ?>">
-                <?= sprintf(l('global.plan_settings.biolink_blocks_limit'), ($data->plan_settings->biolink_blocks_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->biolink_blocks_limit))) ?>
+            <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->microsite_blocks_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+            <div class="<?= $data->plan_settings->microsite_blocks_limit ? null : 'text-muted' ?>">
+                <?= sprintf(l('global.plan_settings.microsite_blocks_limit'), ($data->plan_settings->microsite_blocks_limit == -1 ? l('global.unlimited') : nr($data->plan_settings->microsite_blocks_limit))) ?>
             </div>
         </li>
 
-        <?php $enabled_biolink_blocks = array_filter((array) $data->plan_settings->enabled_biolink_blocks) ?>
-        <?php $enabled_biolink_blocks_count = count($enabled_biolink_blocks) ?>
+        <?php $enabled_microsite_blocks = array_filter((array) $data->plan_settings->enabled_microsite_blocks) ?>
+        <?php $enabled_microsite_blocks_count = count($enabled_microsite_blocks) ?>
         <?php
-        $enabled_biolink_blocks_string = implode(', ', array_map(function($key) {
-            return l('link.biolink.blocks.' . mb_strtolower($key));
-        }, array_keys($enabled_biolink_blocks)));
+        $enabled_microsite_blocks_string = implode(', ', array_map(function($key) {
+            return l('link.microsite.blocks.' . mb_strtolower($key));
+        }, array_keys($enabled_microsite_blocks)));
         ?>
         <li class="d-flex align-items-baseline mb-2">
-            <i class="fas fa-fw fa-sm mr-3 <?= $enabled_biolink_blocks_count ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-            <div class="<?= $enabled_biolink_blocks_count ? null : 'text-muted' ?>">
-                <?php if($enabled_biolink_blocks_count == count(require APP_PATH . 'includes/enabled_biolink_blocks.php')): ?>
-                    <?= l('global.plan_settings.enabled_biolink_blocks_all') ?>
+            <i class="fas fa-fw fa-sm mr-3 <?= $enabled_microsite_blocks_count ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+            <div class="<?= $enabled_microsite_blocks_count ? null : 'text-muted' ?>">
+                <?php if($enabled_microsite_blocks_count == count(require APP_PATH . 'includes/enabled_microsite_blocks.php')): ?>
+                    <?= l('global.plan_settings.enabled_microsite_blocks_all') ?>
                 <?php else: ?>
-                    <?= sprintf(l('global.plan_settings.enabled_biolink_blocks_x'), '<strong>' . nr($enabled_biolink_blocks_count) . '</strong>') ?>
+                    <?= sprintf(l('global.plan_settings.enabled_microsite_blocks_x'), '<strong>' . nr($enabled_microsite_blocks_count) . '</strong>') ?>
                 <?php endif ?>
 
-                <span class="mr-1" data-toggle="tooltip" title="<?= $enabled_biolink_blocks_string ?>"><i class="fas fa-fw fa-xs fa-circle-question text-gray-500"></i></span>
+                <span class="mr-1" data-toggle="tooltip" title="<?= $enabled_microsite_blocks_string ?>"><i class="fas fa-fw fa-xs fa-circle-question text-gray-500"></i></span>
             </div>
         </li>
     <?php endif ?>
@@ -279,25 +279,25 @@
     </div>
 
     <div class="collapse view_all_container">
-        <?php if(settings()->links->biolinks_is_enabled && settings()->links->biolinks_themes_is_enabled): ?>
+        <?php if(settings()->links->microsites_is_enabled && settings()->links->microsites_themes_is_enabled): ?>
             <li class="d-flex align-items-baseline mb-2">
-                <i class="fas fa-fw fa-sm mr-3 <?= count($data->plan_settings->biolinks_themes ?? []) ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-                <div class="<?= count($data->plan_settings->biolinks_themes ?? []) ? null : 'text-muted' ?>">
-                    <?= sprintf(l('global.plan_settings.biolinks_themes'), nr(count($data->plan_settings->biolinks_themes ?? []))) ?>
+                <i class="fas fa-fw fa-sm mr-3 <?= count($data->plan_settings->microsites_themes ?? []) ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+                <div class="<?= count($data->plan_settings->microsites_themes ?? []) ? null : 'text-muted' ?>">
+                    <?= sprintf(l('global.plan_settings.microsites_themes'), nr(count($data->plan_settings->microsites_themes ?? []))) ?>
                 </div>
             </li>
         <?php endif ?>
 
-        <?php if(settings()->links->biolinks_is_enabled && settings()->links->biolinks_templates_is_enabled): ?>
+        <?php if(settings()->links->microsites_is_enabled && settings()->links->microsites_templates_is_enabled): ?>
             <li class="d-flex align-items-baseline mb-2">
-                <i class="fas fa-fw fa-sm mr-3 <?= count($data->plan_settings->biolinks_templates ?? []) ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
-                <div class="<?= count($data->plan_settings->biolinks_templates ?? []) ? null : 'text-muted' ?>">
-                    <?= sprintf(l('global.plan_settings.biolinks_templates'), nr(count($data->plan_settings->biolinks_templates ?? []))) ?>
+                <i class="fas fa-fw fa-sm mr-3 <?= count($data->plan_settings->microsites_templates ?? []) ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
+                <div class="<?= count($data->plan_settings->microsites_templates ?? []) ? null : 'text-muted' ?>">
+                    <?= sprintf(l('global.plan_settings.microsites_templates'), nr(count($data->plan_settings->microsites_templates ?? []))) ?>
                 </div>
             </li>
         <?php endif ?>
 
-        <?php if(settings()->links->biolinks_is_enabled && \Altum\Plugin::is_active('payment-blocks')): ?>
+        <?php if(settings()->links->microsites_is_enabled && \Altum\Plugin::is_active('payment-blocks')): ?>
             <li class="d-flex align-items-baseline mb-2">
                 <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->payment_processors_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
                 <div class="<?= $data->plan_settings->payment_processors_limit ? null : 'text-muted' ?>">

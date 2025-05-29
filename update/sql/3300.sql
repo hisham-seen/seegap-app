@@ -2,11 +2,11 @@ UPDATE `settings` SET `value` = '{\"version\":\"33.0.0\", \"code\":\"3300\"}' WH
 
 -- SEPARATOR --
 
-UPDATE biolinks_blocks SET type = 'tiktok_video' WHERE `type` = 'tiktok';
+UPDATE microsites_blocks SET type = 'tiktok_video' WHERE `type` = 'tiktok';
 
 -- SEPARATOR --
 
-UPDATE biolinks_blocks SET type = 'email_collector' WHERE `type` = 'mail';
+UPDATE microsites_blocks SET type = 'email_collector' WHERE `type` = 'mail';
 
 -- SEPARATOR --
 

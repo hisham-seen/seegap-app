@@ -69,7 +69,7 @@
             <?= settings()->custom->body_content ?>
         <?php endif ?>
 
-        <?php //ALTUMCODE:DEMO if(DEMO) echo include_view(THEME_PATH . 'views/partials/ac_banner.php', ['demo_url' => 'https://66biolinks.com/demo/', 'product_name' => PRODUCT_NAME, 'product_url' => PRODUCT_URL]) ?>
+        <?php //ALTUMCODE:DEMO if(DEMO) echo include_view(THEME_PATH . 'views/partials/ac_banner.php', ['demo_url' => 'https://66microsites.com/demo/', 'product_name' => PRODUCT_NAME, 'product_url' => PRODUCT_URL]) ?>
         <?php require THEME_PATH . 'views/partials/js_welcome.php' ?>
         <?php require THEME_PATH . 'views/partials/admin_impersonate_user.php' ?>
         <?php require THEME_PATH . 'views/partials/team_delegate_access.php' ?>

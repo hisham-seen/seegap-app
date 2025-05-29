@@ -129,7 +129,7 @@ class Sitemap extends Controller {
     }
 
     public function links() {
-        if(!settings()->links->biolinks_is_enabled) {
+        if(!settings()->links->microsites_is_enabled) {
             redirect('not-found');
         }
 
@@ -158,7 +158,7 @@ class Sitemap extends Controller {
                     WHERE
                         `users`.`status` = 1
                         AND `links`.`is_enabled` = 1
-                        AND `links`.`type` = 'biolink'
+                        AND `links`.`type` = 'microsite'
                         AND `links`.`domain_id` = 0
                   ")->fetch_object()->total ?? 0;
 
@@ -200,7 +200,7 @@ class Sitemap extends Controller {
                     WHERE
                         `users`.`status` = 1
                         AND `links`.`is_enabled` = 1
-                        AND `links`.`type` = 'biolink'
+                        AND `links`.`type` = 'microsite'
                         AND `links`.`domain_id` = 0
                     LIMIT 
                         {$limit_start}, {$pagination}

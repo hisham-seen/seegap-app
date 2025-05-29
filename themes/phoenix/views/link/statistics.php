@@ -41,35 +41,35 @@
 
 <div class="row">
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'overview' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=overview&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'overview' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=overview&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-list mr-1"></i>
             <?= l('link.statistics.overview') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'entries' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=entries&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'entries' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=entries&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-chart-bar mr-1"></i>
             <?= l('link.statistics.entries') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'continent_code' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=continent_code&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'continent_code' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=continent_code&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-globe-europe mr-1"></i>
             <?= l('global.continent') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'country' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=country&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'country' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=country&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-globe mr-1"></i>
             <?= l('global.countries') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'city_name' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=city_name&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'city_name' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=city_name&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-city mr-1"></i>
             <?= l('global.cities') ?>
         </a>
@@ -78,42 +78,42 @@
 
 <div class="row mb-4">
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= in_array($data->type, ['referrer_host', 'referrer_path']) ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=referrer_host&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= in_array($data->type, ['referrer_host', 'referrer_path']) ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=referrer_host&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-random mr-1"></i>
             <?= l('link.statistics.referrer_host') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'device' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=device&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'device' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=device&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-laptop mr-1"></i>
             <?= l('link.statistics.device') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'os' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=os&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'os' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=os&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-server mr-1"></i>
             <?= l('link.statistics.os') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'browser' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=browser&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'browser' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=browser&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-window-restore mr-1"></i>
             <?= l('link.statistics.browser') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'language' ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=language&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= $data->type == 'language' ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=language&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-language mr-1"></i>
             <?= l('link.statistics.language') ?>
         </a>
     </div>
 
     <div class="col-lg p-1 p-lg-2 text-truncate">
-        <a class="btn btn-block btn-custom text-truncate <?= in_array($data->type, ['utm_source', 'utm_medium', 'utm_campaign']) ? 'active' : null ?>" href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=utm_source&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
+        <a class="btn btn-block btn-custom text-truncate <?= in_array($data->type, ['utm_source', 'utm_medium', 'utm_campaign']) ? 'active' : null ?>" href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=utm_source&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>">
             <i class="fas fa-fw fa-sm fa-link mr-1"></i>
             <?= l('link.statistics.utms') ?>
         </a>
@@ -177,4 +177,4 @@
 </script>
 <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/statistics_reset_modal.php', ['modal_id' => 'link_statistics_reset_modal', 'resource_id' => 'link_id', 'path' => (isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/statistics/reset']), 'modals'); ?>
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/statistics_reset_modal.php', ['modal_id' => 'link_statistics_reset_modal', 'resource_id' => 'link_id', 'path' => (isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/statistics/reset']), 'modals'); ?>

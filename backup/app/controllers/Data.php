@@ -24,14 +24,14 @@ class Data extends Controller {
 
     public function index() {
 
-        if(!settings()->links->biolinks_is_enabled) {
+        if(!settings()->links->microsites_is_enabled) {
             redirect('not-found');
         }
 
         \Altum\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['biolink_block_id', 'link_id', 'project_id', 'user_id', 'type', 'is_enabled'], [], ['datum_id', 'datetime']));
+        $filters = (new \Altum\Filters(['microsite_block_id', 'link_id', 'project_id', 'user_id', 'type', 'is_enabled'], [], ['datum_id', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->data_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
@@ -70,7 +70,7 @@ class Data extends Controller {
             'projects'          => $projects,
             'pagination'        => $pagination,
             'filters'           => $filters,
-            'biolink_blocks'    => require APP_PATH . 'includes/biolink_blocks.php',
+            'microsite_blocks'    => require APP_PATH . 'includes/microsite_blocks.php',
         ];
 
         $view = new \Altum\View('data/index', (array) $this);

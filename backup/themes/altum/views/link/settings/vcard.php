@@ -58,7 +58,7 @@
             <?php endif ?>
 
             <div class="form-group">
-                <label for="vcard_avatar"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_avatar') ?></label>
+                <label for="vcard_avatar"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_avatar') ?></label>
                 <div class="row">
                     <div class="col">
                         <input id="vcard_avatar" type="file" name="vcard_avatar" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('vcards_avatars') ?>" class="form-control-file altum-file-input" />
@@ -87,13 +87,13 @@
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="<?= 'vcard_first_name_' . $data->link->link_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_first_name') ?></label>
+                        <label for="<?= 'vcard_first_name_' . $data->link->link_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_first_name') ?></label>
                         <input type="text" id="<?= 'vcard_first_name_' . $data->link->link_id ?>" name="vcard_first_name" class="form-control" value="<?= $data->link->settings->vcard_first_name ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['first_name']['max_length'] ?>" />
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="<?= 'vcard_last_name_' . $data->link->link_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_last_name') ?></label>
+                        <label for="<?= 'vcard_last_name_' . $data->link->link_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_last_name') ?></label>
                         <input type="text" id="<?= 'vcard_last_name_' . $data->link->link_id ?>" name="vcard_last_name" class="form-control" value="<?= $data->link->settings->vcard_last_name ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['last_name']['max_length'] ?>" />
                     </div>
                 </div>
@@ -105,27 +105,27 @@
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_url_' . $data->link->link_id ?>"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_url') ?></label>
+                <label for="<?= 'vcard_url_' . $data->link->link_id ?>"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_url') ?></label>
                 <input type="url" id="<?= 'vcard_url_' . $data->link->link_id ?>" name="vcard_url" class="form-control" value="<?= $data->link->settings->vcard_url ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['url']['max_length'] ?>" />
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_company_' . $data->link->link_id ?>"><i class="fas fa-fw fa-building fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_company') ?></label>
+                <label for="<?= 'vcard_company_' . $data->link->link_id ?>"><i class="fas fa-fw fa-building fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_company') ?></label>
                 <input type="text" id="<?= 'vcard_company_' . $data->link->link_id ?>" name="vcard_company" class="form-control" value="<?= $data->link->settings->vcard_company ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['company']['max_length'] ?>" />
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_job_title_' . $data->link->link_id ?>"><i class="fas fa-fw fa-user-tie fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_job_title') ?></label>
+                <label for="<?= 'vcard_job_title_' . $data->link->link_id ?>"><i class="fas fa-fw fa-user-tie fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_job_title') ?></label>
                 <input type="text" id="<?= 'vcard_job_title_' . $data->link->link_id ?>" name="vcard_job_title" class="form-control" value="<?= $data->link->settings->vcard_job_title ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['job_title']['max_length'] ?>" />
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_birthday_' . $data->link->link_id ?>"><i class="fas fa-fw fa-birthday-cake fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_birthday') ?></label>
+                <label for="<?= 'vcard_birthday_' . $data->link->link_id ?>"><i class="fas fa-fw fa-birthday-cake fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_birthday') ?></label>
                 <input type="date" id="<?= 'vcard_birthday_' . $data->link->link_id ?>" name="vcard_birthday" class="form-control" value="<?= $data->link->settings->vcard_birthday ?? null ?>" />
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_street_' . $data->link->link_id ?>"><i class="fas fa-fw fa-road fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_street') ?></label>
+                <label for="<?= 'vcard_street_' . $data->link->link_id ?>"><i class="fas fa-fw fa-road fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_street') ?></label>
                 <input type="text" id="<?= 'vcard_street_' . $data->link->link_id ?>" name="vcard_street" class="form-control" value="<?= $data->link->settings->vcard_street ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['street']['max_length'] ?>" />
             </div>
 
@@ -135,12 +135,12 @@
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_zip_' . $data->link->link_id ?>"><i class="fas fa-fw fa-mail-bulk fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_zip') ?></label>
+                <label for="<?= 'vcard_zip_' . $data->link->link_id ?>"><i class="fas fa-fw fa-mail-bulk fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_zip') ?></label>
                 <input type="text" id="<?= 'vcard_zip_' . $data->link->link_id ?>" name="vcard_zip" class="form-control" value="<?= $data->link->settings->vcard_zip ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['zip']['max_length'] ?>" />
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_region_' . $data->link->link_id ?>"><i class="fas fa-fw fa-flag fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_region') ?></label>
+                <label for="<?= 'vcard_region_' . $data->link->link_id ?>"><i class="fas fa-fw fa-flag fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_region') ?></label>
                 <input type="text" id="<?= 'vcard_region_' . $data->link->link_id ?>" name="vcard_region" class="form-control" value="<?= $data->link->settings->vcard_region ?? null ?>" maxlength="<?= $data->links_types['vcard']['fields']['region']['max_length'] ?>" />
             </div>
 
@@ -150,26 +150,26 @@
             </div>
 
             <div class="form-group">
-                <label for="<?= 'vcard_note_' . $data->link->link_id ?>"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_note') ?></label>
+                <label for="<?= 'vcard_note_' . $data->link->link_id ?>"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_note') ?></label>
                 <textarea id="<?= 'vcard_note_' . $data->link->link_id ?>" name="vcard_note" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['note']['max_length'] ?>"><?= $data->link->settings->vcard_note ?? null ?></textarea>
             </div>
 
             <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'vcard_phone_numbers_container_' . $data->link->link_id ?>" aria-expanded="false" aria-controls="<?= 'vcard_phone_numbers_container_' . $data->link->link_id ?>">
-                <i class="fas fa-fw fa-phone-square-alt fa-sm mr-1"></i> <?= l('biolink_vcard.vcard_phone_numbers') ?>
+                <i class="fas fa-fw fa-phone-square-alt fa-sm mr-1"></i> <?= l('microsite_vcard.vcard_phone_numbers') ?>
             </button>
 
             <div class="collapse" id="<?= 'vcard_phone_numbers_container_' . $data->link->link_id ?>">
-                <div id="<?= 'vcard_phone_numbers_' . $data->link->link_id ?>" data-biolink-block-id="<?= $data->link->link_id ?>">
+                <div id="<?= 'vcard_phone_numbers_' . $data->link->link_id ?>" data-microsite-block-id="<?= $data->link->link_id ?>">
                     <?php foreach($data->link->settings->vcard_phone_numbers ?? [] as $key => $phone_number): ?>
                         <div class="mb-4">
                             <div class="form-group">
-                                <label for="<?= 'vcard_phone_number_label_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_label') ?></label>
+                                <label for="<?= 'vcard_phone_number_label_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_phone_number_label') ?></label>
                                 <input id="<?= 'vcard_phone_number_label_' . $key . '_' . $data->link->link_id ?>" type="text" name="vcard_phone_number_label[<?= $key ?>]" class="form-control" value="<?= $phone_number->label ?>" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_label']['max_length'] ?>" />
-                                <small class="form-text text-muted"><?= l('biolink_vcard.vcard_phone_number_label_help') ?></small>
+                                <small class="form-text text-muted"><?= l('microsite_vcard.vcard_phone_number_label_help') ?></small>
                             </div>
 
                             <div class="form-group">
-                                <label for="<?= 'vcard_phone_number_value_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-phone-square-alt fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_value') ?></label>
+                                <label for="<?= 'vcard_phone_number_value_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-phone-square-alt fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_phone_number_value') ?></label>
                                 <input id="<?= 'vcard_phone_number_value_' . $key . '_' . $data->link->link_id ?>" type="text" name="vcard_phone_number_value[<?= $key ?>]" value="<?= $phone_number->value ?>" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_value']['max_length'] ?>" required="required" />
                             </div>
 
@@ -179,25 +179,25 @@
                 </div>
 
                 <div class="mb-3">
-                    <button data-add="vcard_phone_numbers" data-biolink-block-id="<?= $data->link->link_id ?>" type="button" class="btn btn-outline-success btn-block"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
+                    <button data-add="vcard_phone_numbers" data-microsite-block-id="<?= $data->link->link_id ?>" type="button" class="btn btn-outline-success btn-block"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
                 </div>
             </div>
 
             <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'vcard_socials_container_' . $data->link->link_id ?>" aria-expanded="false" aria-controls="<?= 'vcard_socials_container_' . $data->link->link_id ?>">
-                <i class="fas fa-fw fa-share-alt fa-sm mr-1"></i> <?= l('biolink_vcard.vcard_socials') ?>
+                <i class="fas fa-fw fa-share-alt fa-sm mr-1"></i> <?= l('microsite_vcard.vcard_socials') ?>
             </button>
 
             <div class="collapse" id="<?= 'vcard_socials_container_' . $data->link->link_id ?>">
-                <div id="<?= 'vcard_socials_' . $data->link->link_id ?>" data-biolink-block-id="<?= $data->link->link_id ?>">
+                <div id="<?= 'vcard_socials_' . $data->link->link_id ?>" data-microsite-block-id="<?= $data->link->link_id ?>">
                     <?php foreach($data->link->settings->vcard_socials ?? [] as $key => $social): ?>
                         <div class="mb-4">
                             <div class="form-group">
-                                <label for="<?= 'vcard_social_label_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_label') ?></label>
+                                <label for="<?= 'vcard_social_label_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_social_label') ?></label>
                                 <input id="<?= 'vcard_social_label_' . $key . '_' . $data->link->link_id ?>" type="text" name="vcard_social_label[<?= $key ?>]" class="form-control" value="<?= $social->label ?>" maxlength="<?= $data->links_types['vcard']['fields']['social_label']['max_length'] ?>" required="required" />
                             </div>
 
                             <div class="form-group">
-                                <label for="<?= 'vcard_social_value_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_value') ?></label>
+                                <label for="<?= 'vcard_social_value_' . $key . '_' . $data->link->link_id ?>"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_social_value') ?></label>
                                 <input id="<?= 'vcard_social_value_' . $key . '_' . $data->link->link_id ?>" type="url" name="vcard_social_value[<?= $key ?>]" value="<?= $social->value ?>" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['social_value']['max_length'] ?>" required="required" />
                             </div>
 
@@ -207,7 +207,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <button data-add="vcard_social" data-biolink-block-id="<?= $data->link->link_id ?>" type="button" class="btn btn-outline-success btn-block"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
+                    <button data-add="vcard_social" data-microsite-block-id="<?= $data->link->link_id ?>" type="button" class="btn btn-outline-success btn-block"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
                 </div>
             </div>
 
@@ -405,12 +405,12 @@
 <template id="template_vcard_social">
     <div class="mb-4">
         <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_label') ?></label>
+            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_social_label') ?></label>
             <input id="" type="text" name="vcard_social_label[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['social_label']['max_length'] ?>" required="required" />
         </div>
 
         <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_social_value') ?></label>
+            <label for=""><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_social_value') ?></label>
             <input id="" type="url" name="vcard_social_value[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['social_value']['max_length'] ?>" required="required" />
         </div>
 
@@ -421,13 +421,13 @@
 <template id="template_vcard_phone_numbers">
     <div class="mb-4">
         <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_label') ?></label>
+            <label for=""><i class="fas fa-fw fa-bookmark fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_phone_number_label') ?></label>
             <input id="" type="text" name="vcard_phone_number_label[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_label']['max_length'] ?>" />
-            <small class="form-text text-muted"><?= l('biolink_vcard.vcard_phone_number_label_help') ?></small>
+            <small class="form-text text-muted"><?= l('microsite_vcard.vcard_phone_number_label_help') ?></small>
         </div>
 
         <div class="form-group">
-            <label for=""><i class="fas fa-fw fa-phone-square-alt fa-sm text-muted mr-1"></i> <?= l('biolink_vcard.vcard_phone_number_value') ?></label>
+            <label for=""><i class="fas fa-fw fa-phone-square-alt fa-sm text-muted mr-1"></i> <?= l('microsite_vcard.vcard_phone_number_value') ?></label>
             <input id="" type="text" name="vcard_phone_number_value[]" class="form-control" maxlength="<?= $data->links_types['vcard']['fields']['phone_number_value']['max_length'] ?>" required="required" />
         </div>
 
@@ -533,16 +533,16 @@
 
     /* add new */
     let vcard_social_add = event => {
-        let biolink_block_id = event.currentTarget.getAttribute('data-biolink-block-id');
+        let microsite_block_id = event.currentTarget.getAttribute('data-microsite-block-id');
         let clone = document.querySelector(`#template_vcard_social`).content.cloneNode(true);
-        let count = document.querySelectorAll(`[id="vcard_socials_${biolink_block_id}"] .mb-4`).length;
+        let count = document.querySelectorAll(`[id="vcard_socials_${microsite_block_id}"] .mb-4`).length;
 
         if(count >= 20) return;
 
         clone.querySelector(`input[name="vcard_social_label[]"`).setAttribute('name', `vcard_social_label[${count}]`);
         clone.querySelector(`input[name="vcard_social_value[]"`).setAttribute('name', `vcard_social_value[${count}]`);
 
-        document.querySelector(`[id="vcard_socials_${biolink_block_id}"]`).appendChild(clone);
+        document.querySelector(`[id="vcard_socials_${microsite_block_id}"]`).appendChild(clone);
 
         vcard_social_remove_initiator();
     };
@@ -572,16 +572,16 @@
 
     /* add new */
     let vcard_phone_number_add = event => {
-        let biolink_block_id = event.currentTarget.getAttribute('data-biolink-block-id');
+        let microsite_block_id = event.currentTarget.getAttribute('data-microsite-block-id');
         let clone = document.querySelector(`#template_vcard_phone_numbers`).content.cloneNode(true);
-        let count = document.querySelectorAll(`[id="vcard_phone_numbers_${biolink_block_id}"] .mb-4`).length;
+        let count = document.querySelectorAll(`[id="vcard_phone_numbers_${microsite_block_id}"] .mb-4`).length;
 
         if(count >= 20) return;
 
         clone.querySelector(`input[name="vcard_phone_number_label[]"`).setAttribute('name', `vcard_phone_number_label[${count}]`);
         clone.querySelector(`input[name="vcard_phone_number_value[]"`).setAttribute('name', `vcard_phone_number_value[${count}]`);
 
-        document.querySelector(`[id="vcard_phone_numbers_${biolink_block_id}"]`).appendChild(clone);
+        document.querySelector(`[id="vcard_phone_numbers_${microsite_block_id}"]`).appendChild(clone);
 
         vcard_phone_number_remove_initiator();
     };

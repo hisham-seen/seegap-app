@@ -55,7 +55,7 @@ class Link extends Model {
 
     public function delete($link_id) {
 
-        if(!$link = db()->where('link_id', $link_id)->getOne('links', ['user_id', 'link_id', 'biolink_theme_id', 'type', 'settings'])) {
+        if(!$link = db()->where('link_id', $link_id)->getOne('links', ['user_id', 'link_id', 'microsite_theme_id', 'type', 'settings'])) {
             return;
         }
 
@@ -74,7 +74,7 @@ class Link extends Model {
         }
 
         /* Process to delete the stored files of the link */
-        if($link->type == 'biolink') {
+        if($link->type == 'microsite') {
             $link->settings = json_decode($link->settings ?? '');
 
             if(!empty($link->settings->pwa_file_name)) {
@@ -85,15 +85,15 @@ class Link extends Model {
             \Altum\Uploads::delete_uploaded_file($link->settings->seo->image, 'block_images');
             \Altum\Uploads::delete_uploaded_file($link->settings->pwa_icon, 'app_icon');
 
-            if($link->settings->background_type == 'image' && !$link->biolink_theme_id) {
+            if($link->settings->background_type == 'image' && !$link->microsite_theme_id) {
                 \Altum\Uploads::delete_uploaded_file($link->settings->background, 'backgrounds');
             }
 
-            /* Get all the available biolink blocks and iterate over them to delete the stored images */
-            $result = database()->query("SELECT `biolink_block_id` FROM `biolinks_blocks` WHERE `link_id` = {$link->link_id}");
+            /* Get all the available microsite blocks and iterate over them to delete the stored images */
+            $result = database()->query("SELECT `microsite_block_id` FROM `microsites_blocks` WHERE `link_id` = {$link->link_id}");
             while($row = $result->fetch_object()) {
 
-                (new \Altum\Models\BiolinkBlock())->delete($row->biolink_block_id);
+                (new \Altum\Models\MicrositeBlock())->delete($row->microsite_block_id);
 
             }
         }
@@ -115,7 +115,7 @@ class Link extends Model {
         cache()->deleteItem('links?user_id=' . $link->user_id);
 
         /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
 
     }

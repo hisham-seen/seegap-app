@@ -40,10 +40,10 @@ if(settings()->links->pixels_is_enabled) {
     $access['delete']['delete.pixels'] = l('pixels.title');
 }
 
-if(settings()->links->biolinks_is_enabled) {
-    $access['create']['create.biolinks_blocks'] = l('biolinks_blocks.title');
-    $access['update']['update.biolinks_blocks'] = l('biolinks_blocks.title');
-    $access['delete']['delete.biolinks_blocks'] = l('biolinks_blocks.title');
+if(settings()->links->microsites_is_enabled) {
+    $access['create']['create.microsites_blocks'] = l('microsites_blocks.title');
+    $access['update']['update.microsites_blocks'] = l('microsites_blocks.title');
+    $access['delete']['delete.microsites_blocks'] = l('microsites_blocks.title');
 }
 
 if(settings()->codes->qr_codes_is_enabled) {

@@ -6,7 +6,7 @@
         <lastmod><?= (new \DateTime())->format('Y-m-d\TH:i:sP') ?></lastmod>
     </sitemap>
 
-    <?php if(settings()->links->biolinks_is_enabled): ?>
+    <?php if(settings()->links->microsites_is_enabled): ?>
     <sitemap>
         <loc><?= SITE_URL . 'sitemap/links'  ?></loc>
         <lastmod><?= (new \DateTime())->format('Y-m-d\TH:i:sP') ?></lastmod>

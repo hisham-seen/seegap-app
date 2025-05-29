@@ -60,7 +60,7 @@
                                 <select name="type" id="type" class="custom-select custom-select-sm">
                                     <option value=""><?= l('global.all') ?></option>
                                     <?php foreach(['email_collector', 'phone_collector', 'contact_collector'] as $value): ?>
-                                        <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.biolink.blocks.' . $value) ?></option>
+                                        <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.microsite.blocks.' . $value) ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -181,8 +181,8 @@
 
                             <td class="text-nowrap">
                                 <span class="badge badge-light">
-                                    <i class="<?= $data->biolink_blocks[$row->type]['icon'] ?> fa-fw fa-sm mr-1"></i>
-                                    <?= l('link.biolink.blocks.' . $row->type) ?>
+                                    <i class="<?= $data->microsite_blocks[$row->type]['icon'] ?> fa-fw fa-sm mr-1"></i>
+                                    <?= l('link.microsite.blocks.' . $row->type) ?>
                                 </span>
                             </td>
 
@@ -199,7 +199,7 @@
                             <?php endif ?>
 
                             <td class="text-nowrap text-muted">
-                                <a href="<?= url('link/' . $row->link_id . '?tab=blocks') ?>" class="mr-2 text-decoration-none" data-toggle="tooltip" title="<?= l('data.biolink') ?>">
+                                <a href="<?= url('link/' . $row->link_id . '?tab=blocks') ?>" class="mr-2 text-decoration-none" data-toggle="tooltip" title="<?= l('data.microsite') ?>">
                                     <i class="fas fa-fw fa-hashtag text-muted"></i>
                                 </a>
 

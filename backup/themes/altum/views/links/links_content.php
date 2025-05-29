@@ -30,10 +30,10 @@
                 </div>
             <?php endif ?>
 
-            <?php if(settings()->links->biolinks_templates_is_enabled && $data->filters->filters['type'] == 'biolink'): ?>
+            <?php if(settings()->links->microsites_templates_is_enabled && $data->filters->filters['type'] == 'microsite'): ?>
                 <div class="ml-3">
-                    <a href="<?= url('biolinks-templates') ?>" class="btn btn-outline-primary">
-                        <i class="fas fa-fw fa-moon fa-sm mr-1"></i> <?= l('biolinks_templates.menu') ?>
+                    <a href="<?= url('microsites-templates') ?>" class="btn btn-outline-primary">
+                        <i class="fas fa-fw fa-moon fa-sm mr-1"></i> <?= l('microsites_templates.menu') ?>
                     </a>
                 </div>
             <?php endif ?>
@@ -45,11 +45,11 @@
                     </button>
 
                     <div class="dropdown-menu dropdown-menu-right">
-                        <?php if(settings()->links->biolinks_is_enabled): ?>
-                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#create_biolink">
-                                <i class="fas fa-fw fa-circle fa-sm mr-2" style="color: <?= $data->links_types['biolink']['color'] ?>"></i>
+                        <?php if(settings()->links->microsites_is_enabled): ?>
+                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#create_microsite">
+                                <i class="fas fa-fw fa-circle fa-sm mr-2" style="color: <?= $data->links_types['microsite']['color'] ?>"></i>
 
-                                <?= l('link.biolink.name') ?>
+                                <?= l('link.microsite.name') ?>
                             </a>
                         <?php endif ?>
 
@@ -192,8 +192,8 @@
                             <label for="filters_type" class="small"><?= l('global.type') ?></label>
                             <select name="type" id="filters_type" class="custom-select custom-select-sm">
                                 <option value=""><?= l('global.all') ?></option>
-                                <?php if(settings()->links->biolinks_is_enabled): ?>
-                                    <option value="biolink" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'biolink' ? 'selected="selected"' : null ?>><?= l('links.menu.biolink') ?></option>
+                                <?php if(settings()->links->microsites_is_enabled): ?>
+                                    <option value="microsite" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'microsite' ? 'selected="selected"' : null ?>><?= l('links.menu.microsite') ?></option>
                                 <?php endif ?>
 
                                 <?php if(settings()->links->shortener_is_enabled): ?>
@@ -320,8 +320,8 @@
                                 <div class="d-flex flex-column min-width-0">
                                     <div class="d-inline-block text-truncate">
                                         <a href="<?= url('link/' . $row->link_id) ?>" class="font-weight-bold"><?= $row->url ?></a>
-                                        <?php if($row->type == 'biolink' && $row->is_verified): ?>
-                                            <span data-toggle="tooltip" title="<?= l('link.biolink.verified') ?>"><i class="fas fa-fw fa-xs fa-check-circle" style="color: #0086ff"></i></span>
+                                        <?php if($row->type == 'microsite' && $row->is_verified): ?>
+                                            <span data-toggle="tooltip" title="<?= l('link.microsite.verified') ?>"><i class="fas fa-fw fa-xs fa-check-circle" style="color: #0086ff"></i></span>
                                         <?php endif ?>
                                     </div>
 

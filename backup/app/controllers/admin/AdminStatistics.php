@@ -757,29 +757,29 @@ class AdminStatistics extends Controller {
 
     }
 
-    protected function biolinks() {
+    protected function microsites() {
 
-        $total = ['biolinks' => 0];
+        $total = ['microsites' => 0];
 
         $convert_tz_sql = get_convert_tz_sql('`datetime`', $this->user->timezone);
 
-        $biolinks_chart = [];
-        $result = database()->query("SELECT COUNT(*) AS `total`, DATE_FORMAT({$convert_tz_sql}, '{$this->datetime['query_date_format']}') AS `formatted_date` FROM `links` WHERE {$convert_tz_sql} BETWEEN '{$this->datetime['query_start_date']}' AND '{$this->datetime['query_end_date']}' AND `type` = 'biolink' GROUP BY `formatted_date`");
+        $microsites_chart = [];
+        $result = database()->query("SELECT COUNT(*) AS `total`, DATE_FORMAT({$convert_tz_sql}, '{$this->datetime['query_date_format']}') AS `formatted_date` FROM `links` WHERE {$convert_tz_sql} BETWEEN '{$this->datetime['query_start_date']}' AND '{$this->datetime['query_end_date']}' AND `type` = 'microsite' GROUP BY `formatted_date`");
         while($row = $result->fetch_object()) {
             $row->formatted_date = $this->datetime['process']($row->formatted_date, true);
 
-            $biolinks_chart[$row->formatted_date] = [
-                'biolinks' => $row->total,
+            $microsites_chart[$row->formatted_date] = [
+                'microsites' => $row->total,
             ];
 
-            $total['biolinks'] += $row->total;
+            $total['microsites'] += $row->total;
         }
 
-        $biolinks_chart = get_chart_data($biolinks_chart);
+        $microsites_chart = get_chart_data($microsites_chart);
 
         return [
             'total' => $total,
-            'biolinks_chart' => $biolinks_chart,
+            'microsites_chart' => $microsites_chart,
         ];
 
     }
@@ -930,22 +930,22 @@ class AdminStatistics extends Controller {
         ];
     }
 
-    protected function biolinks_blocks() {
+    protected function microsites_blocks() {
 
         $total = [];
 
         $convert_tz_sql = get_convert_tz_sql('`datetime`', $this->user->timezone);
 
-        $biolinks_blocks_chart = [];
-        $result = database()->query("SELECT COUNT(*) AS `total`, DATE_FORMAT({$convert_tz_sql}, '{$this->datetime['query_date_format']}') AS `formatted_date`, `type` FROM `biolinks_blocks` WHERE {$convert_tz_sql} BETWEEN '{$this->datetime['query_start_date']}' AND '{$this->datetime['query_end_date']}' GROUP BY `formatted_date`, `type`");
+        $microsites_blocks_chart = [];
+        $result = database()->query("SELECT COUNT(*) AS `total`, DATE_FORMAT({$convert_tz_sql}, '{$this->datetime['query_date_format']}') AS `formatted_date`, `type` FROM `microsites_blocks` WHERE {$convert_tz_sql} BETWEEN '{$this->datetime['query_start_date']}' AND '{$this->datetime['query_end_date']}' GROUP BY `formatted_date`, `type`");
         while($row = $result->fetch_object()) {
             $row->formatted_date = $this->datetime['process']($row->formatted_date, true);
 
-            if(!array_key_exists($row->type, $biolinks_blocks_chart)) {
-                $biolinks_blocks_chart[$row->type] = [];
+            if(!array_key_exists($row->type, $microsites_blocks_chart)) {
+                $microsites_blocks_chart[$row->type] = [];
             }
 
-            $biolinks_blocks_chart[$row->type][$row->formatted_date] = ['total' => $row->total];
+            $microsites_blocks_chart[$row->type][$row->formatted_date] = ['total' => $row->total];
 
             if(!array_key_exists($row->type, $total)) {
                 $total[$row->type] = $row->total;
@@ -955,13 +955,13 @@ class AdminStatistics extends Controller {
         }
 
         foreach($total as $key => $value) {
-            $biolinks_blocks_chart[$key] = get_chart_data($biolinks_blocks_chart[$key]);
+            $microsites_blocks_chart[$key] = get_chart_data($microsites_blocks_chart[$key]);
         }
 
         return [
             'total' => $total,
-            'biolinks_blocks_chart' => $biolinks_blocks_chart,
-            'biolink_blocks' => require APP_PATH . 'includes/biolink_blocks.php',
+            'microsites_blocks_chart' => $microsites_blocks_chart,
+            'microsite_blocks' => require APP_PATH . 'includes/microsite_blocks.php',
         ];
 
     }

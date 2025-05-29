@@ -184,7 +184,7 @@
                                         <i class="fas fa-fw fa-link text-muted"></i>
                                     </a>
 
-                                    <?php if(settings()->links->biolinks_is_enabled): ?>
+                                    <?php if(settings()->links->microsites_is_enabled): ?>
                                         <a href="<?= url('data?project_id=' . $row->project_id) ?>" class="mr-2" data-toggle="tooltip" title="<?= l('data.title') ?>">
                                             <i class="fas fa-fw fa-database text-muted"></i>
                                         </a>

@@ -218,9 +218,9 @@ class CustomHooks {
                 'payment_processors.',
                 'payment_processor_create.',
                 'payment_processor_update.',
-                'biolink_donation.',
-                'biolink_product.',
-                'biolink_service.',
+                'microsite_donation.',
+                'microsite_product.',
+                'microsite_service.',
             ]);
         } else {
             $prefixes = array_values(array_filter($prefixes, fn($item) => $item !== 'pay.'));
@@ -234,8 +234,8 @@ class CustomHooks {
             $prefixes = array_merge($prefixes, ['domains.', 'domain_create.', 'domain_update.', 'domain_delete_modal.']);
         }
 
-        if(!settings()->links->biolinks_is_enabled || !settings()->links->biolinks_templates_is_enabled) {
-            $prefixes = array_merge($prefixes, ['biolinks_templates.']);
+        if(!settings()->links->microsites_is_enabled || !settings()->links->microsites_templates_is_enabled) {
+            $prefixes = array_merge($prefixes, ['microsites_templates.']);
         }
 
         if(!settings()->links->splash_page_is_enabled) {
@@ -246,8 +246,8 @@ class CustomHooks {
             $prefixes = array_merge($prefixes, ['pixels.', 'pixel_create.', 'pixel_update.']);
         }
 
-        if(!settings()->links->biolinks_is_enabled){
-            $prefixes = array_merge($prefixes, ['biolinks_', 'biolink_', 'link.biolink.', 'data.', 'biolink_block_delete.']);
+        if(!settings()->links->microsites_is_enabled){
+            $prefixes = array_merge($prefixes, ['microsites_', 'microsite_', 'link.microsite.', 'data.', 'microsite_block_delete.']);
         }
 
         if(!settings()->links->shortener_is_enabled){

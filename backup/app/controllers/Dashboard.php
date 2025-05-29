@@ -135,9 +135,9 @@ class Dashboard extends Controller {
             });
         }
 
-        if(settings()->links->biolinks_is_enabled) {
-            $biolink_links_total = \Altum\Cache::cache_function_result('biolink_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
-                return db()->where('user_id', $this->user->user_id)->where('type', 'biolink')->getValue('links', 'count(*)');
+        if(settings()->links->microsites_is_enabled) {
+            $microsite_links_total = \Altum\Cache::cache_function_result('microsite_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+                return db()->where('user_id', $this->user->user_id)->where('type', 'microsite')->getValue('links', 'count(*)');
             });
         }
 
@@ -190,7 +190,7 @@ class Dashboard extends Controller {
             'vcard_links_total'         => $vcard_links_total ?? null,
             'link_links_total'          => $link_links_total ?? null,
             'file_links_total'          => $file_links_total ?? null,
-            'biolink_links_total'       => $biolink_links_total ?? null,
+            'microsite_links_total'       => $microsite_links_total ?? null,
         ];
 
         $view = new \Altum\View('dashboard/index', (array) $this);

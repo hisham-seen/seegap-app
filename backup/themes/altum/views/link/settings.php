@@ -3,7 +3,7 @@
 <?php
 
 /* Get some variables */
-$biolink_backgrounds = require APP_PATH . 'includes/biolink_backgrounds.php';
+$microsite_backgrounds = require APP_PATH . 'includes/microsite_backgrounds.php';
 
 /* Get the proper settings depending on the type of link */
 $settings = require THEME_PATH . 'views/link/settings/' . mb_strtolower($data->link->type) . '.php';
@@ -37,27 +37,27 @@ $settings = require THEME_PATH . 'views/link/settings/' . mb_strtolower($data->l
         $('#link_full_url_copy').attr('data-clipboard-text', new_full_url);
 
         /* Refresh iframe */
-        refresh_biolink_preview();
+        refresh_microsite_preview();
     };
 
-    let refresh_biolink_preview = () => {
-        if(!document.querySelector('#biolink_preview_iframe')) {
+    let refresh_microsite_preview = () => {
+        if(!document.querySelector('#microsite_preview_iframe')) {
             return;
         }
 
         /* Add loader */
-        document.querySelector('#biolink_preview_iframe_loading').classList.remove('d-none');
+        document.querySelector('#microsite_preview_iframe_loading').classList.remove('d-none');
 
         /* Refresh iframe */
-        let biolink_preview_iframe = document.querySelector('#biolink_preview_iframe');
+        let microsite_preview_iframe = document.querySelector('#microsite_preview_iframe');
 
         setTimeout(() => {
-            biolink_preview_iframe.setAttribute('src', biolink_preview_iframe.getAttribute('src'));
+            microsite_preview_iframe.setAttribute('src', microsite_preview_iframe.getAttribute('src'));
         }, 750)
 
-        biolink_preview_iframe.onload = () => {
-            document.querySelector('#biolink_preview_iframe').dispatchEvent(new Event('refreshed'));
-            document.querySelector('#biolink_preview_iframe_loading').classList.add('d-none');
+        microsite_preview_iframe.onload = () => {
+            document.querySelector('#microsite_preview_iframe').dispatchEvent(new Event('refreshed'));
+            document.querySelector('#microsite_preview_iframe_loading').classList.add('d-none');
         }
     }
 

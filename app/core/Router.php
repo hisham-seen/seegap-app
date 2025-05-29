@@ -87,8 +87,8 @@ class Router {
             ],
 
 
-            'biolinks-templates' => [
-                'controller' => 'BiolinksTemplates',
+            'microsites-templates' => [
+                'controller' => 'MicrositesTemplates',
                 'settings' => [
                     'wrapper' => 'app_wrapper',
                     'ads' => true,
@@ -304,8 +304,8 @@ class Router {
                 ]
             ],
 
-            'biolink-block' => [
-                'controller' => 'BiolinkBlock',
+            'microsite-block' => [
+                'controller' => 'MicrositeBlock',
                 'settings' => [
                     'wrapper' => 'app_wrapper',
                     'ads' => true,
@@ -353,8 +353,8 @@ class Router {
                 ]
             ],
 
-            'biolink-block-ajax' => [
-                'controller' => 'BiolinkBlockAjax'
+            'microsite-block-ajax' => [
+                'controller' => 'MicrositeBlockAjax'
             ],
 
             'link-ajax' => [
@@ -1188,32 +1188,32 @@ class Router {
                 'controller' => 'AdminLinks'
             ],
 
-            'biolinks-blocks' => [
-                'controller' => 'AdminBiolinksBlocks'
+            'microsites-blocks' => [
+                'controller' => 'AdminMicrositesBlocks'
             ],
 
-            'biolinks-themes' => [
-                'controller' => 'AdminBiolinksThemes'
+            'microsites-themes' => [
+                'controller' => 'AdminMicrositesThemes'
             ],
 
-            'biolink-theme-create' => [
-                'controller' => 'AdminBiolinkThemeCreate'
+            'microsite-theme-create' => [
+                'controller' => 'AdminMicrositeThemeCreate'
             ],
 
-            'biolink-theme-update' => [
-                'controller' => 'AdminBiolinkThemeUpdate'
+            'microsite-theme-update' => [
+                'controller' => 'AdminMicrositeThemeUpdate'
             ],
 
-            'biolinks-templates' => [
-                'controller' => 'AdminBiolinksTemplates'
+            'microsites-templates' => [
+                'controller' => 'AdminMicrositesTemplates'
             ],
 
-            'biolink-template-create' => [
-                'controller' => 'AdminBiolinkTemplateCreate'
+            'microsite-template-create' => [
+                'controller' => 'AdminMicrositeTemplateCreate'
             ],
 
-            'biolink-template-update' => [
-                'controller' => 'AdminBiolinkTemplateUpdate'
+            'microsite-template-update' => [
+                'controller' => 'AdminMicrositeTemplateUpdate'
             ],
 
             'signatures' => [

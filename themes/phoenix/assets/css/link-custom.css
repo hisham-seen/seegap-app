@@ -364,12 +364,12 @@ form .btn-primary:active {
 }
 
 /* Preview highlight */
-[data-biolink-block-id] {
+[data-microsite-block-id] {
     transition: .3s all;
     border: 2px solid transparent;
 }
 
-[data-biolink-block-id].preview-highlight {
+[data-microsite-block-id].preview-highlight {
     background: rgba(255, 255, 255, 0.2) !important;
     border: 2px solid rgba(255, 255, 255, 0.4) !important;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);

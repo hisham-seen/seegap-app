@@ -44,7 +44,7 @@
                 <div class="mt-4">
                     <div class="d-flex justify-content-between mb-1">
                         <div class="text-truncate">
-                            <a href="<?= url((isset($data->link->biolink_block_id) ? 'biolink-block/' . $data->link->biolink_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=utm_campaign&utm_source=' . $data->utm_source . '&utm_medium=' . $row->utm_medium . '&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><?= $row->utm_medium ?></a>
+                            <a href="<?= url((isset($data->link->microsite_block_id) ? 'microsite-block/' . $data->link->microsite_block_id : 'link/' . $data->link->link_id) . '/' . $data->method . '?type=utm_campaign&utm_source=' . $data->utm_source . '&utm_medium=' . $row->utm_medium . '&start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><?= $row->utm_medium ?></a>
                         </div>
 
                         <div>

@@ -24,7 +24,7 @@ This document tracks the implementation progress of the link handlers refactorin
 | Link Type | Handler File | Status | Lines of Code | Complexity |
 |-----------|-------------|--------|---------------|------------|
 | **Standard URL Shortener** | `LinkHandler.php` | ✅ Complete | ~300 | Medium |
-| **Biolink Pages** | `BiolinkHandler.php` | ✅ Complete | ~600 | High |
+| **Microsite Pages** | `MicrositeHandler.php` | ✅ Complete | ~600 | High |
 | **File Sharing** | `FileHandler.php` | ✅ Complete | ~200 | Low |
 | **Calendar Events** | `EventHandler.php` | ✅ Complete | ~180 | Low |
 | **Static Website Hosting** | `StaticHandler.php` | ✅ Complete | ~280 | Medium |
@@ -44,7 +44,7 @@ This document tracks the implementation progress of the link handlers refactorin
 - ✅ Password protection
 - ✅ Sensitive content flagging
 
-#### BiolinkHandler (Biolink Pages) ✅ COMPLETE
+#### MicrositeHandler (Microsite Pages) ✅ COMPLETE
 - ✅ Theme and template support
 - ✅ PWA generation capabilities
 - ✅ Background management (preset, color, gradient, image)
@@ -153,7 +153,7 @@ All handlers inherit these capabilities:
 
 ### Phase 2: Handler Implementation ✅ COMPLETE
 - ✅ LinkHandler (Standard URL shortener)
-- ✅ BiolinkHandler (Biolink pages)
+- ✅ MicrositeHandler (Microsite pages)
 - ✅ FileHandler (File sharing)
 - ✅ EventHandler (Calendar events)
 - ✅ StaticHandler (Static website hosting)

@@ -117,7 +117,7 @@
                                         <a href="<?= $row->full_url ?>" target="_blank" class="font-weight-bold text-decoration-none"><?= $row->settings->seo->title ?: $row->url ?></a>
 
                                         <?php if($row->is_verified): ?>
-                                            <span data-toggle="tooltip" title="<?= l('link.biolink.verified') ?>"><i class="fas fa-fw fa-xs fa-check-circle" style="color: #0086ff"></i></span>
+                                            <span data-toggle="tooltip" title="<?= l('link.microsite.verified') ?>"><i class="fas fa-fw fa-xs fa-check-circle" style="color: #0086ff"></i></span>
                                         <?php endif ?>
                                     </div>
 

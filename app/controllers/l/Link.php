@@ -29,8 +29,8 @@ class Link extends Controller {
     public $type;
     public $user;
     public $is_preview = false;
-    public $biolinks_themes = [];
-    public $biolink_theme = null;
+    public $microsites_themes = [];
+    public $microsite_theme = null;
 
     public function index() {
 
@@ -48,10 +48,10 @@ class Link extends Controller {
                 $this->type = 'link';
             }
 
-            if(isset($_GET['biolink_block_id'])) {
-                $biolink_block_id = (int) $_GET['biolink_block_id'];
-                $this->link = db()->where('biolink_block_id', $biolink_block_id)->getOne('biolinks_blocks');
-                $this->type = 'biolink_block';
+            if(isset($_GET['microsite_block_id'])) {
+                $microsite_block_id = (int) $_GET['microsite_block_id'];
+                $this->link = db()->where('microsite_block_id', $microsite_block_id)->getOne('microsites_blocks');
+                $this->type = 'microsite_block';
             }
 
         }
@@ -60,13 +60,13 @@ class Link extends Controller {
             redirect('not-found');
         }
 
-        /* If a preview is asked for, make sure it is correct - BIOLINK PAGES */
-        if($this->link->type == 'biolink' && isset($_GET['preview']) && $_GET['preview'] == md5($this->link->user_id)) {
+        /* If a preview is asked for, make sure it is correct - MICROSITE PAGES */
+        if($this->link->type == 'microsite' && isset($_GET['preview']) && $_GET['preview'] == md5($this->link->user_id)) {
             $this->is_preview = true;
 
             /* Get available themes */
-            $this->biolinks_themes = (new \Altum\Models\BiolinksThemes())->get_biolinks_themes();
-            $this->biolink_theme = isset($_GET['biolink_theme_id']) && array_key_exists($_GET['biolink_theme_id'], $this->biolinks_themes) ? $this->biolinks_themes[$_GET['biolink_theme_id']] : null;
+            $this->microsites_themes = (new \Altum\Models\MicrositesThemes())->get_microsites_themes();
+            $this->microsite_theme = isset($_GET['microsite_theme_id']) && array_key_exists($_GET['microsite_theme_id'], $this->microsites_themes) ? $this->microsites_themes[$_GET['microsite_theme_id']] : null;
         }
 
         /* If a preview is asked for, make sure it is correct - STATIC PAGES */
@@ -99,7 +99,7 @@ class Link extends Controller {
         if(in_array($this->type, ['link', 'file', 'event'])) {
             $this->link->full_url = $domain_id && !isset($_GET['link_id']) ? \Altum\Router::$data['domain']->scheme . \Altum\Router::$data['domain']->host . '/' . (\Altum\Router::$data['domain']->link_id == $this->link->link_id ? null : $this->link->url) : SITE_URL . $this->link->url;
         } else {
-            $this->link->full_url = SITE_URL . 'l/link?biolink_block_id=' . $this->link->biolink_block_id;
+            $this->link->full_url = SITE_URL . 'l/link?microsite_block_id=' . $this->link->microsite_block_id;
         }
 
         /* Static links need the / for proper asset pathing */
@@ -248,8 +248,8 @@ class Link extends Controller {
             $this->add_view_content('content', $view->run());
 
             /* Prepare the view */
-            $biolink_wrapper = new \Altum\View('l/biolink_wrapper', (array) $this);
-            echo $biolink_wrapper->run();
+            $microsite_wrapper = new \Altum\View('l/microsite_wrapper', (array) $this);
+            echo $microsite_wrapper->run();
             die();
         }
 
@@ -263,15 +263,15 @@ class Link extends Controller {
             $this->add_view_content('content', $view->run());
 
             /* Prepare the view */
-            $biolink_wrapper = new \Altum\View('l/biolink_wrapper', (array) $this);
-            echo $biolink_wrapper->run();
+            $microsite_wrapper = new \Altum\View('l/microsite_wrapper', (array) $this);
+            echo $microsite_wrapper->run();
             die();
         }
 
         else {
 
             /* If its a block type tracking */
-            if($this->type == 'biolink_block') {
+            if($this->type == 'microsite_block') {
                 /* Store statistics */
                 $this->create_statistics();
 
@@ -282,13 +282,13 @@ class Link extends Controller {
             }
 
             /* Check what to do next */
-            if($this->link->type == 'biolink') {
+            if($this->link->type == 'microsite') {
 
                 /* Store statistics */
                 $this->create_statistics();
 
-                /* Process biolink page */
-                $this->process_biolink();
+                /* Process microsite page */
+                $this->process_microsite();
 
             } else if($this->link->type == 'link') {
 
@@ -334,7 +334,7 @@ class Link extends Controller {
 
     private function create_statistics() {
 
-        $cookie_name = 's_statistics_' . ($this->type == 'link' ? $this->link->link_id : $this->link->biolink_block_id);
+        $cookie_name = 's_statistics_' . ($this->type == 'link' ? $this->link->link_id : $this->link->microsite_block_id);
 
         if(isset($_COOKIE[$cookie_name]) && (int) $_COOKIE[$cookie_name] >= 3) {
             return;
@@ -408,7 +408,7 @@ class Link extends Controller {
         db()->insert('track_links', [
             'user_id' => $this->user->user_id,
             'link_id' => $this->type == 'link' ? $this->link->link_id : null,
-            'biolink_block_id' => $this->type == 'biolink_block' ? $this->link->biolink_block_id : null,
+            'microsite_block_id' => $this->type == 'microsite_block' ? $this->link->microsite_block_id : null,
             'continent_code' => $continent_code,
             'country_code' => $country_code,
             'city_name' => $city_name,
@@ -426,8 +426,8 @@ class Link extends Controller {
         ]);
 
         /* Add the unique hit to the link table as well */
-        if($this->type == 'biolink_block') {
-            db()->where('biolink_block_id', $this->link->biolink_block_id)->update('biolinks_blocks', ['clicks' => db()->inc()]);
+        if($this->type == 'microsite_block') {
+            db()->where('microsite_block_id', $this->link->microsite_block_id)->update('microsites_blocks', ['clicks' => db()->inc()]);
         } else {
             db()->where('link_id', $this->link->link_id)->update('links', ['clicks' => db()->inc()]);
         }
@@ -437,7 +437,7 @@ class Link extends Controller {
         setcookie($cookie_name, (int) $cookie_new_value, time()+60*60*24*1);
     }
 
-    private function process_biolink() {
+    private function process_microsite() {
 
         /* Check for a leap link */
         if($this->link->settings->leap_link && $this->user->plan_settings->leap_link && !$this->is_preview) {
@@ -445,25 +445,25 @@ class Link extends Controller {
             return;
         }
 
-        /* Get all the links inside of the biolink */
-        $cache_instance = cache()->getItem('biolink_blocks?link_id=' . $this->link->link_id);
+        /* Get all the links inside of the microsite */
+        $cache_instance = cache()->getItem('microsite_blocks?link_id=' . $this->link->link_id);
 
         /* Set cache if not existing */
         if(is_null($cache_instance->get())) {
 
-            $result = database()->query("SELECT * FROM `biolinks_blocks` WHERE `link_id` = {$this->link->link_id} AND `is_enabled` = 1 ORDER BY `order` ASC");
-            $biolink_blocks = [];
+            $result = database()->query("SELECT * FROM `microsites_blocks` WHERE `link_id` = {$this->link->link_id} AND `is_enabled` = 1 ORDER BY `order` ASC");
+            $microsite_blocks = [];
 
             while($row = $result->fetch_object()) {
-                $biolink_blocks[] = $row;
+                $microsite_blocks[] = $row;
             }
 
-            cache()->save($cache_instance->set($biolink_blocks)->expiresAfter(CACHE_DEFAULT_SECONDS));
+            cache()->save($cache_instance->set($microsite_blocks)->expiresAfter(CACHE_DEFAULT_SECONDS));
 
         } else {
 
             /* Get cache */
-            $biolink_blocks = $cache_instance->get();
+            $microsite_blocks = $cache_instance->get();
 
         }
 
@@ -493,17 +493,17 @@ class Link extends Controller {
 
             /* Prepare the pixels view */
             $pixels_view = new \Altum\View('l/partials/pixels');
-            $this->add_view_content('pixels', $pixels_view->run(['pixels' => $pixels, 'type' => 'biolink']));
+            $this->add_view_content('pixels', $pixels_view->run(['pixels' => $pixels, 'type' => 'microsite']));
         }
 
         /* Prepare the view */
-        $view_content = \Altum\Link::get_biolink($this, $this->link, $this->user, $biolink_blocks);
+        $view_content = \Altum\Link::get_microsite($this, $this->link, $this->user, $microsite_blocks);
 
         $this->add_view_content('content', $view_content);
 
         /* Prepare the view */
-        $biolink_wrapper = new \Altum\View('l/biolink_wrapper', (array) $this);
-        echo $biolink_wrapper->run();
+        $microsite_wrapper = new \Altum\View('l/microsite_wrapper', (array) $this);
+        echo $microsite_wrapper->run();
     }
 
     private function process_event() {
@@ -930,25 +930,25 @@ class Link extends Controller {
             die();
         }
 
-        $_POST['biolink_block_id'] = (int) $_POST['biolink_block_id'];
+        $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['email'] = input_clean($_POST['email'], 320);
         $_POST['name'] = input_clean($_POST['name'], 32);
 
-        if(settings()->captcha->biolink_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
+        if(settings()->captcha->microsite_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
             Response::json(l('global.error_message.invalid_captcha'), 'error');
         }
 
         /* Get the link data */
-        $biolink_block = db()->where('biolink_block_id', $_POST['biolink_block_id'])->where('type', 'email_collector')->getOne('biolinks_blocks', ['biolink_block_id', 'link_id', 'type', 'settings']);
+        $microsite_block = db()->where('microsite_block_id', $_POST['microsite_block_id'])->where('type', 'email_collector')->getOne('microsites_blocks', ['microsite_block_id', 'link_id', 'type', 'settings']);
 
-        if(!$biolink_block) {
+        if(!$microsite_block) {
             die();
         }
 
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-        /* Get biolink data */
-        $link = db()->where('link_id', $biolink_block->link_id)->getOne('links');
+        /* Get microsite data */
+        $link = db()->where('link_id', $microsite_block->link_id)->getOne('links');
 
         /* Get the user data */
         $user = db()->where('user_id', $link->user_id)->getOne('users');
@@ -960,20 +960,20 @@ class Link extends Controller {
 
         /* Store the data */
         db()->insert('data', [
-            'biolink_block_id' => $biolink_block->biolink_block_id,
+            'microsite_block_id' => $microsite_block->microsite_block_id,
             'link_id' => $link->link_id,
             'project_id' => $link->project_id,
             'user_id' => $link->user_id,
-            'type' => $biolink_block->type,
+            'type' => $microsite_block->type,
             'data' => json_encode($data),
             'datetime' => get_date(),
         ]);
 
         /* Send email notifications if needed to the owner */
-        if($biolink_block->settings->email_notification) {
+        if($microsite_block->settings->email_notification) {
             $email_template = get_email_template(
                 [
-                    '{{BLOCK_TITLE}}' => $biolink_block->settings->name,
+                    '{{BLOCK_TITLE}}' => $microsite_block->settings->name,
                 ],
                 l('global.emails.user_data_collected.subject', $user->language),
                 [
@@ -985,32 +985,32 @@ class Link extends Controller {
                 l('global.emails.user_data_collected_email_collector.body', $user->language)
             );
 
-            send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+            send_mail($microsite_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
         }
 
         /* Send the webhook */
-        if($biolink_block->settings->webhook_url) {
-            fire_and_forget('post', $biolink_block->settings->webhook_url, [
+        if($microsite_block->settings->webhook_url) {
+            fire_and_forget('post', $microsite_block->settings->webhook_url, [
                 'email' => $_POST['email'],
                 'name' => $_POST['name'],
             ]);
         }
 
         /* Send the email to mailchimp */
-        if($biolink_block->settings->mailchimp_api && $biolink_block->settings->mailchimp_api_list) {
+        if($microsite_block->settings->mailchimp_api && $microsite_block->settings->mailchimp_api_list) {
 
             /* Check the mailchimp api list and get data */
-            $explode = explode('-', $biolink_block->settings->mailchimp_api);
+            $explode = explode('-', $microsite_block->settings->mailchimp_api);
 
             if(count($explode) < 2) {
                 die();
             }
 
             $dc = $explode[1];
-            $url = 'https://' . $dc . '.api.mailchimp.com/3.0/lists/' . $biolink_block->settings->mailchimp_api_list . '/members';
+            $url = 'https://' . $dc . '.api.mailchimp.com/3.0/lists/' . $microsite_block->settings->mailchimp_api_list . '/members';
 
             /* Try to subscribe the user to mailchimp list */
-            \Unirest\Request::auth('altum', $biolink_block->settings->mailchimp_api);
+            \Unirest\Request::auth('altum', $microsite_block->settings->mailchimp_api);
 
             $body = \Unirest\Request\Body::json([
                 'email_address' => $_POST['email'],
@@ -1028,7 +1028,7 @@ class Link extends Controller {
 
         }
 
-        Response::json($biolink_block->settings->success_text, 'success', ['thank_you_url' => $biolink_block->settings->thank_you_url]);
+        Response::json($microsite_block->settings->success_text, 'success', ['thank_you_url' => $microsite_block->settings->thank_you_url]);
     }
 
     public function phone_collector() {
@@ -1036,25 +1036,25 @@ class Link extends Controller {
             die();
         }
 
-        $_POST['biolink_block_id'] = (int) $_POST['biolink_block_id'];
+        $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['phone'] = input_clean($_POST['phone'], 32);
         $_POST['name'] = input_clean($_POST['name'], 32);
 
-        if(settings()->captcha->biolink_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
+        if(settings()->captcha->microsite_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
             Response::json(l('global.error_message.invalid_captcha'), 'error');
         }
 
         /* Get the link data */
-        $biolink_block = db()->where('biolink_block_id', $_POST['biolink_block_id'])->where('type', 'phone_collector')->getOne('biolinks_blocks', ['biolink_block_id', 'link_id', 'type', 'settings']);
+        $microsite_block = db()->where('microsite_block_id', $_POST['microsite_block_id'])->where('type', 'phone_collector')->getOne('microsites_blocks', ['microsite_block_id', 'link_id', 'type', 'settings']);
 
-        if(!$biolink_block) {
+        if(!$microsite_block) {
             die();
         }
 
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-        /* Get biolink data */
-        $link = db()->where('link_id', $biolink_block->link_id)->getOne('links');
+        /* Get microsite data */
+        $link = db()->where('link_id', $microsite_block->link_id)->getOne('links');
 
         /* Get the user data */
         $user = db()->where('user_id', $link->user_id)->getOne('users');
@@ -1066,20 +1066,20 @@ class Link extends Controller {
 
         /* Store the data */
         db()->insert('data', [
-            'biolink_block_id' => $biolink_block->biolink_block_id,
+            'microsite_block_id' => $microsite_block->microsite_block_id,
             'link_id' => $link->link_id,
             'project_id' => $link->project_id,
             'user_id' => $link->user_id,
-            'type' => $biolink_block->type,
+            'type' => $microsite_block->type,
             'data' => json_encode($data),
             'datetime' => get_date(),
         ]);
 
         /* Send email notifications if needed to the owner */
-        if($biolink_block->settings->email_notification) {
+        if($microsite_block->settings->email_notification) {
             $email_template = get_email_template(
                 [
-                    '{{BLOCK_TITLE}}' => $biolink_block->settings->name,
+                    '{{BLOCK_TITLE}}' => $microsite_block->settings->name,
                 ],
                 l('global.emails.user_data_collected.subject', $user->language),
                 [
@@ -1091,18 +1091,18 @@ class Link extends Controller {
                 l('global.emails.user_data_collected_phone_collector.body', $user->language)
             );
 
-            send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+            send_mail($microsite_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
         }
 
         /* Send the webhook */
-        if($biolink_block->settings->webhook_url) {
-            fire_and_forget('post', $biolink_block->settings->webhook_url, [
+        if($microsite_block->settings->webhook_url) {
+            fire_and_forget('post', $microsite_block->settings->webhook_url, [
                 'phone' => $_POST['phone'],
                 'name' => $_POST['name'],
             ]);
         }
 
-        Response::json($biolink_block->settings->success_text, 'success', ['thank_you_url' => $biolink_block->settings->thank_you_url]);
+        Response::json($microsite_block->settings->success_text, 'success', ['thank_you_url' => $microsite_block->settings->thank_you_url]);
     }
 
     public function contact_collector() {
@@ -1110,27 +1110,27 @@ class Link extends Controller {
             die();
         }
 
-        $_POST['biolink_block_id'] = (int) $_POST['biolink_block_id'];
+        $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['phone'] = input_clean($_POST['phone'], 32);
         $_POST['name'] = input_clean($_POST['name'], 32);
         $_POST['email'] = input_clean($_POST['email'], 320);
         $_POST['message'] = input_clean($_POST['message'], 512);
 
-        if(settings()->captcha->biolink_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
+        if(settings()->captcha->microsite_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
             Response::json(l('global.error_message.invalid_captcha'), 'error');
         }
 
         /* Get the link data */
-        $biolink_block = db()->where('biolink_block_id', $_POST['biolink_block_id'])->where('type', 'contact_collector')->getOne('biolinks_blocks', ['biolink_block_id', 'link_id', 'type', 'settings']);
+        $microsite_block = db()->where('microsite_block_id', $_POST['microsite_block_id'])->where('type', 'contact_collector')->getOne('microsites_blocks', ['microsite_block_id', 'link_id', 'type', 'settings']);
 
-        if(!$biolink_block) {
+        if(!$microsite_block) {
             die();
         }
 
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-        /* Get biolink data */
-        $link = db()->where('link_id', $biolink_block->link_id)->getOne('links');
+        /* Get microsite data */
+        $link = db()->where('link_id', $microsite_block->link_id)->getOne('links');
 
         /* Get the user data */
         $user = db()->where('user_id', $link->user_id)->getOne('users');
@@ -1144,20 +1144,20 @@ class Link extends Controller {
 
         /* Store the data */
         db()->insert('data', [
-            'biolink_block_id' => $biolink_block->biolink_block_id,
+            'microsite_block_id' => $microsite_block->microsite_block_id,
             'link_id' => $link->link_id,
             'project_id' => $link->project_id,
             'user_id' => $link->user_id,
-            'type' => $biolink_block->type,
+            'type' => $microsite_block->type,
             'data' => json_encode($data),
             'datetime' => get_date(),
         ]);
 
         /* Send email notifications if needed to the owner */
-        if($biolink_block->settings->email_notification) {
+        if($microsite_block->settings->email_notification) {
             $email_template = get_email_template(
                 [
-                    '{{BLOCK_TITLE}}' => $biolink_block->settings->name,
+                    '{{BLOCK_TITLE}}' => $microsite_block->settings->name,
                 ],
                 l('global.emails.user_data_collected.subject', $user->language),
                 [
@@ -1171,12 +1171,12 @@ class Link extends Controller {
                 l('global.emails.user_data_collected_contact_collector.body', $user->language)
             );
 
-            send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+            send_mail($microsite_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
         }
 
         /* Send the webhook */
-        if($biolink_block->settings->webhook_url) {
-            fire_and_forget('post', $biolink_block->settings->webhook_url, [
+        if($microsite_block->settings->webhook_url) {
+            fire_and_forget('post', $microsite_block->settings->webhook_url, [
                 'phone' => $_POST['phone'],
                 'name' => $_POST['name'],
                 'email' => $_POST['email'],
@@ -1184,7 +1184,7 @@ class Link extends Controller {
             ]);
         }
 
-        Response::json($biolink_block->settings->success_text, 'success', ['thank_you_url' => $biolink_block->settings->thank_you_url]);
+        Response::json($microsite_block->settings->success_text, 'success', ['thank_you_url' => $microsite_block->settings->thank_you_url]);
     }
 
     public function feedback_collector() {
@@ -1192,27 +1192,27 @@ class Link extends Controller {
             die();
         }
 
-        $_POST['biolink_block_id'] = (int) $_POST['biolink_block_id'];
+        $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['phone'] = input_clean($_POST['phone'], 32);
         $_POST['name'] = input_clean($_POST['name'], 32);
         $_POST['email'] = input_clean($_POST['email'], 320);
         $_POST['message'] = isset($_POST['message']) ? input_clean($_POST['message'], 512) : null;
 
-        if(settings()->captcha->biolink_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
+        if(settings()->captcha->microsite_is_enabled && settings()->captcha->type != 'basic' && !(new Captcha())->is_valid()) {
             Response::json(l('global.error_message.invalid_captcha'), 'error');
         }
 
         /* Get the link data */
-        $biolink_block = db()->where('biolink_block_id', $_POST['biolink_block_id'])->where('type', 'feedback_collector')->getOne('biolinks_blocks', ['biolink_block_id', 'link_id', 'type', 'settings']);
+        $microsite_block = db()->where('microsite_block_id', $_POST['microsite_block_id'])->where('type', 'feedback_collector')->getOne('microsites_blocks', ['microsite_block_id', 'link_id', 'type', 'settings']);
 
-        if(!$biolink_block) {
+        if(!$microsite_block) {
             die();
         }
 
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-        /* Get biolink data */
-        $link = db()->where('link_id', $biolink_block->link_id)->getOne('links');
+        /* Get microsite data */
+        $link = db()->where('link_id', $microsite_block->link_id)->getOne('links');
 
         /* Get the user data */
         $user = db()->where('user_id', $link->user_id)->getOne('users');
@@ -1224,10 +1224,10 @@ class Link extends Controller {
         ];
 
         /* Process custom questions if they exist */
-        if(isset($biolink_block->settings->questions) && is_array($biolink_block->settings->questions)) {
+        if(isset($microsite_block->settings->questions) && is_array($microsite_block->settings->questions)) {
             $answers = [];
             
-            foreach($biolink_block->settings->questions as $question_index => $question) {
+            foreach($microsite_block->settings->questions as $question_index => $question) {
                 $question_key = 'question_' . $question_index;
                 
                 /* Get the answer based on question type */
@@ -1252,17 +1252,17 @@ class Link extends Controller {
 
         /* Store the data */
         db()->insert('data', [
-            'biolink_block_id' => $biolink_block->biolink_block_id,
+            'microsite_block_id' => $microsite_block->microsite_block_id,
             'link_id' => $link->link_id,
             'project_id' => $link->project_id,
             'user_id' => $link->user_id,
-            'type' => $biolink_block->type,
+            'type' => $microsite_block->type,
             'data' => json_encode($data),
             'datetime' => get_date(),
         ]);
 
         /* Send email notifications if needed to the owner */
-        if($biolink_block->settings->email_notification) {
+        if($microsite_block->settings->email_notification) {
             /* Prepare the email content */
             $email_data = [
                 '{{NAME}}' => $user->name,
@@ -1292,22 +1292,22 @@ class Link extends Controller {
             
             $email_template = get_email_template(
                 [
-                    '{{BLOCK_TITLE}}' => $biolink_block->settings->name,
+                    '{{BLOCK_TITLE}}' => $microsite_block->settings->name,
                 ],
                 l('global.emails.user_data_collected.subject', $user->language),
                 $email_data,
                 l('global.emails.user_data_collected_feedback_collector.body', $user->language)
             );
 
-            send_mail($biolink_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
+            send_mail($microsite_block->settings->email_notification, $email_template->subject, $email_template->body, ['anti_phishing_code' => $user->anti_phishing_code, 'language' => $user->language]);
         }
 
         /* Send the webhook */
-        if($biolink_block->settings->webhook_url) {
-            fire_and_forget('post', $biolink_block->settings->webhook_url, $data);
+        if($microsite_block->settings->webhook_url) {
+            fire_and_forget('post', $microsite_block->settings->webhook_url, $data);
         }
 
-        Response::json($biolink_block->settings->success_text, 'success', ['thank_you_url' => $biolink_block->settings->thank_you_url]);
+        Response::json($microsite_block->settings->success_text, 'success', ['thank_you_url' => $microsite_block->settings->thank_you_url]);
     }
 
     public function payment_generator() {
@@ -1315,30 +1315,30 @@ class Link extends Controller {
             die();
         }
 
-        $_POST['biolink_block_id'] = (int) $_POST['biolink_block_id'];
+        $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['payment_processor_id'] = (int) $_POST['payment_processor_id'];
 
         /* Get the link data */
-        $biolink_block = db()->where('biolink_block_id', $_POST['biolink_block_id'])->getOne('biolinks_blocks');
+        $microsite_block = db()->where('microsite_block_id', $_POST['microsite_block_id'])->getOne('microsites_blocks');
 
-        if(!$biolink_block) {
+        if(!$microsite_block) {
             die();
         }
 
-        if(!in_array($biolink_block->type, ['donation', 'product', 'service'])) {
+        if(!in_array($microsite_block->type, ['donation', 'product', 'service'])) {
             die();
         }
 
-        $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-        if(!in_array($_POST['payment_processor_id'], $biolink_block->settings->payment_processors_ids)) {
+        if(!in_array($_POST['payment_processor_id'], $microsite_block->settings->payment_processors_ids)) {
             die();
         }
 
-        /* Get biolink data */
-        $link = db()->where('link_id', $biolink_block->link_id)->getOne('links');
+        /* Get microsite data */
+        $link = db()->where('link_id', $microsite_block->link_id)->getOne('links');
 
-        /* Determine the full url of the biolink page */
+        /* Determine the full url of the microsite page */
         if($link->domain_id) {
             $domain = (new Domain())->get_domain_by_domain_id($link->domain_id);
             $link->full_url = $domain->scheme . $domain->host . '/' . ($domain->link_id == $link->link_id ? null : $link->url);
@@ -1347,7 +1347,7 @@ class Link extends Controller {
         }
 
         /* Get the payment processor */
-        $payment_processors = (new \Altum\Models\PaymentProcessor())->get_payment_processors_by_user_id($biolink_block->user_id);
+        $payment_processors = (new \Altum\Models\PaymentProcessor())->get_payment_processors_by_user_id($microsite_block->user_id);
         $payment_processor = $payment_processors[$_POST['payment_processor_id']];
 
         /* Prepare the data */
@@ -1356,7 +1356,7 @@ class Link extends Controller {
         $email = null;
         $name = null;
 
-        switch($biolink_block->type) {
+        switch($microsite_block->type) {
             case 'donation':
                 $price = $_POST['amount'] = (float) $_POST['amount'];
                 $data['message'] = $_POST['message'] = input_clean($_POST['message'] ?? null, 256);
@@ -1376,12 +1376,12 @@ class Link extends Controller {
 
         /* Insert the guest payment in a pending state */
         $guest_payment_id = db()->insert('guests_payments', [
-            'biolink_block_id' => $biolink_block->biolink_block_id,
-            'link_id' => $biolink_block->link_id,
+            'microsite_block_id' => $microsite_block->microsite_block_id,
+            'link_id' => $microsite_block->link_id,
             'payment_processor_id' => $payment_processor->payment_processor_id,
             'project_id' => $link->project_id,
-            'user_id' => $biolink_block->user_id,
-            'type' => $biolink_block->type,
+            'user_id' => $microsite_block->user_id,
+            'type' => $microsite_block->type,
             'processor' => $payment_processor->processor,
             'name' => $name,
             'email' => $email,
@@ -1417,7 +1417,7 @@ class Link extends Controller {
                     'Authorization' => 'Bearer ' . $paypal_access_token
                 ];
 
-                $price = in_array($biolink_block->settings->currency, ['JPY', 'TWD', 'HUF']) ? number_format($price, 0, '.', '') : number_format($price, 2, '.', '');
+                $price = in_array($microsite_block->settings->currency, ['JPY', 'TWD', 'HUF']) ? number_format($price, 0, '.', '') : number_format($price, 2, '.', '');
 
                 /* Metadata */
                 $custom_id = $guest_payment_id;
@@ -1427,34 +1427,34 @@ class Link extends Controller {
                     'intent' => 'CAPTURE',
                     'purchase_units' => [[
                         'amount' => [
-                            'currency_code' => $biolink_block->settings->currency,
+                            'currency_code' => $microsite_block->settings->currency,
                             'value' => $price,
                             'breakdown' => [
                                 'item_total' => [
-                                    'currency_code' => $biolink_block->settings->currency,
+                                    'currency_code' => $microsite_block->settings->currency,
                                     'value' => $price
                                 ]
                             ]
                         ],
-                        'description' => mb_substr($biolink_block->settings->description, 0, 127),
+                        'description' => mb_substr($microsite_block->settings->description, 0, 127),
                         'custom_id' => $custom_id,
                         'items' => [[
-                            'name' => $biolink_block->settings->title,
-                            'description' => mb_substr($biolink_block->settings->description, 0, 127),
+                            'name' => $microsite_block->settings->title,
+                            'description' => mb_substr($microsite_block->settings->description, 0, 127),
                             'quantity' => 1,
                             'unit_amount' => [
-                                'currency_code' => $biolink_block->settings->currency,
+                                'currency_code' => $microsite_block->settings->currency,
                                 'value' => $price
                             ]
                         ]]
                     ]],
                     'application_context' => [
-                        'brand_name' => $biolink_block->settings->title,
+                        'brand_name' => $microsite_block->settings->title,
                         'landing_page' => 'NO_PREFERENCE',
                         'shipping_preference' => 'NO_SHIPPING',
                         'user_action' => 'PAY_NOW',
-                        'return_url' => $biolink_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
-                        'cancel_url' => $link->full_url . '?payment_cancelled=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
+                        'return_url' => $microsite_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
+                        'cancel_url' => $link->full_url . '?payment_cancelled=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
                     ]
                 ]));
 
@@ -1476,22 +1476,22 @@ class Link extends Controller {
                 \Stripe\Stripe::setApiVersion('2023-10-16');
 
                 /* Final price */
-                $stripe_formatted_price = in_array($biolink_block->settings->currency, ['MGA', 'BIF', 'CLP', 'PYG', 'DJF', 'RWF', 'GNF', 'UGX', 'JPY', 'VND', 'VUV', 'XAF', 'KMF', 'KRW', 'XOF', 'XPF']) ? number_format($price, 0, '.', '') : number_format($price, 2, '.', '') * 100;
+                $stripe_formatted_price = in_array($microsite_block->settings->currency, ['MGA', 'BIF', 'CLP', 'PYG', 'DJF', 'RWF', 'GNF', 'UGX', 'JPY', 'VND', 'VUV', 'XAF', 'KMF', 'KRW', 'XOF', 'XPF']) ? number_format($price, 0, '.', '') : number_format($price, 2, '.', '') * 100;
 
                 /* Generate the stripe session */
                 try {
                     $stripe_session = \Stripe\Checkout\Session::create([
                         'mode' => 'payment',
                         'customer_email' => $email,
-                        'currency' => $biolink_block->settings->currency,
+                        'currency' => $microsite_block->settings->currency,
 
                         'line_items' => [
                             [
                                 'price_data' => [
-                                    'currency' => $biolink_block->settings->currency,
+                                    'currency' => $microsite_block->settings->currency,
                                     'product_data' => [
-                                        'name' => $biolink_block->settings->title,
-                                        'description' => $biolink_block->settings->description,
+                                        'name' => $microsite_block->settings->title,
+                                        'description' => $microsite_block->settings->description,
                                     ],
                                     'unit_amount' => $stripe_formatted_price,
                                 ],
@@ -1501,8 +1501,8 @@ class Link extends Controller {
                         'metadata' => [
                             'guest_payment_id' => $guest_payment_id,
                         ],
-                        'success_url' => $biolink_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
-                        'cancel_url' => $link->full_url . '?payment_cancelled=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
+                        'success_url' => $microsite_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
+                        'cancel_url' => $link->full_url . '?payment_cancelled=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
                     ]);
                 } catch (\Exception $exception) {
                     /* Delete inserted pending payment on error */
@@ -1525,14 +1525,14 @@ class Link extends Controller {
                     'https://pay.crypto.com/api/payments',
                     [],
                     \Unirest\Request\Body::Form([
-                        'description' => $biolink_block->settings->title,
+                        'description' => $microsite_block->settings->title,
                         'amount' => $price,
-                        'currency' => $biolink_block->settings->currency,
+                        'currency' => $microsite_block->settings->currency,
                         'metadata' => [
                             'guest_payment_id' => $guest_payment_id,
                         ],
-                        'return_url' => $biolink_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
-                        'cancel_url' => $link->full_url . '?payment_cancelled=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
+                        'return_url' => $microsite_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
+                        'cancel_url' => $link->full_url . '?payment_cancelled=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
                     ])
                 );
 
@@ -1557,9 +1557,9 @@ class Link extends Controller {
                 try {
                     $response = $razorpay->paymentLink->create([
                         'amount' => $price,
-                        'currency' => $biolink_block->settings->currency,
+                        'currency' => $microsite_block->settings->currency,
                         'accept_partial' => false,
-                        'description' => $biolink_block->settings->description,
+                        'description' => $microsite_block->settings->description,
                         'customer' => [
                             'name' => '',
                             'email' => '',
@@ -1572,7 +1572,7 @@ class Link extends Controller {
                         'notes' => [
                             'guest_payment_id' => $guest_payment_id,
                         ],
-                        'callback_url' => $biolink_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
+                        'callback_url' => $microsite_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
                         'callback_method' => 'get'
                     ]);
                 } catch (\Exception $exception) {
@@ -1595,12 +1595,12 @@ class Link extends Controller {
                 $response = \Unirest\Request::post(Paystack::$api_url . 'transaction/initialize', Paystack::get_headers(), \Unirest\Request\Body::json([
                     'key' => $payment_processor->settings->public_key,
                     'amount' => $price,
-                    'currency' => $biolink_block->settings->currency,
+                    'currency' => $microsite_block->settings->currency,
                     'metadata' => [
                         'guest_payment_id' => $guest_payment_id,
                     ],
                     'email' => 'hey@example.com',
-                    'callback_url' => $biolink_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
+                    'callback_url' => $microsite_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
                 ]));
 
                 if(!$response->body->status) {
@@ -1625,14 +1625,14 @@ class Link extends Controller {
                     /* Generate the payment link */
                     $response = $mollie->payments->create([
                         'amount' => [
-                            'currency' => $biolink_block->settings->currency,
+                            'currency' => $microsite_block->settings->currency,
                             'value' => $price,
                         ],
-                        'description' => $biolink_block->settings->description,
+                        'description' => $microsite_block->settings->description,
                         'metadata' => [
                             'guest_payment_id' => $guest_payment_id,
                         ],
-                        'redirectUrl' => $biolink_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $biolink_block->type . '&biolink_block_id=' . $biolink_block->biolink_block_id,
+                        'redirectUrl' => $microsite_block->settings->thank_you_url ?: $link->full_url . '?payment_thank_you=' . $microsite_block->type . '&microsite_block_id=' . $microsite_block->microsite_block_id,
                         'webhookUrl'  => SITE_URL . 'l/guest-payment-webhook?processor=mollie&payment_processor_id=' . $payment_processor->payment_processor_id,
                     ]);
                 } catch (\Exception $exception) {

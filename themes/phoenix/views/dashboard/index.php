@@ -5,7 +5,7 @@
 
     <div class="mb-4">
         <div class="row m-n3 justify-content-between">
-            <?php if(settings()->links->biolinks_is_enabled): ?>
+            <?php if(settings()->links->microsites_is_enabled): ?>
                 <div class="col-12 col-sm-6 col-xl-4 p-3">
                     <div class="card dashboard-card h-100 position-relative">
                         <div class="card-body">
@@ -14,11 +14,11 @@
                                     <i class="fas fa-fw fa-hashtag"></i>
                                 </div>
                                 <div class="dashboard-stats-info">
-                                    <div class="dashboard-stats-value"><?= nr($data->biolink_links_total) ?></div>
-                                    <div class="dashboard-stats-label"><?= l('dashboard.biolinks') ?></div>
+                                    <div class="dashboard-stats-value"><?= nr($data->microsite_links_total) ?></div>
+                                    <div class="dashboard-stats-label"><?= l('dashboard.microsites') ?></div>
                                 </div>
                             </div>
-                            <a href="<?= url('links?type=biolink') ?>" class="stretched-link"></a>
+                            <a href="<?= url('links?type=microsite') ?>" class="stretched-link"></a>
                         </div>
                     </div>
                 </div>

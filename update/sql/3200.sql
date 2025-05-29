@@ -2,12 +2,12 @@ UPDATE `settings` SET `value` = '{\"version\":\"32.0.0\", \"code\":\"3200\"}' WH
 
 -- SEPARATOR --
 
-alter table biolinks_themes add `order` int default 0 after is_enabled;
+alter table microsites_themes add `order` int default 0 after is_enabled;
 
 -- SEPARATOR --
 
-CREATE TABLE `biolinks_templates` (
-`biolink_template_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE `microsites_templates` (
+`microsite_template_id` bigint unsigned NOT NULL AUTO_INCREMENT,
 `link_id` int DEFAULT NULL,
 `name` varchar(64) NOT NULL,
 `url` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -18,9 +18,9 @@ CREATE TABLE `biolinks_templates` (
 `order` int DEFAULT '0',
 `last_datetime` datetime DEFAULT NULL,
 `datetime` datetime NOT NULL,
-PRIMARY KEY (`biolink_template_id`),
+PRIMARY KEY (`microsite_template_id`),
 KEY `link_id` (`link_id`),
-CONSTRAINT `biolinks_templates_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE
+CONSTRAINT `microsites_templates_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- SEPARATOR --

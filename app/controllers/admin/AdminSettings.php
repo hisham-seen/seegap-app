@@ -754,7 +754,7 @@ class AdminSettings extends Controller {
 
             /* :) */
             $_POST['type'] = in_array($_POST['type'], ['basic', 'recaptcha', 'hcaptcha', 'turnstile']) ? $_POST['type'] : 'basic';
-            foreach(['login', 'register', 'lost_password', 'resend_activation', 'contact', 'biolink'] as $key) {
+            foreach(['login', 'register', 'lost_password', 'resend_activation', 'contact', 'microsite'] as $key) {
                 $_POST[$key . '_is_enabled'] = isset($_POST[$key . '_is_enabled']);
             }
 
@@ -778,7 +778,7 @@ class AdminSettings extends Controller {
                 'lost_password_is_enabled' => $_POST['lost_password_is_enabled'],
                 'resend_activation_is_enabled' => $_POST['resend_activation_is_enabled'],
                 'contact_is_enabled' => $_POST['contact_is_enabled'],
-                'biolink_is_enabled' => $_POST['biolink_is_enabled'],
+                'microsite_is_enabled' => $_POST['microsite_is_enabled'],
             ]);
 
             $this->update_settings('captcha', $value);
@@ -912,8 +912,8 @@ class AdminSettings extends Controller {
                 'ad_blocker_detector_delay' => (int) $_POST['ad_blocker_detector_delay'],
                 'header' => $_POST['header'],
                 'footer' => $_POST['footer'],
-                'header_biolink' => $_POST['header_biolink'],
-                'footer_biolink' => $_POST['footer_biolink'],
+                'header_microsite' => $_POST['header_microsite'],
+                'footer_microsite' => $_POST['footer_microsite'],
                 'header_splash' => $_POST['header_splash'],
                 'footer_splash' => $_POST['footer_splash'],
             ]);
@@ -1182,9 +1182,9 @@ class AdminSettings extends Controller {
                 'welcome_js' => $_POST['welcome_js'],
                 'pay_thank_you_js' => $_POST['pay_thank_you_js'],
                 'head_css' => $_POST['head_css'],
-                'head_js_biolink' => $_POST['head_js_biolink'],
-                'head_css_biolink' => $_POST['head_css_biolink'],
-                'body_content_biolink' => $_POST['body_content_biolink'],
+                'head_js_microsite' => $_POST['head_js_microsite'],
+                'head_css_microsite' => $_POST['head_css_microsite'],
+                'body_content_microsite' => $_POST['body_content_microsite'],
                 'head_js_splash_page' => $_POST['head_js_splash_page'],
                 'head_css_splash_page' => $_POST['head_css_splash_page'],
                 'body_content_splash_page' => $_POST['body_content_splash_page'],
@@ -1772,18 +1772,18 @@ class AdminSettings extends Controller {
             $_POST['random_url_length'] = isset($_POST['random_url_length']) && $_POST['random_url_length'] < 4 ? 4 : (int) $_POST['random_url_length'];
             $_POST['shortener_is_enabled'] = (int) isset($_POST['shortener_is_enabled']);
             $_POST['branding'] = trim($_POST['branding']);
-            $_POST['biolinks_is_enabled'] = (int) isset($_POST['biolinks_is_enabled']);
-            $_POST['biolinks_report_is_enabled'] = (int) isset($_POST['biolinks_report_is_enabled']);
-            $_POST['biolinks_templates_is_enabled'] = (int) isset($_POST['biolinks_templates_is_enabled']);
-            $_POST['biolinks_new_blocks_position'] = in_array($_POST['biolinks_new_blocks_position'], ['top', 'bottom']) ? $_POST['biolinks_new_blocks_position'] : 'bottom';
-            $_POST['biolinks_default_active_tab'] = in_array($_POST['biolinks_default_active_tab'], ['settings', 'blocks']) ? $_POST['biolinks_default_active_tab'] : 'bottom';
-            $_POST['default_biolink_theme_id'] = $_POST['default_biolink_theme_id'] ? (int) $_POST['default_biolink_theme_id'] : null;
-            $_POST['default_biolink_template_id'] = $_POST['default_biolink_template_id'] ? (int) $_POST['default_biolink_template_id'] : null;
+            $_POST['microsites_is_enabled'] = (int) isset($_POST['microsites_is_enabled']);
+            $_POST['microsites_report_is_enabled'] = (int) isset($_POST['microsites_report_is_enabled']);
+            $_POST['microsites_templates_is_enabled'] = (int) isset($_POST['microsites_templates_is_enabled']);
+            $_POST['microsites_new_blocks_position'] = in_array($_POST['microsites_new_blocks_position'], ['top', 'bottom']) ? $_POST['microsites_new_blocks_position'] : 'bottom';
+            $_POST['microsites_default_active_tab'] = in_array($_POST['microsites_default_active_tab'], ['settings', 'blocks']) ? $_POST['microsites_default_active_tab'] : 'bottom';
+            $_POST['default_microsite_theme_id'] = $_POST['default_microsite_theme_id'] ? (int) $_POST['default_microsite_theme_id'] : null;
+            $_POST['default_microsite_template_id'] = $_POST['default_microsite_template_id'] ? (int) $_POST['default_microsite_template_id'] : null;
             $_POST['files_is_enabled'] = (int) isset($_POST['files_is_enabled']);
             $_POST['events_is_enabled'] = (int) isset($_POST['events_is_enabled']);
             $_POST['static_is_enabled'] = (int) isset($_POST['static_is_enabled']);
             $_POST['claim_url_is_enabled'] = (int) isset($_POST['claim_url_is_enabled']);
-            $_POST['claim_url_type'] = in_array($_POST['claim_url_type'], ['link', 'biolink', 'file', 'event', 'static']) ? $_POST['claim_url_type'] : 'link';
+            $_POST['claim_url_type'] = in_array($_POST['claim_url_type'], ['link', 'microsite', 'file', 'event', 'static']) ? $_POST['claim_url_type'] : 'link';
             $_POST['pixels_is_enabled'] = (int) isset($_POST['pixels_is_enabled']);
             $_POST['splash_page_is_enabled'] = (int) isset($_POST['splash_page_is_enabled']);
             $_POST['splash_page_auto_redirect'] = (int) isset($_POST['splash_page_auto_redirect']);
@@ -1809,25 +1809,25 @@ class AdminSettings extends Controller {
             $_POST['static_size_limit'] = $_POST['static_size_limit'] > get_max_upload() || $_POST['static_size_limit'] < 0 ? get_max_upload() : (float) $_POST['static_size_limit'];
             $_POST['pwa_icon_size_limit'] = $_POST['pwa_icon_size_limit'] > get_max_upload() || $_POST['pwa_icon_size_limit'] < 0 ? get_max_upload() : (float) $_POST['pwa_icon_size_limit'];
 
-            $available_biolink_blocks = [];
-            foreach(require APP_PATH . 'includes/biolink_blocks.php' as $key => $value) {
-                $available_biolink_blocks[$key] = in_array($key, $_POST['available_biolink_blocks'] ?? []);
+            $available_microsite_blocks = [];
+            foreach(require APP_PATH . 'includes/microsite_blocks.php' as $key => $value) {
+                $available_microsite_blocks[$key] = in_array($key, $_POST['available_microsite_blocks'] ?? []);
             }
 
             $value = json_encode([
-                'available_biolink_blocks' => $available_biolink_blocks,
+                'available_microsite_blocks' => $available_microsite_blocks,
                 'example_url' => $_POST['example_url'],
                 'random_url_length' => $_POST['random_url_length'],
                 'branding' => $_POST['branding'],
                 'shortener_is_enabled' => $_POST['shortener_is_enabled'],
-                'biolinks_is_enabled' => $_POST['biolinks_is_enabled'],
-                'biolinks_report_is_enabled' => $_POST['biolinks_report_is_enabled'],
-                'biolinks_templates_is_enabled' => $_POST['biolinks_templates_is_enabled'],
-                'biolinks_themes_is_enabled' => $_POST['biolinks_themes_is_enabled'],
-                'biolinks_new_blocks_position' => $_POST['biolinks_new_blocks_position'],
-                'biolinks_default_active_tab' => $_POST['biolinks_default_active_tab'],
-                'default_biolink_theme_id' => $_POST['default_biolink_theme_id'],
-                'default_biolink_template_id' => $_POST['default_biolink_template_id'],
+                'microsites_is_enabled' => $_POST['microsites_is_enabled'],
+                'microsites_report_is_enabled' => $_POST['microsites_report_is_enabled'],
+                'microsites_templates_is_enabled' => $_POST['microsites_templates_is_enabled'],
+                'microsites_themes_is_enabled' => $_POST['microsites_themes_is_enabled'],
+                'microsites_new_blocks_position' => $_POST['microsites_new_blocks_position'],
+                'microsites_default_active_tab' => $_POST['microsites_default_active_tab'],
+                'default_microsite_theme_id' => $_POST['default_microsite_theme_id'],
+                'default_microsite_template_id' => $_POST['default_microsite_template_id'],
                 'files_is_enabled' => $_POST['files_is_enabled'],
                 'events_is_enabled' => $_POST['events_is_enabled'],
                 'static_is_enabled' => $_POST['static_is_enabled'],

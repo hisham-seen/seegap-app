@@ -518,8 +518,8 @@ const ajax_call_helper = (event, controller, request_type, success_callback = ()
             data.link_id = row_id;
             break;
 
-        case 'biolink-block-ajax':
-            data.biolink_block_id = row_id;
+        case 'microsite-block-ajax':
+            data.microsite_block_id = row_id;
             break;
 
         default:

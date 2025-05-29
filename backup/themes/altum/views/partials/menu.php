@@ -43,7 +43,7 @@
                     <li class="nav-item"><a class="nav-link" href="<?= url('tools') ?>"><?= l('tools.menu') ?></a></li>
                 <?php endif ?>
 
-                <?php if(settings()->links->biolinks_is_enabled && settings()->links->directory_is_enabled && (settings()->links->directory_access == 'everyone' || (settings()->links->directory_access == 'users' && is_logged_in()))): ?>
+                <?php if(settings()->links->microsites_is_enabled && settings()->links->directory_is_enabled && (settings()->links->directory_access == 'everyone' || (settings()->links->directory_access == 'users' && is_logged_in()))): ?>
                     <li class="nav-item"><a class="nav-link" href="<?= url('directory') ?>"><?= l('directory.menu') ?></a></li>
                 <?php endif ?>
 
@@ -97,8 +97,8 @@
 
                                     <div class="dropdown-divider"></div>
 
-                                    <?php if(settings()->links->biolinks_is_enabled): ?>
-                                        <a href="<?= url('links?type=biolink') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('links.menu.biolink') ?></a>
+                                    <?php if(settings()->links->microsites_is_enabled): ?>
+                                        <a href="<?= url('links?type=microsite') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('links.menu.microsite') ?></a>
                                     <?php endif ?>
 
                                     <?php if(settings()->links->shortener_is_enabled): ?>

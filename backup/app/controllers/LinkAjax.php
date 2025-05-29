@@ -18,7 +18,7 @@ namespace Altum\Controllers;
 
 use Altum\Alerts;
 use Altum\Date;
-use Altum\Models\BiolinksThemes;
+use Altum\Models\MicrositesThemes;
 use Altum\Models\Domain;
 use Altum\Response;
 
@@ -77,7 +77,7 @@ class LinkAjax extends Controller {
 
             /* Clear the cache */
             cache()->deleteItem('link?link_id=' . $_POST['link_id']);
-            cache()->deleteItem('biolink_blocks?link_id=' . $_POST['link_id']);
+            cache()->deleteItem('microsite_blocks?link_id=' . $_POST['link_id']);
             cache()->deleteItemsByTag('link_id=' . $_POST['link_id']);
 
             Response::json(l('global.success_message.create2'), 'success');
@@ -219,17 +219,17 @@ class LinkAjax extends Controller {
         Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
     }
 
-    private function create_biolink() {
-        if(!settings()->links->biolinks_is_enabled) {
+    private function create_microsite() {
+        if(!settings()->links->microsites_is_enabled) {
             Response::json(l('global.error_message.basic'), 'error');
         }
 
         $_POST['url'] = !empty($_POST['url']) && $this->user->plan_settings->custom_url ? get_slug($_POST['url'], '-', false) : null;
-        $_POST['biolink_template_id'] = isset($_POST['biolink_template_id']) && in_array($_POST['biolink_template_id'], $this->user->plan_settings->biolinks_templates ?? []) ? (int) $_POST['biolink_template_id'] : null;
+        $_POST['microsite_template_id'] = isset($_POST['microsite_template_id']) && in_array($_POST['microsite_template_id'], $this->user->plan_settings->microsites_templates ?? []) ? (int) $_POST['microsite_template_id'] : null;
 
         /* Check for a default template id */
-        if(!$_POST['biolink_template_id'] && settings()->links->default_biolink_template_id) {
-            $_POST['biolink_template_id'] = settings()->links->default_biolink_template_id;
+        if(!$_POST['microsite_template_id'] && settings()->links->default_microsite_template_id) {
+            $_POST['microsite_template_id'] = settings()->links->default_microsite_template_id;
         }
 
         if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
@@ -240,8 +240,8 @@ class LinkAjax extends Controller {
         $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
 
         /* Make sure that the user didn't exceed the limit */
-        $user_total_biolinks = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'biolink'")->fetch_object()->total;
-        if($this->user->plan_settings->biolinks_limit != -1 && $user_total_biolinks >= $this->user->plan_settings->biolinks_limit) {
+        $user_total_microsites = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'microsite'")->fetch_object()->total;
+        if($this->user->plan_settings->microsites_limit != -1 && $user_total_microsites >= $this->user->plan_settings->microsites_limit) {
             Response::json(l('global.info_message.plan_feature_limit'), 'error');
         }
 
@@ -254,7 +254,7 @@ class LinkAjax extends Controller {
 
         /* Start the creation process */
         $url = $_POST['url'] ? $_POST['url'] : mb_strtolower(string_generate(settings()->links->random_url_length ?? 7));
-        $type = 'biolink';
+        $type = 'microsite';
         $settings = [
             'pwa_file_name' => null,
             'pwa_is_enabled' => false,
@@ -309,34 +309,34 @@ class LinkAjax extends Controller {
         $this->check_url($_POST['url']);
 
         $additional = null;
-        $biolink_theme_id = null;
+        $microsite_theme_id = null;
 
-        /* Check for biolink templates */
-        if($_POST['biolink_template_id']) {
-            $biolinks_templates = (new \Altum\Models\BiolinksTemplates())->get_biolinks_templates();
+        /* Check for microsite templates */
+        if($_POST['microsite_template_id']) {
+            $microsites_templates = (new \Altum\Models\MicrositesTemplates())->get_microsites_templates();
 
-            if(array_key_exists($_POST['biolink_template_id'], $biolinks_templates)) {
-                $biolink_template = $biolinks_templates[$_POST['biolink_template_id']];
+            if(array_key_exists($_POST['microsite_template_id'], $microsites_templates)) {
+                $microsite_template = $microsites_templates[$_POST['microsite_template_id']];
 
-                /* Get the details of the biolink page */
-                $biolink = db()->where('link_id', $biolink_template->link_id)->getOne('links');
+                /* Get the details of the microsite page */
+                $microsite = db()->where('link_id', $microsite_template->link_id)->getOne('links');
 
-                if($biolink) {
-                    /* Get all the biolink blocks as well */
-                    $biolink->settings = json_decode($biolink->settings ?? '');
-                    $biolink->settings->seo->image = \Altum\Uploads::copy_uploaded_file($biolink->settings->seo->image, 'block_images/', 'block_images/', 'json_error');
-                    $biolink->settings->favicon = \Altum\Uploads::copy_uploaded_file($biolink->settings->favicon, 'favicons/', 'favicons/', 'json_error');
-                    if($biolink->settings->background_type == 'image') $biolink->settings->background = \Altum\Uploads::copy_uploaded_file($biolink->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
-                    $biolink->settings->pwa_is_enabled = false;
-                    $biolink->settings->pwa_icon = null;
-                    $additional = $biolink->additional;
-                    $biolink_theme_id = $biolink->biolink_theme_id;
+                if($microsite) {
+                    /* Get all the microsite blocks as well */
+                    $microsite->settings = json_decode($microsite->settings ?? '');
+                    $microsite->settings->seo->image = \Altum\Uploads::copy_uploaded_file($microsite->settings->seo->image, 'block_images/', 'block_images/', 'json_error');
+                    $microsite->settings->favicon = \Altum\Uploads::copy_uploaded_file($microsite->settings->favicon, 'favicons/', 'favicons/', 'json_error');
+                    if($microsite->settings->background_type == 'image') $microsite->settings->background = \Altum\Uploads::copy_uploaded_file($microsite->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                    $microsite->settings->pwa_is_enabled = false;
+                    $microsite->settings->pwa_icon = null;
+                    $additional = $microsite->additional;
+                    $microsite_theme_id = $microsite->microsite_theme_id;
 
                     /* Overwrite default settings with the settings of the template */
-                    $settings = $biolink->settings;
+                    $settings = $microsite->settings;
 
                     /* Database query */
-                    db()->where('biolink_template_id', $biolink_template->biolink_template_id)->update('biolinks_templates', [
+                    db()->where('microsite_template_id', $microsite_template->microsite_template_id)->update('microsites_templates', [
                         'total_usage' => db()->inc()
                     ]);
 
@@ -345,21 +345,21 @@ class LinkAjax extends Controller {
         }
 
         /* Check for a default theme id */
-        if(!$_POST['biolink_template_id'] && settings()->links->default_biolink_theme_id) {
-            $biolink_theme_id = settings()->links->default_biolink_theme_id;
+        if(!$_POST['microsite_template_id'] && settings()->links->default_microsite_theme_id) {
+            $microsite_theme_id = settings()->links->default_microsite_theme_id;
 
             /* Get available themes */
-            $biolinks_themes = (new BiolinksThemes())->get_biolinks_themes();
-            $biolink_theme_id = isset($biolink_theme_id) && array_key_exists($biolink_theme_id, $biolinks_themes) ? $biolink_theme_id : null;
+            $microsites_themes = (new MicrositesThemes())->get_microsites_themes();
+            $microsite_theme_id = isset($microsite_theme_id) && array_key_exists($microsite_theme_id, $microsites_themes) ? $microsite_theme_id : null;
 
-            if($biolink_theme_id) {
-                $biolink_theme = $biolinks_themes[$biolink_theme_id];
+            if($microsite_theme_id) {
+                $microsite_theme = $microsites_themes[$microsite_theme_id];
 
-                /* Save settings for biolink page */
-                $settings = array_merge($settings, (array) $biolink_theme->settings->biolink);
+                /* Save settings for microsite page */
+                $settings = array_merge($settings, (array) $microsite_theme->settings->microsite);
 
                 /* Save the additional settings */
-                $additional = json_encode($biolink_theme->settings->additional);
+                $additional = json_encode($microsite_theme->settings->additional);
             }
         }
 
@@ -369,7 +369,7 @@ class LinkAjax extends Controller {
         $link_id = db()->insert('links', [
             'user_id' => $this->user->user_id,
             'domain_id' => $domain_id,
-            'biolink_theme_id' => $biolink_theme_id ?? null,
+            'microsite_theme_id' => $microsite_theme_id ?? null,
             'type' => $type,
             'url' => $url,
             'settings' => $settings,
@@ -378,81 +378,81 @@ class LinkAjax extends Controller {
         ]);
 
         /* Check for a template usage */
-        if(isset($biolink_template)) {
-            /* Get all biolink blocks if needed */
-            $biolink_blocks = db()->where('link_id', $biolink_template->link_id)->get('biolinks_blocks');
+        if(isset($microsite_template)) {
+            /* Get all microsite blocks if needed */
+            $microsite_blocks = db()->where('link_id', $microsite_template->link_id)->get('microsites_blocks');
 
-            foreach($biolink_blocks as $biolink_block) {
-                $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+            foreach($microsite_blocks as $microsite_block) {
+                $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-                if(is_array($biolink_block->settings)) {
-                    $biolink_block->settings = (object) $biolink_block->settings;
+                if(is_array($microsite_block->settings)) {
+                    $microsite_block->settings = (object) $microsite_block->settings;
                 }
 
                 /* Duplication of resources */
-                switch($biolink_block->type) {
+                switch($microsite_block->type) {
                     case 'file':
                     case 'audio':
                     case 'video':
                     case 'pdf_document':
                     case 'powerpoint_presentation':
                     case 'excel_spreadsheet':
-                        $biolink_block->settings->file = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
+                        $microsite_block->settings->file = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
                         break;
 
                     case 'review':
-                        $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, \Altum\Uploads::get_path('block_images'), \Altum\Uploads::get_path('block_images'), 'json_error');
+                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, \Altum\Uploads::get_path('block_images'), \Altum\Uploads::get_path('block_images'), 'json_error');
                         break;
 
                     case 'avatar':
-                        $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'avatars/', 'avatars/', 'json_error');
+                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
                         break;
 
                     case 'header':
-                        $biolink_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
-                        $biolink_block->settings->background = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                        $microsite_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
+                        $microsite_block->settings->background = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                         break;
 
                     case 'vcard':
-                        $biolink_block->settings->vcard_avatar = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->vcard_avatar, 'avatars/', 'avatars/', 'json_error');
-                        $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
+                        $microsite_block->settings->vcard_avatar = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->vcard_avatar, 'avatars/', 'avatars/', 'json_error');
+                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
                         break;
 
                     case 'image':
                     case 'image_grid':
-                        $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'block_images/', 'block_images/', 'json_error');
+                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
                         break;
 
                     case 'heading':
-                        $biolink_block->settings->verified_location = '';
+                        $microsite_block->settings->verified_location = '';
                         break;
 
                     case 'image_slider':
 
-                        $biolink_block->settings->items = (array) $biolink_block->settings->items;
+                        $microsite_block->settings->items = (array) $microsite_block->settings->items;
 
-                        foreach($biolink_block->settings->items as $key => $item) {
-                            $biolink_block->settings->items[$key]->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
+                        foreach($microsite_block->settings->items as $key => $item) {
+                            $microsite_block->settings->items[$key]->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
                         }
 
                         break;
 
                     default:
-                        $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
+                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
                         break;
                 }
 
                 /* Database query */
-                db()->insert('biolinks_blocks', [
+                db()->insert('microsites_blocks', [
                     'user_id' => $this->user->user_id,
                     'link_id' => $link_id,
-                    'type' => $biolink_block->type,
-                    'location_url' => $biolink_block->location_url,
-                    'settings' => json_encode($biolink_block->settings),
-                    'order' => $biolink_block->order,
-                    'start_date' => $biolink_block->start_date,
-                    'end_date' => $biolink_block->end_date,
-                    'is_enabled' => $biolink_block->is_enabled,
+                    'type' => $microsite_block->type,
+                    'location_url' => $microsite_block->location_url,
+                    'settings' => json_encode($microsite_block->settings),
+                    'order' => $microsite_block->order,
+                    'start_date' => $microsite_block->start_date,
+                    'end_date' => $microsite_block->end_date,
+                    'is_enabled' => $microsite_block->is_enabled,
                     'datetime' => get_date(),
                 ]);
             }
@@ -927,7 +927,7 @@ class LinkAjax extends Controller {
 
         /* Cloaking */
         $link->settings->cloaking_favicon = \Altum\Uploads::process_upload($link->settings->cloaking_favicon, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
-        $link->settings->cloaking_opengraph = \Altum\Uploads::process_upload($link->settings->cloaking_opengraph, 'biolink_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
+        $link->settings->cloaking_opengraph = \Altum\Uploads::process_upload($link->settings->cloaking_opengraph, 'microsite_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
 
         /* Existing projects */
         $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
@@ -1071,7 +1071,7 @@ class LinkAjax extends Controller {
         $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
 
         /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItem('link?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
@@ -1079,8 +1079,8 @@ class LinkAjax extends Controller {
         Response::json(l('global.success_message.update2'), 'success', ['url' => $url, 'app_linking' => $app_linking]);
     }
 
-    private function update_biolink() {
-        if(!settings()->links->biolinks_is_enabled) {
+    private function update_microsite() {
+        if(!settings()->links->microsites_is_enabled) {
             Response::json(l('global.error_message.basic'), 'error');
         }
 
@@ -1116,11 +1116,11 @@ class LinkAjax extends Controller {
         $link->settings = json_decode($link->settings ?? '');
 
         /* Get available themes */
-        $biolinks_themes = (new BiolinksThemes())->get_biolinks_themes();
-        $_POST['biolink_theme_id'] = isset($_POST['biolink_theme_id']) && array_key_exists($_POST['biolink_theme_id'], $biolinks_themes) ? (int) $_POST['biolink_theme_id'] : null;
+        $microsites_themes = (new MicrositesThemes())->get_microsites_themes();
+        $_POST['microsite_theme_id'] = isset($_POST['microsite_theme_id']) && array_key_exists($_POST['microsite_theme_id'], $microsites_themes) ? (int) $_POST['microsite_theme_id'] : null;
 
         /* Make sure theme is accessible via plan */
-        $_POST['biolink_theme_id'] = $_POST['biolink_theme_id'] && in_array($_POST['biolink_theme_id'], $this->user->plan_settings->biolinks_themes ?? []) ? $_POST['biolink_theme_id'] : null;
+        $_POST['microsite_theme_id'] = $_POST['microsite_theme_id'] && in_array($_POST['microsite_theme_id'], $this->user->plan_settings->microsites_themes ?? []) ? $_POST['microsite_theme_id'] : null;
 
         /* Existing pixels */
         $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
@@ -1161,9 +1161,9 @@ class LinkAjax extends Controller {
         /* Image uploads */
         $image_allowed_extensions = [
             'pwa_icon' => \Altum\Uploads::get_whitelisted_file_extensions('app_icon'),
-            'seo_image' => \Altum\Uploads::get_whitelisted_file_extensions('biolink_seo_image'),
+            'seo_image' => \Altum\Uploads::get_whitelisted_file_extensions('microsite_seo_image'),
             'favicon' => \Altum\Uploads::get_whitelisted_file_extensions('favicons'),
-            'background' => \Altum\Uploads::get_whitelisted_file_extensions('biolink_background'),
+            'background' => \Altum\Uploads::get_whitelisted_file_extensions('microsite_background'),
         ];
         $image = [
             'pwa_icon' => !empty($_FILES['pwa_icon']['name']) && !isset($_POST['pwa_icon_remove']),
@@ -1173,9 +1173,9 @@ class LinkAjax extends Controller {
         ];
         $image_upload_path = [
             'pwa_icon' => \Altum\Uploads::get_path('app_icon'),
-            'seo_image' => \Altum\Uploads::get_path('biolink_seo_image'),
+            'seo_image' => \Altum\Uploads::get_path('microsite_seo_image'),
             'favicon' => \Altum\Uploads::get_path('favicons'),
-            'background' => \Altum\Uploads::get_path('biolink_background'),
+            'background' => \Altum\Uploads::get_path('microsite_background'),
         ];
         $image_uploaded_file = [
             'pwa_icon' => $link->settings->pwa_icon,
@@ -1290,8 +1290,8 @@ class LinkAjax extends Controller {
             $image_url[$image_key] = $image_uploaded_file[$image_key] ? UPLOADS_FULL_URL . $image_upload_path[$image_key] . $image_uploaded_file[$image_key] : null;
         }
 
-        $biolink_backgrounds = require APP_PATH . 'includes/biolink_backgrounds.php';
-        $_POST['background_type'] = array_key_exists($_POST['background_type'], $biolink_backgrounds) ? $_POST['background_type'] : 'preset';
+        $microsite_backgrounds = require APP_PATH . 'includes/microsite_backgrounds.php';
+        $_POST['background_type'] = array_key_exists($_POST['background_type'], $microsite_backgrounds) ? $_POST['background_type'] : 'preset';
         $_POST['background_attachment'] = isset($_POST['background_attachment']) && in_array($_POST['background_attachment'], ['scroll', 'fixed']) ? $_POST['background_attachment'] : 'scroll';
         $_POST['background_blur'] = isset($_POST['background_blur']) && in_array((int) $_POST['background_attachment'], range(0, 30)) ? (int) $_POST['background_blur'] : 0;
         $_POST['background_brightness'] = isset($_POST['background_brightness']) && in_array((int) $_POST['background_attachment'], range(0, 150)) ? (int) $_POST['background_brightness'] : 0;
@@ -1299,7 +1299,7 @@ class LinkAjax extends Controller {
         switch($_POST['background_type']) {
             case 'preset':
             case 'preset_abstract':
-                $background = array_key_exists($_POST['background'], $biolink_backgrounds[$_POST['background_type']]) ? $_POST['background'] : 'zero';
+                $background = array_key_exists($_POST['background'], $microsite_backgrounds[$_POST['background_type']]) ? $_POST['background'] : 'zero';
                 break;
 
             case 'color':
@@ -1357,7 +1357,7 @@ class LinkAjax extends Controller {
                             $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
                             /* Delete current image */
-                            if(!$link->biolink_theme_id && is_string($link->settings->background)) {
+                            if(!$link->microsite_theme_id && is_string($link->settings->background)) {
                                 $s3->deleteObject([
                                     'Bucket' => settings()->offload->storage_name,
                                     'Key' => 'uploads/backgrounds/' . $link->settings->background,
@@ -1380,7 +1380,7 @@ class LinkAjax extends Controller {
                     /* Local uploading */
                     else {
                         /* Delete current file */
-                        if(!$link->biolink_theme_id && is_string($link->settings->background) && !empty($link->settings->background) && file_exists(UPLOADS_PATH . $image_upload_path['background'] . $link->settings->background)) {
+                        if(!$link->microsite_theme_id && is_string($link->settings->background) && !empty($link->settings->background) && file_exists(UPLOADS_PATH . $image_upload_path['background'] . $link->settings->background)) {
                             unlink(UPLOADS_PATH . $image_upload_path['background'] . $link->settings->background);
                         }
 
@@ -1397,9 +1397,9 @@ class LinkAjax extends Controller {
         /* Delete existing background file if needed */
         if(
             $link->settings->background_type == 'image'
-            && ($image['background'] || ($_POST['biolink_theme_id'] && $link->biolink_theme_id != $_POST['biolink_theme_id']) || $_POST['background_type'] != $link->settings->background_type)
+            && ($image['background'] || ($_POST['microsite_theme_id'] && $link->microsite_theme_id != $_POST['microsite_theme_id']) || $_POST['background_type'] != $link->settings->background_type)
             && is_string($link->settings->background)
-            && (!$link->biolink_theme_id)
+            && (!$link->microsite_theme_id)
         )
         {
             /* Offload deleting */
@@ -1444,8 +1444,8 @@ class LinkAjax extends Controller {
         $this->check_location_url($_POST['leap_link'], true);
 
         /* Make sure the font is ok */
-        $biolink_fonts = require APP_PATH . 'includes/biolink_fonts.php';
-        $_POST['font'] = !array_key_exists($_POST['font'], $biolink_fonts) ? false : query_clean($_POST['font']);
+        $microsite_fonts = require APP_PATH . 'includes/microsite_fonts.php';
+        $_POST['font'] = !array_key_exists($_POST['font'], $microsite_fonts) ? false : query_clean($_POST['font']);
         $_POST['font_size'] = (int) $_POST['font_size'] < 14 || (int) $_POST['font_size'] > 22 ? 16 : (int) $_POST['font_size'];
 
         /* Width */
@@ -1464,7 +1464,7 @@ class LinkAjax extends Controller {
         $_POST['pwa_theme_color'] = isset($_POST['pwa_theme_color']) && verify_hex_color($_POST['pwa_theme_color']) ? $_POST['pwa_theme_color'] : '#000000';
 
         if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled && $this->user->plan_settings->custom_pwa_is_enabled && $_POST['pwa_is_enabled']) {
-            $pwa_file_name = $link->settings->pwa_file_name ?? 'biolinks-' . md5(time() . rand() . rand());
+            $pwa_file_name = $link->settings->pwa_file_name ?? 'microsites-' . md5(time() . rand() . rand());
 
             $full_url = $domain_id ? $domains[$_POST['domain_id']]->scheme . $domains[$_POST['domain_id']]->host . '/' . ($_POST['is_main_link'] ? null : $_POST['url']) : SITE_URL . $_POST['url'];
 
@@ -1543,54 +1543,54 @@ class LinkAjax extends Controller {
 
         /* Check if we need to override defaults for a new theme */
         $additional = null;
-        if($_POST['biolink_theme_id'] && $link->biolink_theme_id != $_POST['biolink_theme_id']) {
-            $biolink_theme = $biolinks_themes[$_POST['biolink_theme_id']];
+        if($_POST['microsite_theme_id'] && $link->microsite_theme_id != $_POST['microsite_theme_id']) {
+            $microsite_theme = $microsites_themes[$_POST['microsite_theme_id']];
 
-            /* Save settings for biolink page */
-            $settings = array_merge($settings, (array) $biolink_theme->settings->biolink);
+            /* Save settings for microsite page */
+            $settings = array_merge($settings, (array) $microsite_theme->settings->microsite);
 
             /* Save the additional settings */
-            $additional = json_encode($biolink_theme->settings->additional ?? '');
+            $additional = json_encode($microsite_theme->settings->additional ?? '');
 
             /* Save settings for all existing blocks */
-            $biolink_blocks = require APP_PATH . 'includes/biolink_blocks.php';
+            $microsite_blocks = require APP_PATH . 'includes/microsite_blocks.php';
             $themable_blocks = [];
-            foreach($biolink_blocks as $key => $value) {
+            foreach($microsite_blocks as $key => $value) {
                 if($value['themable']) $themable_blocks[] = $key;
             }
             $themable_blocks_sql = "'" . implode('\', \'', $themable_blocks) . "'";
 
-            $biolink_blocks_result = database()->query("SELECT `biolink_block_id`, `type`, `settings` FROM `biolinks_blocks` WHERE `link_id` = {$link->link_id} AND `type` IN ({$themable_blocks_sql})");
-            while($biolink_block = $biolink_blocks_result->fetch_object()) {
-                $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+            $microsite_blocks_result = database()->query("SELECT `microsite_block_id`, `type`, `settings` FROM `microsites_blocks` WHERE `link_id` = {$link->link_id} AND `type` IN ({$themable_blocks_sql})");
+            while($microsite_block = $microsite_blocks_result->fetch_object()) {
+                $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-                switch($biolink_block->type) {
+                switch($microsite_block->type) {
                     case 'socials':
-                        $biolink_block->settings = (object) array_merge((array) $biolink_block->settings, (array) $biolink_theme->settings->biolink_block_socials ?? []);
+                        $microsite_block->settings = (object) array_merge((array) $microsite_block->settings, (array) $microsite_theme->settings->microsite_block_socials ?? []);
                         break;
 
                     case 'heading':
-                        $biolink_block->settings = (object) array_merge((array) $biolink_block->settings, (array) $biolink_theme->settings->biolink_block_heading ?? []);
+                        $microsite_block->settings = (object) array_merge((array) $microsite_block->settings, (array) $microsite_theme->settings->microsite_block_heading ?? []);
                         break;
 
                     case 'paragraph':
-                        $biolink_block->settings = (object) array_merge((array) $biolink_block->settings, (array) $biolink_theme->settings->biolink_block_paragraph ?? []);
+                        $microsite_block->settings = (object) array_merge((array) $microsite_block->settings, (array) $microsite_theme->settings->microsite_block_paragraph ?? []);
                         break;
 
                     default:
-                        $biolink_block->settings = (object) array_merge((array) $biolink_block->settings, (array) $biolink_theme->settings->biolink_block ?? []);
+                        $microsite_block->settings = (object) array_merge((array) $microsite_block->settings, (array) $microsite_theme->settings->microsite_block ?? []);
                         break;
                 }
 
-                $new_biolink_block_settings = json_encode($biolink_block->settings);
+                $new_microsite_block_settings = json_encode($microsite_block->settings);
 
-                db()->where('biolink_block_id', $biolink_block->biolink_block_id)->update('biolinks_blocks', [
-                    'settings' => $new_biolink_block_settings,
+                db()->where('microsite_block_id', $microsite_block->microsite_block_id)->update('microsites_blocks', [
+                    'settings' => $new_microsite_block_settings,
                 ]);
             }
 
             /* Clear the cache */
-            cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+            cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
             cache()->deleteItem('link?link_id=' . $link->link_id);
             cache()->deleteItemsByTag('link_id=' . $link->link_id);
             cache()->deleteItem('links?user_id=' . $this->user->user_id);
@@ -1607,7 +1607,7 @@ class LinkAjax extends Controller {
             'project_id' => $_POST['project_id'],
             'splash_page_id' => $_POST['splash_page_id'],
             'domain_id' => $domain_id,
-            'biolink_theme_id' => $_POST['biolink_theme_id'],
+            'microsite_theme_id' => $_POST['microsite_theme_id'],
             'pixels_ids' => $_POST['pixels_ids'],
             'url' => $url,
             'settings' => $settings,
@@ -1621,7 +1621,7 @@ class LinkAjax extends Controller {
         $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
 
         /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItem('link?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
@@ -1766,7 +1766,7 @@ class LinkAjax extends Controller {
         $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
 
         /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItem('link?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
@@ -1986,7 +1986,7 @@ class LinkAjax extends Controller {
         $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
 
         /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItem('link?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
@@ -2171,7 +2171,7 @@ class LinkAjax extends Controller {
         $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
 
         /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItem('link?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
@@ -2317,7 +2317,7 @@ class LinkAjax extends Controller {
         $url = $domain_id && $_POST['is_main_link'] ? '' : $url;
 
         /* Clear the cache */
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItem('link?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $this->user->user_id);
@@ -2378,13 +2378,13 @@ class LinkAjax extends Controller {
             }
         }
 
-        elseif($link->type == 'biolink') {
-            if(!settings()->links->biolinks_is_enabled) {
+        elseif($link->type == 'microsite') {
+            if(!settings()->links->microsites_is_enabled) {
                 Response::json(l('global.error_message.basic'), 'error');
             }
 
-            $user_total_biolinks = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'biolink'")->fetch_object()->total;
-            if($this->user->plan_settings->biolinks_limit != -1 && $user_total_biolinks >= $this->user->plan_settings->biolinks_limit) {
+            $user_total_microsites = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'microsite'")->fetch_object()->total;
+            if($this->user->plan_settings->microsites_limit != -1 && $user_total_microsites >= $this->user->plan_settings->microsites_limit) {
                 Alerts::add_error(l('global.info_message.plan_feature_limit'));
             }
         }
@@ -2416,7 +2416,7 @@ class LinkAjax extends Controller {
             /* Duplicate the link */
             $link->settings = json_decode($link->settings ?? '');
 
-            if($link->type == 'biolink') {
+            if($link->type == 'microsite') {
                 $link->settings->seo->image = \Altum\Uploads::copy_uploaded_file($link->settings->seo->image, 'block_images/', 'block_images/', 'json_error');
                 $link->settings->favicon = \Altum\Uploads::copy_uploaded_file($link->settings->favicon, 'favicons/', 'favicons/', 'json_error');
                 if($link->settings->background_type == 'image') $link->settings->background = \Altum\Uploads::copy_uploaded_file($link->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
@@ -2441,7 +2441,7 @@ class LinkAjax extends Controller {
             $link_id = db()->insert('links', [
                 'user_id' => $this->user->user_id,
                 'project_id' => $link->project_id,
-                'biolink_theme_id' => $link->biolink_theme_id,
+                'microsite_theme_id' => $link->microsite_theme_id,
                 'domain_id' => $link->domain_id,
                 'pixels_ids' => $link->pixels_ids,
                 'type' => $link->type,
@@ -2456,79 +2456,79 @@ class LinkAjax extends Controller {
                 'datetime' => get_date(),
             ]);
 
-            /* Duplicate the biolink blocks */
-            if($link->type == 'biolink') {
-                /* Get all biolink blocks if needed */
-                $biolink_blocks = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->get('biolinks_blocks');
+            /* Duplicate the microsite blocks */
+            if($link->type == 'microsite') {
+                /* Get all microsite blocks if needed */
+                $microsite_blocks = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->get('microsites_blocks');
 
-                foreach($biolink_blocks as $biolink_block) {
-                    $biolink_block->settings = json_decode($biolink_block->settings ?? '');
+                foreach($microsite_blocks as $microsite_block) {
+                    $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-                    if(is_array($biolink_block->settings)) {
-                        $biolink_block->settings = (object) $biolink_block->settings;
+                    if(is_array($microsite_block->settings)) {
+                        $microsite_block->settings = (object) $microsite_block->settings;
                     }
 
                     /* Duplication of resources */
-                    switch($biolink_block->type) {
+                    switch($microsite_block->type) {
                         case 'file':
                         case 'audio':
                         case 'video':
                         case 'pdf_document':
                         case 'powerpoint_presentation':
                         case 'excel_spreadsheet':
-                            $biolink_block->settings->file = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
+                            $microsite_block->settings->file = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
                             break;
 
                         case 'review':
-                            $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, \Altum\Uploads::get_path('block_images'), \Altum\Uploads::get_path('block_images'), 'json_error');
+                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, \Altum\Uploads::get_path('block_images'), \Altum\Uploads::get_path('block_images'), 'json_error');
                             break;
 
                         case 'avatar':
-                            $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'avatars/', 'avatars/', 'json_error');
+                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
                             break;
 
                         case 'header':
-                            $biolink_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
-                            $biolink_block->settings->background = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                            $microsite_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
+                            $microsite_block->settings->background = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                             break;
 
                         case 'vcard':
-                            $biolink_block->settings->vcard_avatar = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->vcard_avatar, 'avatars/', 'avatars/', 'json_error');
+                            $microsite_block->settings->vcard_avatar = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->vcard_avatar, 'avatars/', 'avatars/', 'json_error');
                             break;
 
                         case 'image':
                         case 'image_grid':
-                            $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'block_images/', 'block_images/', 'json_error');
+                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
                             break;
 
                         case 'heading':
-                            $biolink_block->settings->verified_location = '';
+                            $microsite_block->settings->verified_location = '';
                             break;
 
                         case 'image_slider':
-                            $biolink_block->settings->items = (array) $biolink_block->settings->items;
-                            foreach($biolink_block->settings->items as $key => $item) {
-                                $biolink_block->settings->items[$key]->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
+                            $microsite_block->settings->items = (array) $microsite_block->settings->items;
+                            foreach($microsite_block->settings->items as $key => $item) {
+                                $microsite_block->settings->items[$key]->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
                             }
 
                             break;
 
                         default:
-                            $biolink_block->settings->image = \Altum\Uploads::copy_uploaded_file($biolink_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
+                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
                             break;
                     }
 
                     /* Database query */
-                    db()->insert('biolinks_blocks', [
+                    db()->insert('microsites_blocks', [
                         'user_id' => $this->user->user_id,
                         'link_id' => $link_id,
-                        'type' => $biolink_block->type,
-                        'location_url' => $biolink_block->location_url,
-                        'settings' => json_encode($biolink_block->settings),
-                        'order' => $biolink_block->order,
-                        'start_date' => $biolink_block->start_date,
-                        'end_date' => $biolink_block->end_date,
-                        'is_enabled' => $biolink_block->is_enabled,
+                        'type' => $microsite_block->type,
+                        'location_url' => $microsite_block->location_url,
+                        'settings' => json_encode($microsite_block->settings),
+                        'order' => $microsite_block->order,
+                        'start_date' => $microsite_block->start_date,
+                        'end_date' => $microsite_block->end_date,
+                        'is_enabled' => $microsite_block->is_enabled,
                         'datetime' => get_date(),
                     ]);
                 }

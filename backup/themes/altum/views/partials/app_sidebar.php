@@ -42,9 +42,9 @@
                     <?php endif ?>
                 </li>
 
-                <?php if(settings()->links->biolinks_is_enabled): ?>
-                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'biolink') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'biolink') ? 'active' : null ?>">
-                        <a href="<?= url('links?type=biolink') ?>"><i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('links.menu.biolink') ?></a>
+                <?php if(settings()->links->microsites_is_enabled): ?>
+                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'microsite') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'microsite') ? 'active' : null ?>">
+                        <a href="<?= url('links?type=microsite') ?>"><i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('links.menu.microsite') ?></a>
                     </li>
                 <?php endif ?>
 
@@ -163,7 +163,7 @@
                     </li>
                 <?php endif ?>
 
-                <?php if(settings()->links->biolinks_is_enabled): ?>
+                <?php if(settings()->links->microsites_is_enabled): ?>
                     <li class="<?= \Altum\Router::$controller == 'Data' ? 'active' : null ?>">
                         <a href="<?= url('data') ?>"><i class="fas fa-fw fa-sm fa-database mr-2"></i> <?= l('data.menu') ?></a>
                     </li>
@@ -179,7 +179,7 @@
                 <?php endif ?>
             <?php endif ?>
 
-            <?php if(settings()->links->biolinks_is_enabled && settings()->links->directory_is_enabled && (settings()->links->directory_access == 'everyone' || (settings()->links->directory_access == 'users' && is_logged_in()))): ?>
+            <?php if(settings()->links->microsites_is_enabled && settings()->links->directory_is_enabled && (settings()->links->directory_access == 'everyone' || (settings()->links->directory_access == 'users' && is_logged_in()))): ?>
                 <li class="<?= \Altum\Router::$controller == 'Directory' ? 'active' : null ?>">
                     <a href="<?= url('directory') ?>"><i class="fas fa-fw fa-sm fa-sitemap mr-2"></i> <?= l('directory.menu') ?></a>
                 </li>

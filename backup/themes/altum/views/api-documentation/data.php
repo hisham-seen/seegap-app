@@ -83,7 +83,7 @@
     "data": [
         {
             "id": 1,
-            "biolink_block_id": 1,
+            "microsite_block_id": 1,
             "link_id": 1,
             "project_id": 1,
             "type": "mail",
@@ -152,7 +152,7 @@
 {
     "data": {
         "id": 1,
-        "biolink_block_id": 1,
+        "microsite_block_id": 1,
         "link_id": 1,
         "project_id": 1,
         "type": "mail",

@@ -68,7 +68,7 @@
                             <label for="filters_type" class="small"><?= l('global.type') ?></label>
                             <select name="type" id="filters_type" class="custom-select custom-select-sm">
                                 <option value=""><?= l('global.all') ?></option>
-                                <option value="biolink" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'biolink' ? 'selected="selected"' : null ?>><?= l('links.menu.biolink') ?></option>
+                                <option value="microsite" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'microsite' ? 'selected="selected"' : null ?>><?= l('links.menu.microsite') ?></option>
                                 <option value="link" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'link' ? 'selected="selected"' : null ?>><?= l('links.menu.link') ?></option>
                                 <option value="file" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'file' ? 'selected="selected"' : null ?>><?= l('links.menu.file') ?></option>
                                 <option value="vcard" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == 'vcard' ? 'selected="selected"' : null ?>><?= l('links.menu.vcard') ?></option>
@@ -211,8 +211,8 @@
                                 <i class="fas fa-fw fa-xs fa-external-link-alt text-muted ml-1"></i>
                             </a>
 
-                            <?php if($row->type == 'biolink' && $row->is_verified): ?>
-                                <span data-toggle="tooltip" title="<?= l('link.biolink.verified') ?>"><i class="fas fa-fw fa-xs fa-check-circle link-verified" style="color: #0086ff"></i></span>
+                            <?php if($row->type == 'microsite' && $row->is_verified): ?>
+                                <span data-toggle="tooltip" title="<?= l('link.microsite.verified') ?>"><i class="fas fa-fw fa-xs fa-check-circle link-verified" style="color: #0086ff"></i></span>
                             <?php endif ?>
                         </div>
 
@@ -243,7 +243,7 @@
                 </td>
 
                 <td class="text-nowrap text-muted">
-                    <a href="<?= url('admin/biolinks-blocks?link_id=' . $row->link_id) ?>" class="mr-2" data-toggle="tooltip" title="<?= l('admin_biolinks_blocks.title') ?>">
+                    <a href="<?= url('admin/microsites-blocks?link_id=' . $row->link_id) ?>" class="mr-2" data-toggle="tooltip" title="<?= l('admin_microsites_blocks.title') ?>">
                         <i class="fas fa-fw fa-table-cells-large text-muted"></i>
                     </a>
                 </td>

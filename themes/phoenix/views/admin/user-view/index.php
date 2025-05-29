@@ -311,13 +311,13 @@
     <div class="col-12 col-sm-6 col-xl-3 p-3 position-relative">
         <div class="card d-flex flex-row h-100 overflow-hidden">
             <div class="card-body text-truncate">
-                <small class="text-muted"><i class="fas fa-fw fa-sm fa-hashtag mr-1"></i> <?= l('links.menu.biolink') ?></small>
+                <small class="text-muted"><i class="fas fa-fw fa-sm fa-hashtag mr-1"></i> <?= l('links.menu.microsite') ?></small>
 
-                <div class="mt-3"><span class="h4"><?= nr($data->biolink_links) ?></span></div>
+                <div class="mt-3"><span class="h4"><?= nr($data->microsite_links) ?></span></div>
             </div>
 
             <div class="pr-4 d-flex flex-column justify-content-center">
-                <a href="<?= url('admin/links?type=biolink&user_id=' . $data->user->user_id) ?>" class="stretched-link">
+                <a href="<?= url('admin/links?type=microsite&user_id=' . $data->user->user_id) ?>" class="stretched-link">
                     <i class="fas fa-fw fa-angle-right text-gray-500"></i>
                 </a>
             </div>

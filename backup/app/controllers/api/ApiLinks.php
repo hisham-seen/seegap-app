@@ -96,7 +96,7 @@ class ApiLinks extends Controller {
                 'project_id' => (int) $row->project_id,
                 'domain_id' => (int) $row->domain_id,
                 'pixels_ids' => json_decode($row->pixels_ids),
-                'biolink_theme_id' => (int) $row->biolink_theme_id,
+                'microsite_theme_id' => (int) $row->microsite_theme_id,
                 'type' => $row->type,
                 'url' => $row->url,
                 'location_url' => $row->location_url,
@@ -152,7 +152,7 @@ class ApiLinks extends Controller {
             'project_id' => (int) $link->project_id,
             'domain_id' => (int) $link->domain_id,
             'pixels_ids' => json_decode($link->pixels_ids),
-            'biolink_theme_id' => (int) $link->biolink_theme_id,
+            'microsite_theme_id' => (int) $link->microsite_theme_id,
             'type' => $link->type,
             'url' => $link->url,
             'location_url' => $link->location_url,
@@ -678,7 +678,7 @@ class ApiLinks extends Controller {
 
         /* Clear the cache */
         cache()->deleteItem('link?link_id=' . $link->link_id);
-        cache()->deleteItem('biolink_blocks?link_id=' . $link->link_id);
+        cache()->deleteItem('microsite_blocks?link_id=' . $link->link_id);
         cache()->deleteItemsByTag('link_id=' . $link->link_id);
         cache()->deleteItem('links?user_id=' . $link->user_id);
 

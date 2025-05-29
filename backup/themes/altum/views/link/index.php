@@ -100,5 +100,5 @@
 <?php include_view(THEME_PATH . 'views/partials/color_picker_js.php', ['exclude_js' => true]) ?>
 
 <?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'link_duplicate_modal', 'resource_id' => 'link_id', 'path' => 'link-ajax/duplicate']), 'modals'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'biolink_block_duplicate_modal', 'resource_id' => 'biolink_block_id', 'path' => 'biolink-block-ajax/duplicate']), 'modals'); ?>
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'microsite_block_duplicate_modal', 'resource_id' => 'microsite_block_id', 'path' => 'microsite-block-ajax/duplicate']), 'modals'); ?>
 <?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'link_reset_modal', 'resource_id' => 'link_id', 'path' => 'links/reset']), 'modals'); ?>

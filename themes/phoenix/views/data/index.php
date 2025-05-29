@@ -71,7 +71,7 @@
                                 <select name="type" id="type" class="custom-select custom-select-sm">
                                     <option value=""><?= l('global.all') ?></option>
                                     <?php foreach(['email_collector', 'phone_collector', 'contact_collector', 'feedback_collector'] as $value): ?>
-                                        <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.biolink.blocks.' . $value) ?></option>
+                                        <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.microsite.blocks.' . $value) ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -177,14 +177,14 @@
                         <tr>
                             <td data-bulk-table class="d-none">
                                 <div class="custom-control custom-checkbox">
-                                    <input id="selected_form_id_<?= $form->biolink_block_id ?>" type="checkbox" class="custom-control-input" name="selected[]" value="<?= $form->biolink_block_id ?>" />
-                                    <label class="custom-control-label" for="selected_form_id_<?= $form->biolink_block_id ?>"></label>
+                                    <input id="selected_form_id_<?= $form->microsite_block_id ?>" type="checkbox" class="custom-control-input" name="selected[]" value="<?= $form->microsite_block_id ?>" />
+                                    <label class="custom-control-label" for="selected_form_id_<?= $form->microsite_block_id ?>"></label>
                                 </div>
                             </td>
 
                             <td class="text-nowrap">
                                 <div class="d-flex flex-column">
-                                    <a href="<?= url('data?biolink_block_id=' . $form->biolink_block_id) ?>" class="font-weight-bold text-truncate">
+                                    <a href="<?= url('data?microsite_block_id=' . $form->microsite_block_id) ?>" class="font-weight-bold text-truncate">
                                         <?= $form->form_name ?>
                                     </a>
                                     <?php if(isset($form->instances) && count($form->instances) > 1): ?>
@@ -195,8 +195,8 @@
 
                             <td class="text-nowrap">
                                 <span class="badge badge-light">
-                                    <i class="<?= $data->biolink_blocks[$form->type]['icon'] ?> fa-fw fa-sm mr-1"></i>
-                                    <?= l('link.biolink.blocks.' . $form->type) ?>
+                                    <i class="<?= $data->microsite_blocks[$form->type]['icon'] ?> fa-fw fa-sm mr-1"></i>
+                                    <?= l('link.microsite.blocks.' . $form->type) ?>
                                 </span>
                             </td>
 
@@ -236,18 +236,18 @@
                                             <?php if(isset($form->instances) && count($form->instances) > 1): ?>
                                                 <h6 class="dropdown-header">Form instances</h6>
                                                 <?php foreach($form->instances as $instance_id): ?>
-                                                    <a href="<?= url('data?biolink_block_id=' . $instance_id) ?>" class="dropdown-item">
+                                                    <a href="<?= url('data?microsite_block_id=' . $instance_id) ?>" class="dropdown-item">
                                                         <i class="fas fa-fw fa-sm fa-eye mr-2"></i> 
-                                                        <?= isset($biolink_blocks[$instance_id]) ? $biolink_blocks[$instance_id]->settings->name ?? 'Unknown Form' : 'Unknown Form' ?> 
+                                                        <?= isset($microsite_blocks[$instance_id]) ? $microsite_blocks[$instance_id]->settings->name ?? 'Unknown Form' : 'Unknown Form' ?> 
                                                     </a>
                                                 <?php endforeach; ?>
                                                 <div class="dropdown-divider"></div>
                                             <?php endif; ?>
-                                            <a href="<?= url('data?biolink_block_id=' . $form->biolink_block_id) ?>" class="dropdown-item">
+                                            <a href="<?= url('data?microsite_block_id=' . $form->microsite_block_id) ?>" class="dropdown-item">
                                                 <i class="fas fa-fw fa-sm fa-eye mr-2"></i> <?= l('global.view') ?>
                                             </a>
-                                            <a href="<?= url('link/' . $form->link_id . '?tab=blocks') ?>" class="dropdown-item" data-toggle="tooltip" title="<?= l('data.biolink') ?>">
-                                                <i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('data.biolink') ?>
+                                            <a href="<?= url('link/' . $form->link_id . '?tab=blocks') ?>" class="dropdown-item" data-toggle="tooltip" title="<?= l('data.microsite') ?>">
+                                                <i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('data.microsite') ?>
                                             </a>
                                         </div>
                                     </div>

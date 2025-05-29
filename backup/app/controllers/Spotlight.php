@@ -83,10 +83,10 @@ class Spotlight extends Controller {
             ];
 
             /* Per product */
-            if(settings()->links->biolinks_is_enabled) {
+            if(settings()->links->microsites_is_enabled) {
                 $available_pages[] = [
-                    'name' => l('links.menu.biolink'),
-                    'url'  => 'links?type=biolink'
+                    'name' => l('links.menu.microsite'),
+                    'url'  => 'links?type=microsite'
                 ];
             }
 
@@ -149,18 +149,18 @@ class Spotlight extends Controller {
             }
 
 
-            if(settings()->links->biolinks_is_enabled) {
+            if(settings()->links->microsites_is_enabled) {
                 $available_pages[] = [
                     'name' => l('data.title'),
                     'url' => 'data'
                 ];
                 $available_pages[] = [
-                    'name' => l('biolinks_templates.title'),
-                    'url' => 'biolinks-templates'
+                    'name' => l('microsites_templates.title'),
+                    'url' => 'microsites-templates'
                 ];
             }
 
-            if(settings()->links->biolinks_is_enabled && settings()->links->directory_is_enabled && (settings()->links->directory_access == 'everyone' || (settings()->links->directory_access == 'users' && is_logged_in()))) {
+            if(settings()->links->microsites_is_enabled && settings()->links->directory_is_enabled && (settings()->links->directory_access == 'everyone' || (settings()->links->directory_access == 'users' && is_logged_in()))) {
                 $available_pages[] = [
                     'name' => l('directory.title'),
                     'url' => 'directory'
@@ -669,28 +669,28 @@ class Spotlight extends Controller {
                 ];
 
                 $available_pages[] = [
-                    'name' => l('global.menu.admin') . ' - ' . l('admin_biolinks_blocks.title'),
-                    'url' => 'admin/biolinks-blocks'
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_microsites_blocks.title'),
+                    'url' => 'admin/microsites-blocks'
                 ];
 
                 $available_pages[] = [
-                    'name' => l('global.menu.admin') . ' - ' . l('admin_biolinks_themes.title'),
-                    'url' => 'admin/biolinks-themes'
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_microsites_themes.title'),
+                    'url' => 'admin/microsites-themes'
                 ];
 
                 $available_pages[] = [
-                    'name' => l('global.menu.admin') . ' - ' . l('admin_biolink_theme_create.title'),
-                    'url' => 'admin/biolink-theme-create'
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_microsite_theme_create.title'),
+                    'url' => 'admin/microsite-theme-create'
                 ];
 
                 $available_pages[] = [
-                    'name' => l('global.menu.admin') . ' - ' . l('admin_biolinks_templates.title'),
-                    'url' => 'admin/biolinks-templates'
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_microsites_templates.title'),
+                    'url' => 'admin/microsites-templates'
                 ];
 
                 $available_pages[] = [
-                    'name' => l('global.menu.admin') . ' - ' . l('admin_biolink_template_create.title'),
-                    'url' => 'admin/biolink-template-create'
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_microsite_template_create.title'),
+                    'url' => 'admin/microsite-template-create'
                 ];
 
                 if(\Altum\Plugin::is_active('email-signatures')) {

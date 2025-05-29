@@ -17,10 +17,10 @@
                     <h1 class="index-header mb-4"><?= l('index.header') ?></h1>
 
                     <div class="row mb-5">
-                        <?php if(settings()->links->biolinks_is_enabled): ?>
+                        <?php if(settings()->links->microsites_is_enabled): ?>
                             <div class="col-6 col-xl-4 index-feature text-truncate">
-                                <a href="<?= url('links?type=biolink') ?>" class="text-truncate">
-                                    <?= l('index.subheader.biolink') ?>
+                                <a href="<?= url('links?type=microsite') ?>" class="text-truncate">
+                                    <?= l('index.subheader.microsite') ?>
                                 </a>
                             </div>
                         <?php endif ?>
@@ -143,7 +143,7 @@
                         <?php endif ?>
 
                         <?php //ALTUMCODE:DEMO if(!DEMO): ?>
-                        <?php if(settings()->links->biolinks_is_enabled && settings()->links->example_url && !settings()->links->claim_url_is_enabled): ?>
+                        <?php if(settings()->links->microsites_is_enabled && settings()->links->example_url && !settings()->links->claim_url_is_enabled): ?>
                             <a href="<?= settings()->links->example_url ?>" target="_blank" class="btn btn-outline-primary index-button mb-3 mb-lg-0">
                                 <?= l('index.example') ?> <i class="fas fa-fw fa-sm fa-external-link-alt"></i>
                             </a>
@@ -162,13 +162,13 @@
     </div>
 </div>
 
-<?php if(settings()->links->biolinks_is_enabled): ?>
+<?php if(settings()->links->microsites_is_enabled): ?>
     <div class="container mt-6">
         <div class="card index-highly-rounded border-0" data-aos="fade-up">
             <div class="card-body">
                 <div class="row">
                     <div class="col-auto col-lg-5 mb-4 mb-lg-0">
-                        <img src="<?= ASSETS_FULL_URL . 'images/index/bio-link.webp' ?>" class="index-card-image index-highly-rounded" loading="lazy" alt="<?= l('index.biolink_image_alt') ?>" />
+                        <img src="<?= ASSETS_FULL_URL . 'images/index/bio-link.webp' ?>" class="index-card-image index-highly-rounded" loading="lazy" alt="<?= l('index.microsite_image_alt') ?>" />
                     </div>
                     <div class="col ml-3">
                         <div class="bg-primary-100 p-3 w-fit-content rounded">
@@ -342,7 +342,7 @@
     </div>
 <?php endif ?>
 
-<?php if(settings()->links->biolinks_is_enabled ||settings()->links->shortener_is_enabled ||settings()->links->files_is_enabled ||settings()->links->vcards_is_enabled ||settings()->links->events_is_enabled ||settings()->links->static_is_enabled): ?>
+<?php if(settings()->links->microsites_is_enabled ||settings()->links->shortener_is_enabled ||settings()->links->files_is_enabled ||settings()->links->vcards_is_enabled ||settings()->links->events_is_enabled ||settings()->links->static_is_enabled): ?>
 <div class="container mt-6">
     <div class="card index-highly-rounded border-0" data-aos="fade-up">
         <div class="card-body">

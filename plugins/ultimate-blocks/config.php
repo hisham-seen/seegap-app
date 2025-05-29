@@ -4,9 +4,9 @@ defined('ALTUMCODE') || die();
 return (object) [
     'plugin_id' => 'ultimate-blocks',
     'name' => 'Ultimate Blocks',
-    'description' => 'The Ultimate Blocks plugin is meant to give you +26 extra new biolink blocks.',
+    'description' => 'The Ultimate Blocks plugin is meant to give you +26 extra new microsite blocks.',
     'version' => '7.1.0',
-    'url' => 'https://altumco.de/66biolinks-ultimate-blocks',
+    'url' => 'https://altumco.de/66microsites-ultimate-blocks',
     'author' => 'AltumCode',
     'author_url' => 'https://altumcode.com/',
     'status' => 'uninstalled',

@@ -72,7 +72,7 @@ alter table users modify last_user_agent varchar(1024) collate utf8_unicode_ci n
 
 CREATE TABLE `data` (
 `datum_id` bigint unsigned NOT NULL AUTO_INCREMENT,
-`biolink_block_id` int DEFAULT NULL,
+`microsite_block_id` int DEFAULT NULL,
 `link_id` int DEFAULT NULL,
 `project_id` int DEFAULT NULL,
 `user_id` int NOT NULL,
@@ -84,11 +84,11 @@ UNIQUE KEY `datum_id` (`datum_id`),
 KEY `link_id` (`link_id`),
 KEY `project_id` (`project_id`),
 KEY `user_id` (`user_id`),
-KEY `biolink_block_id` (`biolink_block_id`),
+KEY `microsite_block_id` (`microsite_block_id`),
 CONSTRAINT `data_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE SET NULL ON UPDATE CASCADE,
 CONSTRAINT `data_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE,
 CONSTRAINT `data_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-CONSTRAINT `data_ibfk_4` FOREIGN KEY (`biolink_block_id`) REFERENCES `biolinks_blocks` (`biolink_block_id`) ON DELETE SET NULL ON UPDATE CASCADE
+CONSTRAINT `data_ibfk_4` FOREIGN KEY (`microsite_block_id`) REFERENCES `microsites_blocks` (`microsite_block_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- SEPARATOR --

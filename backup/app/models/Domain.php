@@ -184,7 +184,7 @@ class Domain extends Model {
     public function delete($domain_id) {
 
         /* Delete everything related to the domain that the user owns */
-        $result = database()->query("SELECT `link_id` FROM `links` WHERE `domain_id` = {$domain_id} AND `type` = 'biolink'");
+        $result = database()->query("SELECT `link_id` FROM `links` WHERE `domain_id` = {$domain_id} AND `type` = 'microsite'");
 
         while($link = $result->fetch_object()) {
 
