@@ -4367,4 +4367,9 @@ return [
     'admin_settings.gs1_links.allowed_gtin_prefixes' => 'Allowed GTIN prefixes',
     'admin_settings.gs1_links.allowed_gtin_prefixes_help' => 'Comma-separated list of allowed GTIN prefixes. Leave empty to allow all. Example: 123,456,789',
 
+    // Admin Statistics - GS1 Links
+    'admin_statistics.gs1_links.menu' => 'GS1 Links',
+    'admin_statistics.gs1_links.header' => 'GS1 Digital Links Statistics',
+    'admin_statistics.gs1_links.chart' => 'GS1 Links',
+
 ];
