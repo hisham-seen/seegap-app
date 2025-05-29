@@ -168,7 +168,7 @@
                         <?php if(settings()->links->projects_is_enabled): ?>
                         <th><?= l('projects.project_id') ?></th>
                         <?php endif ?>
-                        <th></th>
+                        <th><?= l('global.actions') ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -226,14 +226,23 @@
                             <?php endif ?>
 
                             <td>
-                                <div class="d-flex justify-content-end">
-                                    <div class="dropdown">
-                                        <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
-                                            <i class="fas fa-fw fa-ellipsis-v"></i>
-                                        </button>
+                                <div class="d-flex align-items-center">
 
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <?php if(isset($form->instances) && count($form->instances) > 1): ?>
+                                    <a href="<?= url('data?microsite_block_id=' . $form->microsite_block_id) ?>" class="text-primary mr-3" data-toggle="tooltip" title="<?= l('global.view') ?>">
+                                        <i class="fas fa-fw fa-eye"></i>
+                                    </a>
+
+                                    <a href="<?= url('link/' . $form->link_id . '?tab=blocks') ?>" class="text-info mr-3" data-toggle="tooltip" title="<?= l('data.microsite') ?>">
+                                        <i class="fas fa-fw fa-hashtag"></i>
+                                    </a>
+
+                                    <?php if(isset($form->instances) && count($form->instances) > 1): ?>
+                                        <div class="dropdown">
+                                            <a href="#" class="text-secondary" data-toggle="dropdown" data-boundary="viewport" title="Form instances">
+                                                <i class="fas fa-fw fa-list"></i>
+                                            </a>
+
+                                            <div class="dropdown-menu dropdown-menu-right">
                                                 <h6 class="dropdown-header">Form instances</h6>
                                                 <?php foreach($form->instances as $instance_id): ?>
                                                     <a href="<?= url('data?microsite_block_id=' . $instance_id) ?>" class="dropdown-item">
@@ -241,16 +250,10 @@
                                                         <?= isset($microsite_blocks[$instance_id]) ? $microsite_blocks[$instance_id]->settings->name ?? 'Unknown Form' : 'Unknown Form' ?> 
                                                     </a>
                                                 <?php endforeach; ?>
-                                                <div class="dropdown-divider"></div>
-                                            <?php endif; ?>
-                                            <a href="<?= url('data?microsite_block_id=' . $form->microsite_block_id) ?>" class="dropdown-item">
-                                                <i class="fas fa-fw fa-sm fa-eye mr-2"></i> <?= l('global.view') ?>
-                                            </a>
-                                            <a href="<?= url('link/' . $form->link_id . '?tab=blocks') ?>" class="dropdown-item" data-toggle="tooltip" title="<?= l('data.microsite') ?>">
-                                                <i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('data.microsite') ?>
-                                            </a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php endif; ?>
+
                                 </div>
                             </td>
                         </tr>

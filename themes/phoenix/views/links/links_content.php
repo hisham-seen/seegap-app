@@ -282,9 +282,11 @@
                         </div>
                     </th>
                     <th><?= l('link.link') ?></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th><?= l('links.clicks') ?></th>
+                    <th><?= l('global.status') ?></th>
+                    <th><?= l('global.datetime') ?></th>
+                    <th><?= l('global.last_datetime') ?></th>
+                    <th><?= l('global.actions') ?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -332,80 +334,73 @@
                         </td>
 
                         <td class="text-nowrap">
-                            <?php if(settings()->links->projects_is_enabled): ?>
-                            <div class="mx-2">
-                                <?php if($row->project_id && isset($data->projects[$row->project_id])): ?>
-                                    <a href="<?= url('links?project_id=' . $row->project_id) ?>" class="text-decoration-none" data-toggle="tooltip" title="<?= l('projects.project_id') ?>">
-                                        <span class="badge badge-light" style="color: <?= $data->projects[$row->project_id]->color ?> !important;">
-                                            <?= $data->projects[$row->project_id]->name ?>
-                                        </span>
-                                    </a>
-                                <?php endif ?>
-                            </div>
-                            <?php endif ?>
+                            <a href="<?= url('link/' . $row->link_id . '/statistics') ?>" class="text-decoration-none text-muted" data-toggle="tooltip" title="<?= l('links.clicks') ?>">
+                                <i class="fas fa-fw fa-chart-bar fa-sm mr-1"></i> <?= nr($row->clicks) ?>
+                            </a>
+                        </td>
 
-                            <div class="mx-2">
-                                <a href="<?= url('link/' . $row->link_id . '/statistics') ?>">
-                                    <span data-toggle="tooltip" title="<?= l('links.clicks') ?>"><span class="badge badge-light"><i class="fas fa-fw fa-sm fa-chart-bar mr-1"></i> <?= nr($row->clicks) ?></span></span>
-                                </a>
+                        <td class="text-nowrap">
+                            <div class="custom-control custom-switch" data-toggle="tooltip" title="<?= l('links.is_enabled_tooltip') ?>">
+                                <input
+                                        type="checkbox"
+                                        class="custom-control-input"
+                                        id="link_is_enabled_<?= $row->link_id ?>"
+                                        data-row-id="<?= $row->link_id ?>"
+                                        onchange="ajax_call_helper(event, 'link-ajax', 'is_enabled_toggle')"
+                                    <?= $row->is_enabled ? 'checked="checked"' : null ?>
+                                >
+                                <label class="custom-control-label" for="link_is_enabled_<?= $row->link_id ?>"></label>
                             </div>
                         </td>
 
                         <td class="text-nowrap text-muted">
-                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
-                                <i class="fas fa-fw fa-calendar text-muted"></i>
-                            </span>
-
-                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.last_datetime_tooltip'), ($row->last_datetime ? '<br />' . \Altum\Date::get($row->last_datetime, 2) . '<br /><small>' . \Altum\Date::get($row->last_datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->last_datetime) . ')</small>' : '<br />-')) ?>">
-                                <i class="fas fa-fw fa-history text-muted"></i>
+                            <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
+                                <?= \Altum\Date::get($row->datetime, 2) ?>
                             </span>
                         </td>
 
-                        <td class="text-nowrap">
-                            <div class="d-flex align-items-center justify-content-end">
+                        <td class="text-nowrap text-muted">
+                            <?php if($row->last_datetime): ?>
+                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
+                                    <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="text-muted">-</span>
+                            <?php endif ?>
+                        </td>
 
-                                <div class="custom-control custom-switch" data-toggle="tooltip" title="<?= l('links.is_enabled_tooltip') ?>">
-                                    <input
-                                            type="checkbox"
-                                            class="custom-control-input"
-                                            id="link_is_enabled_<?= $row->link_id ?>"
-                                            data-row-id="<?= $row->link_id ?>"
-                                            onchange="ajax_call_helper(event, 'link-ajax', 'is_enabled_toggle')"
-                                        <?= $row->is_enabled ? 'checked="checked"' : null ?>
-                                    >
-                                    <label class="custom-control-label" for="link_is_enabled_<?= $row->link_id ?>"></label>
-                                </div>
+                        <td>
+                            <div class="d-flex align-items-center">
 
-                                <button
-                                        id="url_copy"
-                                        type="button"
-                                        class="btn btn-link text-secondary"
-                                        data-toggle="tooltip"
-                                        title="<?= l('global.clipboard_copy') ?>"
-                                        aria-label="<?= l('global.clipboard_copy') ?>"
-                                        data-copy="<?= l('global.clipboard_copy') ?>"
-                                        data-copied="<?= l('global.clipboard_copied') ?>"
-                                        data-clipboard-text="<?= $row->full_url ?>"
-                                >
-                                    <i class="fas fa-fw fa-sm fa-copy"></i>
-                                </button>
+                                <a href="<?= url('link/' . $row->link_id) ?>" class="text-primary mr-3" data-toggle="tooltip" title="<?= l('global.edit') ?>">
+                                    <i class="fas fa-fw fa-pencil-alt"></i>
+                                </a>
 
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
-                                        <i class="fas fa-fw fa-ellipsis-v"></i>
-                                    </button>
+                                <a href="<?= url('link/' . $row->link_id . '/statistics') ?>" class="text-info mr-3" data-toggle="tooltip" title="<?= l('link.statistics.link') ?>">
+                                    <i class="fas fa-fw fa-chart-bar"></i>
+                                </a>
 
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="<?= url('link/' . $row->link_id) ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-pencil-alt mr-2"></i> <?= l('global.edit') ?></a>
-                                        <a href="<?= url('link/' . $row->link_id . '/statistics') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-chart-bar mr-2"></i> <?= l('link.statistics.link') ?></a>
-                                        <?php if(settings()->codes->qr_codes_is_enabled): ?>
-                                            <a href="<?= url('qr-code-create?name=' . $row->url . '&project_id=' . $row->project_id . '&type=url&url=' . $row->full_url . '&link_id=' . $row->link_id . '&url_dynamic=1') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('qr_codes.create') ?></a>
-                                        <?php endif ?>
-                                        <a href="#" data-toggle="modal" data-target="#link_duplicate_modal" class="dropdown-item" data-link-id="<?= $row->link_id ?>"><i class="fas fa-fw fa-sm fa-clone mr-2"></i> <?= l('global.duplicate') ?></a>
-                                        <a href="#" data-toggle="modal" data-target="#link_reset_modal" class="dropdown-item" data-link-id="<?= $row->link_id ?>"><i class="fas fa-fw fa-sm fa-redo mr-2"></i> <?= l('global.reset') ?></a>
-                                        <a href="#" data-toggle="modal" data-target="#link_delete_modal" class="dropdown-item" data-link-id="<?= $row->link_id ?>"><i class="fas fa-fw fa-sm fa-trash-alt mr-2"></i> <?= l('global.delete') ?></a>
-                                    </div>
-                                </div>
+                                <?php if(settings()->codes->qr_codes_is_enabled): ?>
+                                    <a href="<?= url('qr-code-create?name=' . $row->url . '&project_id=' . $row->project_id . '&type=url&url=' . $row->full_url . '&link_id=' . $row->link_id . '&url_dynamic=1') ?>" class="text-secondary mr-3" data-toggle="tooltip" title="<?= l('qr_codes.create') ?>">
+                                        <i class="fas fa-fw fa-qrcode"></i>
+                                    </a>
+                                <?php endif ?>
+
+                                <a href="#" class="text-secondary mr-3" data-toggle="tooltip" title="<?= l('global.clipboard_copy') ?>" aria-label="<?= l('global.clipboard_copy') ?>" data-copy="<?= l('global.clipboard_copy') ?>" data-copied="<?= l('global.clipboard_copied') ?>" data-clipboard-text="<?= $row->full_url ?>">
+                                    <i class="fas fa-fw fa-copy"></i>
+                                </a>
+
+                                <a href="#" class="text-success mr-3" data-toggle="modal" data-target="#link_duplicate_modal" data-link-id="<?= $row->link_id ?>" title="<?= l('global.duplicate') ?>">
+                                    <i class="fas fa-fw fa-clone"></i>
+                                </a>
+
+                                <a href="#" class="text-warning mr-3" data-toggle="modal" data-target="#link_reset_modal" data-link-id="<?= $row->link_id ?>" title="<?= l('global.reset') ?>">
+                                    <i class="fas fa-fw fa-redo"></i>
+                                </a>
+
+                                <a href="#" class="text-danger" data-toggle="modal" data-target="#link_delete_modal" data-link-id="<?= $row->link_id ?>" title="<?= l('global.delete') ?>">
+                                    <i class="fas fa-fw fa-trash-alt"></i>
+                                </a>
 
                             </div>
                         </td>
@@ -429,10 +424,18 @@
 
 <?php endif ?>
 
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+    'name' => 'link',
+    'resource_id' => 'link_id',
+    'has_dynamic_resource_name' => false,
+    'path' => 'links/delete'
+]), 'modals') ?>
+
 <?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'link_duplicate_modal', 'resource_id' => 'link_id', 'path' => 'link-ajax/duplicate']), 'modals'); ?>
+
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'link_reset_modal', 'resource_id' => 'link_id', 'path' => 'links/reset']), 'modals'); ?>
+
 <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
 <?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
-
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'link_reset_modal', 'resource_id' => 'link_id', 'path' => 'links/reset']), 'modals'); ?>

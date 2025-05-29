@@ -73,7 +73,7 @@
                 <?php endif ?>
 
                 <?php if(settings()->codes->qr_codes_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['QrCodes', 'QrCodeUpdate', 'QrCodeCreate']) ? 'active' : null ?>">
+                    <li class="<?= in_array(\Altum\Router::$controller, ['QrCodes', 'QrCodeUpdate', 'QrCodeCreate', 'QrCodeManager']) ? 'active' : null ?>">
                         <a href="<?= url('qr-codes') ?>"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('qr_codes.menu') ?></a>
                     </li>
                 <?php endif ?>

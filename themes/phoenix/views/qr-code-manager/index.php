@@ -10,13 +10,26 @@
                     <li>
                         <a href="<?= url('qr-codes') ?>"><?= l('qr_codes.breadcrumb') ?></a><i class="fas fa-fw fa-angle-right"></i>
                     </li>
-                    <li class="active" aria-current="page"><?= l('qr_code_create.breadcrumb') ?></li>
+                    <li class="active" aria-current="page">
+                        <?php if($data->mode == 'create'): ?>
+                            <?= l('qr_code_create.breadcrumb') ?>
+                        <?php else: ?>
+                            <?= l('qr_code_update.breadcrumb') ?>
+                        <?php endif ?>
+                    </li>
                 </ol>
             </nav>
         <?php endif ?>
 
         <div class="d-flex align-items-center mb-4">
-            <h1 class="h4 text-truncate mb-0 mr-2"><i class="fas fa-fw fa-xs fa-qrcode mr-1"></i> <?= l('qr_code_create.header') ?></h1>
+            <h1 class="h4 text-truncate mb-0 mr-2">
+                <i class="fas fa-fw fa-xs fa-qrcode mr-1"></i> 
+                <?php if($data->mode == 'create'): ?>
+                    <?= l('qr_code_create.header') ?>
+                <?php else: ?>
+                    <?= l('qr_code_update.header') ?>
+                <?php endif ?>
+            </h1>
         </div>
     </div>
 
@@ -83,6 +96,7 @@
                                 <?= \Altum\Alerts::output_field_error('text') ?>
                             </div>
 
+                            <?php if($data->mode == 'create'): ?>
                             <div class="form-group" data-type="text">
                                 <div <?= $this->user->plan_settings->qr_codes_bulk_limit ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
                                     <div class="<?= $this->user->plan_settings->qr_codes_bulk_limit ? null : 'container-disabled' ?>">
@@ -94,6 +108,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php endif ?>
                         </div>
 
                         <div>
@@ -103,18 +118,63 @@
                                 <?= \Altum\Alerts::output_field_error('url') ?>
                             </div>
 
-                            <div class="form-group" data-type="url" data-link-id>
+                            <div class="form-group" data-type="url" data-dynamic-type>
+                                <label for="dynamic_type"><i class="fas fa-fw fa-layer-group fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.dynamic_type') ?></label>
+                                <select id="dynamic_type" name="dynamic_type" class="custom-select" data-reload-qr-code>
+                                    <option value=""><?= l('global.choose') ?></option>
+                                    <option value="links" <?= ($data->values['dynamic_type'] ?? null) == 'links' ? 'selected="selected"' : null?>><i class="fas fa-fw fa-link mr-1"></i> <?= l('links.links') ?></option>
+                                    <option value="gs1_links" <?= ($data->values['dynamic_type'] ?? null) == 'gs1_links' ? 'selected="selected"' : null?>><i class="fas fa-fw fa-barcode mr-1"></i> <?= l('gs1_links.gs1_links') ?></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" data-type="url" data-dynamic-links>
                                 <div class="d-flex flex-column flex-xl-row justify-content-between">
                                     <label for="link_id"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.link_id') ?></label>
-                                    <a href="<?= url('links') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('global.create') ?></a>
+                                    <a href="<?= url('link-create') ?>" target="_blank" class="small mb-2" id="create_link_btn"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('global.create') ?></a>
                                 </div>
                                 <select id="link_id" name="link_id" class="custom-select" required="required" data-reload-qr-code>
+                                    <option value=""><?= l('global.none') ?></option>
                                     <?php foreach($data->links as $row): ?>
                                         <option value="<?= $row->link_id ?>" <?= ($data->values['link_id'] ?? null) == $row->link_id ? 'selected="selected"' : null?> data-url="<?= $row->full_url ?>">
                                             <?= remove_url_protocol_from_url($row->full_url) . ($row->location_url ? ' -> ' . remove_url_protocol_from_url($row->location_url) : null) ?>
                                         </option>
                                     <?php endforeach ?>
                                 </select>
+                                <?php if(empty($data->links)): ?>
+                                    <small class="form-text text-muted"><?= l('qr_codes.input.no_links_available') ?></small>
+                                <?php endif ?>
+                            </div>
+
+                            <div class="form-group" data-type="url" data-dynamic-gs1-links>
+                                <div class="d-flex flex-column flex-xl-row justify-content-between">
+                                    <label for="gs1_link_id"><i class="fas fa-fw fa-barcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.gs1_link_id') ?></label>
+                                    <a href="<?= url('gs1-link-manager/create') ?>" target="_blank" class="small mb-2" id="create_gs1_link_btn"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('global.create') ?></a>
+                                </div>
+                                <select id="gs1_link_id" name="gs1_link_id" class="custom-select" data-reload-qr-code>
+                                    <option value=""><?= l('global.none') ?></option>
+                                    <?php foreach($data->gs1_links as $row): ?>
+                                        <?php 
+                                        // Ensure we have a proper full URL for the data-url attribute
+                                        if ($row->full_url) {
+                                            $gs1_full_url = $row->full_url;
+                                        } else {
+                                            // Generate fallback URL with proper domain handling
+                                            if ($row->domain_id && isset($row->scheme) && isset($row->host)) {
+                                                $domain = $row->scheme . $row->host;
+                                            } else {
+                                                $domain = SITE_URL;
+                                            }
+                                            $gs1_full_url = rtrim($domain, '/') . '/01/' . $row->gtin;
+                                        }
+                                        ?>
+                                        <option value="<?= $row->gs1_link_id ?>" <?= ($data->values['gs1_link_id'] ?? null) == $row->gs1_link_id ? 'selected="selected"' : null?> data-url="<?= $gs1_full_url ?>">
+                                            <?= $gs1_full_url ?>
+                                        </option>
+                                    <?php endforeach ?>
+                                </select>
+                                <?php if(empty($data->gs1_links)): ?>
+                                    <small class="form-text text-muted"><?= l('qr_codes.input.no_gs1_links_available') ?></small>
+                                <?php endif ?>
                             </div>
 
                             <div class="form-group" data-type="url">
@@ -319,6 +379,134 @@
                         </div>
 
                         <div>
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_first_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_first_name') ?></label>
+                                <input type="text" id="vcard_first_name" name="vcard_first_name" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_first_name') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_first_name'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['first_name']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_first_name') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_last_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_last_name') ?></label>
+                                <input type="text" id="vcard_last_name" name="vcard_last_name" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_last_name') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_last_name'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['last_name']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_last_name') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_email"><i class="fas fa-fw fa-envelope fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_email') ?></label>
+                                <input type="email" id="vcard_email" name="vcard_email" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_email') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_email'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['email']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_email') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_url') ?></label>
+                                <input type="url" id="vcard_url" name="vcard_url" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_url') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_url'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['url']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_url') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_company"><i class="fas fa-fw fa-building fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_company') ?></label>
+                                <input type="text" id="vcard_company" name="vcard_company" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_company') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_company'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['company']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_company') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_job_title"><i class="fas fa-fw fa-user-tie fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_job_title') ?></label>
+                                <input type="text" id="vcard_job_title" name="vcard_job_title" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_job_title') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_job_title'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['job_title']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_job_title') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_birthday"><i class="fas fa-fw fa-birthday-cake fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_birthday') ?></label>
+                                <input type="date" id="vcard_birthday" name="vcard_birthday" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_birthday') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_birthday'] ?? null ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_birthday') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_street"><i class="fas fa-fw fa-road fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_street') ?></label>
+                                <input type="text" id="vcard_street" name="vcard_street" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_street') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_street'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['street']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_street') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_city"><i class="fas fa-fw fa-city fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_city') ?></label>
+                                <input type="text" id="vcard_city" name="vcard_city" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_city') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_city'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['city']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_city') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_zip"><i class="fas fa-fw fa-mail-bulk fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_zip') ?></label>
+                                <input type="text" id="vcard_zip" name="vcard_zip" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_zip') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_zip'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['zip']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_zip') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_region"><i class="fas fa-fw fa-flag fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_region') ?></label>
+                                <input type="text" id="vcard_region" name="vcard_region" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_region') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_region'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['region']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_region') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_country"><i class="fas fa-fw fa-globe fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_country') ?></label>
+                                <input type="text" id="vcard_country" name="vcard_country" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_country') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_country'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['country']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('vcard_country') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label for="vcard_note"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_note') ?></label>
+                                <textarea id="vcard_note" name="vcard_note" class="form-control <?= \Altum\Alerts::has_field_errors('vcard_note') ? 'is-invalid' : null ?>" maxlength="<?= $data->available_qr_codes['vcard']['note']['max_length'] ?>" data-reload-qr-code><?= $data->values['settings']['vcard_note'] ?? null ?></textarea>
+                                <?= \Altum\Alerts::output_field_error('vcard_note') ?>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label><i class="fas fa-fw fa-phone fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_phone_numbers') ?></label>
+
+                                <div data-vcard-phone-numbers>
+                                    <?php if(isset($data->values['settings']['vcard_phone_numbers']) && is_array($data->values['settings']['vcard_phone_numbers'])): ?>
+                                        <?php foreach($data->values['settings']['vcard_phone_numbers'] as $key => $phone_number): ?>
+                                            <div class="form-row mb-3" data-vcard-phone-number>
+                                                <div class="col-4">
+                                                    <input type="text" name="vcard_phone_number_label[]" class="form-control" value="<?= $phone_number['label'] ?>" placeholder="<?= l('qr_codes.input.vcard_phone_number_label_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['phone_number_value']['max_length'] ?>" data-reload-qr-code />
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="text" name="vcard_phone_number_value[]" class="form-control" value="<?= $phone_number['value'] ?>" placeholder="<?= l('qr_codes.input.vcard_phone_number_value_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['phone_number_value']['max_length'] ?>" data-reload-qr-code />
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" data-remove="vcard-phone-number" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach ?>
+                                    <?php endif ?>
+                                </div>
+
+                                <button data-add="vcard-phone-number" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
+                            </div>
+
+                            <div class="form-group" data-type="vcard">
+                                <label><i class="fas fa-fw fa-hashtag fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_socials') ?></label>
+
+                                <div data-vcard-socials>
+                                    <?php if(isset($data->values['settings']['vcard_socials']) && is_array($data->values['settings']['vcard_socials'])): ?>
+                                        <?php foreach($data->values['settings']['vcard_socials'] as $key => $social): ?>
+                                            <div class="form-row mb-3" data-vcard-social>
+                                                <div class="col-4">
+                                                    <input type="text" name="vcard_social_label[]" class="form-control" value="<?= $social['label'] ?>" placeholder="<?= l('qr_codes.input.vcard_social_label_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['social_value']['max_length'] ?>" data-reload-qr-code />
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="text" name="vcard_social_value[]" class="form-control" value="<?= $social['value'] ?>" placeholder="<?= l('qr_codes.input.vcard_social_value_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['social_value']['max_length'] ?>" data-reload-qr-code />
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" data-remove="vcard-social" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach ?>
+                                    <?php endif ?>
+                                </div>
+
+                                <button data-add="vcard-social" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
+                            </div>
+                        </div>
+
+                        <div>
                             <div class="form-group" data-type="paypal">
                                 <label for="paypal_type"><i class="fab fa-fw fa-paypal fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_type') ?></label>
                                 <select id="paypal_type" name="paypal_type" class="custom-select" data-reload-qr-code>
@@ -459,9 +647,9 @@
                             </div>
 
                             <div class="form-group" data-type="epc">
-                                <label for="epc_information"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_information') ?></label>
-                                <input type="text" id="epc_information" name="epc_information" class="form-control <?= \Altum\Alerts::has_field_errors('epc_information') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['epc_information'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['information']['max_length'] ?>" data-reload-qr-code />
-                                <?= \Altum\Alerts::output_field_error('epc_information') ?>
+                                <label for="information"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_information') ?></label>
+                                <input type="text" id="information" name="information" class="form-control <?= \Altum\Alerts::has_field_errors('information') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['information'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['information']['max_length'] ?>" data-reload-qr-code />
+                                <?= \Altum\Alerts::output_field_error('information') ?>
                             </div>
                         </div>
 
@@ -493,13 +681,13 @@
 
                             <div class="form-group" data-type="pix">
                                 <label for="pix_city"><i class="fas fa-fw fa-city fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_city') ?></label>
-                                <input type="text" id="pix_city" name="pix_city" class="form-control <?= \Altum\Alerts::has_field_errors('pix_city') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_city'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['city']['max_length'] ?>" data-reload-qr-code />
+                                <input type="text" id="pix_city" name="pix_city" class="form-control <?= \Altum\Alerts::has_field_errors('pix_city') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_city'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['city']['max_length'] ?>" required="required" data-reload-qr-code />
                                 <?= \Altum\Alerts::output_field_error('pix_city') ?>
                             </div>
 
                             <div class="form-group" data-type="pix">
                                 <label for="pix_transaction_id"><i class="fas fa-fw fa-receipt fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_transaction_id') ?></label>
-                                <input type="text" id="pix_transaction_id" name="pix_transaction_id" class="form-control <?= \Altum\Alerts::has_field_errors('pix_transaction_id') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_transaction_id'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['transaction_id']['max_length'] ?>" data-reload-qr-code />
+                                <input type="text" id="pix_transaction_id" name="pix_transaction_id" class="form-control <?= \Altum\Alerts::has_field_errors('pix_transaction_id') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_transaction_id'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['transaction_id']['max_length'] ?>" required="required" data-reload-qr-code />
                                 <?= \Altum\Alerts::output_field_error('pix_transaction_id') ?>
                             </div>
 
@@ -519,10 +707,10 @@
                                 <label for="style"><i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.style') ?></label>
                                 <div class="row btn-group-toggle p-2" data-toggle="buttons">
                                     <?php foreach($data->styles as $key => $style): ?>
-                                        <div class="col-3 p-2">
+                                        <div class="col-2 p-1">
                                             <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['style'] ?? null) == $key ? 'active"' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
                                                 <input type="radio" name="style" value="<?= $key ?>" class="custom-control-input" <?= ($data->values['settings']['style'] ?? null) == $key ? 'checked="checked"' : null?> required="required" data-reload-qr-code />
-                                                <div class="py-2">
+                                                <div class="py-1">
                                                     <?= sprintf($style['svg'], 'var(--primary-800)') ?>
                                                 </div>
                                             </label>
@@ -535,10 +723,10 @@
                                 <label for="inner_eye_style"><i class="fas fa-fw fa-circle fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.inner_eye_style') ?></label>
                                 <div class="row btn-group-toggle p-2" data-toggle="buttons">
                                     <?php foreach($data->inner_eyes as $key => $style): ?>
-                                        <div class="col-3 p-2">
+                                        <div class="col-2 p-1">
                                             <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['inner_eye_style'] ?? null) == $key ? 'active"' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
                                                 <input type="radio" name="inner_eye_style" value="<?= $key ?>" class="custom-control-input" <?= ($data->values['settings']['inner_eye_style'] ?? null) == $key ? 'checked="checked"' : null?> required="required" data-reload-qr-code />
-                                                <div class="py-2">
+                                                <div class="py-1">
                                                     <?= sprintf($style['svg'], 'var(--primary-800)') ?>
                                                 </div>
                                             </label>
@@ -551,10 +739,10 @@
                                 <label for="outer_eye_style"><i class="fas fa-fw fa-dot-circle fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.outer_eye_style') ?></label>
                                 <div class="row btn-group-toggle p-2" data-toggle="buttons">
                                     <?php foreach($data->outer_eyes as $key => $style): ?>
-                                        <div class="col-3 p-2">
+                                        <div class="col-1 p-1">
                                             <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['outer_eye_style'] ?? null) == $key ? 'active"' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
                                                 <input type="radio" name="outer_eye_style" value="<?= $key ?>" class="custom-control-input" <?= ($data->values['settings']['outer_eye_style'] ?? null) == $key ? 'checked="checked"' : null?> required="required" data-reload-qr-code />
-                                                <div class="py-2">
+                                                <div class="py-1">
                                                     <?= sprintf($style['svg'], 'var(--primary-800)') ?>
                                                 </div>
                                             </label>
@@ -726,7 +914,7 @@
                         <div class="collapse" id="branding_container" data-parent="#form">
                             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->codes->logo_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->codes->logo_size_limit) ?>">
                                 <label for="qr_code_logo"><i class="fas fa-fw fa-sm fa-eye text-muted mr-1"></i> <?= l('qr_codes.input.qr_code_logo') ?></label>
-                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_logo', 'file_key' => 'qr_code_logo', 'already_existing_image' => null, 'input_data' => 'data-reload-qr-code']) ?>
+                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_logo', 'file_key' => 'qr_code_logo', 'already_existing_image' => $data->mode == 'edit' ? $data->qr_code->qr_code_logo : null, 'input_data' => 'data-reload-qr-code']) ?>
                                 <?= \Altum\Alerts::output_field_error('qr_code_logo') ?>
                                 <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('qr_code_logo')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->codes->logo_size_limit) ?></small>
                             </div>
@@ -739,7 +927,7 @@
 
                             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->codes->background_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->codes->background_size_limit) ?>">
                                 <label for="qr_code_background"><i class="fas fa-fw fa-sm fa-image text-muted mr-1"></i> <?= l('qr_codes.input.qr_code_background') ?></label>
-                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_background', 'file_key' => 'qr_code_background', 'already_existing_image' => null, 'input_data' => 'data-reload-qr-code']) ?>
+                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_background', 'file_key' => 'qr_code_background', 'already_existing_image' => $data->mode == 'edit' ? $data->qr_code->qr_code_background : null, 'input_data' => 'data-reload-qr-code']) ?>
                                 <?= \Altum\Alerts::output_field_error('qr_code_background') ?>
                                 <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('qr_code_background')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->codes->background_size_limit) ?></small>
                             </div>
@@ -752,7 +940,7 @@
 
                             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->codes->background_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->codes->background_size_limit) ?>">
                                 <label for="qr_code_foreground"><i class="fas fa-fw fa-sm fa-images text-muted mr-1"></i> <?= l('qr_codes.input.qr_code_foreground') ?></label>
-                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_foreground', 'file_key' => 'qr_code_foreground', 'already_existing_image' => null, 'input_data' => 'data-reload-qr-code']) ?>
+                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_foreground', 'file_key' => 'qr_code_foreground', 'already_existing_image' => $data->mode == 'edit' ? $data->qr_code->qr_code_foreground : null, 'input_data' => 'data-reload-qr-code']) ?>
                                 <?= \Altum\Alerts::output_field_error('qr_code_foreground') ?>
                                 <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('qr_code_foreground')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->codes->background_size_limit) ?></small>
                             </div>
@@ -805,7 +993,13 @@
                             </div>
                         </div>
 
-                        <button type="submit" name="submit" class="btn btn-block btn-primary mt-4"><?= l('global.create') ?></button>
+                        <button type="submit" name="submit" class="btn btn-block btn-primary mt-4">
+                            <?php if($data->mode == 'create'): ?>
+                                <?= l('global.create') ?>
+                            <?php else: ?>
+                                <?= l('global.update') ?>
+                            <?php endif ?>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -815,7 +1009,7 @@
                     <div class="mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <img id="qr_code" src="<?= settings()->codes->qr_codes_default_image ? \Altum\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg' ?>" class="img-fluid qr-code" loading="lazy" />
+                                <img id="qr_code" src="<?= $data->mode == 'edit' && $data->qr_code->qr_code ? \Altum\Uploads::get_full_url('qr_code') . $data->qr_code->qr_code : (settings()->codes->qr_codes_default_image ? \Altum\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg') ?>" class="img-fluid qr-code" loading="lazy" />
                             </div>
                         </div>
                     </div>
@@ -833,7 +1027,7 @@
                             </button>
 
                             <div class="dropdown-menu">
-                                <a href="<?= $data->values['settings']['data'] ?? (settings()->codes->qr_codes_default_image ? \Altum\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg') ?>" id="download_svg" class="dropdown-item" download="<?= get_slug($data->values['name'] ?? settings()->main->title) . '.svg' ?>"><?= sprintf(l('global.download_as'), 'SVG') ?></a>
+                                <a href="<?= $data->values['settings']['data'] ?? ($data->mode == 'edit' && $data->qr_code->qr_code ? \Altum\Uploads::get_full_url('qr_code') . $data->qr_code->qr_code : (settings()->codes->qr_codes_default_image ? \Altum\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg')) ?>" id="download_svg" class="dropdown-item" download="<?= get_slug($data->values['name'] ?? settings()->main->title) . '.svg' ?>"><?= sprintf(l('global.download_as'), 'SVG') ?></a>
                                 <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others(null, 'png', '<?= get_slug($data->values['name'] ?? settings()->main->title) . '.png' ?>');"><?= sprintf(l('global.download_as'), 'PNG') ?></button>
                                 <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others(null, 'jpg', '<?= get_slug($data->values['name'] ?? settings()->main->title) . '.jpg' ?>');"><?= sprintf(l('global.download_as'), 'JPG') ?></button>
                                 <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others(null, 'webp', '<?= get_slug($data->values['name'] ?? settings()->main->title) . '.webp' ?>');"><?= sprintf(l('global.download_as'), 'WEBP') ?></button>
@@ -872,3 +1066,35 @@
 
 <?php require THEME_PATH . 'views/qr-codes/js_qr_codes.php' ?>
 <?php include_view(THEME_PATH . 'views/partials/color_picker_js.php') ?>
+
+<script>
+/* VCard phone numbers */
+document.querySelectorAll('[data-add="vcard-phone-number"]').forEach(element => {
+    element.addEventListener('click', event => {
+        let clone = document.querySelector('[data-vcard-phone-number]').cloneNode(true);
+        clone.querySelectorAll('input').forEach(input => input.value = '');
+        document.querySelector('[data-vcard-phone-numbers]').appendChild(clone);
+    });
+});
+
+document.addEventListener('click', event => {
+    if(event.target.closest('[data-remove="vcard-phone-number"]')) {
+        event.target.closest('[data-vcard-phone-number]').remove();
+    }
+});
+
+/* VCard socials */
+document.querySelectorAll('[data-add="vcard-social"]').forEach(element => {
+    element.addEventListener('click', event => {
+        let clone = document.querySelector('[data-vcard-social]').cloneNode(true);
+        clone.querySelectorAll('input').forEach(input => input.value = '');
+        document.querySelector('[data-vcard-socials]').appendChild(clone);
+    });
+});
+
+document.addEventListener('click', event => {
+    if(event.target.closest('[data-remove="vcard-social"]')) {
+        event.target.closest('[data-vcard-social]').remove();
+    }
+});
+</script>

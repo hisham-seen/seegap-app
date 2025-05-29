@@ -239,16 +239,8 @@ class Router {
                 ]
             ],
 
-            'qr-code-create' => [
-                'controller' => 'QrCodeCreate',
-                'settings' => [
-                    'wrapper' => 'app_wrapper',
-                    'ads' => true,
-                ]
-            ],
-
-            'qr-code-update' => [
-                'controller' => 'QrCodeUpdate',
+            'qr-code-manager' => [
+                'controller' => 'QrCodeManager',
                 'settings' => [
                     'wrapper' => 'app_wrapper',
                     'ads' => true,

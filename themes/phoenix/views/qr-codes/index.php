@@ -21,7 +21,7 @@
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('qr_codes.create') ?>
                     </button>
                 <?php else: ?>
-                    <a href="<?= url('qr-code-create') ?>" class="btn btn-primary" data-toggle="tooltip" data-html="true" title="<?= get_plan_feature_limit_info($data->total_qr_codes, $this->user->plan_settings->qr_codes_limit, isset($data->filters) ? !$data->filters->has_applied_filters : true) ?>">
+                    <a href="<?= url('qr-code-manager/create') ?>" class="btn btn-primary" data-toggle="tooltip" data-html="true" title="<?= get_plan_feature_limit_info($data->total_qr_codes, $this->user->plan_settings->qr_codes_limit, isset($data->filters) ? !$data->filters->has_applied_filters : true) ?>">
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('qr_codes.create') ?>
                     </a>
                 <?php endif ?>
@@ -181,8 +181,9 @@
                         <?php if(settings()->links->projects_is_enabled): ?>
                         <th></th>
                         <?php endif ?>
-                        <th></th>
-                        <th></th>
+                        <th><?= l('global.datetime') ?></th>
+                        <th><?= l('global.last_datetime') ?></th>
+                        <th><?= l('global.actions') ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -211,7 +212,7 @@
 
                                     <div class="d-flex flex-column">
                                         <div>
-                                            <a href="<?= url('qr-code-update/' . $row->qr_code_id) ?>" class="font-weight-bold text-truncate"><?= $row->name ?></a>
+                                            <a href="<?= url('qr-code-manager/edit/' . $row->qr_code_id) ?>" class="font-weight-bold text-truncate"><?= $row->name ?></a>
                                         </div>
                                         <?php if($row->type == 'url'): ?>
                                             <div class="d-flex align-items-center">
@@ -249,23 +250,34 @@
                             <?php endif ?>
 
                             <td class="text-nowrap text-muted">
-                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
-                                <i class="fas fa-fw fa-calendar text-muted"></i>
-                            </span>
+                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
+                                    <?= \Altum\Date::get($row->datetime, 2) ?>
+                                </span>
+                            </td>
 
-                                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.last_datetime_tooltip'), ($row->last_datetime ? '<br />' . \Altum\Date::get($row->last_datetime, 2) . '<br /><small>' . \Altum\Date::get($row->last_datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->last_datetime) . ')</small>' : '<br />-')) ?>">
-                                <i class="fas fa-fw fa-history text-muted"></i>
-                            </span>
+                            <td class="text-nowrap text-muted">
+                                <?php if($row->last_datetime): ?>
+                                    <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
+                                        <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="text-muted">-</span>
+                                <?php endif ?>
                             </td>
 
                             <td>
-                                <div class="d-flex justify-content-end">
-                                    <div class="dropdown">
-                                        <button type="button" class="btn btn-block btn-link dropdown-toggle dropdown-toggle-simple" title="<?= l('global.download') ?>" data-toggle="dropdown" aria-expanded="false" data-tooltip data-tooltip-hide-on-click>
-                                            <i class="fas fa-fw fa-sm fa-download"></i>
-                                        </button>
+                                <div class="d-flex align-items-center">
 
-                                        <div class="dropdown-menu">
+                                    <a href="<?= url('qr-code-manager/edit/' . $row->qr_code_id) ?>" class="text-primary mr-3" data-toggle="tooltip" title="<?= l('global.edit') ?>">
+                                        <i class="fas fa-fw fa-pencil-alt"></i>
+                                    </a>
+
+                                    <div class="dropdown mr-3">
+                                        <a href="#" class="text-secondary dropdown-toggle-simple" title="<?= l('global.download') ?>" data-toggle="dropdown" aria-expanded="false" data-tooltip data-tooltip-hide-on-click>
+                                            <i class="fas fa-fw fa-download"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-right">
                                             <a href="<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>" class="dropdown-item" download="<?= get_slug($row->name) . '.svg' ?>"><?= sprintf(l('global.download_as'), 'SVG') ?></a>
                                             <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'png', '<?= get_slug($row->name) . '.png' ?>');"><?= sprintf(l('global.download_as'), 'PNG') ?></button>
                                             <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'jpg', '<?= get_slug($row->name) . '.jpg' ?>');"><?= sprintf(l('global.download_as'), 'JPG') ?></button>
@@ -273,7 +285,14 @@
                                         </div>
                                     </div>
 
-                                    <?= include_view(THEME_PATH . 'views/qr-codes/qr_code_dropdown_button.php', ['id' => $row->qr_code_id, 'resource_name' => $row->name]) ?>
+                                    <a href="#" class="text-success mr-3" data-toggle="modal" data-target="#qr_code_duplicate_modal" data-qr-code-id="<?= $row->qr_code_id ?>" title="<?= l('global.duplicate') ?>">
+                                        <i class="fas fa-fw fa-clone"></i>
+                                    </a>
+
+                                    <a href="#" class="text-danger" data-toggle="modal" data-target="#qr_code_delete_modal" data-qr-code-id="<?= $row->qr_code_id ?>" data-resource-name="<?= $row->name ?>" title="<?= l('global.delete') ?>">
+                                        <i class="fas fa-fw fa-trash-alt"></i>
+                                    </a>
+
                                 </div>
                             </td>
                         </tr>
@@ -296,6 +315,15 @@
     <?php endif ?>
 
 </section>
+
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+    'name' => 'qr_code',
+    'resource_id' => 'qr_code_id',
+    'has_dynamic_resource_name' => true,
+    'path' => 'qr-codes/delete'
+]), 'modals') ?>
+
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'qr_code_duplicate_modal', 'resource_id' => 'qr_code_id', 'path' => 'qr-codes/duplicate']), 'modals'); ?>
 
 <?php require THEME_PATH . 'views/qr-codes/js_qr_codes.php' ?>
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>

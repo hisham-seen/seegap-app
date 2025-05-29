@@ -163,9 +163,9 @@
                         </th>
                         <th><?= l('global.name') ?></th>
                         <th><?= l('global.type') ?></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th><?= l('global.datetime') ?></th>
+                        <th><?= l('global.last_datetime') ?></th>
+                        <th><?= l('global.actions') ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -192,24 +192,36 @@
                             </td>
 
                             <td class="text-nowrap text-muted">
-                                <a href="<?= url('links?pixels_ids=' . $row->pixel_id) ?>" class="mr-2" data-toggle="tooltip" title="<?= l('links.title') ?>">
-                                    <i class="fas fa-fw fa-link text-muted"></i>
-                                </a>
+                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
+                                    <?= \Altum\Date::get($row->datetime, 2) ?>
+                                </span>
                             </td>
 
                             <td class="text-nowrap text-muted">
-                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
-                                <i class="fas fa-fw fa-calendar text-muted"></i>
-                            </span>
-
-                                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.last_datetime_tooltip'), ($row->last_datetime ? '<br />' . \Altum\Date::get($row->last_datetime, 2) . '<br /><small>' . \Altum\Date::get($row->last_datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->last_datetime) . ')</small>' : '<br />-')) ?>">
-                                <i class="fas fa-fw fa-history text-muted"></i>
-                            </span>
+                                <?php if($row->last_datetime): ?>
+                                    <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
+                                        <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="text-muted">-</span>
+                                <?php endif ?>
                             </td>
 
                             <td>
-                                <div class="d-flex justify-content-end">
-                                    <?= include_view(THEME_PATH . 'views/pixels/pixel_dropdown_button.php', ['id' => $row->pixel_id, 'resource_name' => $row->name]) ?>
+                                <div class="d-flex align-items-center">
+
+                                    <a href="<?= url('pixel-update/' . $row->pixel_id) ?>" class="text-primary mr-3" data-toggle="tooltip" title="<?= l('global.edit') ?>">
+                                        <i class="fas fa-fw fa-pencil-alt"></i>
+                                    </a>
+
+                                    <a href="<?= url('links?pixels_ids=' . $row->pixel_id) ?>" class="text-info mr-3" data-toggle="tooltip" title="<?= l('links.title') ?>">
+                                        <i class="fas fa-fw fa-link"></i>
+                                    </a>
+
+                                    <a href="#" class="text-danger" data-toggle="modal" data-target="#pixel_delete_modal" data-pixel-id="<?= $row->pixel_id ?>" data-resource-name="<?= $row->name ?>" title="<?= l('global.delete') ?>">
+                                        <i class="fas fa-fw fa-trash-alt"></i>
+                                    </a>
+
                                 </div>
                             </td>
                         </tr>
@@ -233,6 +245,13 @@
     <?php endif ?>
 
 </div>
+
+<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+    'name' => 'pixel',
+    'resource_id' => 'pixel_id',
+    'has_dynamic_resource_name' => true,
+    'path' => 'pixels/delete'
+]), 'modals') ?>
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
 <?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>

@@ -143,7 +143,8 @@
                     <th><?= l('gs1_links.table.clicks') ?></th>
                     <th><?= l('global.status') ?></th>
                     <th><?= l('global.datetime') ?></th>
-                    <th></th>
+                    <th><?= l('global.last_datetime') ?></th>
+                    <th><?= l('global.actions') ?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -197,65 +198,68 @@
                             </a>
                         </td>
 
+                        <td class="text-nowrap">
+                            <div class="custom-control custom-switch" data-toggle="tooltip" title="<?= l('gs1_links.is_enabled_tooltip') ?>">
+                                <input
+                                        type="checkbox"
+                                        class="custom-control-input"
+                                        id="gs1_link_is_enabled_<?= $row->gs1_link_id ?>"
+                                        data-row-id="<?= $row->gs1_link_id ?>"
+                                        onchange="ajax_call_helper(event, 'gs1-link-ajax', 'is_enabled_toggle')"
+                                    <?= $row->is_enabled ? 'checked="checked"' : null ?>
+                                >
+                                <label class="custom-control-label" for="gs1_link_is_enabled_<?= $row->gs1_link_id ?>"></label>
+                            </div>
+                        </td>
+
                         <td class="text-nowrap text-muted">
                             <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
                                 <?= \Altum\Date::get($row->datetime, 2) ?>
                             </span>
                         </td>
 
-                        <td class="text-nowrap">
-                            <div class="d-flex align-items-center justify-content-end">
+                        <td class="text-nowrap text-muted">
+                            <?php if($row->last_datetime): ?>
+                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
+                                    <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="text-muted">-</span>
+                            <?php endif ?>
+                        </td>
 
-                                <div class="custom-control custom-switch mr-3" data-toggle="tooltip" title="<?= l('gs1_links.is_enabled_tooltip') ?>">
-                                    <input
-                                            type="checkbox"
-                                            class="custom-control-input"
-                                            id="gs1_link_is_enabled_<?= $row->gs1_link_id ?>"
-                                            data-row-id="<?= $row->gs1_link_id ?>"
-                                            onchange="ajax_call_helper(event, 'gs1-link-ajax', 'is_enabled_toggle')"
-                                        <?= $row->is_enabled ? 'checked="checked"' : null ?>
-                                    >
-                                    <label class="custom-control-label" for="gs1_link_is_enabled_<?= $row->gs1_link_id ?>"></label>
-                                </div>
+                        <td>
+                            <div class="d-flex align-items-center">
 
-                                <a href="<?= url('gs1-link-manager/edit/' . $row->gs1_link_id) ?>" class="btn btn-sm btn-outline-primary mr-2" data-toggle="tooltip" title="<?= l('global.edit') ?>">
-                                    <i class="fas fa-fw fa-sm fa-pencil-alt"></i>
+                                <a href="<?= url('gs1-link-manager/edit/' . $row->gs1_link_id) ?>" class="text-primary mr-3" data-toggle="tooltip" title="<?= l('global.edit') ?>">
+                                    <i class="fas fa-fw fa-pencil-alt"></i>
                                 </a>
 
-                                <a href="<?= url('gs1-link/' . $row->gs1_link_id . '/statistics') ?>" class="btn btn-sm btn-outline-info mr-2" data-toggle="tooltip" title="<?= l('link.statistics.link') ?>">
-                                    <i class="fas fa-fw fa-sm fa-chart-bar"></i>
+                                <a href="<?= url('gs1-link/' . $row->gs1_link_id . '/statistics') ?>" class="text-info mr-3" data-toggle="tooltip" title="<?= l('link.statistics.link') ?>">
+                                    <i class="fas fa-fw fa-chart-bar"></i>
                                 </a>
 
                                 <?php if(settings()->codes->qr_codes_is_enabled): ?>
-                                    <a href="<?= url('qr-code-create?name=' . $row->gtin . '&type=url&url=' . url('01/' . $row->gtin) . '&gs1_link_id=' . $row->gs1_link_id . '&url_dynamic=1') ?>" class="btn btn-sm btn-outline-secondary mr-2" data-toggle="tooltip" title="<?= l('qr_codes.create') ?>">
-                                        <i class="fas fa-fw fa-sm fa-qrcode"></i>
+                                    <a href="<?= url('qr-code-create?name=' . $row->gtin . '&type=url&url=' . url('01/' . $row->gtin) . '&gs1_link_id=' . $row->gs1_link_id . '&url_dynamic=1') ?>" class="text-secondary mr-3" data-toggle="tooltip" title="<?= l('qr_codes.create') ?>">
+                                        <i class="fas fa-fw fa-qrcode"></i>
                                     </a>
                                 <?php endif ?>
 
-                                <button
-                                        type="button"
-                                        class="btn btn-sm btn-outline-secondary mr-2"
-                                        data-toggle="tooltip"
-                                        title="<?= l('global.clipboard_copy') ?>"
-                                        aria-label="<?= l('global.clipboard_copy') ?>"
-                                        data-copy="<?= l('global.clipboard_copy') ?>"
-                                        data-copied="<?= l('global.clipboard_copied') ?>"
-                                        data-clipboard-text="<?= url('01/' . $row->gtin) ?>"
-                                >
-                                    <i class="fas fa-fw fa-sm fa-copy"></i>
-                                </button>
+                                <a href="#" class="text-secondary mr-3" data-toggle="tooltip" title="<?= l('global.clipboard_copy') ?>" aria-label="<?= l('global.clipboard_copy') ?>" data-copy="<?= l('global.clipboard_copy') ?>" data-copied="<?= l('global.clipboard_copied') ?>" data-clipboard-text="<?= url('01/' . $row->gtin) ?>">
+                                    <i class="fas fa-fw fa-copy"></i>
+                                </a>
 
-                                <button type="button" class="btn btn-sm btn-outline-success mr-2" data-toggle="modal" data-target="#gs1_link_duplicate_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" title="<?= l('global.duplicate') ?>">
-                                    <i class="fas fa-fw fa-sm fa-clone"></i>
-                                </button>
+                                <a href="#" class="text-success mr-3" data-toggle="modal" data-target="#gs1_link_duplicate_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" title="<?= l('global.duplicate') ?>">
+                                    <i class="fas fa-fw fa-clone"></i>
+                                </a>
 
-                                <button type="button" class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#gs1_link_reset_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" title="<?= l('global.reset') ?>">
-                                    <i class="fas fa-fw fa-sm fa-redo"></i>
-                                </button>
+                                <a href="#" class="text-warning mr-3" data-toggle="modal" data-target="#gs1_link_reset_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" title="<?= l('global.reset') ?>">
+                                    <i class="fas fa-fw fa-redo"></i>
+                                </a>
 
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" data-resource-name="<?= $row->gtin ?>" title="<?= l('global.delete') ?>">
-                                    <i class="fas fa-fw fa-sm fa-trash-alt"></i>
-                                </button>
+                                <a href="#" class="text-danger" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" data-resource-name="<?= $row->gtin ?>" title="<?= l('global.delete') ?>">
+                                    <i class="fas fa-fw fa-trash-alt"></i>
+                                </a>
 
                             </div>
                         </td>

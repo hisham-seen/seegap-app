@@ -12,10 +12,11 @@ namespace Altum\Controllers;
 use Altum\Alerts;
 use Altum\Date;
 use Altum\Uploads;
+use Unirest\Request;
 
 defined('ALTUMCODE') || die();
 
-class QrCodeUpdate extends Controller {
+class QrCodeManager extends Controller {
 
     public function index() {
 
@@ -25,18 +26,38 @@ class QrCodeUpdate extends Controller {
             redirect('not-found');
         }
 
+        /* Determine mode based on URL parameters */
+        $mode = isset($this->params[0]) && in_array($this->params[0], ['create', 'edit']) ? $this->params[0] : 'create';
+        $qr_code_id = null;
+        $qr_code = null;
+
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.qr_codes')) {
-            Alerts::add_info(l('global.info_message.team_no_access'));
-            redirect('qr-codes');
-        }
+        if($mode == 'create') {
+            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.qr_codes')) {
+                Alerts::add_info(l('global.info_message.team_no_access'));
+                redirect('qr-codes');
+            }
 
-        $qr_code_id = isset($this->params[0]) ? (int) $this->params[0] : null;
+            /* Check for the plan limit */
+            $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `qr_codes` WHERE `user_id` = {$this->user->user_id}")->fetch_object()->total ?? 0;
 
-        if(!$qr_code = db()->where('qr_code_id', $qr_code_id)->where('user_id', $this->user->user_id)->getOne('qr_codes')) {
-            redirect('qr-codes');
+            if($this->user->plan_settings->qr_codes_limit != -1 && $total_rows >= $this->user->plan_settings->qr_codes_limit) {
+                Alerts::add_info(l('global.info_message.plan_feature_limit'));
+                redirect('qr-codes');
+            }
+        } else {
+            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.qr_codes')) {
+                Alerts::add_info(l('global.info_message.team_no_access'));
+                redirect('qr-codes');
+            }
+
+            $qr_code_id = isset($this->params[1]) ? (int) $this->params[1] : null;
+
+            if(!$qr_code = db()->where('qr_code_id', $qr_code_id)->where('user_id', $this->user->user_id)->getOne('qr_codes')) {
+                redirect('qr-codes');
+            }
+            $qr_code->settings = json_decode($qr_code->settings ?? '');
         }
-        $qr_code->settings = json_decode($qr_code->settings ?? '');
 
         $available_qr_codes = require APP_PATH . 'includes/enabled_qr_codes.php';
         $frames = require APP_PATH . 'includes/qr_codes_frames.php';
@@ -51,17 +72,37 @@ class QrCodeUpdate extends Controller {
         /* Existing links */
         $links = (new \Altum\Models\Link())->get_full_links_by_user_id($this->user->user_id);
 
+        /* Existing GS1 links */
+        $gs1_links = (new \Altum\Models\Gs1Link())->get_gs1_links_by_user_id($this->user->user_id);
+
+        $settings = [
+            'style' => 'square',
+            'inner_eye_style' => 'square',
+            'outer_eye_style' => 'square',
+            'foreground_type' => 'color',
+            'qr_code_background_transparency' => 0,
+            'qr_code_foreground_transparency' => 0,
+
+            'frame' => null,
+            'frame_text' => null,
+            'frame_text_size' => 0,
+            'frame_text_font' => array_key_first($frames_fonts),
+            'frame_custom_colors' => false,
+            'frame_color' => '#000000',
+            'frame_text_color' => '#ffffff',
+        ];
+
         if(!empty($_POST)) {
             $required_fields = ['name', 'type'];
-            $settings = [];
 
             $_POST['name'] = trim(query_clean($_POST['name']));
             $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
             $_POST['embedded_data'] = input_clean($_POST['embedded_data'], 10000);
             $_POST['type'] = isset($_POST['type']) && array_key_exists($_POST['type'], $available_qr_codes) ? $_POST['type'] : 'text';
-            $settings['style'] = $_POST['style'] = isset($_POST['style']) && array_key_exists($_POST['style'], $styles) ? $_POST['style'] : 'square';
+            $_POST['dynamic_type'] = isset($_POST['dynamic_type']) && in_array($_POST['dynamic_type'], ['links', 'gs1_links']) ? $_POST['dynamic_type'] : null;
             $settings['inner_eye_style'] = $_POST['inner_eye_style'] = isset($_POST['inner_eye_style']) && array_key_exists($_POST['inner_eye_style'], $inner_eyes) ? $_POST['inner_eye_style'] : 'square';
-            $settings['outer_eye_style'] = $_POST['outer_eye_style'] = isset($_POST['outer_eye_style']) && array_key_exists($_POST['outer_eye_style'], $outer_eyes) ? $_POST['outer_eye_style'] : 'square';            $settings['foreground_type'] = $_POST['foreground_type'] = isset($_POST['foreground_type']) && in_array($_POST['foreground_type'], ['color', 'gradient']) ? $_POST['foreground_type'] : 'color';
+            $settings['outer_eye_style'] = $_POST['outer_eye_style'] = isset($_POST['outer_eye_style']) && array_key_exists($_POST['outer_eye_style'], $outer_eyes) ? $_POST['outer_eye_style'] : 'square';
+            $settings['style'] = $_POST['style'] = isset($_POST['style']) && array_key_exists($_POST['style'], $styles) ? $_POST['style'] : 'square';
             $settings['foreground_type'] = $_POST['foreground_type'] = isset($_POST['foreground_type']) && in_array($_POST['foreground_type'], ['color', 'gradient']) ? $_POST['foreground_type'] : 'color';
             switch($_POST['foreground_type']) {
                 case 'color':
@@ -123,6 +164,7 @@ class QrCodeUpdate extends Controller {
                 'EUC-KR',
             ]) ? $_POST['encoding'] : 'UTF-8';
             $settings['is_readable'] = $_POST['is_readable'] = (int) isset($_POST['is_readable']);
+            $_POST['is_bulk'] = (int) isset($_POST['is_bulk']);
 
             /* Frame */
             $settings['frame'] = $_POST['frame'] = isset($_POST['frame']) && array_key_exists($_POST['frame'], $frames) ? input_clean($_POST['frame']) : null;
@@ -150,10 +192,20 @@ class QrCodeUpdate extends Controller {
                     if(isset($_POST['link_id']) && isset($_POST['url_dynamic'])) {
                         $link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links', ['link_id']);
                         if(!$link) {
-                            $_POST['link_id'] = null;
+                            unset($_POST['link_id']);
                         }
                     } else {
-                        $_POST['link_id'] = null;
+                        unset($_POST['link_id']);
+                        unset($_POST['url_dynamic']);
+                    }
+
+                    if(isset($_POST['gs1_link_id']) && isset($_POST['url_dynamic'])) {
+                        $gs1_link = db()->where('gs1_link_id', $_POST['gs1_link_id'])->where('user_id', $this->user->user_id)->getOne('gs1_links', ['gs1_link_id']);
+                        if(!$gs1_link) {
+                            unset($_POST['gs1_link_id']);
+                        }
+                    } else {
+                        unset($_POST['gs1_link_id']);
                     }
                     break;
 
@@ -236,11 +288,11 @@ class QrCodeUpdate extends Controller {
                     $settings['vcard_country'] = $_POST['vcard_country'] = input_clean($_POST['vcard_country'], $available_qr_codes['vcard']['country']['max_length']);
                     $settings['vcard_note'] = $_POST['vcard_note'] = input_clean($_POST['vcard_note'], $available_qr_codes['vcard']['note']['max_length']);
 
-                    /* Phone numbers */
                     if(!isset($_POST['vcard_phone_number_label'])) {
                         $_POST['vcard_phone_number_label'] = [];
                         $_POST['vcard_phone_number_value'] = [];
                     }
+
                     $vcard_phone_numbers = [];
                     foreach ($_POST['vcard_phone_number_label'] as $key => $value) {
                         if($key >= 20) continue;
@@ -252,11 +304,11 @@ class QrCodeUpdate extends Controller {
                     }
                     $settings['vcard_phone_numbers'] = $vcard_phone_numbers;
 
-                    /* Socials */
                     if(!isset($_POST['vcard_social_label'])) {
                         $_POST['vcard_social_label'] = [];
                         $_POST['vcard_social_value'] = [];
                     }
+
                     $vcard_socials = [];
                     foreach ($_POST['vcard_social_label'] as $key => $value) {
                         if(empty(trim($value)) || $key >= 20) continue;
@@ -337,94 +389,237 @@ class QrCodeUpdate extends Controller {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
-            $qr_code->qr_code_logo = \Altum\Uploads::process_upload($qr_code->qr_code_logo, 'qr_code_logo', 'qr_code_logo', 'qr_code_logo_remove', settings()->codes->logo_size_limit);
-            $qr_code->qr_code_background = \Altum\Uploads::process_upload($qr_code->qr_code_background, 'qr_code_background', 'qr_code_background', 'qr_code_background_remove', settings()->codes->background_size_limit);
-            $qr_code->qr_code_foreground = \Altum\Uploads::process_upload($qr_code->qr_code_foreground, 'qr_code_foreground', 'qr_code_foreground', 'qr_code_foreground_remove', settings()->codes->background_size_limit);
+            /* Bulk processing - only available in create mode */
+            if($mode == 'create' && $_POST['is_bulk'] && $_POST['type'] == 'text') {
+                $data_rows = preg_split('/\r\n|\r|\n/', $_POST['text']);
 
-            if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
-                /* QR Code image */
-                if($_POST['qr_code']) {
-                    $_POST['qr_code'] = base64_decode(mb_substr($_POST['qr_code'], mb_strlen('data:image/svg+xml;base64,')));
+                /* Foreach row, generate one QR code */
+                $i = 1;
+                $total_created_qr_codes = 0;
 
-                    /* Generate new name for image */
-                    $image_new_name = md5(time() . rand()) . '.svg';
-
-                    /* Offload uploading */
-                    if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
-                        try {
-                            $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
-
-                            /* Delete current image */
-                            $s3->deleteObject([
-                                'Bucket' => settings()->offload->storage_name,
-                                'Key' =>  UPLOADS_URL_PATH . Uploads::get_path('qr_code') . $qr_code->qr_code,
-                            ]);
-
-                            /* Upload image */
-                            $result = $s3->putObject([
-                                'Bucket' => settings()->offload->storage_name,
-                                'Key' =>  UPLOADS_URL_PATH . Uploads::get_path('qr_code') . $image_new_name,
-                                'ContentType' => 'image/svg+xml',
-                                'Body' => $_POST['qr_code'],
-                                'ACL' => 'public-read'
-                            ]);
-                        } catch (\Exception $exception) {
-                            Alerts::add_error($exception->getMessage());
-                        }
+                foreach($data_rows as $data_row) {
+                    /* Skip empty lines */
+                    if(empty(trim($data_row))) {
+                        continue;
                     }
 
-                    /* Local uploading */
-                    else {
-                        /* Delete current image */
-                        if(!empty($qr_code->qr_code) && file_exists(Uploads::get_full_path('qr_code') . $qr_code->qr_code)) {
-                            unlink(Uploads::get_full_path('qr_code') . $qr_code->qr_code);
-                        }
+                    /* Set the QR data */
+                    $settings['text'] = $data_row;
 
-                        /* Upload the original */
-                        file_put_contents(Uploads::get_full_path('qr_code') . $image_new_name, $_POST['qr_code']);
+                    /* Generate the QR Code */
+                    $request_files = [];
+
+                    if($_POST['qr_code_logo']) $request_files['qr_code_logo'] = $_FILES['qr_code_logo']['tmp_name'];
+                    if($_POST['qr_code_background']) $request_files['qr_code_background'] = $_FILES['qr_code_background']['tmp_name'];
+                    if($_POST['qr_code_foreground']) $request_files['qr_code_foreground'] = $_FILES['qr_code_foreground']['tmp_name'];
+
+                    try {
+                        $response = Request::post(
+                            url('api/qr-codes'),
+                            ['Authorization' => 'Bearer ' . $this->user->api_key],
+                            Request\Body::multipart(
+                                array_merge([
+                                    'api_key' => $this->user->api_key,
+                                    'type' => $_POST['type'],
+                                    'project_id' => $_POST['project_id'],
+                                    'name' => $_POST['name'] . ' - #' . $i,
+                                ], $settings),
+                                $request_files
+                            )
+                        );
+                    } catch (\Exception $exception) {
+                        Alerts::add_error($exception->getMessage());
+                        break;
                     }
 
-                    $qr_code->qr_code = $image_new_name;
+                    if(isset($response->body->errors)) {
+                        Alerts::add_error($response->body->errors[0]->title);
+                        break;
+                    }
+
+                    if($response->code == 201) {
+                        $total_created_qr_codes++;
+
+                        /* Set a nice success message */
+                        Alerts::add_success(sprintf(l('global.success_message.create1'), '<strong>' . $_POST['name'] . ' - #' . $i . '</strong>'));
+                    }
+
+                    /* Do not allow more than X at once */
+                    if($i >= $this->user->plan_settings->qr_codes_bulk_limit) {
+                        break;
+                    }
+                    $i++;
                 }
 
-                $settings = json_encode($settings);
-
-                /* Database query */
-                db()->where('qr_code_id', $qr_code->qr_code_id)->update('qr_codes', [
-                    'project_id' => $_POST['project_id'],
-                    'link_id' => $_POST['link_id'],
-                    'name' => $_POST['name'],
-                    'type' => $_POST['type'],
-                    'settings' => $settings,
-                    'embedded_data' => $_POST['embedded_data'],
-                    'qr_code' => $qr_code->qr_code,
-                    'qr_code_logo' => $qr_code->qr_code_logo,
-                    'qr_code_background' => $qr_code->qr_code_background,
-                    'qr_code_foreground' => $qr_code->qr_code_foreground,
-                    'last_datetime' => get_date(),
-                ]);
-
-                /* Set a nice success message */
-                Alerts::add_success(sprintf(l('global.success_message.update1'), '<strong>' . $_POST['name'] . '</strong>'));
-
-                redirect('qr-code-update/' . $qr_code_id);
+                if($total_created_qr_codes) {
+                    redirect('qr-codes/');
+                }
             }
+
+            else {
+                if($mode == 'edit') {
+                    $qr_code->qr_code_logo = \Altum\Uploads::process_upload($qr_code->qr_code_logo, 'qr_code_logo', 'qr_code_logo', 'qr_code_logo_remove', settings()->codes->logo_size_limit);
+                    $qr_code->qr_code_background = \Altum\Uploads::process_upload($qr_code->qr_code_background, 'qr_code_background', 'qr_code_background', 'qr_code_background_remove', settings()->codes->background_size_limit);
+                    $qr_code->qr_code_foreground = \Altum\Uploads::process_upload($qr_code->qr_code_foreground, 'qr_code_foreground', 'qr_code_foreground', 'qr_code_foreground_remove', settings()->codes->background_size_limit);
+                } else {
+                    $qr_code_logo = \Altum\Uploads::process_upload(null, 'qr_code_logo', 'qr_code_logo', 'qr_code_logo_remove', settings()->codes->logo_size_limit);
+                    $qr_code_background = \Altum\Uploads::process_upload(null, 'qr_code_background', 'qr_code_background', 'qr_code_background_remove', settings()->codes->background_size_limit);
+                    $qr_code_foreground = \Altum\Uploads::process_upload(null, 'qr_code_foreground', 'qr_code_foreground', 'qr_code_foreground_remove', settings()->codes->background_size_limit);
+                }
+
+                if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
+                    $qr_code_file = null;
+
+                    /* QR Code image */
+                    if($_POST['qr_code']) {
+                        $_POST['qr_code'] = base64_decode(mb_substr($_POST['qr_code'], mb_strlen('data:image/svg+xml;base64,')));
+
+                        /* Generate new name for image */
+                        $image_new_name = md5(time() . rand()) . '.svg';
+
+                        /* Offload uploading */
+                        if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                            try {
+                                $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
+
+                                if($mode == 'edit') {
+                                    /* Delete current image */
+                                    $s3->deleteObject([
+                                        'Bucket' => settings()->offload->storage_name,
+                                        'Key' =>  UPLOADS_URL_PATH . Uploads::get_path('qr_code') . $qr_code->qr_code,
+                                    ]);
+                                }
+
+                                /* Upload image */
+                                $result = $s3->putObject([
+                                    'Bucket' => settings()->offload->storage_name,
+                                    'Key' =>  UPLOADS_URL_PATH . Uploads::get_path('qr_code') . $image_new_name,
+                                    'ContentType' => 'image/svg+xml',
+                                    'Body' => $_POST['qr_code'],
+                                    'ACL' => 'public-read'
+                                ]);
+                            } catch (\Exception $exception) {
+                                Alerts::add_error($exception->getMessage());
+                            }
+                        }
+                        /* Local uploading */
+                        else {
+                            if($mode == 'edit') {
+                                /* Delete current image */
+                                if(!empty($qr_code->qr_code) && file_exists(Uploads::get_full_path('qr_code') . $qr_code->qr_code)) {
+                                    unlink(Uploads::get_full_path('qr_code') . $qr_code->qr_code);
+                                }
+                            }
+
+                            /* Upload the original */
+                            file_put_contents(Uploads::get_full_path('qr_code') . $image_new_name, $_POST['qr_code']);
+                        }
+
+                        $qr_code_file = $image_new_name;
+                    }
+
+                    $settings = json_encode($settings);
+
+                    if($mode == 'create') {
+                        /* Database query */
+                        $qr_code_id = db()->insert('qr_codes', [
+                            'user_id' => $this->user->user_id,
+                            'project_id' => $_POST['project_id'],
+                            'link_id' => $_POST['link_id'] ?? null,
+                            'gs1_link_id' => $_POST['gs1_link_id'] ?? null,
+                            'name' => $_POST['name'],
+                            'type' => $_POST['type'],
+                            'settings' => $settings,
+                            'embedded_data' => $_POST['embedded_data'],
+                            'qr_code' => $qr_code_file,
+                            'qr_code_logo' => $qr_code_logo,
+                            'qr_code_background' => $qr_code_background,
+                            'qr_code_foreground' => $qr_code_foreground,
+                            'datetime' => get_date(),
+                        ]);
+
+                        /* Clear the cache */
+                        cache()->deleteItem('qr_codes_total?user_id=' . $this->user->user_id);
+
+                        /* Set a nice success message */
+                        Alerts::add_success(sprintf(l('global.success_message.create1'), '<strong>' . $_POST['name'] . '</strong>'));
+
+                        redirect('qr-code-manager/edit/' . $qr_code_id);
+                    } else {
+                        /* Database query */
+                        db()->where('qr_code_id', $qr_code->qr_code_id)->update('qr_codes', [
+                            'project_id' => $_POST['project_id'],
+                            'link_id' => $_POST['link_id'] ?? null,
+                            'gs1_link_id' => $_POST['gs1_link_id'] ?? null,
+                            'name' => $_POST['name'],
+                            'type' => $_POST['type'],
+                            'settings' => $settings,
+                            'embedded_data' => $_POST['embedded_data'],
+                            'qr_code' => $qr_code_file ?? $qr_code->qr_code,
+                            'qr_code_logo' => $qr_code->qr_code_logo,
+                            'qr_code_background' => $qr_code->qr_code_background,
+                            'qr_code_foreground' => $qr_code->qr_code_foreground,
+                            'last_datetime' => get_date(),
+                        ]);
+
+                        /* Set a nice success message */
+                        Alerts::add_success(sprintf(l('global.success_message.update1'), '<strong>' . $_POST['name'] . '</strong>'));
+
+                        redirect('qr-code-manager/edit/' . $qr_code_id);
+                    }
+                }
+            }
+        }
+
+        /* Set default values */
+        if($mode == 'create') {
+            $settings['text'] = $settings['text'] ?? $_GET['text'] ?? null;
+            $settings['url'] = $settings['url'] ?? $_GET['url'] ?? null;
+
+            $values = [
+                'name' => $_POST['name'] ?? $_GET['name'] ?? '',
+                'type' => $_POST['type'] ?? $_GET['type'] ?? array_key_first($available_qr_codes),
+                'project_id' => $_POST['project_id'] ?? $_GET['project_id'] ?? '',
+                'url_dynamic' => $_POST['url_dynamic'] ?? $_GET['url_dynamic'] ?? null,
+                'is_bulk' => $_POST['is_bulk'] ?? $_GET['is_bulk'] ?? null,
+                'dynamic_type' => $_POST['dynamic_type'] ?? $_GET['dynamic_type'] ?? null,
+                'link_id' => $_POST['link_id'] ?? $_GET['link_id'] ?? '',
+                'gs1_link_id' => $_POST['gs1_link_id'] ?? $_GET['gs1_link_id'] ?? '',
+                'embedded_data' => $_POST['embedded_data'] ?? $_GET['embedded_data'] ?? '',
+                'settings' => $settings
+            ];
+        } else {
+            $values = [
+                'name' => $_POST['name'] ?? $qr_code->name ?? '',
+                'type' => $_POST['type'] ?? $qr_code->type ?? array_key_first($available_qr_codes),
+                'project_id' => $_POST['project_id'] ?? $qr_code->project_id ?? '',
+                'url_dynamic' => $_POST['url_dynamic'] ?? null,
+                'is_bulk' => false,
+                'dynamic_type' => $_POST['dynamic_type'] ?? $qr_code->dynamic_type ?? null,
+                'link_id' => $_POST['link_id'] ?? $qr_code->link_id ?? '',
+                'gs1_link_id' => $_POST['gs1_link_id'] ?? $qr_code->gs1_link_id ?? '',
+                'embedded_data' => $_POST['embedded_data'] ?? $qr_code->embedded_data ?? '',
+                'settings' => array_merge($settings, (array) $qr_code->settings)
+            ];
         }
 
         /* Prepare the view */
         $data = [
+            'mode' => $mode,
+            'qr_code' => $qr_code,
             'available_qr_codes' => $available_qr_codes,
             'frames_fonts' => $frames_fonts,
             'frames' => $frames,
             'styles' => $styles,
             'inner_eyes' => $inner_eyes,
             'outer_eyes' => $outer_eyes,
-            'qr_code' => $qr_code,
             'projects' => $projects,
             'links' => $links,
+            'gs1_links' => $gs1_links,
+            'values' => $values,
         ];
 
-        $view = new \Altum\View('qr-code-update/index', (array) $this);
+        $view = new \Altum\View('qr-code-manager/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

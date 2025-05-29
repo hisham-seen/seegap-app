@@ -2674,3 +2674,131 @@ input[type="range"] {
         margin-bottom: 0.5rem;
     }
 }
+
+/* Dense Grid Layout for QR Code Manager and GS1 Link Manager */
+.qr-code-manager .card,
+.gs1-link-manager .card {
+    margin-bottom: 0.5rem !important;
+}
+
+.qr-code-manager .card-body,
+.gs1-link-manager .card-body {
+    padding: 0.75rem !important;
+}
+
+.qr-code-manager .form-group,
+.gs1-link-manager .form-group {
+    margin-bottom: 0.5rem !important;
+}
+
+.qr-code-manager .form-control,
+.gs1-link-manager .form-control,
+.qr-code-manager .custom-select,
+.gs1-link-manager .custom-select {
+    padding: 0.375rem 0.5rem !important;
+    font-size: 0.875rem !important;
+    height: calc(1.5em + 0.75rem + 2px) !important;
+}
+
+.qr-code-manager label,
+.gs1-link-manager label {
+    font-size: 0.8rem !important;
+    margin-bottom: 0.25rem !important;
+    font-weight: 500 !important;
+}
+
+.qr-code-manager .btn,
+.gs1-link-manager .btn {
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.875rem !important;
+}
+
+.qr-code-manager .row,
+.gs1-link-manager .row {
+    margin-bottom: 0.5rem !important;
+}
+
+.qr-code-manager .col-12,
+.gs1-link-manager .col-12,
+.qr-code-manager .col-lg-6,
+.gs1-link-manager .col-lg-6,
+.qr-code-manager .col-lg-4,
+.gs1-link-manager .col-lg-4 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Make the preview section more compact */
+.qr-code-manager .qr-code,
+.gs1-link-manager .mobile-preview {
+    margin-bottom: 1rem !important;
+}
+
+/* Reduce spacing in collapse sections */
+.qr-code-manager .collapse,
+.gs1-link-manager .collapse {
+    padding-top: 0.5rem !important;
+}
+
+/* Make input groups more compact */
+.qr-code-manager .input-group,
+.gs1-link-manager .input-group {
+    margin-bottom: 0.5rem !important;
+}
+
+.qr-code-manager .input-group-text,
+.gs1-link-manager .input-group-text {
+    padding: 0.375rem 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* Reduce spacing in custom controls */
+.qr-code-manager .custom-control,
+.gs1-link-manager .custom-control {
+    margin-bottom: 0.25rem !important;
+}
+
+/* Make small text even smaller */
+.qr-code-manager small,
+.gs1-link-manager small {
+    font-size: 0.7rem !important;
+    line-height: 1.2 !important;
+}
+
+/* Reduce padding in tabs */
+.qr-code-manager .nav-tabs .nav-link,
+.gs1-link-manager .nav-tabs .nav-link {
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* Make the overall container more compact */
+.qr-code-manager .container,
+.gs1-link-manager .container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+}
+
+/* Reduce header spacing */
+.qr-code-manager h1,
+.gs1-link-manager h1,
+.qr-code-manager .h3,
+.gs1-link-manager .h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Make breadcrumbs more compact */
+.qr-code-manager .custom-breadcrumbs,
+.gs1-link-manager .custom-breadcrumbs {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* Reduce spacing between sections */
+.qr-code-manager .py-4,
+.gs1-link-manager .py-4 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
