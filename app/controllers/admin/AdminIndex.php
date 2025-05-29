@@ -19,6 +19,7 @@ class AdminIndex extends Controller {
         $shortened_links = db()->where('type', 'link')->getValue('links', 'count(`link_id`)');
         $track_links = db()->getValue('track_links', 'MAX(`id`)');
         $qr_codes = db()->getValue('qr_codes', 'count(`qr_code_id`)');
+        $gs1_links = db()->getValue('gs1_links', 'count(`gs1_link_id`)');
         $domains = db()->getValue('domains', 'count(`domain_id`)');
         $users = db()->getValue('users', 'count(`user_id`)');
 
@@ -30,6 +31,7 @@ class AdminIndex extends Controller {
                 'shortened_links_current_month' => db()->where('type', 'link')->where('datetime', date('Y-m-01'), '>=')->getValue('links', 'count(*)'),
                 'track_links_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('track_links', 'count(*)'),
                 'qr_codes_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('qr_codes', 'count(*)'),
+                'gs1_links_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('gs1_links', 'count(*)'),
                 'users_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('users', 'count(*)'),
                 'payments_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'count(*)'),
                 'payments_amount_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'sum(`total_amount_default_currency`)'),
@@ -68,6 +70,7 @@ class AdminIndex extends Controller {
             'shortened_links' => $shortened_links,
             'track_links' => $track_links,
             'qr_codes' => $qr_codes,
+            'gs1_links' => $gs1_links,
             'domains' => $domains,
             'payments_total_amount' => $payments_total_amount,
             'users' => $users,
@@ -78,6 +81,7 @@ class AdminIndex extends Controller {
             'shortened_links_current_month' => $shortened_links_current_month,
             'track_links_current_month' => $track_links_current_month,
             'qr_codes_current_month' => $qr_codes_current_month,
+            'gs1_links_current_month' => $gs1_links_current_month,
             'users_current_month' => $users_current_month,
             'payments_current_month' => $payments_current_month,
             'payments_amount_current_month' => $payments_amount_current_month,

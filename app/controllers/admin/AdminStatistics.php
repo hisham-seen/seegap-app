@@ -1456,4 +1456,43 @@ class AdminStatistics extends Controller {
         ];
 
     }
+
+    protected function gs1_links() {
+
+        $total = ['gs1_links' => 0];
+
+        $convert_tz_sql = get_convert_tz_sql('`datetime`', $this->user->timezone);
+
+        $gs1_links_chart = [];
+        $result = database()->query("
+            SELECT
+                COUNT(*) AS `total`,
+                DATE_FORMAT({$convert_tz_sql}, '{$this->datetime['query_date_format']}') AS `formatted_date`
+            FROM
+                `gs1_links`
+            WHERE
+                {$convert_tz_sql} BETWEEN '{$this->datetime['query_start_date']}' AND '{$this->datetime['query_end_date']}'
+            GROUP BY
+                `formatted_date`
+            ORDER BY
+                `formatted_date`
+        ");
+        while($row = $result->fetch_object()) {
+            $row->formatted_date = $this->datetime['process']($row->formatted_date, true);
+
+            $gs1_links_chart[$row->formatted_date] = [
+                'gs1_links' => $row->total,
+            ];
+
+            $total['gs1_links'] += $row->total;
+        }
+
+        $gs1_links_chart = get_chart_data($gs1_links_chart);
+
+        return [
+            'total' => $total,
+            'gs1_links_chart' => $gs1_links_chart,
+        ];
+
+    }
 }

@@ -274,6 +274,14 @@ class Router {
                 ]
             ],
 
+            'gs1-link' => [
+                'controller' => 'Gs1Link',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
             'link' => [
                 'controller' => 'Link',
                 'settings' => [

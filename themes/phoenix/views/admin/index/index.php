@@ -108,6 +108,31 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col text-truncate">
+                        <small class="text-muted font-weight-bold"><?= l('admin_gs1_links.menu') ?></small>
+                    </div>
+
+                    <div class="col-auto">
+                    <span class="p-2 bg-primary-100 rounded">
+                        <i class="fas fa-fw fa-sm fa-barcode text-primary"></i>
+                    </span>
+                    </div>
+                </div>
+
+                <div class="mt-2 text-break">
+                    <a href="<?= url('admin/gs1-links') ?>" class="stretched-link text-reset text-decoration-none">
+                        <span class="h4"><?= nr($data->gs1_links) ?></span>
+                    </a>
+                    <div class="mt-1"><span class="small text-muted"><?= nr($data->gs1_links_current_month) ?> <?= mb_strtolower(l('global.date.this_month')) ?></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3 p-3 position-relative">
+        <div class="card d-flex flex-row h-100 overflow-hidden">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col text-truncate">
                         <small class="text-muted font-weight-bold"><?= l('admin_domains.menu') ?></small>
                     </div>
 
