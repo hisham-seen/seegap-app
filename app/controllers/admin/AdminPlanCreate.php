@@ -17,10 +17,8 @@ class AdminPlanCreate extends Controller {
 
     public function index() {
 
-        if(in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended'])) {
-            /* Get the available taxes from the system */
-            $taxes = db()->get('taxes');
-        }
+        /* Get the available taxes from the system */
+        $taxes = db()->get('taxes');
 
         $additional_domains = db()->where('is_enabled', 1)->where('type', 1)->get('domains');
         $microsites_templates = (new \Altum\Models\MicrositesTemplates())->get_microsites_templates();

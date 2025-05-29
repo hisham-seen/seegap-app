@@ -435,39 +435,37 @@ class Spotlight extends Controller {
                     'url' => 'admin/plan-create'
                 ];
 
-                if(in_array(settings()->license->type, ['SPECIAL','Extended License', 'extended'])) {
-                    $available_pages[] = [
-                        'name' => l('global.menu.admin') . ' - ' . l('admin_codes.title'),
-                        'url' => 'admin/codes'
-                    ];
+                $available_pages[] = [
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_codes.title'),
+                    'url' => 'admin/codes'
+                ];
 
-                    $available_pages[] = [
-                        'name' => l('global.menu.admin') . ' - ' . l('admin_code_create.title'),
-                        'url' => 'admin/code-create'
-                    ];
+                $available_pages[] = [
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_code_create.title'),
+                    'url' => 'admin/code-create'
+                ];
 
-                    $available_pages[] = [
-                        'name' => l('global.menu.admin') . ' - ' . l('admin_taxes.title'),
-                        'url' => 'admin/taxes'
-                    ];
+                $available_pages[] = [
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_taxes.title'),
+                    'url' => 'admin/taxes'
+                ];
 
-                    $available_pages[] = [
-                        'name' => l('global.menu.admin') . ' - ' . l('admin_tax_create.title'),
-                        'url' => 'admin/tax-create'
-                    ];
+                $available_pages[] = [
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_tax_create.title'),
+                    'url' => 'admin/tax-create'
+                ];
 
-                    if(\Altum\Plugin::is_active('affiliate')) {
-                        $available_pages[] = [
-                            'name' => l('global.menu.admin') . ' - ' . l('admin_affiliates_withdrawals.title'),
-                            'url' => 'admin/affiliates-withdrawals'
-                        ];
-                    }
-
+                if(\Altum\Plugin::is_active('affiliate')) {
                     $available_pages[] = [
-                        'name' => l('global.menu.admin') . ' - ' . l('admin_payments.title'),
-                        'url' => 'admin/payments'
+                        'name' => l('global.menu.admin') . ' - ' . l('admin_affiliates_withdrawals.title'),
+                        'url' => 'admin/affiliates-withdrawals'
                     ];
                 }
+
+                $available_pages[] = [
+                    'name' => l('global.menu.admin') . ' - ' . l('admin_payments.title'),
+                    'url' => 'admin/payments'
+                ];
 
                 $available_pages[] = [
                     'name' => l('global.menu.admin') . ' - ' . l('admin_statistics.menu'),

@@ -47,10 +47,8 @@ class AdminPlanUpdate extends Controller {
                 /* Parse codes & taxes */
                 $plan->taxes_ids = json_decode($plan->taxes_ids);
 
-                if(in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended'])) {
-                    /* Get the available taxes from the system */
-                    $taxes = db()->get('taxes');
-                }
+                /* Get the available taxes from the system */
+                $taxes = db()->get('taxes');
 
                 break;
 

@@ -31,8 +31,8 @@ class AdminIndex extends Controller {
                 'track_links_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('track_links', 'count(*)'),
                 'qr_codes_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('qr_codes', 'count(*)'),
                 'users_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('users', 'count(*)'),
-                'payments_current_month' => in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended']) ? db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'count(*)') : 0,
-                'payments_amount_current_month' => in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended']) ? db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'sum(`total_amount_default_currency`)') : 0,
+                'payments_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'count(*)'),
+                'payments_amount_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'sum(`total_amount_default_currency`)'),
             ];
         }, 86400));
 
@@ -40,12 +40,8 @@ class AdminIndex extends Controller {
         $fifteen_minutes_ago_datetime = (new \DateTime())->modify('-15 minutes')->format('Y-m-d H:i:s');
         $active_users = db()->where('last_activity', $fifteen_minutes_ago_datetime, '>=')->getValue('users', 'COUNT(*)');
 
-        if(in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended'])) {
-            $payments = db()->getValue('payments', 'count(`id`)');
-            $payments_total_amount = db()->getValue('payments', 'sum(`total_amount_default_currency`)');
-        } else {
-            $payments = $payments_total_amount = 0;
-        }
+        $payments = db()->getValue('payments', 'count(`id`)');
+        $payments_total_amount = db()->getValue('payments', 'sum(`total_amount_default_currency`)');
 
         if(settings()->internal_notifications->admins_is_enabled) {
             $internal_notifications = db()->where('for_who', 'admin')->orderBy('internal_notification_id', 'DESC')->get('internal_notifications', 5);

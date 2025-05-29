@@ -35,7 +35,7 @@ class AdminUserView extends Controller {
         $splash_pages = db()->where('user_id', $user_id)->getValue('splash_pages', 'count(`splash_page_id`)');
         $qr_codes = db()->where('user_id', $user_id)->getValue('qr_codes', 'count(`qr_code_id`)');
         $domains = db()->where('user_id', $user_id)->getValue('domains', 'count(`domain_id`)');
-        $payments = in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended']) ? db()->where('user_id', $user_id)->getValue('payments', 'count(`id`)') : 0;
+        $payments = db()->where('user_id', $user_id)->getValue('payments', 'count(`id`)');
 
         if(\Altum\Plugin::is_active('email-signatures')) {
             $signatures = db()->where('user_id', $user_id)->getValue('signatures', 'count(`signature_id`)');

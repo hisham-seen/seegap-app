@@ -1,13 +1,8 @@
 <?php defined('ALTUMCODE') || die() ?>
 
 <div>
-    <?php if(!in_array(settings()->license->type, ['Extended License', 'extended'])): ?>
-        <div class="alert alert-primary" role="alert">
-            You need to own the Extended License in order to activate the payment system.
-        </div>
-    <?php endif ?>
 
-    <div class="<?= !in_array(settings()->license->type, ['Extended License', 'extended']) ? 'container-disabled' : null ?>">
+    <div class="">
         <div class="alert alert-info mb-3"><?= sprintf(l('admin_settings.documentation'), '<a href="' . PRODUCT_DOCUMENTATION_URL . '#' . \Altum\Router::$method . '" target="_blank">', '</a>') ?></div>
         <div class="form-group custom-control custom-switch">
             <input id="is_enabled" name="is_enabled" type="checkbox" class="custom-control-input" <?= settings()->flutterwave->is_enabled ? 'checked="checked"' : null?>>

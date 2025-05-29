@@ -1,11 +1,6 @@
 <?php defined('ALTUMCODE') || die() ?>
 
 <div>
-    <?php if(!in_array(settings()->license->type, ['Extended License', 'extended'])): ?>
-        <div class="alert alert-primary" role="alert">
-            You need to own the Extended License in order to activate the affiliate plugin system.
-        </div>
-    <?php endif ?>
 
     <div <?= !\Altum\Plugin::is_active('affiliate') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \Altum\Plugin::get('affiliate')->name ?? 'affiliate') . '"' : null ?>>
         <div class="<?= !in_array(settings()->license->type, ['Extended License', 'extended']) || !\Altum\Plugin::is_active('affiliate') ? 'container-disabled' : null ?>">
