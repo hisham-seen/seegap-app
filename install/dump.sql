@@ -617,3 +617,20 @@ CREATE TABLE `track_gs1_links` (
   CONSTRAINT `track_gs1_links_gs1_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `track_gs1_links_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SEPARATOR --
+
+CREATE TABLE `reports` (
+  `report_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `description` text,
+  `superset_embed_code` text,
+  `assigned_user_ids` text,
+  `is_enabled` tinyint NOT NULL DEFAULT '1',
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

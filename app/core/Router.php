@@ -306,6 +306,22 @@ class Router {
                 ]
             ],
 
+            'reports' => [
+                'controller' => 'Reports',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
+            'report-view' => [
+                'controller' => 'ReportView',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
             'domains' => [
                 'controller' => 'Domains',
                 'settings' => [
@@ -1263,6 +1279,10 @@ class Router {
 
             'syntheses' => [
                 'controller' => 'AdminSyntheses',
+            ],
+
+            'reports' => [
+                'controller' => 'AdminReports'
             ],
 
             'projects' => [

@@ -135,6 +135,10 @@
 
             <?php if(is_logged_in()): ?>
 
+                <li class="<?= in_array(\Altum\Router::$controller, ['Reports', 'ReportView']) ? 'active' : null ?>">
+                    <a href="<?= url('reports') ?>"><i class="fas fa-fw fa-sm fa-chart-bar mr-2"></i> <?= l('reports.menu') ?></a>
+                </li>
+
                 <?php if(settings()->links->domains_is_enabled): ?>
                     <li class="<?= in_array(\Altum\Router::$controller, ['Domains', 'DomainUpdate', 'DomainCreate']) ? 'active' : null ?>">
                         <a href="<?= url('domains') ?>"><i class="fas fa-fw fa-sm fa-globe mr-2"></i> <?= l('domains.menu') ?></a>

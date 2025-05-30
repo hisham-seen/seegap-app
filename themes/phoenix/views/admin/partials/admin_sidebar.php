@@ -136,6 +136,10 @@
                 <a href="<?= url('admin/gs1-links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('admin_gs1_links.menu') ?></a>
             </li>
 
+            <li class="<?= in_array(\Altum\Router::$controller, ['AdminReports']) ? 'active' : null ?>">
+                <a href="<?= url('admin/reports') ?>"><i class="fas fa-fw fa-sm fa-chart-bar mr-2"></i> <?= l('admin_reports.menu') ?></a>
+            </li>
+
             <li class="<?= in_array(\Altum\Router::$controller, ['AdminProjects']) ? 'active' : null ?>">
                 <a href="<?= url('admin/projects') ?>"><i class="fas fa-fw fa-sm fa-project-diagram mr-2"></i> <?= l('admin_projects.menu') ?></a>
             </li>
