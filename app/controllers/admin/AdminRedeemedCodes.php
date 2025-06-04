@@ -23,7 +23,8 @@ class AdminRedeemedCodes extends Controller {
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
-        $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `redeemed_codes` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
+        $total_rows_result = database()->query("SELECT COUNT(*) AS `total` FROM `redeemed_codes` WHERE 1 = 1 {$filters->get_sql_where()}");
+        $total_rows = $total_rows_result ? $total_rows_result->fetch_object()->total ?? 0 : 0;
         $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/redeemed-codes?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
@@ -46,8 +47,10 @@ class AdminRedeemedCodes extends Controller {
             {$paginator->get_sql_limit()}
         ");
 
-        while($row = $redeemed_codes_result->fetch_object()) {
-            $redeemed_codes[] = $row;
+        if($redeemed_codes_result) {
+            while($row = $redeemed_codes_result->fetch_object()) {
+                $redeemed_codes[] = $row;
+            }
         }
 
         /* Export handler */

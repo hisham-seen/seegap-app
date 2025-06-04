@@ -30,6 +30,7 @@ class AdminUserView extends Controller {
         $file_links = db()->where('user_id', $user_id)->where('type', 'file')->getValue('links', 'count(`link_id`)');
         $event_links = db()->where('user_id', $user_id)->where('type', 'event')->getValue('links', 'count(`link_id`)');
         $static_links = db()->where('user_id', $user_id)->where('type', 'static')->getValue('links', 'count(`link_id`)');
+        $gs1_links = db()->where('user_id', $user_id)->getValue('gs1_links', 'count(`gs1_link_id`)');
         $projects = db()->where('user_id', $user_id)->getValue('projects', 'count(`project_id`)');
         $pixels = db()->where('user_id', $user_id)->getValue('pixels', 'count(`pixel_id`)');
         $splash_pages = db()->where('user_id', $user_id)->getValue('splash_pages', 'count(`splash_page_id`)');
@@ -67,6 +68,7 @@ class AdminUserView extends Controller {
             'file_links' => $file_links,
             'event_links' => $event_links,
             'static_links' => $static_links,
+            'gs1_links' => $gs1_links,
             'projects' => $projects,
             'splash_pages' => $splash_pages,
             'pixels' => $pixels,

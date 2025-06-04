@@ -39,7 +39,7 @@
 
 <body class="<?= l('direction') == 'rtl' ? 'rtl' : null ?>" data-theme-style="<?= \SeeGap\ThemeStyle::get() ?>">
 <div id="admin_overlay" class="admin-overlay" style="display: none"></div>
-<?php if(settings()->main->admin_spotlight_is_enabled || settings()->main->user_spotlight_is_enabled) require THEME_PATH . 'views/partials/spotlight.php' ?>
+<?php if((settings()->main->admin_spotlight_is_enabled ?? false) || (settings()->main->user_spotlight_is_enabled ?? false)) require THEME_PATH . 'views/partials/spotlight.php' ?>
 
 <div class="app-container">
     <?= $this->views['admin_sidebar'] ?>

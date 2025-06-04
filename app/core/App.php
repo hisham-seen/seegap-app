@@ -228,7 +228,7 @@ class App {
         }
 
         /* Maintenance mode */
-        if(settings()->main->maintenance_is_enabled && (!is_logged_in() || $user->type != 1) && !in_array(\SeeGap\Router::$controller_key, ['maintenance', 'login', 'lost-password', 'reset-password'])) {
+        if((settings()->main->maintenance_is_enabled ?? false) && (!is_logged_in() || $user->type != 1) && !in_array(\SeeGap\Router::$controller_key, ['maintenance', 'login', 'lost-password', 'reset-password'])) {
             header('HTTP/1.1 503 Service Unavailable');
             header('Retry-After: 3600');
             header('Location: ' . url('maintenance'));

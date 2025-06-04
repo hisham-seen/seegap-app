@@ -391,6 +391,22 @@
     <div class="col-12 col-sm-6 col-xl-3 p-3 position-relative">
         <div class="card d-flex flex-row h-100 overflow-hidden">
             <div class="card-body text-truncate">
+                <small class="text-muted"><i class="fas fa-fw fa-sm fa-barcode mr-1"></i> <?= l('admin_gs1_links.menu') ?></small>
+
+                <div class="mt-3"><span class="h4"><?= nr($data->gs1_links) ?></span></div>
+            </div>
+
+            <div class="pr-4 d-flex flex-column justify-content-center">
+                <a href="<?= url('admin/gs1-links?user_id=' . $data->user->user_id) ?>" class="stretched-link">
+                    <i class="fas fa-fw fa-angle-right text-gray-500"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3 p-3 position-relative">
+        <div class="card d-flex flex-row h-100 overflow-hidden">
+            <div class="card-body text-truncate">
                 <small class="text-muted"><i class="fas fa-fw fa-sm fa-project-diagram mr-1"></i> <?= l('admin_projects.menu') ?></small>
 
                 <div class="mt-3"><span class="h4"><?= nr($data->projects) ?></span></div>
