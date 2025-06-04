@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="app-sidebar">
     <div class="app-sidebar-title text-truncate">
@@ -12,8 +12,8 @@
                 data-dark-class="<?= settings()->main->logo_dark != '' ? 'img-fluid navbar-logo' : '' ?>"
                 data-dark-tag="<?= settings()->main->logo_dark != '' ? 'img' : 'span' ?>"
         >
-            <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()} != ''): ?>
-                <img src="<?= settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
+            <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()} != ''): ?>
+                <img src="<?= settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
             <?php else: ?>
                 <?= settings()->main->title ?>
             <?php endif ?>
@@ -23,7 +23,7 @@
     <div class="app-sidebar-links-wrapper flex-grow-1">
         <ul class="app-sidebar-links">
             <?php if(is_logged_in()): ?>
-                <li class="<?= \Altum\Router::$controller == 'Dashboard' ? 'active' : null ?> d-flex dropdown" id="internal_notifications">
+                <li class="<?= \SeeGap\Router::$controller == 'Dashboard' ? 'active' : null ?> d-flex dropdown" id="internal_notifications">
                     <a href="<?= url('dashboard') ?>"><i class="fas fa-fw fa-sm fa-th mr-2"></i> <?= l('dashboard.menu') ?></a>
 
                     <?php if(settings()->internal_notifications->users_is_enabled): ?>
@@ -43,85 +43,85 @@
                 </li>
 
                 <?php if(settings()->links->microsites_is_enabled): ?>
-                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'microsite') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'microsite') ? 'active' : null ?>">
+                    <li class="<?= (\SeeGap\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'microsite') || (\SeeGap\Router::$controller == 'Link' && $this->link->type == 'microsite') ? 'active' : null ?>">
                         <a href="<?= url('links?type=microsite') ?>"><i class="fas fa-fw fa-sm fa-hashtag mr-2"></i> <?= l('links.menu.microsite') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->shortener_is_enabled): ?>
-                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'link') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'link') || \Altum\Router::$controller == 'LinkCreate' ? 'active' : null ?>">
+                    <li class="<?= (\SeeGap\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'link') || (\SeeGap\Router::$controller == 'Link' && $this->link->type == 'link') || \SeeGap\Router::$controller == 'LinkCreate' ? 'active' : null ?>">
                         <a href="<?= url('links?type=link') ?>"><i class="fas fa-fw fa-sm fa-link mr-2"></i> <?= l('links.menu.link') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->files_is_enabled): ?>
-                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'file') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'file') ? 'active' : null ?>">
+                    <li class="<?= (\SeeGap\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'file') || (\SeeGap\Router::$controller == 'Link' && $this->link->type == 'file') ? 'active' : null ?>">
                         <a href="<?= url('links?type=file') ?>"><i class="fas fa-fw fa-sm fa-file mr-2"></i> <?= l('links.menu.file') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->events_is_enabled): ?>
-                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'event') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'event') ? 'active' : null ?>">
+                    <li class="<?= (\SeeGap\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'event') || (\SeeGap\Router::$controller == 'Link' && $this->link->type == 'event') ? 'active' : null ?>">
                         <a href="<?= url('links?type=event') ?>"><i class="fas fa-fw fa-sm fa-calendar mr-2"></i> <?= l('links.menu.event') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->static_is_enabled): ?>
-                    <li class="<?= (\Altum\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'static') || (\Altum\Router::$controller == 'Link' && $this->link->type == 'static') ? 'active' : null ?>">
+                    <li class="<?= (\SeeGap\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'static') || (\SeeGap\Router::$controller == 'Link' && $this->link->type == 'static') ? 'active' : null ?>">
                         <a href="<?= url('links?type=static') ?>"><i class="fas fa-fw fa-sm fa-file-code mr-2"></i> <?= l('links.menu.static') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->codes->qr_codes_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['QrCodes', 'QrCodeUpdate', 'QrCodeCreate', 'QrCodeManager']) ? 'active' : null ?>">
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['QrCodes', 'QrCodeUpdate', 'QrCodeCreate', 'QrCodeManager']) ? 'active' : null ?>">
                         <a href="<?= url('qr-codes') ?>"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('qr_codes.menu') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->gs1_links->gs1_links_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Gs1Links', 'Gs1LinkManager']) ? 'active' : null ?>">
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Gs1Links', 'Gs1LinkManager']) ? 'active' : null ?>">
                         <a href="<?= url('gs1-links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('gs1_links.menu') ?></a>
                     </li>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix')): ?>
+                <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                     <div class="divider-wrapper">
                         <div class="divider"></div>
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Documents', 'DocumentUpdate', 'DocumentCreate']) ? 'active' : null ?>">
+                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Documents', 'DocumentUpdate', 'DocumentCreate']) ? 'active' : null ?>">
                         <a href="<?= url('documents') ?>"><i class="fas fa-fw fa-sm fa-robot mr-2"></i> <?= l('documents.menu') ?></a>
                     </li>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->images_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Images', 'ImageUpdate', 'ImageCreate']) ? 'active' : null ?>">
+                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->images_is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Images', 'ImageUpdate', 'ImageCreate']) ? 'active' : null ?>">
                         <a href="<?= url('images') ?>"><i class="fas fa-fw fa-sm fa-icons mr-2"></i> <?= l('images.menu') ?></a>
                     </li>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Transcriptions', 'TranscriptionUpdate', 'TranscriptionCreate']) ? 'active' : null ?>">
+                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Transcriptions', 'TranscriptionUpdate', 'TranscriptionCreate']) ? 'active' : null ?>">
                         <a href="<?= url('transcriptions') ?>"><i class="fas fa-fw fa-sm fa-microphone-alt mr-2"></i> <?= l('transcriptions.menu') ?></a>
                     </li>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->syntheses_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Syntheses', 'SynthesisUpdate', 'SynthesisCreate']) ? 'active' : null ?>">
+                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->syntheses_is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Syntheses', 'SynthesisUpdate', 'SynthesisCreate']) ? 'active' : null ?>">
                         <a href="<?= url('syntheses') ?>"><i class="fas fa-fw fa-sm fa-voicemail mr-2"></i> <?= l('syntheses.menu') ?></a>
                     </li>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->chats_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Chats', 'Chat', 'ChatCreate']) ? 'active' : null ?>">
+                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->chats_is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Chats', 'Chat', 'ChatCreate']) ? 'active' : null ?>">
                         <a href="<?= url('chats') ?>"><i class="fas fa-fw fa-sm fa-comments mr-2"></i> <?= l('chats.menu') ?></a>
                     </li>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Signatures', 'SignatureUpdate', 'SignatureCreate']) ? 'active' : null ?>">
+                <?php if(\SeeGap\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Signatures', 'SignatureUpdate', 'SignatureCreate']) ? 'active' : null ?>">
                         <a href="<?= url('signatures') ?>"><i class="fas fa-fw fa-sm fa-file-signature mr-2"></i> <?= l('signatures.menu') ?></a>
                     </li>
                 <?php endif ?>
@@ -135,44 +135,44 @@
 
             <?php if(is_logged_in()): ?>
 
-                <li class="<?= in_array(\Altum\Router::$controller, ['Reports', 'ReportView']) ? 'active' : null ?>">
+                <li class="<?= in_array(\SeeGap\Router::$controller, ['Reports', 'ReportView']) ? 'active' : null ?>">
                     <a href="<?= url('reports') ?>"><i class="fas fa-fw fa-sm fa-chart-bar mr-2"></i> <?= l('reports.menu') ?></a>
                 </li>
 
                 <?php if(settings()->links->domains_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Domains', 'DomainUpdate', 'DomainCreate']) ? 'active' : null ?>">
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Domains', 'DomainUpdate', 'DomainCreate']) ? 'active' : null ?>">
                         <a href="<?= url('domains') ?>"><i class="fas fa-fw fa-sm fa-globe mr-2"></i> <?= l('domains.menu') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->pixels_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['Pixels', 'PixelUpdate', 'PixelCreate']) ? 'active' : null ?>">
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Pixels', 'PixelUpdate', 'PixelCreate']) ? 'active' : null ?>">
                         <a href="<?= url('pixels') ?>"><i class="fas fa-fw fa-sm fa-adjust mr-2"></i> <?= l('pixels.menu') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->projects_is_enabled): ?>
-                <li class="<?= in_array(\Altum\Router::$controller, ['Projects', 'ProjectUpdate', 'ProjectCreate']) ? 'active' : null ?>">
+                <li class="<?= in_array(\SeeGap\Router::$controller, ['Projects', 'ProjectUpdate', 'ProjectCreate']) ? 'active' : null ?>">
                     <a href="<?= url('projects') ?>"><i class="fas fa-fw fa-sm fa-project-diagram mr-2"></i> <?= l('projects.menu') ?></a>
                 </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->splash_page_is_enabled): ?>
-                    <li class="<?= in_array(\Altum\Router::$controller, ['SplashPages', 'SplashPageUpdate', 'SplashPageCreate']) ? 'active' : null ?>">
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['SplashPages', 'SplashPageUpdate', 'SplashPageCreate']) ? 'active' : null ?>">
                         <a href="<?= url('splash-pages') ?>"><i class="fas fa-fw fa-sm fa-droplet mr-2"></i> <?= l('splash_pages.menu') ?></a>
                     </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->microsites_is_enabled): ?>
-                    <li class="<?= \Altum\Router::$controller == 'Data' ? 'active' : null ?>">
+                    <li class="<?= \SeeGap\Router::$controller == 'Data' ? 'active' : null ?>">
                         <a href="<?= url('data') ?>"><i class="fas fa-fw fa-sm fa-database mr-2"></i> <?= l('data.menu') ?></a>
                     </li>
 
-                    <?php if(\Altum\Plugin::is_active('payment-blocks')): ?>
-                        <li class="<?= in_array(\Altum\Router::$controller, ['PaymentProcessors', 'PaymentProcessorUpdate', 'PaymentProcessorCreate']) ? 'active' : null ?>">
+                    <?php if(\SeeGap\Plugin::is_active('payment-blocks')): ?>
+                        <li class="<?= in_array(\SeeGap\Router::$controller, ['PaymentProcessors', 'PaymentProcessorUpdate', 'PaymentProcessorCreate']) ? 'active' : null ?>">
                             <a href="<?= url('payment-processors') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('payment_processors.menu') ?></a>
                         </li>
-                        <li class="<?= \Altum\Router::$controller == 'GuestsPayments' ? 'active' : null ?>">
+                        <li class="<?= \SeeGap\Router::$controller == 'GuestsPayments' ? 'active' : null ?>">
                             <a href="<?= url('guests-payments') ?>"><i class="fas fa-fw fa-sm fa-coins mr-2"></i> <?= l('guests_payments.menu') ?></a>
                         </li>
                     <?php endif ?>
@@ -209,32 +209,32 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right">
-                <?php if(!\Altum\Teams::is_delegated()): ?>
-                    <?php if(\Altum\Authentication::is_admin()): ?>
+                <?php if(!\SeeGap\Teams::is_delegated()): ?>
+                    <?php if(\SeeGap\Authentication::is_admin()): ?>
                         <a class="dropdown-item" href="<?= url('admin') ?>"><i class="fas fa-fw fa-sm fa-fingerprint text-primary mr-2"></i> <?= l('global.menu.admin') ?></a>
                         <div class="dropdown-divider"></div>
                     <?php endif ?>
 
-                    <a class="dropdown-item <?= in_array(\Altum\Router::$controller, ['Account']) ? 'active' : null ?>" href="<?= url('account') ?>"><i class="fas fa-fw fa-sm fa-user-cog mr-2"></i> <?= l('account.menu') ?></a>
+                    <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['Account']) ? 'active' : null ?>" href="<?= url('account') ?>"><i class="fas fa-fw fa-sm fa-user-cog mr-2"></i> <?= l('account.menu') ?></a>
 
-                    <a class="dropdown-item <?= in_array(\Altum\Router::$controller, ['AccountPreferences']) ? 'active' : null ?>" href="<?= url('account-preferences') ?>"><i class="fas fa-fw fa-sm fa-sliders-h mr-2"></i> <?= l('account_preferences.menu') ?></a>
+                    <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountPreferences']) ? 'active' : null ?>" href="<?= url('account-preferences') ?>"><i class="fas fa-fw fa-sm fa-sliders-h mr-2"></i> <?= l('account_preferences.menu') ?></a>
 
-                    <a class="dropdown-item <?= in_array(\Altum\Router::$controller, ['AccountPlan']) ? 'active' : null ?>" href="<?= url('account-plan') ?>"><i class="fas fa-fw fa-sm fa-box-open mr-2"></i> <?= l('account_plan.menu') ?></a>
+                    <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountPlan']) ? 'active' : null ?>" href="<?= url('account-plan') ?>"><i class="fas fa-fw fa-sm fa-box-open mr-2"></i> <?= l('account_plan.menu') ?></a>
 
                     <?php if(settings()->payment->is_enabled): ?>
-                        <a class="dropdown-item <?= in_array(\Altum\Router::$controller, ['AccountPayments']) ? 'active' : null ?>" href="<?= url('account-payments') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('account_payments.menu') ?></a>
+                        <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountPayments']) ? 'active' : null ?>" href="<?= url('account-payments') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('account_payments.menu') ?></a>
 
-                        <?php if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
-                            <a class="dropdown-item <?= in_array(\Altum\Router::$controller, ['Referrals']) ? 'active' : null ?>" href="<?= url('referrals') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('referrals.menu') ?></a>
+                        <?php if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
+                            <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['Referrals']) ? 'active' : null ?>" href="<?= url('referrals') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('referrals.menu') ?></a>
                         <?php endif ?>
                     <?php endif ?>
 
                     <?php if(settings()->main->api_is_enabled): ?>
-                        <a class="dropdown-item <?= in_array(\Altum\Router::$controller, ['AccountApi']) ? 'active' : null ?>" href="<?= url('account-api') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('account_api.menu') ?></a>
+                        <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountApi']) ? 'active' : null ?>" href="<?= url('account-api') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('account_api.menu') ?></a>
                     <?php endif ?>
 
-                    <?php if(\Altum\Plugin::is_active('teams')): ?>
-                        <a class="dropdown-item <?= in_array(\Altum\Router::$controller, ['TeamsSystem', 'Teams', 'Team', 'TeamCreate', 'TeamUpdate', 'TeamsMember', 'TeamsMembers', 'TeamsMemberCreate', 'TeamsMemberUpdate']) ? 'active' : null ?>" href="<?= url('teams-system') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('teams_system.menu') ?></a>
+                    <?php if(\SeeGap\Plugin::is_active('teams')): ?>
+                        <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['TeamsSystem', 'Teams', 'Team', 'TeamCreate', 'TeamUpdate', 'TeamsMember', 'TeamsMembers', 'TeamsMemberCreate', 'TeamsMemberUpdate']) ? 'active' : null ?>" href="<?= url('teams-system') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('teams_system.menu') ?></a>
                     <?php endif ?>
 
                     <?php if(settings()->sso->is_enabled && settings()->sso->display_menu_items && count((array) settings()->sso->websites)): ?>
@@ -271,4 +271,4 @@
 <script>
     document.querySelector('ul[class="app-sidebar-links"] li.active') && document.querySelector('ul[class="app-sidebar-links"] li.active').scrollIntoView({ behavior: 'smooth', block: 'center' });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

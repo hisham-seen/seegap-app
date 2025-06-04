@@ -1,6 +1,6 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <h1 class="h5"><?= l('lost_password.header') ?></h1>
 <p class="text-muted"><?= l('lost_password.subheader') ?></p>
@@ -8,8 +8,8 @@
 <form action="" method="post" class="mt-4" role="form">
     <div class="form-group">
         <label for="email"><?= l('global.email') ?></label>
-        <input id="email" type="email" name="email" class="form-control <?= \Altum\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" required="required" autofocus="autofocus" />
-        <?= \Altum\Alerts::output_field_error('email') ?>
+        <input id="email" type="email" name="email" class="form-control <?= \SeeGap\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" required="required" autofocus="autofocus" />
+        <?= \SeeGap\Alerts::output_field_error('email') ?>
     </div>
 
     <?php if(settings()->captcha->lost_password_is_enabled): ?>
@@ -48,4 +48,4 @@
             ]
         }
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

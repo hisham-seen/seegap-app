@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if($this->link->settings->scroll_buttons_is_enabled): ?>
     <div id="scroll_buttons" style="position: fixed; left: 1rem; top: 1rem; z-index: 1;">
@@ -27,5 +27,5 @@
         window.addEventListener('resize', toggle_scroll_buttons);
     </script>
 
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 <?php endif ?>

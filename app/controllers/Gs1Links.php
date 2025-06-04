@@ -7,19 +7,19 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\Domain;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Models\Domain;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Gs1Links extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check if GS1 links feature is enabled */
         if(!settings()->gs1_links->gs1_links_is_enabled) {
@@ -27,19 +27,19 @@ class Gs1Links extends Controller {
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('read.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('read.gs1_links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('dashboard');
         }
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled', 'project_id', 'domain_id'], ['gtin', 'target_url', 'title'], ['gs1_link_id', 'last_datetime', 'datetime', 'clicks', 'gtin']));
+        $filters = (new \SeeGap\Filters(['is_enabled', 'project_id', 'domain_id'], ['gtin', 'target_url', 'title'], ['gs1_link_id', 'last_datetime', 'datetime', 'clicks', 'gtin']));
         $filters->set_default_order_by('gs1_link_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `gs1_links` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('gs1-links?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('gs1-links?' . $filters->get_get() . '&page=%d')));
 
         /* Get domains */
         $domains = (new Domain())->get_available_domains_by_user($this->user);
@@ -71,14 +71,14 @@ class Gs1Links extends Controller {
         process_export_json($gs1_links, 'include', ['gs1_link_id', 'user_id', 'project_id', 'domain_id', 'gtin', 'target_url', 'title', 'description', 'settings', 'clicks', 'is_enabled', 'last_datetime', 'datetime'], sprintf(l('gs1_links.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Delete Modal */
-        $view = new \Altum\View('gs1-links/gs1_link_delete_modal', (array) $this);
-        \Altum\Event::add_content($view->run(), 'modals');
+        $view = new \SeeGap\View('gs1-links/gs1_link_delete_modal', (array) $this);
+        \SeeGap\Event::add_content($view->run(), 'modals');
 
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Set a custom title */
         Title::set(l('gs1_links.title'));
@@ -92,16 +92,16 @@ class Gs1Links extends Controller {
             'domains'           => $domains,
         ];
 
-        $view = new \Altum\View('gs1-links/index', (array) $this);
+        $view = new \SeeGap\View('gs1-links/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
 
     }
 
     public function bulk() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -116,7 +116,7 @@ class Gs1Links extends Controller {
             redirect('gs1-links');
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -128,7 +128,7 @@ class Gs1Links extends Controller {
                 case 'delete':
 
                     /* Team checks */
-                    if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.gs1_links')) {
+                    if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.gs1_links')) {
                         Alerts::add_info(l('global.info_message.team_no_access'));
                         redirect('gs1-links');
                     }
@@ -136,7 +136,7 @@ class Gs1Links extends Controller {
                     foreach($_POST['selected'] as $gs1_link_id) {
                         if($gs1_link = db()->where('gs1_link_id', $gs1_link_id)->where('user_id', $this->user->user_id)->getOne('gs1_links', ['gs1_link_id'])) {
                             /* Delete the resource */
-                            (new \Altum\Models\Gs1Link())->delete($gs1_link->gs1_link_id);
+                            (new \SeeGap\Models\Gs1Link())->delete($gs1_link->gs1_link_id);
                         }
                     }
 
@@ -153,10 +153,10 @@ class Gs1Links extends Controller {
     }
 
     public function reset() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.gs1_links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('gs1-links');
         }
@@ -167,9 +167,9 @@ class Gs1Links extends Controller {
 
         $gs1_link_id = (int) query_clean($_POST['gs1_link_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('gs1-links');
         }

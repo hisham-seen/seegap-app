@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Plan;
+use SeeGap\Models\Plan;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminUserView extends Controller {
 
@@ -37,11 +37,11 @@ class AdminUserView extends Controller {
         $domains = db()->where('user_id', $user_id)->getValue('domains', 'count(`domain_id`)');
         $payments = db()->where('user_id', $user_id)->getValue('payments', 'count(`id`)');
 
-        if(\Altum\Plugin::is_active('email-signatures')) {
+        if(\SeeGap\Plugin::is_active('email-signatures')) {
             $signatures = db()->where('user_id', $user_id)->getValue('signatures', 'count(`signature_id`)');
         }
 
-        if(\Altum\Plugin::is_active('aix')) {
+        if(\SeeGap\Plugin::is_active('aix')) {
             $documents = db()->where('user_id', $user_id)->getValue('documents', 'count(`document_id`)');
             $images = db()->where('user_id', $user_id)->getValue('images', 'count(`image_id`)');
             $transcriptions = db()->where('user_id', $user_id)->getValue('transcriptions', 'count(`transcription_id`)');
@@ -81,7 +81,7 @@ class AdminUserView extends Controller {
             'chats' => $chats ?? null,
         ];
 
-        $view = new \Altum\View('admin/user-view/index', (array) $this);
+        $view = new \SeeGap\View('admin/user-view/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

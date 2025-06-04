@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg d-flex align-items-center mb-3 mb-lg-0 text-truncate">
@@ -213,15 +213,15 @@
                         </td>
 
                         <td class="text-nowrap text-muted">
-                            <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
-                                <?= \Altum\Date::get($row->datetime, 2) ?>
+                            <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>">
+                                <?= \SeeGap\Date::get($row->datetime, 2) ?>
                             </span>
                         </td>
 
                         <td class="text-nowrap text-muted">
                             <?php if($row->last_datetime): ?>
-                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
-                                    <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->last_datetime, 1) ?>">
+                                    <?= \SeeGap\Date::get($row->last_datetime, 2) ?>
                                 </span>
                             <?php else: ?>
                                 <span class="text-muted">-</span>
@@ -280,15 +280,15 @@
     <?php endif ?>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'gs1_link',
     'resource_id' => 'gs1_link_id',
     'has_dynamic_resource_name' => true,
     'path' => 'gs1-links/delete'
 ]), 'modals') ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'gs1_link_duplicate_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-link-ajax/duplicate']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'gs1_link_duplicate_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-link-ajax/duplicate']), 'modals'); ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'gs1_link_reset_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-links/reset']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'gs1_link_reset_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-links/reset']), 'modals'); ?>
 
 <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>

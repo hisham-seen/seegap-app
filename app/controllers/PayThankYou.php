@@ -7,16 +7,16 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class PayThankYou extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(!settings()->payment->is_enabled) {
             redirect('not-found');
@@ -39,7 +39,7 @@ class PayThankYou extends Controller {
                 $plan_id = (int) $plan_id;
 
                 /* Check if plan exists */
-                if(!$plan = (new \Altum\Models\Plan())->get_plan_by_id($plan_id)) {
+                if(!$plan = (new \SeeGap\Models\Plan())->get_plan_by_id($plan_id)) {
                     redirect('plan');
                 }
 
@@ -62,7 +62,7 @@ class PayThankYou extends Controller {
             $thank_you_url_parameters .= '&' . $key . '=' . $value;
         }
 
-        $unique_transaction_identifier = md5(\Altum\Date::get('', 4) . $thank_you_url_parameters);
+        $unique_transaction_identifier = md5(\SeeGap\Date::get('', 4) . $thank_you_url_parameters);
 
         if($_GET['unique_transaction_identifier'] != $unique_transaction_identifier) {
             redirect('plan');
@@ -79,7 +79,7 @@ class PayThankYou extends Controller {
             'plan'       => $plan,
         ];
 
-        $view = new \Altum\View('pay-thank-you/index', (array) $this);
+        $view = new \SeeGap\View('pay-thank-you/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

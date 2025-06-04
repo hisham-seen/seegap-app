@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
     <h1 class="h3 mb-3 mb-md-0"><i class="fas fa-fw fa-xs fa-box-open text-primary-900 mr-2"></i> <?= l('admin_plans.header') ?></h1>
@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="table-responsive table-custom-container">
     <table class="table table-custom">
@@ -46,7 +46,7 @@
                         <i class="fas fa-fw fa-sort text-muted"></i>
                     </span>
 
-                    <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), (null ? \Altum\Date::get(null, 2) . ' - <small>' . \Altum\Date::get(null, 3) . '</small>' : '<br />-')) ?>">
+                    <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), (null ? \SeeGap\Date::get(null, 2) . ' - <small>' . \SeeGap\Date::get(null, 3) . '</small>' : '<br />-')) ?>">
                         <i class="fas fa-fw fa-calendar text-muted"></i>
                     </span>
                 </td>
@@ -88,7 +88,7 @@
                     <i class="fas fa-fw fa-sort text-muted"></i>
                 </span>
 
-                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), (null ? \Altum\Date::get(null, 2) . ' - <small>' . \Altum\Date::get(null, 3) . '</small>' : '<br />-')) ?>">
+                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), (null ? \SeeGap\Date::get(null, 2) . ' - <small>' . \SeeGap\Date::get(null, 3) . '</small>' : '<br />-')) ?>">
                     <i class="fas fa-fw fa-calendar text-muted"></i>
                 </span>
             </td>
@@ -129,7 +129,7 @@
                     <i class="fas fa-fw fa-sort text-muted"></i>
                 </span>
 
-                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), (null ? \Altum\Date::get(null, 2) . ' - <small>' . \Altum\Date::get(null, 3) . '</small>' : '<br />-')) ?>">
+                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), (null ? \SeeGap\Date::get(null, 2) . ' - <small>' . \SeeGap\Date::get(null, 3) . '</small>' : '<br />-')) ?>">
                     <i class="fas fa-fw fa-calendar text-muted"></i>
                 </span>
             </td>
@@ -191,7 +191,7 @@
                         <i class="fas fa-fw fa-sort text-muted"></i>
                     </span>
 
-                    <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                    <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                         <i class="fas fa-fw fa-calendar text-muted"></i>
                     </span>
                 </td>

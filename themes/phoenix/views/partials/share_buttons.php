@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(($data->type ?? 'fontawesome') == 'fontawesome'): ?>
     <button type="button" class="<?= $data->class ?> d-none" style="color: #3a18f2;" data-toggle="tooltip" title="<?= sprintf(l('global.share_via'), l('global.device')) ?>" data-native-share>
@@ -100,4 +100,4 @@
             }
         })
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'native_share') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'native_share') ?>

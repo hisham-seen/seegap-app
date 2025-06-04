@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Date;
-use Altum\Models\QrCode;
-use Altum\Response;
-use Altum\Traits\Apiable;
-use Altum\Uploads;
+use SeeGap\Alerts;
+use SeeGap\Date;
+use SeeGap\Models\QrCode;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
+use SeeGap\Uploads;
 use Unirest\Request;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ApiQrCodes extends Controller {
     use Apiable;
@@ -71,14 +71,14 @@ class ApiQrCodes extends Controller {
     private function get_all() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], [], []));
+        $filters = (new \SeeGap\Filters([], [], []));
         $filters->set_default_order_by($this->api_user->preferences->qr_codes_default_order_by, $this->api_user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->api_user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
         $filters->process();
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `qr_codes` WHERE `user_id` = {$this->api_user->user_id}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/qr-codes?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/qr-codes?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $data = [];
@@ -102,10 +102,10 @@ class ApiQrCodes extends Controller {
                 'user_id' => (int) $row->user_id,
                 'type' => $row->type,
                 'name' => $row->name,
-                'qr_code' => \Altum\Uploads::get_full_url('qr_code') . $row->qr_code,
-                'qr_code_logo' => \Altum\Uploads::get_full_url('qr_code_logo') . $row->qr_code_logo,
-                'qr_code_background' => \Altum\Uploads::get_full_url('qr_code_background') . $row->qr_code_background,
-                'qr_code_foreground' => \Altum\Uploads::get_full_url('qr_code_foreground') . $row->qr_code_foreground,
+                'qr_code' => \SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code,
+                'qr_code_logo' => \SeeGap\Uploads::get_full_url('qr_code_logo') . $row->qr_code_logo,
+                'qr_code_background' => \SeeGap\Uploads::get_full_url('qr_code_background') . $row->qr_code_background,
+                'qr_code_foreground' => \SeeGap\Uploads::get_full_url('qr_code_foreground') . $row->qr_code_foreground,
                 'settings' => json_decode($row->settings),
                 'embedded_data' => $row->embedded_data,
                 'last_datetime' => $row->last_datetime,
@@ -153,10 +153,10 @@ class ApiQrCodes extends Controller {
             'user_id' => (int) $qr_code->user_id,
             'name' => $qr_code->name,
             'type' => $qr_code->type,
-            'qr_code' => \Altum\Uploads::get_full_url('qr_code') . $qr_code->qr_code,
-            'qr_code_logo' => \Altum\Uploads::get_full_url('qr_code_logo') . $qr_code->qr_code_logo,
-            'qr_code_background' => \Altum\Uploads::get_full_url('qr_code_background') . $qr_code->qr_code_background,
-            'qr_code_foreground' => \Altum\Uploads::get_full_url('qr_code_foreground') . $qr_code->qr_code_foreground,
+            'qr_code' => \SeeGap\Uploads::get_full_url('qr_code') . $qr_code->qr_code,
+            'qr_code_logo' => \SeeGap\Uploads::get_full_url('qr_code_logo') . $qr_code->qr_code_logo,
+            'qr_code_background' => \SeeGap\Uploads::get_full_url('qr_code_background') . $qr_code->qr_code_background,
+            'qr_code_foreground' => \SeeGap\Uploads::get_full_url('qr_code_foreground') . $qr_code->qr_code_foreground,
             'settings' => json_decode($qr_code->settings),
             'embedded_data' => $qr_code->embedded_data,
             'last_datetime' => $qr_code->last_datetime,
@@ -190,7 +190,7 @@ class ApiQrCodes extends Controller {
         $outer_eyes = require APP_PATH . 'includes/qr_codes_outer_eyes.php';
 
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->api_user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->api_user->user_id);
 
         $_POST['name'] = trim($_POST['name'] ?? null);
         $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
@@ -524,7 +524,7 @@ class ApiQrCodes extends Controller {
                     $this->response_error(l('global.error_message.invalid_file_type'), 401);
                 }
 
-                if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                     if(!is_writable(Uploads::get_full_path('qr_code_logo'))) {
                         $this->response_error(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_logo')), 401);
                     }
@@ -540,7 +540,7 @@ class ApiQrCodes extends Controller {
                     $image_new_name = md5(time() . rand()) . '.' . $file_extension;
 
                     /* Offload uploading */
-                    if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                    if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                         try {
                             $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -584,7 +584,7 @@ class ApiQrCodes extends Controller {
                     $this->response_error(l('global.error_message.invalid_file_type'), 401);
                 }
 
-                if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                     if(!is_writable(Uploads::get_full_path('qr_code_background'))) {
                         $this->response_error(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_background')), 401);
                     }
@@ -600,7 +600,7 @@ class ApiQrCodes extends Controller {
                     $image_new_name = md5(time() . rand()) . '.' . $file_extension;
 
                     /* Offload uploading */
-                    if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                    if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                         try {
                             $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -644,7 +644,7 @@ class ApiQrCodes extends Controller {
                     $this->response_error(l('global.error_message.invalid_file_type'), 401);
                 }
 
-                if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                     if(!is_writable(Uploads::get_full_path('qr_code_foreground'))) {
                         $this->response_error(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_foreground')), 401);
                     }
@@ -660,7 +660,7 @@ class ApiQrCodes extends Controller {
                     $image_new_name = md5(time() . rand()) . '.' . $file_extension;
 
                     /* Offload uploading */
-                    if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                    if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                         try {
                             $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -695,7 +695,7 @@ class ApiQrCodes extends Controller {
             $image_new_name = md5(time() . rand()) . '.svg';
 
             /* Offload uploading */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 try {
                     $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -768,7 +768,7 @@ class ApiQrCodes extends Controller {
         $outer_eyes = require APP_PATH . 'includes/qr_codes_outer_eyes.php';
 
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->api_user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->api_user->user_id);
 
         $_POST['name'] = trim($_POST['name'] ?? $qr_code->name);
         $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : $qr_code->project_id;
@@ -966,9 +966,9 @@ class ApiQrCodes extends Controller {
         ], $settings);
 
         /* Attach old images if needed */
-        if($qr_code->qr_code_logo) $request_data['qr_code_logo'] = \Altum\Uploads::get_full_url('qr_code_logo') . $qr_code->qr_code_logo;
-        if($qr_code->qr_code_background) $request_data['qr_code_background'] = \Altum\Uploads::get_full_url('qr_code_background') . $qr_code->qr_code_background;
-        if($qr_code->qr_code_foreground) $request_data['qr_code_foreground'] = \Altum\Uploads::get_full_url('qr_code_foreground') . $qr_code->qr_code_foreground;
+        if($qr_code->qr_code_logo) $request_data['qr_code_logo'] = \SeeGap\Uploads::get_full_url('qr_code_logo') . $qr_code->qr_code_logo;
+        if($qr_code->qr_code_background) $request_data['qr_code_background'] = \SeeGap\Uploads::get_full_url('qr_code_background') . $qr_code->qr_code_background;
+        if($qr_code->qr_code_foreground) $request_data['qr_code_foreground'] = \SeeGap\Uploads::get_full_url('qr_code_foreground') . $qr_code->qr_code_foreground;
 
         $request_data = json_encode($request_data);
 
@@ -1008,7 +1008,7 @@ class ApiQrCodes extends Controller {
                 $this->response_error(l('global.error_message.invalid_file_type'), 401);
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                 if(!is_writable(Uploads::get_full_path('qr_code_logo'))) {
                     $this->response_error(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_logo')), 401);
                 }
@@ -1024,7 +1024,7 @@ class ApiQrCodes extends Controller {
                 $image_new_name = md5(time() . rand()) . '.' . $file_extension;
 
                 /* Offload uploading */
-                if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                     try {
                         $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -1064,7 +1064,7 @@ class ApiQrCodes extends Controller {
 
         /* Check for the removal of the already uploaded file */
         if(isset($_POST['qr_code_logo_remove'])) {
-            \Altum\Uploads::delete_uploaded_file($qr_code->qr_code_logo, 'qr_code_logo');
+            \SeeGap\Uploads::delete_uploaded_file($qr_code->qr_code_logo, 'qr_code_logo');
             $qr_code->qr_code_logo = '';
         }
 
@@ -1087,7 +1087,7 @@ class ApiQrCodes extends Controller {
                 $this->response_error(l('global.error_message.invalid_file_type'), 401);
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                 if(!is_writable(Uploads::get_full_path('qr_code_background'))) {
                     $this->response_error(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_background')), 401);
                 }
@@ -1103,7 +1103,7 @@ class ApiQrCodes extends Controller {
                 $image_new_name = md5(time() . rand()) . '.' . $file_extension;
 
                 /* Offload uploading */
-                if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                     try {
                         $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -1143,7 +1143,7 @@ class ApiQrCodes extends Controller {
 
         /* Check for the removal of the already uploaded file */
         if(isset($_POST['qr_code_background_remove'])) {
-            \Altum\Uploads::delete_uploaded_file($qr_code->qr_code_background, 'qr_code_background');
+            \SeeGap\Uploads::delete_uploaded_file($qr_code->qr_code_background, 'qr_code_background');
             $qr_code->qr_code_background = '';
         }
 
@@ -1166,7 +1166,7 @@ class ApiQrCodes extends Controller {
                 $this->response_error(l('global.error_message.invalid_file_type'), 401);
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                 if(!is_writable(Uploads::get_full_path('qr_code_foreground'))) {
                     $this->response_error(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_foreground')), 401);
                 }
@@ -1182,7 +1182,7 @@ class ApiQrCodes extends Controller {
                 $image_new_name = md5(time() . rand()) . '.' . $file_extension;
 
                 /* Offload uploading */
-                if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                     try {
                         $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -1222,7 +1222,7 @@ class ApiQrCodes extends Controller {
 
         /* Check for the removal of the already uploaded file */
         if(isset($_POST['qr_code_foreground_remove'])) {
-            \Altum\Uploads::delete_uploaded_file($qr_code->qr_code_foreground, 'qr_code_foreground');
+            \SeeGap\Uploads::delete_uploaded_file($qr_code->qr_code_foreground, 'qr_code_foreground');
             $qr_code->qr_code_foreground = '';
         }
 
@@ -1236,7 +1236,7 @@ class ApiQrCodes extends Controller {
         $image_new_name = md5(time() . rand()) . '.svg';
 
         /* Offload uploading */
-        if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+        if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
             try {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 

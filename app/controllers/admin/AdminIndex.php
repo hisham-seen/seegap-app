@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminIndex extends Controller {
 
@@ -24,7 +24,7 @@ class AdminIndex extends Controller {
         $users = db()->getValue('users', 'count(`user_id`)');
 
         /* Widgets stats: current month */
-        extract(\Altum\Cache::cache_function_result('admin_dashboard_current_month', null, function() {
+        extract(\SeeGap\Cache::cache_function_result('admin_dashboard_current_month', null, function() {
             return [
                 'domains_current_month' => db()->where('datetime', date('Y-m-01'), '>=')->getValue('domains', 'count(*)'),
                 'microsite_links_current_month' => db()->where('type', 'microsite')->where('datetime', date('Y-m-01'), '>=')->getValue('links', 'count(*)'),
@@ -62,7 +62,7 @@ class AdminIndex extends Controller {
         }
 
         /* Requested plan details */
-        $plans = (new \Altum\Models\Plan())->get_plans();
+        $plans = (new \SeeGap\Models\Plan())->get_plans();
 
         /* Main View */
         $data = [
@@ -91,7 +91,7 @@ class AdminIndex extends Controller {
             'internal_notifications' => $internal_notifications ?? [],
         ];
 
-        $view = new \Altum\View('admin/index/index', (array) $this);
+        $view = new \SeeGap\View('admin/index/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -1,14 +1,14 @@
 <?php
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return (object) [
     'plugin_id' => 'pwa',
     'name' => 'PWA system',
     'description' => 'The PWA plugin makes your whole site basic PWA compatible.',
     'version' => '4.0.0',
-    'url' => 'https://altumco.de/pwa-plugin',
-    'author' => 'AltumCode',
-    'author_url' => 'https://altumcode.com/',
+    'url' => 'https://Seegap.com/pwa-plugin',
+    'author' => 'SeeGap',
+    'author_url' => 'https://Seegap.com/',
     'status' => 'inexistent',
     'actions'=> true,
     'settings_url' => url('admin/settings/pwa'),

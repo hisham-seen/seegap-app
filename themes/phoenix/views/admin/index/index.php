@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <h1 class="h3 mb-4 text-truncate"><?= sprintf(l('admin_index.header'), $this->user->name) ?></h1>
 
@@ -256,8 +256,8 @@
             </thead>
             <tbody>
             <?php while($row = $result->fetch_object()): ?>
-                <?php //ALTUMCODE:DEMO if(DEMO) {$row->email = 'hidden@demo.com'; $row->name = 'hidden on demo';} ?>
-                <?php if(!isset($data->plans[$row->plan_id])) $data->plans[$row->plan_id] = (new \Altum\Models\Plan())->get_plan_by_id($row->plan_id) ?>
+                <?php //SEEGAP:DEMO if(DEMO) {$row->email = 'hidden@demo.com'; $row->name = 'hidden on demo';} ?>
+                <?php if(!isset($data->plans[$row->plan_id])) $data->plans[$row->plan_id] = (new \SeeGap\Models\Plan())->get_plan_by_id($row->plan_id) ?>
                 <tr>
                     <td class="text-nowrap">
                         <div class="d-flex">
@@ -291,14 +291,14 @@
 
                             <?php if($row->plan_id != 'free'): ?>
                                 <div>
-                                    <small class="text-muted" data-toggle="tooltip" title="<?= l('admin_users.plan_expiration_date') ?>"><?= \Altum\Date::get($row->plan_expiration_date, 1) ?></small>
+                                    <small class="text-muted" data-toggle="tooltip" title="<?= l('admin_users.plan_expiration_date') ?>"><?= \SeeGap\Date::get($row->plan_expiration_date, 1) ?></small>
                                 </div>
                             <?php endif ?>
                         </div>
                     </td>
                     <td class="text-nowrap">
                         <div class="d-flex align-items-center">
-                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= l('admin_users.datetime') . '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>' ?>">
+                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= l('admin_users.datetime') . '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>' ?>">
                                 <i class="fas fa-fw fa-calendar text-muted"></i>
                             </span>
 
@@ -306,7 +306,7 @@
                                 <i class="fas fa-fw fa-sign-in-alt text-muted"></i>
                             </a>
 
-                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= l('admin_users.last_activity') . '<br />' . \Altum\Date::get($row->last_activity, 2) . '<br /><small>' . \Altum\Date::get($row->last_activity, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->last_activity) . ')</small>' ?>">
+                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= l('admin_users.last_activity') . '<br />' . \SeeGap\Date::get($row->last_activity, 2) . '<br /><small>' . \SeeGap\Date::get($row->last_activity, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->last_activity) . ')</small>' ?>">
                                 <i class="fas fa-fw fa-history text-muted"></i>
                             </span>
 
@@ -361,7 +361,7 @@
             <div class="card-body py-2">
                 <div>
                     <?php foreach($data->internal_notifications as $notification): ?>
-                        <?php //ALTUMCODE:DEMO if(DEMO) {$notification->title = $notification->description = 'hidden on demo';} ?>
+                        <?php //SEEGAP:DEMO if(DEMO) {$notification->title = $notification->description = 'hidden on demo';} ?>
 
                         <div class="bg-gray-100 p-3 my-3 rounded <?= $notification->is_read ? null : 'border border-info' ?> position-relative">
                             <div class="d-flex align-items-center">
@@ -383,7 +383,7 @@
                                     </div>
 
                                     <div>
-                                        <small class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($notification->datetime, 1) ?>"><?= \Altum\Date::get_timeago($notification->datetime) ?></small>
+                                        <small class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($notification->datetime, 1) ?>"><?= \SeeGap\Date::get_timeago($notification->datetime) ?></small>
                                     </div>
                                 </div>
                             </div>
@@ -417,7 +417,7 @@
                     </thead>
                     <tbody>
                     <?php while($row = $result->fetch_object()): ?>
-                        <?php //ALTUMCODE:DEMO if(DEMO) {$row->email = $row->user_email = 'hidden@demo.com'; $row->user_name = $row->name = 'hidden on demo';} ?>
+                        <?php //SEEGAP:DEMO if(DEMO) {$row->email = $row->user_email = 'hidden@demo.com'; $row->user_name = $row->name = 'hidden on demo';} ?>
                         <?php $row->taxes_ids = json_decode($row->taxes_ids ?? ''); ?>
 
                         <tr>
@@ -486,7 +486,7 @@
                                     <i class="fas fa-fw fa-sm fa-paperclip text-muted"></i>
                                 </a>
 
-                                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                                     <i class="fas fa-fw fa-calendar text-muted"></i>
                                 </span>
                             </td>

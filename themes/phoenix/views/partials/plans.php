@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->payment->is_enabled): ?>
 
@@ -6,7 +6,7 @@
     $plans = [];
     $available_payment_frequencies = [];
 
-    $plans = (new \Altum\Models\Plan())->get_plans();
+    $plans = (new \SeeGap\Models\Plan())->get_plans();
 
     foreach($plans as $plan) {
         if($plan->status != 1) continue;
@@ -20,7 +20,7 @@
     ?>
 
     <?php if(count($plans)): ?>
-        <?php if(\Altum\Router::$controller_settings['currency_switcher'] && count((array) settings()->payment->currencies ?? []) > 1): ?>
+        <?php if(\SeeGap\Router::$controller_settings['currency_switcher'] && count((array) settings()->payment->currencies ?? []) > 1): ?>
             <div class="mb-3 text-center">
                 <div class="dropdown mb-2 ml-lg-3">
                     <span class="font-weight-bold small mr-3"><?= l('global.choose_currency') ?></span>
@@ -70,13 +70,13 @@
             <div class="col-12 col-lg-6 col-xl-4 p-3">
                 <div class="pricing-plan rounded" style="<?= settings()->plan_free->color ? 'border-width: 2px; border-color: ' . settings()->plan_free->color : null ?>">
                     <div class="pricing-header">
-                        <span class="pricing-name"><?= settings()->plan_free->translations->{\Altum\Language::$name}->name ?: settings()->plan_free->name ?></span>
+                        <span class="pricing-name"><?= settings()->plan_free->translations->{\SeeGap\Language::$name}->name ?: settings()->plan_free->name ?></span>
 
                         <div class="pricing-price">
-                            <span class="pricing-price-amount"><?= settings()->plan_free->translations->{\Altum\Language::$name}->price ?: settings()->plan_free->price ?></span>
+                            <span class="pricing-price-amount"><?= settings()->plan_free->translations->{\SeeGap\Language::$name}->price ?: settings()->plan_free->price ?></span>
                         </div>
 
-                        <div class="pricing-details"><?= settings()->plan_free->translations->{\Altum\Language::$name}->description ?: settings()->plan_free->description ?></div>
+                        <div class="pricing-details"><?= settings()->plan_free->translations->{\SeeGap\Language::$name}->description ?: settings()->plan_free->description ?></div>
                     </div>
 
                     <div class="pricing-body d-flex flex-column justify-content-between">
@@ -109,7 +109,7 @@
                 <div class="pricing-plan rounded" style="<?= $plan->color ? 'border-width: 2px; border-color: ' . $plan->color : null ?>">
                     <div class="pricing-header">
                         <div>
-                            <span class="pricing-name"><?= $plan->translations->{\Altum\Language::$name}->name ?: $plan->name ?></span>
+                            <span class="pricing-name"><?= $plan->translations->{\SeeGap\Language::$name}->name ?: $plan->name ?></span>
 
                             <?php if($plan->prices->monthly->{currency()} && $annual_price_savings > 0): ?>
                                 <span class="badge badge-success mx-1 d-none" data-plan-payment-frequency="annual" data-toggle="tooltip" title="<?= sprintf(l('global.plan_settings.annual_price_savings'), $annual_price_savings . ' ' . currency()) ?>">
@@ -127,7 +127,7 @@
                             <span class="pricing-price-currency"><?= currency() ?></span>
                         </div>
 
-                        <div class="pricing-details"><?= $plan->translations->{\Altum\Language::$name}->description ?: $plan->description ?></div>
+                        <div class="pricing-details"><?= $plan->translations->{\SeeGap\Language::$name}->description ?: $plan->description ?></div>
                     </div>
 
                     <div class="pricing-body d-flex flex-column justify-content-between">
@@ -196,20 +196,20 @@
 
                 payment_frequency_handler();
             </script>
-        <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
         <?php if(settings()->plan_custom->status == 1): ?>
 
             <div class="col-12 col-lg-6 col-xl-4 p-3">
                 <div class="pricing-plan rounded" style="<?= settings()->plan_custom->color ? 'border-width: 2px; border-color: ' . settings()->plan_custom->color : null ?>">
                     <div class="pricing-header">
-                        <span class="pricing-name"><?= settings()->plan_custom->translations->{\Altum\Language::$name}->name ?: settings()->plan_custom->name ?></span>
+                        <span class="pricing-name"><?= settings()->plan_custom->translations->{\SeeGap\Language::$name}->name ?: settings()->plan_custom->name ?></span>
 
                         <div class="pricing-price">
-                            <span class="pricing-price-amount"><?= settings()->plan_custom->translations->{\Altum\Language::$name}->price ?: settings()->plan_custom->price ?></span>
+                            <span class="pricing-price-amount"><?= settings()->plan_custom->translations->{\SeeGap\Language::$name}->price ?: settings()->plan_custom->price ?></span>
                         </div>
 
-                        <div class="pricing-details"><?= settings()->plan_custom->translations->{\Altum\Language::$name}->description ?: settings()->plan_custom->description ?></div>
+                        <div class="pricing-details"><?= settings()->plan_custom->translations->{\SeeGap\Language::$name}->description ?: settings()->plan_custom->description ?></div>
                     </div>
 
                     <div class="pricing-body d-flex flex-column justify-content-between">
@@ -237,7 +237,7 @@ $offers = [];
 if(settings()->plan_guest->status ?? null) {
     $offers[] = [
         '@type' => 'Offer',
-        'name' => settings()->plan_guest->translations->{\Altum\Language::$name}->name ?: settings()->plan_guest->name,
+        'name' => settings()->plan_guest->translations->{\SeeGap\Language::$name}->name ?: settings()->plan_guest->name,
         'availability' => 'https://schema.org/InStock',
         'url' => url('plan')
     ];
@@ -246,7 +246,7 @@ if(settings()->plan_guest->status ?? null) {
 if(settings()->plan_free->status) {
     $offers[] = [
         '@type' => 'Offer',
-        'name' => settings()->plan_free->translations->{\Altum\Language::$name}->name ?: settings()->plan_free->name,
+        'name' => settings()->plan_free->translations->{\SeeGap\Language::$name}->name ?: settings()->plan_free->name,
         'availability' => 'https://schema.org/InStock',
         'url' => url('plan')
     ];
@@ -255,7 +255,7 @@ if(settings()->plan_free->status) {
 if(settings()->plan_custom->status) {
     $offers[] = [
         '@type' => 'Offer',
-        'name' => settings()->plan_custom->translations->{\Altum\Language::$name}->name ?: settings()->plan_custom->name,
+        'name' => settings()->plan_custom->translations->{\SeeGap\Language::$name}->name ?: settings()->plan_custom->name,
         'availability' => 'https://schema.org/InStock',
         'url' => url('plan')
     ];
@@ -269,7 +269,7 @@ if(settings()->payment->is_enabled) {
             if($plan->prices->{$value}->{currency()}) {
                 $offers[] = [
                     '@type' => 'Offer',
-                    'name' => $plan->translations->{\Altum\Language::$name}->name ?: $plan->name . ' - ' . l('plan.custom_plan.' . $value),
+                    'name' => $plan->translations->{\SeeGap\Language::$name}->name ?: $plan->name . ' - ' . l('plan.custom_plan.' . $value),
                     'price' => nr($plan->prices->{$value}->{currency()}, 2, false),
                     'priceCurrency' => currency(),
                     'availability' => 'https://schema.org/InStock',
@@ -290,12 +290,12 @@ if(settings()->payment->is_enabled) {
         "applicationCategory": "WebApplication",
         "operatingSystem": "All",
         "url": "<?= url() ?>",
-    <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()}): ?>
-        "image": "<?= settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} ?>",
+    <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()}): ?>
+        "image": "<?= settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} ?>",
         <?php endif ?>
     "offers": <?= json_encode($offers) ?>
     }
 </script>
 
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 

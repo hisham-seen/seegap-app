@@ -3,12 +3,12 @@ UPDATE `settings` SET `value` = '{\"version\":\"43.0.0\", \"code\":\"4300\"}' WH
 -- SEPARATOR --
 
 -- X --
-call altum;
+call seegap;
 
 -- SEPARATOR --
 
 -- X --
-drop procedure altum;
+drop procedure seegap;
 
 -- SEPARATOR --
 

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
     <h1 class="h3 mb-3 mb-md-0"><i class="fas fa-fw fa-xs fa-credit-card text-primary-900 mr-2"></i> <?= l('admin_payments.header') ?></h1>
@@ -35,7 +35,7 @@
                         <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                         <?php if($data->filters->has_applied_filters): ?>
-                            <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                            <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                         <?php endif ?>
                     </div>
 
@@ -143,7 +143,7 @@
     </div>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="table-responsive table-custom-container">
     <table class="table table-custom">
@@ -159,7 +159,7 @@
         </thead>
         <tbody>
         <?php foreach($data->payments as $row): ?>
-            <?php //ALTUMCODE:DEMO if(DEMO) {$row->email = $row->user_email = 'hidden@demo.com'; $row->name = $row->user_name = 'hidden on demo';} ?>
+            <?php //SEEGAP:DEMO if(DEMO) {$row->email = $row->user_email = 'hidden@demo.com'; $row->name = $row->user_name = 'hidden on demo';} ?>
             <?php $row->taxes_ids = json_decode($row->taxes_ids ?? ''); ?>
             <tr>
                 <td class="text-nowrap">
@@ -227,7 +227,7 @@
                         <i class="fas fa-fw fa-sm fa-paperclip text-muted"></i>
                     </a>
 
-                    <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                    <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                         <i class="fas fa-fw fa-calendar text-muted"></i>
                     </span>
                 </td>
@@ -255,4 +255,4 @@
 
     $('[data-toggle="popover"]').popover();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

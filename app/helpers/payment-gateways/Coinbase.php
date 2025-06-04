@@ -7,10 +7,10 @@
  *
  */
 
-namespace Altum\PaymentGateways;
+namespace SeeGap\PaymentGateways;
 
 /* Helper class for Coinbase */
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Coinbase {
     static public $api_url = 'https://api.commerce.coinbase.com/';

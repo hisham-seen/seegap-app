@@ -1,8 +1,8 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="index-container">
     <div class="container index-container-content">
-        <?= \Altum\Alerts::output_alerts() ?>
+        <?= \SeeGap\Alerts::output_alerts() ?>
 
         <div class="row">
             <div class="col">
@@ -118,7 +118,7 @@
                                             }
                                         }));
                                     </script>
-                                <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+                                <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
                             <?php endif ?>
 
                             <a id="claim_button" href="<?= url('register') ?>" class="btn index-button index-button-white bg-gradient border-0 mb-3 <?= settings()->links->claim_url_is_enabled ? 'rounded-pill' : null ?>">
@@ -126,13 +126,13 @@
                             </a>
                         <?php endif ?>
 
-                        <?php //ALTUMCODE:DEMO if(!DEMO): ?>
+                        <?php //SEEGAP:DEMO if(!DEMO): ?>
                         <?php if(settings()->links->microsites_is_enabled && settings()->links->example_url && !settings()->links->claim_url_is_enabled): ?>
                             <a href="<?= settings()->links->example_url ?>" target="_blank" class="btn btn-outline-primary index-button mb-3 mb-lg-0">
                                 <?= l('index.example') ?> <i class="fas fa-fw fa-sm fa-external-link-alt"></i>
                             </a>
                         <?php endif ?>
-                        <?php //ALTUMCODE:DEMO endif ?>
+                        <?php //SEEGAP:DEMO endif ?>
                     </div>
                 </div>
             </div>
@@ -618,7 +618,7 @@
 
 
 
-<?php if(\Altum\Plugin::is_active('aix') && settings()->aix->images_is_enabled && settings()->aix->images_display_latest_on_index): ?>
+<?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->images_is_enabled && settings()->aix->images_display_latest_on_index): ?>
     <div class="py-3"></div>
 
     <div class="container mt-8">
@@ -632,7 +632,7 @@
                 <div class="row no-gutters">
                     <?php foreach($data->images as $image): ?>
                         <div class="col-6 col-lg-3 p-4" data-aos="zoom-in">
-                            <img src="<?= \Altum\Uploads::get_full_url('images') . $image->image ?>" class="img-fluid rounded" alt="<?= $image->input ?>" data-toggle="tooltip" title="<?= $image->input ?>" loading="lazy" />
+                            <img src="<?= \SeeGap\Uploads::get_full_url('images') . $image->image ?>" class="img-fluid rounded" alt="<?= $image->input ?>" data-toggle="tooltip" title="<?= $image->input ?>" loading="lazy" />
                         </div>
                     <?php endforeach ?>
                 </div>
@@ -641,7 +641,7 @@
     </div>
 <?php endif ?>
 
-<?php if(\Altum\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
+<?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
     <div class="py-3"></div>
 
     <div class="container mt-8">
@@ -664,9 +664,9 @@
                 </div>
 
                 <?php
-                $language_array = \Altum\Language::get(\Altum\Language::$name);
-                if(\Altum\Language::$main_name != \Altum\Language::$name) {
-                    $language_array = array_merge(\Altum\Language::get(\Altum\Language::$main_name), $language_array);
+                $language_array = \SeeGap\Language::get(\SeeGap\Language::$name);
+                if(\SeeGap\Language::$main_name != \SeeGap\Language::$name) {
+                    $language_array = array_merge(\SeeGap\Language::get(\SeeGap\Language::$main_name), $language_array);
                 }
 
                 $testimonials_language_keys = [];
@@ -727,9 +727,9 @@
         </div>
 
         <?php
-        $language_array = \Altum\Language::get(\Altum\Language::$name);
-        if(\Altum\Language::$main_name != \Altum\Language::$name) {
-            $language_array = array_merge(\Altum\Language::get(\Altum\Language::$main_name), $language_array);
+        $language_array = \SeeGap\Language::get(\SeeGap\Language::$name);
+        if(\SeeGap\Language::$main_name != \SeeGap\Language::$name) {
+            $language_array = array_merge(\SeeGap\Language::get(\SeeGap\Language::$main_name), $language_array);
         }
 
         $faq_language_keys = [];
@@ -783,7 +783,7 @@
             svg.style.removeProperty('transform');
         })
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 <?php endif ?>
 
 <?php if(settings()->users->register_is_enabled): ?>
@@ -831,12 +831,12 @@
                     <div class="card h-100 zoom-animation-subtle">
                         <div class="card-body">
                             <?php if($blog_post->image): ?>
-                                <a href="<?= SITE_URL . ($blog_post->language ? \Altum\Language::$active_languages[$blog_post->language] . '/' : null) . 'blog/' . $blog_post->url ?>" aria-label="<?= $blog_post->title ?>">
-                                    <img src="<?= \Altum\Uploads::get_full_url('blog') . $blog_post->image ?>" class="blog-post-image-small img-fluid w-100 rounded mb-4" alt="<?= $blog_post->image_description ?>" loading="lazy" />
+                                <a href="<?= SITE_URL . ($blog_post->language ? \SeeGap\Language::$active_languages[$blog_post->language] . '/' : null) . 'blog/' . $blog_post->url ?>" aria-label="<?= $blog_post->title ?>">
+                                    <img src="<?= \SeeGap\Uploads::get_full_url('blog') . $blog_post->image ?>" class="blog-post-image-small img-fluid w-100 rounded mb-4" alt="<?= $blog_post->image_description ?>" loading="lazy" />
                                 </a>
                             <?php endif ?>
 
-                            <a href="<?= SITE_URL . ($blog_post->language ? \Altum\Language::$active_languages[$blog_post->language] . '/' : null) . 'blog/' . $blog_post->url ?>">
+                            <a href="<?= SITE_URL . ($blog_post->language ? \SeeGap\Language::$active_languages[$blog_post->language] . '/' : null) . 'blog/' . $blog_post->url ?>">
                                 <h3 class="h5 card-title mb-2"><?= $blog_post->title ?></h3>
                             </a>
 
@@ -852,7 +852,7 @@
 
 <?php ob_start() ?>
 <link rel="stylesheet" href="<?= ASSETS_FULL_URL . 'css/libraries/aos.min.css?v=' . PRODUCT_CODE ?>">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/aos.min.js?v=' . PRODUCT_CODE ?>"></script>
@@ -863,7 +863,7 @@
         duration: 600
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php ob_start() ?>
 <script type="application/ld+json">
@@ -872,8 +872,8 @@
         "@type": "Organization",
         "name": "<?= settings()->main->title ?>",
         "url": "<?= url() ?>",
-    <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()}): ?>
-        "logo": "<?= settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} ?>",
+    <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()}): ?>
+        "logo": "<?= settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} ?>",
         <?php endif ?>
     "slogan": "<?= l('index.header') ?>",
         "contactPoint": {
@@ -921,4 +921,4 @@
         }
     </script>
 <?php endif ?>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

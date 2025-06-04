@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\User;
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Models\User;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminApiUsers extends Controller {
     use Apiable;
@@ -65,13 +65,13 @@ class AdminApiUsers extends Controller {
     private function get_all() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], ['name', 'email'], ['email', 'datetime', 'last_activity', 'name', 'total_logins']));
+        $filters = (new \SeeGap\Filters([], ['name', 'email'], ['email', 'datetime', 'last_activity', 'name', 'total_logins']));
         $filters->set_default_order_by('user_id', $this->api_user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->api_user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `users` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin-api/users?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin-api/users?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $data = [];

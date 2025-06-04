@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ApiSplashPages extends Controller {
     use Apiable;
@@ -60,14 +60,14 @@ class ApiSplashPages extends Controller {
     private function get_all() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], [], []));
+        $filters = (new \SeeGap\Filters([], [], []));
         $filters->set_default_order_by('splash_page_id', $this->api_user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->api_user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
         $filters->process();
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `splash_pages` WHERE `user_id` = {$this->api_user->user_id}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/splash-pages?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/splash-pages?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $data = [];
@@ -182,9 +182,9 @@ class ApiSplashPages extends Controller {
         $_POST['link_unlock_seconds'] = (int) ($_POST['link_unlock_seconds'] ?? 5);
         $_POST['auto_redirect'] = (int) isset($_POST['auto_redirect']);
 
-        $logo = \Altum\Uploads::process_upload(null, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
-        $favicon = \Altum\Uploads::process_upload(null, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
-        $opengraph = \Altum\Uploads::process_upload(null, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
+        $logo = \SeeGap\Uploads::process_upload(null, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
+        $favicon = \SeeGap\Uploads::process_upload(null, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
+        $opengraph = \SeeGap\Uploads::process_upload(null, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
 
         $settings = json_encode([
             'logo' => $logo,
@@ -247,9 +247,9 @@ class ApiSplashPages extends Controller {
         $_POST['link_unlock_seconds'] = isset($_POST['link_unlock_seconds']) ? (int) $_POST['link_unlock_seconds'] : $splash_page->link_unlock_seconds;
         $_POST['auto_redirect'] = isset($_POST['auto_redirect']) ? (int) (bool) $_POST['auto_redirect'] : $splash_page->auto_redirect;
 
-        $logo = \Altum\Uploads::process_upload($splash_page->settings->logo, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
-        $favicon = \Altum\Uploads::process_upload($splash_page->settings->favicon, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
-        $opengraph = \Altum\Uploads::process_upload($splash_page->settings->opengraph, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
+        $logo = \SeeGap\Uploads::process_upload($splash_page->settings->logo, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
+        $favicon = \SeeGap\Uploads::process_upload($splash_page->settings->favicon, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
+        $opengraph = \SeeGap\Uploads::process_upload($splash_page->settings->opengraph, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
 
         $settings = json_encode([
             'logo' => $logo,
@@ -297,7 +297,7 @@ class ApiSplashPages extends Controller {
             $this->return_404();
         }
 
-        (new \Altum\Models\SplashPages())->delete($splash_page->splash_page_id);
+        (new \SeeGap\Models\SplashPages())->delete($splash_page->splash_page_id);
 
         http_response_code(200);
         die();

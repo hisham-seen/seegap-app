@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Account extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the TwoFA codes just in case we need them */
         $twofa = new \RobThree\Auth\TwoFactorAuth(settings()->main->title, 6, 30);
@@ -36,7 +36,7 @@ class Account extends Controller {
             $_POST['is_newsletter_subscribed'] = (int) isset($_POST['is_newsletter_subscribed']);
             $twofa_secret = $_POST['twofa_is_enabled'] ? $this->user->twofa_secret : null;
 
-            if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
+            if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
                 $_POST['referral_key'] = input_clean($_POST['referral_key'], 32);
             } else {
                 $_POST['referral_key'] = $this->user->referral_key;
@@ -68,10 +68,10 @@ class Account extends Controller {
                 ]);
             }
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
             if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) == false) {
@@ -210,7 +210,7 @@ class Account extends Controller {
                     db()->where('user_id', $this->user->user_id)->update('users', ['password' => $new_password]);
 
                     /* Logout of the user */
-                    \Altum\Authentication::logout(false);
+                    \SeeGap\Authentication::logout(false);
 
                     /* Start a new session to set a success message */
                     session_start();
@@ -260,7 +260,7 @@ class Account extends Controller {
         $_SESSION['twofa_potential_secret'] = $twofa_secret;
 
         /* Get the account header menu */
-        $menu = new \Altum\View('partials/account_header_menu', (array) $this);
+        $menu = new \SeeGap\View('partials/account_header_menu', (array) $this);
         $this->add_view_content('account_header_menu', $menu->run());
 
         /* Prepare the view */
@@ -269,7 +269,7 @@ class Account extends Controller {
             'twofa_image'   => $twofa_image
         ];
 
-        $view = new \Altum\View('account/index', (array) $this);
+        $view = new \SeeGap\View('account/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

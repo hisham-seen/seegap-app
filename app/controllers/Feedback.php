@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Captcha;
+use SeeGap\Alerts;
+use SeeGap\Captcha;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Feedback extends Controller {
 
@@ -31,7 +31,7 @@ class Feedback extends Controller {
             $_POST['subject'] = input_clean($_POST['subject'], 128);
             $_POST['message'] = input_clean($_POST['message'], 2048);
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name', 'email', 'subject', 'message'];
@@ -41,7 +41,7 @@ class Feedback extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -99,7 +99,7 @@ class Feedback extends Controller {
             'values' => $values,
         ];
 
-        $view = new \Altum\View('feedback/index', (array) $this);
+        $view = new \SeeGap\View('feedback/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

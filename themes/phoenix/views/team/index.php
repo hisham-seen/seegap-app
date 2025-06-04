@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
         <nav aria-label="breadcrumb">
             <ol class="custom-breadcrumbs small">
@@ -65,7 +65,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
@@ -195,7 +195,7 @@
                             <?php endif ?>
                         </td>
 
-                        <td class="text-nowrap"><span class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>"><?= \Altum\Date::get_timeago($row->datetime) ?></span></td>
+                        <td class="text-nowrap"><span class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>"><?= \SeeGap\Date::get_timeago($row->datetime) ?></span></td>
 
                         <td>
                             <div class="d-flex justify-content-end">
@@ -218,14 +218,14 @@
     <?php endif ?>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'team',
     'resource_id' => 'team_id',
     'has_dynamic_resource_name' => true,
     'path' => 'teams/delete'
 ]), 'modals'); ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'team_member',
     'resource_id' => 'team_member_id',
     'has_dynamic_resource_name' => true,

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="create_microsite_avatar" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -14,7 +14,7 @@
 
             <div class="modal-body">
                 <form name="create_microsite_avatar" method="post" role="form" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
                     <input type="hidden" name="block_type" value="avatar" />
@@ -23,8 +23,8 @@
 
                     <div class="form-group">
                         <label for="avatar_image"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('global.image') ?></label>
-                        <input id="avatar_image" type="file" name="image" accept="<?= \Altum\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions']) ?>" class="form-control-file altum-file-input" required="required" data-crop data-aspect-ratio="1" />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
+                        <input id="avatar_image" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions']) ?>" class="form-control-file seegap-file-input" required="required" data-crop data-aspect-ratio="1" />
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
                     </div>
 
                     <div class="form-group">

@@ -1,8 +1,8 @@
 <?php
 
-namespace Altum\Plugin;
+namespace SeeGap\Plugin;
 
-use Altum\Plugin;
+use SeeGap\Plugin;
 
 class UltimateBlocks {
     public static $plugin_id = 'ultimate-blocks';

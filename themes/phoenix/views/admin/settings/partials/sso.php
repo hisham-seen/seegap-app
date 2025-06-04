@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <div class="form-group custom-control custom-switch">
@@ -166,7 +166,7 @@
 
     id_initiator();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 
 <?php ob_start() ?>
@@ -182,4 +182,4 @@
         }
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

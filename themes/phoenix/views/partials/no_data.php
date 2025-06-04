@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if($data->has_wrapper ?? true): ?>
 <div class="card">
@@ -14,7 +14,7 @@
                 <p class="text-muted text-center small mb-3"><?= l('global.filters.no_data_help') ?></p>
 
                 <?php if($data->has_clear_filters_button ?? true): ?>
-                <a href="<?= url(\Altum\Router::$original_request) ?>" class="btn btn-sm btn-light rounded-pill">
+                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="btn btn-sm btn-light rounded-pill">
                     <i class="fas fa-fw fa-sm fa-eraser mr-1"></i> <?= l('global.filters.clear') ?>
                 </a>
                 <?php endif ?>

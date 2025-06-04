@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Meta {
     public static $link_alternate = true;
@@ -37,10 +37,10 @@ class Meta {
     public static function initialize() {
 
         /* Add the prefix if needed */
-        $language_key = preg_replace('/-/', '_', \Altum\Router::$controller_key);
+        $language_key = preg_replace('/-/', '_', \SeeGap\Router::$controller_key);
 
-        if(\Altum\Router::$path != '') {
-            $language_key = \Altum\Router::$path . '_' . $language_key;
+        if(\SeeGap\Router::$path != '') {
+            $language_key = \SeeGap\Router::$path . '_' . $language_key;
         }
 
         /* Check if the default is viable and use it */
@@ -48,11 +48,11 @@ class Meta {
         self::$keywords = l($language_key . '.meta_keywords', null, true);
 
         /* Set title */
-        self::set_social_title(\Altum\Title::get());
+        self::set_social_title(\SeeGap\Title::get());
 
         /* Opengraph image */
         if(settings()->main->opengraph) {
-            self::set_social_image(\Altum\Uploads::get_full_url('opengraph') . settings()->main->opengraph);
+            self::set_social_image(\SeeGap\Uploads::get_full_url('opengraph') . settings()->main->opengraph);
         }
 
         /* Canonical automation */
@@ -92,7 +92,7 @@ class Meta {
     }
 
     public static function set_canonical_url($value = null) {
-        self::$canonical = $value ?? url(\Altum\Router::$original_request);
+        self::$canonical = $value ?? url(\SeeGap\Router::$original_request);
     }
 
     public static function set_robots($value) {
@@ -101,17 +101,17 @@ class Meta {
 
     public static function output() {
         self::$opengraph['og:site_name'] = settings()->main->title;
-        self::$opengraph['og:url'] = self::$opengraph['og:url'] ?: url(\Altum\Router::$original_request);
-        self::$twitter['twitter:url'] = self::$twitter['twitter:url'] ?: url(\Altum\Router::$original_request);
+        self::$opengraph['og:url'] = self::$opengraph['og:url'] ?: url(\SeeGap\Router::$original_request);
+        self::$twitter['twitter:url'] = self::$twitter['twitter:url'] ?: url(\SeeGap\Router::$original_request);
 
         echo '<!-- Open graph / Twitter markup -->' . "\n";
-        foreach(\Altum\Meta::$opengraph as $key => $value) {
+        foreach(\SeeGap\Meta::$opengraph as $key => $value) {
             if($value) {
                 echo '<meta property="' . $key . '" content="' . $value . '" />' . "\n";
             }
         }
 
-        foreach(\Altum\Meta::$twitter as $key => $value) {
+        foreach(\SeeGap\Meta::$twitter as $key => $value) {
             if($value) {
                 echo '<meta name="' . $key . '" content="' . $value . '" />' . "\n";
             }

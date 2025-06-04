@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="<?= $data->modal_id ?>" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -18,7 +18,7 @@
                 <p class="text-muted"><?= l('x_reset_modal.subheader') ?></p>
 
                 <form name="<?= $data->modal_id ?>" method="post" action="<?= url($data->path) ?>" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="<?= $data->resource_id ?>" value="" />
 
                     <div class="mt-4">
@@ -42,4 +42,4 @@
         event.currentTarget.querySelector(`input[name="<?= $data->resource_id ?>"]`).value = id;
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

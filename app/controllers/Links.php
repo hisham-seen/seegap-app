@@ -7,27 +7,27 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\Domain;
+use SeeGap\Alerts;
+use SeeGap\Models\Domain;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Links extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled', 'type', 'project_id', 'domain_id', 'pixels_ids'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'clicks', 'url'], [], ['pixels_ids' => 'json_contains']));
+        $filters = (new \SeeGap\Filters(['is_enabled', 'type', 'project_id', 'domain_id', 'pixels_ids'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'clicks', 'url'], [], ['pixels_ids' => 'json_contains']));
         $filters->set_default_order_by($this->user->preferences->links_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id}  {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('links?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('links?' . $filters->get_get() . '&page=%d')));
 
         /* Get domains */
         $domains = (new Domain())->get_available_domains_by_user($this->user);
@@ -59,18 +59,18 @@ class Links extends Controller {
         process_export_json($links, 'include', ['link_id', 'user_id', 'project_id', 'pixels_ids', 'type', 'url', 'location_url', 'settings', 'start_date', 'end_date', 'clicks', 'is_verified', 'is_enabled', 'last_datetime', 'datetime'], sprintf(l('links.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Create Link Modal */
-        $view = new \Altum\View('links/create_link_modals', (array) $this);
-        \Altum\Event::add_content($view->run(['domains' => $domains]), 'modals');
+        $view = new \SeeGap\View('links/create_link_modals', (array) $this);
+        \SeeGap\Event::add_content($view->run(['domains' => $domains]), 'modals');
 
         /* Delete Modal */
-        $view = new \Altum\View('links/link_delete_modal', (array) $this);
-        \Altum\Event::add_content($view->run(), 'modals');
+        $view = new \SeeGap\View('links/link_delete_modal', (array) $this);
+        \SeeGap\Event::add_content($view->run(), 'modals');
 
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Prepare the Links Content View */
         $data = [
@@ -81,11 +81,11 @@ class Links extends Controller {
             'domains'           => $domains,
             'links_types'       => require APP_PATH . 'includes/links_types.php',
         ];
-        $view = new \Altum\View('links/links_content', (array) $this);
+        $view = new \SeeGap\View('links/links_content', (array) $this);
         $this->add_view_content('links_content', $view->run($data));
 
         /* Prepare the view */
-        $view = new \Altum\View('links/index', (array) $this);
+        $view = new \SeeGap\View('links/index', (array) $this);
 
         $this->add_view_content('content', $view->run());
 
@@ -93,9 +93,9 @@ class Links extends Controller {
 
     public function bulk() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -110,7 +110,7 @@ class Links extends Controller {
             redirect('links');
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -122,7 +122,7 @@ class Links extends Controller {
                 case 'delete':
 
                     /* Team checks */
-                    if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.links')) {
+                    if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.links')) {
                         Alerts::add_info(l('global.info_message.team_no_access'));
                         redirect('links');
                     }
@@ -130,7 +130,7 @@ class Links extends Controller {
                     foreach($_POST['selected'] as $link_id) {
                         if($link = db()->where('link_id', $link_id)->where('user_id', $this->user->user_id)->getOne('links', ['link_id'])) {
                             /* Delete the resource */
-                            (new \Altum\Models\Link())->delete($link->link_id);
+                            (new \SeeGap\Models\Link())->delete($link->link_id);
                         }
                     }
 
@@ -147,10 +147,10 @@ class Links extends Controller {
     }
 
     public function reset() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('links');
         }
@@ -161,9 +161,9 @@ class Links extends Controller {
 
         $link_id = (int) query_clean($_POST['link_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('links');
         }

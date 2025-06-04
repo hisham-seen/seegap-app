@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 
@@ -8,7 +8,7 @@
             <div class="card-body">
 
                 <form name="update_static" action="" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                     <input type="hidden" name="request_type" value="update" />
                     <input type="hidden" name="type" value="static" />
                     <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
@@ -17,9 +17,9 @@
 
                     <div class="form-group" data-file-input-wrapper-size-limit="<?= settings()->links->static_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->static_size_limit) ?>">
                         <label for="file"><i class="fas fa-fw fa-sm fa-file-zipper text-muted mr-1"></i> <?= l('create_static_modal.file') ?></label>
-                        <input id="file" type="file" name="file" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('static') ?>" class="form-control-file altum-file-input" />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('static')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->static_size_limit) ?></small>
-                        <small class="form-text text-muted"><?= sprintf(l('create_static_modal.file.inside_zip_whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format(\Altum\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) ?></small>
+                        <input id="file" type="file" name="file" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('static') ?>" class="form-control-file seegap-file-input" />
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('static')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->static_size_limit) ?></small>
+                        <small class="form-text text-muted"><?= sprintf(l('create_static_modal.file.inside_zip_whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format(\SeeGap\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) ?></small>
                         <small class="form-text text-muted"><?= l('create_static_modal.file.help1') ?></small>
                         <small class="form-text text-muted"><?= l('create_static_modal.file.help2') ?></small>
                     </div>
@@ -30,7 +30,7 @@
                             <div class="input-group-prepend">
                                 <?php if(count($data->domains)): ?>
                                     <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                        <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                        <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                             <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                         <?php endif ?>
 
@@ -133,7 +133,7 @@
                                                         type="text"
                                                         class="form-control"
                                                         name="start_date"
-                                                        value="<?= \Altum\Date::get($data->link->start_date, 1) ?>"
+                                                        value="<?= \SeeGap\Date::get($data->link->start_date, 1) ?>"
                                                         placeholder="<?= l('link.settings.start_date') ?>"
                                                         autocomplete="off"
                                                         data-daterangepicker
@@ -148,7 +148,7 @@
                                                         type="text"
                                                         class="form-control"
                                                         name="end_date"
-                                                        value="<?= \Altum\Date::get($data->link->end_date, 1) ?>"
+                                                        value="<?= \SeeGap\Date::get($data->link->end_date, 1) ?>"
                                                         placeholder="<?= l('link.settings.end_date') ?>"
                                                         autocomplete="off"
                                                         data-daterangepicker

@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminUserUpdate extends Controller {
 
@@ -27,8 +27,8 @@ class AdminUserUpdate extends Controller {
         $user->plan_settings = json_decode($user->plan_settings);
 
         $additional_domains = db()->where('is_enabled', 1)->where('type', 1)->get('domains');
-        $microsites_templates = (new \Altum\Models\MicrositesTemplates())->get_microsites_templates();
-        $microsites_themes = (new \Altum\Models\MicrositesThemes())->get_microsites_themes();
+        $microsites_templates = (new \SeeGap\Models\MicrositesTemplates())->get_microsites_templates();
+        $microsites_themes = (new \SeeGap\Models\MicrositesThemes())->get_microsites_themes();
 
         if(!empty($_POST)) {
             /* Filter some the variables */
@@ -37,11 +37,11 @@ class AdminUserUpdate extends Controller {
             $_POST['type'] = (int) $_POST['type'];
             $_POST['plan_trial_done'] = (int) isset($_POST['plan_trial_done']);
 
-            if(\Altum\Plugin::is_active('affiliate')) {
+            if(\SeeGap\Plugin::is_active('affiliate')) {
                 $_POST['referred_by'] = !empty($_POST['referred_by']) ? (int) $_POST['referred_by'] : null;
             }
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             switch($_POST['plan_id']) {
                 case 'free':
@@ -149,7 +149,7 @@ class AdminUserUpdate extends Controller {
                     break;
             }
 
-            $_POST['plan_expiration_date'] = \Altum\Date::validate($_POST['plan_expiration_date'], 'Y-m-d') ? $_POST['plan_expiration_date'] : '';
+            $_POST['plan_expiration_date'] = \SeeGap\Date::validate($_POST['plan_expiration_date'], 'Y-m-d') ? $_POST['plan_expiration_date'] : '';
             $_POST['plan_expiration_date'] = (new \DateTime($_POST['plan_expiration_date']))->format('Y-m-d H:i:s');
 
             /* Check for any errors */
@@ -160,16 +160,16 @@ class AdminUserUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
             if(mb_strlen($_POST['name']) < 1 || mb_strlen($_POST['name']) > 64) {
                 Alerts::add_field_error('name', l('admin_users.error_message.name_length'));
             }
             if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) == false) {
-                //ALTUMCODE:DEMO if(DEMO) {
+                //SEEGAP:DEMO if(DEMO) {
                 Alerts::add_field_error('email', l('global.error_message.invalid_email'));
-                //ALTUMCODE:DEMO }
+                //SEEGAP:DEMO }
             }
             if(db()->where('email', $_POST['email'])->has('users') && $_POST['email'] !== $user->email) {
                 Alerts::add_field_error('email', l('admin_users.error_message.email_exists'));
@@ -247,7 +247,7 @@ class AdminUserUpdate extends Controller {
             'microsites_themes' => $microsites_themes,
         ];
 
-        $view = new \Altum\View('admin/user-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/user-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

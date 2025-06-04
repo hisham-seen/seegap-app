@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /* Easily configurable footer socials */
 

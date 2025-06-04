@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
+use SeeGap\Alerts;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class DocumentCreate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.documents')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.documents')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('documents');
         }
@@ -49,13 +49,13 @@ class DocumentCreate extends Controller {
         }
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Get available templates categories */
-        $templates_categories = (new \Altum\Models\TemplatesCategories())->get_templates_categories();
+        $templates_categories = (new \SeeGap\Models\TemplatesCategories())->get_templates_categories();
 
         /* Templates */
-        $templates = (new \Altum\Models\Templates())->get_templates();
+        $templates = (new \SeeGap\Models\Templates())->get_templates();
 
         /* Clear $_GET */
         foreach($_GET as $key => $value) {
@@ -63,7 +63,7 @@ class DocumentCreate extends Controller {
         }
 
         $values = [
-            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('document_create.name_x'), \Altum\Date::get()),
+            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('document_create.name_x'), \SeeGap\Date::get()),
             'language' => $_GET['language'] ?? $_POST['language'] ?? reset(settings()->aix->documents_available_languages),
             'variants' => $_GET['variants'] ?? $_POST['variants'] ?? 1,
             'max_words_per_variant' => $_GET['max_words_per_variant'] ?? $_POST['max_words_per_variant'] ?? null,
@@ -89,14 +89,14 @@ class DocumentCreate extends Controller {
             'templates_categories' => $templates_categories,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/document-create/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/document-create/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
 
     }
 
     public function create_ajax() {
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
 
         if(empty($_POST)) {
             redirect();
@@ -104,14 +104,14 @@ class DocumentCreate extends Controller {
 
         set_time_limit(0);
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.documents')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.documents')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -130,15 +130,15 @@ class DocumentCreate extends Controller {
         $this->user->plan_settings->documents_model = $this->user->plan_settings->documents_model ?? 'gpt-3.5-turbo';
 
         /* AI Text models */
-        $ai_text_models = require \Altum\Plugin::get('aix')->path . 'includes/ai_text_models.php';
+        $ai_text_models = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_text_models.php';
         $max_tokens_for_current_model = $ai_text_models[$this->user->plan_settings->documents_model]['max_tokens'];
         $max_words_for_current_model = floor($max_tokens_for_current_model / 1.333);
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Templates */
-        $templates = (new \Altum\Models\Templates())->get_templates();
+        $templates = (new \SeeGap\Models\Templates())->get_templates();
 
         $_POST['name'] = input_clean($_POST['name'], 64);
         $_POST['language'] = in_array($_POST['language'], settings()->aix->documents_available_languages) ? input_clean($_POST['language']) : reset(settings()->aix->documents_available_languages);
@@ -173,7 +173,7 @@ class DocumentCreate extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Response::json(l('global.error_message.invalid_csrf_token'), 'error');
         }
 

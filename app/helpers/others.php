@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 function output_alert($type, $message, $icon = true, $dismissable = true) {
 
@@ -36,7 +36,7 @@ function output_alert($type, $message, $icon = true, $dismissable = true) {
     $dismiss_button = $dismissable ? '<button type="button" class="close ml-2" data-dismiss="alert"><i class="fas fa-fw fa-sm fa-times text-' . $alert_type . '"></i></button>' : null;
 
     return '
-        <div class="alert alert-' . $alert_type . ' altum-animate altum-animate-fill-both altum-animate-fade-in">
+        <div class="alert alert-' . $alert_type . ' seegap-animate seegap-animate-fill-both seegap-animate-fade-in">
             ' . $icon . '
             ' . $dismiss_button . '
             ' . $message . '
@@ -259,9 +259,9 @@ function get_device_type($user_agent) {
 function process_export_json($array_of_objects, $type = '', $type_array = [], $file_name = 'data') {
 
     if(isset($_GET['export']) && $_GET['export'] == 'json') {
-        //ALTUMCODE:DEMO if(DEMO) exit('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) exit('This command is blocked on the demo.');
 
-        if(\Altum\Title::get()) $file_name = \Altum\Title::get();
+        if(\SeeGap\Title::get()) $file_name = \SeeGap\Title::get();
         header('Content-Disposition: attachment; filename="' . $file_name . '.json";');
         header('Content-Type: application/json; charset=UTF-8');
 
@@ -292,9 +292,9 @@ function json_exporter($array_of_objects, $type = 'basic', $type_array = []) {
 function process_export_csv($array, $type = '', $type_array = [], $file_name = 'data') {
 
     if(isset($_GET['export']) && $_GET['export'] == 'csv') {
-        //ALTUMCODE:DEMO if(DEMO) exit('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) exit('This command is blocked on the demo.');
 
-        if(\Altum\Title::get()) $file_name = \Altum\Title::get();
+        if(\SeeGap\Title::get()) $file_name = \SeeGap\Title::get();
         header('Content-Disposition: attachment; filename="' . $file_name . '.csv";');
         header('Content-Type: application/csv; charset=UTF-8');
 
@@ -1369,7 +1369,7 @@ function remove_directory_and_contents($dir) {
 }
 
 function get_convert_tz_sql($column, $new_timezone, $old_timezone = null) {
-    $tz_difference = \Altum\Date::get_timezone_difference($old_timezone ?? \Altum\Date::$default_timezone, $new_timezone);
+    $tz_difference = \SeeGap\Date::get_timezone_difference($old_timezone ?? \SeeGap\Date::$default_timezone, $new_timezone);
 
     return $tz_difference != '+00:00' ? "CONVERT_TZ({$column}, '+00:00', '{$tz_difference}')" : $column;
 }
@@ -1437,7 +1437,7 @@ function fire_and_forget($method, $url, $params = [], $content_type = 'form', $c
         }
         $headers_assoc['Content-Length'] = mb_strlen($body_data);
         $headers_assoc['Accept-Encoding'] = 'deflate, gzip, br, zstd';
-        $headers_assoc['User-Agent'] = 'AltumCode.Com/1.0';
+        $headers_assoc['User-Agent'] = 'SeeGap.Com/1.0';
     }
 
     // Merge custom headers in (overwrites defaults where needed)

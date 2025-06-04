@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="update_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -13,7 +13,7 @@
 
             <div class="modal-body">
                 <form name="update_report" method="post" action="<?= url('admin/reports/update') ?>" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                     <input type="hidden" name="request_type" value="update" />
                     <input type="hidden" name="report_id" value="" />
 
@@ -78,4 +78,4 @@
         dropdownParent: $('#update_modal')
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

@@ -7,22 +7,22 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Plan;
+use SeeGap\Models\Plan;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Affiliate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('affiliate') || (\Altum\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
+        if(!\SeeGap\Plugin::is_active('affiliate') || (\SeeGap\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
             redirect('not-found');
         }
 
         /* Get the min & max of commission for affiliates */
-        $plans = (new \Altum\Models\Plan())->get_plans();
+        $plans = (new \SeeGap\Models\Plan())->get_plans();
         $plans['free'] = (new Plan())->get_plan_by_id('free');
         $plans['custom'] = (new Plan())->get_plan_by_id('custom');
         unset($plans['guest']);
@@ -43,7 +43,7 @@ class Affiliate extends Controller {
             'maximum_commission' => $maximum_commission,
         ];
 
-        $view = new \Altum\View('affiliate/index', (array) $this);
+        $view = new \SeeGap\View('affiliate/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

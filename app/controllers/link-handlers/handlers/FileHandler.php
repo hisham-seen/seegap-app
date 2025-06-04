@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\LinkHandlers\Handlers;
+namespace SeeGap\Controllers\LinkHandlers\Handlers;
 
-use Altum\Controllers\LinkHandlers\BaseLinkHandler;
-use Altum\Response;
+use SeeGap\Controllers\LinkHandlers\BaseLinkHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * File Handler
@@ -44,7 +44,7 @@ class FileHandler extends BaseLinkHandler {
         $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
 
         /* File upload */
-        $db_file = \Altum\Uploads::process_upload(null, 'files', 'file', 'file_remove', settings()->links->file_size_limit, 'json_error');
+        $db_file = \SeeGap\Uploads::process_upload(null, 'files', 'file', 'file_remove', settings()->links->file_size_limit, 'json_error');
 
         /* Check for duplicate url if needed */
         $this->check_duplicate_url($_POST['url'], $domain_id);
@@ -128,7 +128,7 @@ class FileHandler extends BaseLinkHandler {
         }
 
         /* File upload */
-        $db_file = \Altum\Uploads::process_upload($link->settings->file, 'files', 'file', 'file_remove', settings()->links->file_size_limit, 'json_error');
+        $db_file = \SeeGap\Uploads::process_upload($link->settings->file, 'files', 'file', 'file_remove', settings()->links->file_size_limit, 'json_error');
 
         $settings = [
             'file' => $db_file,
@@ -161,7 +161,7 @@ class FileHandler extends BaseLinkHandler {
         /* Clear the cache */
         $this->clear_link_cache($link->link_id, 'file', $this->user->user_id);
 
-        Response::json(l('global.success_message.update2'), 'success', ['url' => $url, 'file' => $db_file, 'file_url' => \Altum\Uploads::get_full_url('files') . $db_file]);
+        Response::json(l('global.success_message.update2'), 'success', ['url' => $url, 'file' => $db_file, 'file_url' => \SeeGap\Uploads::get_full_url('files') . $db_file]);
     }
     
     public function validate($type, $data = []) {

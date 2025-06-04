@@ -7,18 +7,18 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminReports extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled'], ['name'], ['report_id', 'last_datetime', 'name', 'datetime']));
+        $filters = (new \SeeGap\Filters(['is_enabled'], ['name'], ['report_id', 'last_datetime', 'name', 'datetime']));
         $filters->set_default_order_by('report_id', settings()->main->default_order_type);
         $filters->set_default_results_per_page(settings()->main->default_results_per_page);
 
@@ -30,7 +30,7 @@ class AdminReports extends Controller {
             $total_rows_result = database()->query("SELECT COUNT(*) AS `total` FROM `reports` WHERE 1 = 1 {$filters->get_sql_where()}");
             $total_rows = $total_rows_result ? ($total_rows_result->fetch_object()->total ?? 0) : 0;
         }
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/reports?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/reports?' . $filters->get_get() . '&page=%d')));
 
         /* Get the reports list */
         $reports = [];
@@ -59,7 +59,7 @@ class AdminReports extends Controller {
         process_export_json($reports, 'include', ['report_id', 'user_id', 'name', 'description', 'datetime'], sprintf(l('admin_reports.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Get all users for assignment dropdown */
         $users = [];
@@ -77,7 +77,7 @@ class AdminReports extends Controller {
             'users' => $users,
         ];
 
-        $view = new \Altum\View('admin/reports/index', (array) $this);
+        $view = new \SeeGap\View('admin/reports/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -85,7 +85,7 @@ class AdminReports extends Controller {
 
     public function bulk() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -100,9 +100,9 @@ class AdminReports extends Controller {
             redirect('admin/reports');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -130,7 +130,7 @@ class AdminReports extends Controller {
 
     public function create() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(empty($_POST)) {
             redirect('admin/reports');
@@ -144,7 +144,7 @@ class AdminReports extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -165,7 +165,7 @@ class AdminReports extends Controller {
                 'superset_domain' => $_POST['superset_domain'],
                 'superset_embed_code' => $_POST['superset_embed_code'],
                 'assigned_user_ids' => $_POST['assigned_user_ids'],
-                'datetime' => \Altum\Date::$date,
+                'datetime' => \SeeGap\Date::$date,
             ]);
 
             /* Set a nice success message */
@@ -179,7 +179,7 @@ class AdminReports extends Controller {
 
     public function update() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $report_id = isset($this->params[0]) ? (int) $this->params[0] : (isset($_POST['report_id']) ? (int) $_POST['report_id'] : null);
 
@@ -199,7 +199,7 @@ class AdminReports extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -221,7 +221,7 @@ class AdminReports extends Controller {
                 'superset_embed_code' => $_POST['superset_embed_code'],
                 'assigned_user_ids' => $_POST['assigned_user_ids'],
                 'is_enabled' => $_POST['is_enabled'],
-                'last_datetime' => \Altum\Date::$date,
+                'last_datetime' => \SeeGap\Date::$date,
             ]);
 
             /* Set a nice success message */
@@ -235,7 +235,7 @@ class AdminReports extends Controller {
 
     public function delete() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(empty($_POST)) {
             redirect('admin/reports');
@@ -243,9 +243,9 @@ class AdminReports extends Controller {
 
         $report_id = (int) $_POST['report_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

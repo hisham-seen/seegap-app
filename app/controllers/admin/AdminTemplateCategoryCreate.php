@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminTemplateCategoryCreate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('aix')) {
+        if(!\SeeGap\Plugin::is_active('aix')) {
             redirect('not-found');
         }
 
@@ -35,16 +35,16 @@ class AdminTemplateCategoryCreate extends Controller {
                 foreach($array as $key => $value) {
                     $_POST['translations'][$language_name][$key] = input_clean($value);
                 }
-                if(!array_key_exists($language_name, \Altum\Language::$active_languages)) {
+                if(!array_key_exists($language_name, \SeeGap\Language::$active_languages)) {
                     unset($_POST['translations'][$language_name]);
                 }
             }
 
             $settings = json_encode(['translations' => $_POST['translations']]);
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -76,7 +76,7 @@ class AdminTemplateCategoryCreate extends Controller {
         /* Main View */
         $data = [];
 
-        $view = new \Altum\View('admin/template-category-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/template-category-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

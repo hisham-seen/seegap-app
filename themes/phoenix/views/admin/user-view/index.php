@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -21,9 +21,9 @@
     <?= include_view(THEME_PATH . 'views/admin/users/admin_user_dropdown_button.php', ['id' => $data->user->user_id, 'resource_name' => $data->user->name]) ?>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<?php //ALTUMCODE:DEMO if(DEMO) {$data->user->email = 'hidden@demo.com'; $data->user->name = $data->user->ip = 'hidden on demo';} ?>
+<?php //SEEGAP:DEMO if(DEMO) {$data->user->email = 'hidden@demo.com'; $data->user->name = $data->user->ip = 'hidden on demo';} ?>
 
 <div class="row">
     <div class="col-xl-4 mb-4">
@@ -99,7 +99,7 @@
 
                 <div class="form-group">
                     <label for="plan_expiration_date" class="font-weight-bold"><i class="fas fa-fw fa-sm fa-calendar text-muted mr-1"></i> <?= l('admin_users.plan_expiration_date') ?></label>
-                    <input id="plan_expiration_date" type="text" class="form-control-plaintext" value="<?= \Altum\Date::get($data->user->plan_expiration_date, 1) ?>" readonly />
+                    <input id="plan_expiration_date" type="text" class="form-control-plaintext" value="<?= \SeeGap\Date::get($data->user->plan_expiration_date, 1) ?>" readonly />
                 </div>
 
                 <?php if(in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended'])): ?>
@@ -182,7 +182,7 @@
 
                 <div class="form-group">
                     <label for="last_activity" class="font-weight-bold"><i class="fas fa-fw fa-sm fa-history text-muted mr-1"></i> <?= l('admin_users.last_activity') ?></label>
-                    <input id="last_activity" type="text" class="form-control-plaintext" value="<?= $data->user->last_activity ? \Altum\Date::get($data->user->last_activity, 1) : '-' ?>" readonly />
+                    <input id="last_activity" type="text" class="form-control-plaintext" value="<?= $data->user->last_activity ? \SeeGap\Date::get($data->user->last_activity, 1) : '-' ?>" readonly />
                 </div>
 
                 <div class="form-group">
@@ -195,7 +195,7 @@
                     <input id="api_key" type="text" class="form-control-plaintext" value="<?= $data->user->api_key ?>" readonly />
                 </div>
 
-                <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+                <?php if(\SeeGap\Plugin::is_active('affiliate')): ?>
                     <div class="form-group">
                         <label for="referral_key" class="font-weight-bold"><i class="fas fa-fw fa-sm fa-users text-muted mr-1"></i> <?= l('admin_users.referral_key') ?></label>
                         <input id="referral_key" type="text" class="form-control-plaintext" value="<?= $data->user->referral_key ?>" readonly />
@@ -452,7 +452,7 @@
         </div>
     </div>
 
-    <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
+    <?php if(\SeeGap\Plugin::is_active('email-signatures')): ?>
         <div class="col-12 col-sm-6 col-xl-3 p-3 position-relative">
             <div class="card d-flex flex-row h-100 overflow-hidden">
                 <div class="card-body">
@@ -470,7 +470,7 @@
         </div>
     <?php endif ?>
 
-    <?php if(\Altum\Plugin::is_active('aix')): ?>
+    <?php if(\SeeGap\Plugin::is_active('aix')): ?>
         <div class="col-12 col-sm-6 col-xl-3 p-3 position-relative">
             <div class="card d-flex flex-row h-100 overflow-hidden">
                 <div class="card-body">
@@ -614,7 +614,7 @@
         </div>
     </div>
 
-    <?php if(\Altum\Plugin::is_active('push-notifications')): ?>
+    <?php if(\SeeGap\Plugin::is_active('push-notifications')): ?>
     <div class="col-12 col-sm-6 p-3 position-relative">
         <div class="card d-flex flex-row h-100 overflow-hidden">
             <div class="card-body">
@@ -646,7 +646,7 @@
         </div>
     <?php endif ?>
 
-    <?php if(\Altum\Plugin::is_active('teams')): ?>
+    <?php if(\SeeGap\Plugin::is_active('teams')): ?>
         <div class="col-12 col-sm-6 p-3 position-relative">
             <div class="card d-flex flex-row h-100 overflow-hidden">
                 <div class="card-body">
@@ -676,7 +676,7 @@
         </div>
     <?php endif ?>
 
-    <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+    <?php if(\SeeGap\Plugin::is_active('affiliate')): ?>
         <div class="col-12 col-sm-6 p-3 position-relative">
             <div class="card d-flex flex-row h-100 overflow-hidden">
                 <div class="card-body">

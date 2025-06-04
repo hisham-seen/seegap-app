@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <button class="btn btn-block btn-gray-200 mb-4" type="button" data-toggle="collapse" data-target="#microsites_container" aria-expanded="false" aria-controls="microsites_container">
@@ -48,7 +48,7 @@
             <label for="default_microsite_theme_id"><?= l('admin_settings.links.default_microsite_theme_id') ?></label>
             <select id="default_microsite_theme_id" name="default_microsite_theme_id" class="custom-select">
                 <option value="" <?= settings()->links->default_microsite_theme_id == '' ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
-                <?php foreach((new \Altum\Models\MicrositesThemes())->get_microsites_themes() as $microsite_theme_id => $microsite_theme): ?>
+                <?php foreach((new \SeeGap\Models\MicrositesThemes())->get_microsites_themes() as $microsite_theme_id => $microsite_theme): ?>
                     <option value="<?= $microsite_theme_id ?>" <?= settings()->links->default_microsite_theme_id == $microsite_theme_id ? 'selected="selected"' : null ?>><?= $microsite_theme->name ?></option>
                 <?php endforeach ?>
             </select>
@@ -60,7 +60,7 @@
             <label for="default_microsite_template_id"><?= l('admin_settings.links.default_microsite_template_id') ?></label>
             <select id="default_microsite_template_id" name="default_microsite_template_id" class="custom-select">
                 <option value="" <?= settings()->links->default_microsite_theme_id == '' ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
-                <?php foreach((new \Altum\Models\MicrositesTemplates())->get_microsites_templates() as $microsite_template_id => $microsite_template): ?>
+                <?php foreach((new \SeeGap\Models\MicrositesTemplates())->get_microsites_templates() as $microsite_template_id => $microsite_template): ?>
                     <option value="<?= $microsite_template_id ?>" <?= settings()->links->default_microsite_template_id == $microsite_template_id ? 'selected="selected"' : null ?>><?= $microsite_template->name ?></option>
                 <?php endforeach ?>
             </select>

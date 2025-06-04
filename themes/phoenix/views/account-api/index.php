@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?= $this->views['account_header_menu'] ?>
 
@@ -25,7 +25,7 @@
         <div class="card-body">
 
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div <?= $this->user->plan_settings->api_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
                     <div class="form-group <?= $this->user->plan_settings->api_is_enabled ? null : 'container-disabled' ?>">

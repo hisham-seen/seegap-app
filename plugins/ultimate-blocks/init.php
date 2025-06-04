@@ -1,4 +1,4 @@
 <?php
 
 /* Load all the related plugin files */
-require_once \Altum\Plugin::get('ultimate-blocks')->path . 'UltimateBlocks.php';
+require_once \SeeGap\Plugin::get('ultimate-blocks')->path . 'UltimateBlocks.php';

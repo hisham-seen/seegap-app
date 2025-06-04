@@ -7,16 +7,16 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Settings {
     public static $settings = null;
 
     public static function initialize() {
 
-        self::$settings = (new \Altum\Models\Settings())->get();
+        self::$settings = (new \SeeGap\Models\Settings())->get();
 
     }
 

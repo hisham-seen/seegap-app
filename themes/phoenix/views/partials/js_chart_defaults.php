@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/Chart.bundle.min.js?v=' . PRODUCT_CODE ?>"></script>
@@ -110,9 +110,9 @@
         responsive: true,
         maintainAspectRatio: false,
 
-        <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()}): ?>
+        <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()}): ?>
         watermark: {
-            image: <?= json_encode(settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'}) ?>,
+            image: <?= json_encode(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'}) ?>,
 
             x: 50,
             y: 50,
@@ -131,4 +131,4 @@
         <?php endif ?>
     };
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'chartjs') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'chartjs') ?>

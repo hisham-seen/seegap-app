@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminPushNotificationUpdate extends Controller {
 
@@ -37,9 +37,9 @@ class AdminPushNotificationUpdate extends Controller {
             $_POST['url'] = get_url($_POST['url'], 512);
             $_POST['segment'] = in_array($_POST['segment'], ['all']) ? input_clean($_POST['segment']) : 'all';
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -158,7 +158,7 @@ class AdminPushNotificationUpdate extends Controller {
             'push_notification' => $push_notification,
         ];
 
-        $view = new \Altum\View('admin/push-notification-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/push-notification-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

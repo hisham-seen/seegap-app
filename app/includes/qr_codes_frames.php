@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return [
     'circle_simple_bottom_text' => [

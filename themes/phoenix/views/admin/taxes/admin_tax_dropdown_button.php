@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="dropdown">
     <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
@@ -11,4 +11,4 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/admin/taxes/tax_delete_modal.php'), 'modals', 'tax_delete_modal'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/admin/taxes/tax_delete_modal.php'), 'modals', 'tax_delete_modal'); ?>

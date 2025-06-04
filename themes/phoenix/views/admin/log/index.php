@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
     <nav aria-label="breadcrumb">
@@ -23,7 +23,7 @@
 
         <div class="ml-3">
             <span class="badge badge-info" data-toggle="tooltip" title="<?= l('admin_logs.main.last_modified') ?>">
-                <?= \Altum\Date::get_timeago($data->log->last_modified) ?>
+                <?= \SeeGap\Date::get_timeago($data->log->last_modified) ?>
             </span>
         </div>
 
@@ -34,7 +34,7 @@
 </div>
 
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="card">
     <div class="card-body">

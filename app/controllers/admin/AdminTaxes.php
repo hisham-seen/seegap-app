@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminTaxes extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['type', 'value_type', 'billing_type'], ['name', 'description'], ['tax_id', 'name', 'value', 'datetime']));
+        $filters = (new \SeeGap\Filters(['type', 'value_type', 'billing_type'], ['name', 'description'], ['tax_id', 'name', 'value', 'datetime']));
         $filters->set_default_order_by('tax_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `taxes` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/taxes?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/taxes?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $taxes = [];
@@ -49,7 +49,7 @@ class AdminTaxes extends Controller {
         process_export_csv($taxes, 'include', ['tax_id', 'name', 'description', 'value', 'value_type', 'type', 'billing_type', 'countries', 'datetime']);
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -59,7 +59,7 @@ class AdminTaxes extends Controller {
             'filters' => $filters
         ];
 
-        $view = new \Altum\View('admin/taxes/index', (array) $this);
+        $view = new \SeeGap\View('admin/taxes/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -69,9 +69,9 @@ class AdminTaxes extends Controller {
 
         $tax_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

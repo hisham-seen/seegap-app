@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\models;
+namespace SeeGap\models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ChatsAssistants extends Model {
 
@@ -52,7 +52,7 @@ class ChatsAssistants extends Model {
 
         if(!$chat_assistant) return;
 
-        \Altum\Uploads::delete_uploaded_file($chat_assistant->image, 'chats_assistants');
+        \SeeGap\Uploads::delete_uploaded_file($chat_assistant->image, 'chats_assistants');
 
         /* Delete the resource */
         db()->where('chat_assistant_id', $chat_assistant_id)->delete('chats_assistants');

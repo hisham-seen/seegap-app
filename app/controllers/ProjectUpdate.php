@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ProjectUpdate extends Controller {
 
@@ -21,10 +21,10 @@ class ProjectUpdate extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.projects')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.projects')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('projects');
         }
@@ -39,7 +39,7 @@ class ProjectUpdate extends Controller {
             $_POST['name'] = trim(query_clean($_POST['name']));
             $_POST['color'] = !verify_hex_color($_POST['color']) ? '#000000' : $_POST['color'];
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -49,7 +49,7 @@ class ProjectUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -77,7 +77,7 @@ class ProjectUpdate extends Controller {
             'project' => $project
         ];
 
-        $view = new \Altum\View('project-update/index', (array) $this);
+        $view = new \SeeGap\View('project-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

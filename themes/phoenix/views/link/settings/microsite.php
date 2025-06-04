@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 
@@ -14,7 +14,7 @@
                     </h6>
                     <div class="d-flex">
                         <form id="update_microsite_canvas_form" name="update_microsite_canvas" action="" method="post" role="form" enctype="multipart/form-data" class="mr-1">
-                            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                             <input type="hidden" name="request_type" value="update" />
                             <input type="hidden" name="type" value="microsite" />
                             <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
@@ -181,7 +181,7 @@
                 <h6 class="mb-1 d-flex align-items-center"><i class="fas fa-fw fa-wrench fa-xs mr-1"></i> <?= l('link.header.settings_tab') ?></h6>
 
                 <form id="update_microsite" name="update_microsite" action="" method="post" role="form" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                     <input type="hidden" name="request_type" value="update" />
                     <input type="hidden" name="type" value="microsite" />
                     <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
@@ -194,7 +194,7 @@
                             <div class="input-group-prepend">
                                 <?php if(count($data->domains)): ?>
                                     <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                        <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                        <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                             <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                         <?php endif ?>
 
@@ -248,11 +248,11 @@
 
                                     <div id="microsites_themes" class="microsite-themes-wrapper d-flex" style="overflow-x: scroll; width: 100%;">
                                         <?php foreach($data->microsites_themes as $key => $theme): ?>
-                                            <?php $link_style = \Altum\Link::get_processed_link_style($theme->settings->microsite_block) ?>
+                                            <?php $link_style = \SeeGap\Link::get_processed_link_style($theme->settings->microsite_block) ?>
 
                                             <label for="settings_microsite_theme_id_<?= $key ?>" class="m-0 col-6 p-2" <?= in_array($theme->microsite_theme_id, $this->user->plan_settings->microsites_themes ?? []) ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
                                                 <input type="radio" name="microsite_theme_id" value="<?= $key ?>" id="settings_microsite_theme_id_<?= $key ?>" class="d-none" <?= $data->link->microsite_theme_id == $key ? 'checked="checked"' : null ?> />
-                                                <div class="link-microsite-theme card h-100 <?= in_array($theme->microsite_theme_id, $this->user->plan_settings->microsites_themes ?? []) ? null : 'container-disabled' ?>" style="<?= \Altum\Link::get_processed_background_style($theme->settings->microsite); ?>">
+                                                <div class="link-microsite-theme card h-100 <?= in_array($theme->microsite_theme_id, $this->user->plan_settings->microsites_themes ?? []) ? null : 'container-disabled' ?>" style="<?= \SeeGap\Link::get_processed_background_style($theme->settings->microsite); ?>">
                                                     <div class="card-body flex-column d-flex justify-content-center align-items-center text-truncate">
 
                                                         <div class="w-100" style="cursor: not-allowed;pointer-events: none;">
@@ -368,18 +368,18 @@
                             <div class="form-group mb-2">
                                 <div class="row">
                                     <div class="col">
-                                        <input id="background_type_image_input" type="file" name="background" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('microsite_background') ?>" class="form-control-file altum-file-input" />
+                                        <input id="background_type_image_input" type="file" name="background" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_background') ?>" class="form-control-file seegap-file-input" />
                                     </div>
 
                                     <?php if($data->link->settings->background_type == 'image' && is_string($data->link->settings->background) && !string_ends_with('.mp4', $data->link->settings->background)): ?>
                                         <div class="col-3 d-flex justify-content-center align-items-center">
-                                            <a href="<?= \Altum\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
-                                                <img id="background_type_image_preview" src="<?= \Altum\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" data-default-src="<?= \Altum\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" class="altum-file-input-preview rounded" loading="lazy" />
+                                            <a href="<?= \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
+                                                <img id="background_type_image_preview" src="<?= \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" data-default-src="<?= \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" class="seegap-file-input-preview rounded" loading="lazy" />
                                             </a>
                                         </div>
                                     <?php endif ?>
                                 </div>
-                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('microsite_background')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->background_size_limit) ?></small>
+                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_background')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->background_size_limit) ?></small>
                             </div>
                         </div>
 
@@ -410,8 +410,8 @@
                                 <div class="form-group mb-2" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->favicon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->favicon_size_limit) ?>">
                                     <label for="favicon" class="small mb-1"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.favicon') ?></label>
                                     <?= include_view(THEME_PATH . 'views/partials/custom_file_image_input.php', ['uploads_file_key' => 'favicons', 'file_key' => 'favicon', 'already_existing_image' => $data->link->settings->favicon, 'image_container' => 'favicon', 'input_data' => 'data-crop data-aspect-ratio="1"']) ?>
-                                    <?= \Altum\Alerts::output_field_error('favicon') ?>
-                                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
+                                    <?= \SeeGap\Alerts::output_field_error('favicon') ?>
+                                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
                                 </div>
 
                                 <div <?= $this->user->plan_settings->fonts ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
@@ -421,7 +421,7 @@
                                             <?php if($font['font_css_url']): ?>
                                                 <?php ob_start() ?>
                                                 <link href="<?= $font['font_css_url'] ?>" rel="stylesheet">
-                                                <?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+                                                <?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
                                             <?php endif ?>
                                         <?php endforeach ?>
 
@@ -721,14 +721,14 @@
                                         <div class="form-group mb-2" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->seo_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->seo_image_size_limit) ?>">
                                             <label for="seo_image" class="small mb-1"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.seo_image') ?></label>
                                             <?= include_view(THEME_PATH . 'views/partials/custom_file_image_input.php', ['uploads_file_key' => 'microsite_seo_image', 'file_key' => 'seo_image', 'already_existing_image' => $data->link->settings->seo->image, 'image_container' => 'seo_image', 'input_data' => 'data-crop data-aspect-ratio="1.91"']) ?>
-                                            <?= \Altum\Alerts::output_field_error('seo_image') ?>
-                                            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
+                                            <?= \SeeGap\Alerts::output_field_error('seo_image') ?>
+                                            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <?php if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
+                            <?php if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
                                 <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#pwa_container" aria-expanded="false" aria-controls="pwa_container">
                                     <i class="fas fa-fw fa-mobile-alt fa-sm mr-1"></i> <?= l('link.settings.pwa_header') ?>
                                 </button>
@@ -778,8 +778,8 @@
                                             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->pwa_icon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->pwa_icon_size_limit) ?>">
                                                 <label for="pwa_icon"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.pwa_icon') ?></label>
                                                 <?= include_view(THEME_PATH . 'views/partials/custom_file_image_input.php', ['uploads_file_key' => 'app_icon', 'file_key' => 'pwa_icon', 'already_existing_image' => $data->link->settings->pwa_icon, 'image_container' => 'pwa_icon']) ?>
-                                                <?= \Altum\Alerts::output_field_error('pwa_icon') ?>
-                                                <small class="form-text text-muted"><?= l('link.settings.pwa_icon_help') ?><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('app_icon')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->pwa_icon_size_limit) ?></small>
+                                                <?= \SeeGap\Alerts::output_field_error('pwa_icon') ?>
+                                                <small class="form-text text-muted"><?= l('link.settings.pwa_icon_help') ?><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('app_icon')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->pwa_icon_size_limit) ?></small>
                                             </div>
 
                                             <div class="form-group">

@@ -7,30 +7,30 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class PaymentProcessors extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['payment_processor_id', 'processor', 'is_enabled'], ['name'], ['payment_processor_id', 'last_datetime', 'datetime', 'name']));
+        $filters = (new \SeeGap\Filters(['payment_processor_id', 'processor', 'is_enabled'], ['name'], ['payment_processor_id', 'last_datetime', 'datetime', 'name']));
         $filters->set_default_order_by($this->user->preferences->payment_processors_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `payment_processors` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('payment-processors?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('payment-processors?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data list for the user */
         $payment_processors = [];
@@ -44,7 +44,7 @@ class PaymentProcessors extends Controller {
         process_export_json($payment_processors, 'include', ['payment_processor_id', 'user_id', 'name', 'processor', 'settings', 'is_enabled', 'last_datetime', 'datetime'], sprintf(l('payment_processors.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Prepare the view */
         $data = [
@@ -54,7 +54,7 @@ class PaymentProcessors extends Controller {
             'filters' => $filters,
         ];
 
-        $view = new \Altum\View('payment-processors/index', (array) $this);
+        $view = new \SeeGap\View('payment-processors/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -62,7 +62,7 @@ class PaymentProcessors extends Controller {
 
     public function bulk() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -77,9 +77,9 @@ class PaymentProcessors extends Controller {
             redirect('payment-processors');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -91,7 +91,7 @@ class PaymentProcessors extends Controller {
                 case 'delete':
 
                     /* Team checks */
-                    if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.payment_processors')) {
+                    if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.payment_processors')) {
                         Alerts::add_info(l('global.info_message.team_no_access'));
                         redirect('payment-processors');
                     }
@@ -116,10 +116,10 @@ class PaymentProcessors extends Controller {
 
     public function delete() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.payment_processors')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.payment_processors')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('payment-processors');
         }
@@ -130,9 +130,9 @@ class PaymentProcessors extends Controller {
 
         $payment_processor_id = (int) query_clean($_POST['payment_processor_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

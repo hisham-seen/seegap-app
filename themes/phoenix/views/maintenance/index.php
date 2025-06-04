@@ -1,6 +1,6 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <h1 class="h5"><?= settings()->main->maintenance_title ?: l('maintenance.header') ?></h1>
 <p class="text-muted mb-0"><?= settings()->main->maintenance_description ?: l('maintenance.subheader') ?></p>

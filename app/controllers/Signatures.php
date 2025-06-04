@@ -7,30 +7,30 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Signatures extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'project_id'], ['name'], ['signature_id', 'last_datetime', 'datetime', 'name']));
+        $filters = (new \SeeGap\Filters(['user_id', 'project_id'], ['name'], ['signature_id', 'last_datetime', 'datetime', 'name']));
         $filters->set_default_order_by($this->user->preferences->signatures_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `signatures` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('signatures?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('signatures?' . $filters->get_get() . '&page=%d')));
 
         /* Get the signatures */
         $signatures = [];
@@ -55,13 +55,13 @@ class Signatures extends Controller {
         process_export_json($signatures, 'include', ['signature_id', 'project_id', 'user_id', 'name', 'settings', 'datetime', 'last_datetime'], sprintf(l('signatures.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Signature templates */
-        $signature_templates = require \Altum\Plugin::get('email-signatures')->path . 'includes/signature_templates.php';
+        $signature_templates = require \SeeGap\Plugin::get('email-signatures')->path . 'includes/signature_templates.php';
 
         /* Prepare the view */
         $data = [
@@ -73,21 +73,21 @@ class Signatures extends Controller {
             'signature_templates' => $signature_templates,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('email-signatures')->path . 'views/signatures/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('email-signatures')->path . 'views/signatures/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }
 
     public function duplicate() {
 
-        if(!\Altum\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.signatures')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.signatures')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('signatures');
         }
@@ -105,9 +105,9 @@ class Signatures extends Controller {
 
         $signature_id = (int) $_POST['signature_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('signatures');
         }
@@ -145,7 +145,7 @@ class Signatures extends Controller {
 
     public function bulk() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -160,9 +160,9 @@ class Signatures extends Controller {
             redirect('signatures');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -174,7 +174,7 @@ class Signatures extends Controller {
                 case 'delete':
 
                     /* Team checks */
-                    if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.signatures')) {
+                    if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.signatures')) {
                         Alerts::add_info(l('global.info_message.team_no_access'));
                         redirect('signatures');
                     }
@@ -199,14 +199,14 @@ class Signatures extends Controller {
 
     public function delete() {
 
-        if(!\Altum\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.signatures')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.signatures')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('signatures');
         }
@@ -217,9 +217,9 @@ class Signatures extends Controller {
 
         $signature_id = (int) query_clean($_POST['signature_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

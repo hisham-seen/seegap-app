@@ -7,16 +7,16 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminApiDocumentation extends Controller {
 
     public function index() {
 
         /* Prepare the view */
-        $view = new \Altum\View('admin/api-documentation/index', (array) $this);
+        $view = new \SeeGap\View('admin/api-documentation/index', (array) $this);
 
         $this->add_view_content('content', $view->run());
 

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if($this->link->settings->share_is_enabled): ?>
     <div data-toggle="modal" data-target="#share_modal" class="d-flex justify-content-center align-items-center position-absolute share-button-wrapper">
@@ -55,9 +55,9 @@
             </div>
         </div>
     </div>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'modals') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'modals') ?>
 
-    <?php if(!\Altum\Event::exists_content_type_key('javascript', 'share')): ?>
+    <?php if(!\SeeGap\Event::exists_content_type_key('javascript', 'share')): ?>
         <?php ob_start() ?>
         <script src="<?= ASSETS_FULL_URL . 'js/libraries/jquery-qrcode.min.js?v=' . PRODUCT_CODE ?>"></script>
 
@@ -99,6 +99,6 @@
 
         <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>
 
-        <?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'share') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'share') ?>
     <?php endif ?>
 <?php endif ?>

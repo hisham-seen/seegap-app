@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php
 /* Load the proper type view */
@@ -27,14 +27,14 @@ $partial = require THEME_PATH . 'views/admin/statistics/partials/' . $data->type
                     id="daterangepicker"
                     type="button"
                     class="btn btn-sm btn-light"
-                    data-max-date="<?= \Altum\Date::get('', 4) ?>"
+                    data-max-date="<?= \SeeGap\Date::get('', 4) ?>"
             >
                 <i class="fas fa-fw fa-calendar mr-lg-1"></i>
                 <span class="d-none d-lg-inline-block">
                 <?php if($data->datetime['start_date'] == $data->datetime['end_date']): ?>
-                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) ?>
+                    <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) ?>
                 <?php else: ?>
-                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) . ' - ' . \Altum\Date::get($data->datetime['end_date'], 6, \Altum\Date::$default_timezone) ?>
+                    <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) . ' - ' . \SeeGap\Date::get($data->datetime['end_date'], 6, \SeeGap\Date::$default_timezone) ?>
                 <?php endif ?>
             </span>
                 <i class="fas fa-fw fa-caret-down d-none d-lg-inline-block ml-lg-1"></i>
@@ -43,7 +43,7 @@ $partial = require THEME_PATH . 'views/admin/statistics/partials/' . $data->type
     <?php endif ?>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="row">
     <div class="mb-5 mb-xl-0 col-12 col-xl-4">
@@ -59,12 +59,12 @@ $partial = require THEME_PATH . 'views/admin/statistics/partials/' . $data->type
                     <!-- Payment & Revenue -->
                     <?php if(in_array(settings()->license->type, ['SPECIAL','Extended License', 'extended'])): ?>
                         <a class="nav-link <?= $data->type == 'payments' ? 'active' : null ?>" href="<?= url('admin/statistics/payments?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-1"></i> <?= l('admin_statistics.payments.menu') ?></a>
-                        <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+                        <?php if(\SeeGap\Plugin::is_active('affiliate')): ?>
                             <a class="nav-link <?= $data->type == 'affiliates_commissions' ? 'active' : null ?>" href="<?= url('admin/statistics/affiliates_commissions?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-wallet mr-1"></i> <?= l('admin_statistics.affiliates_commissions.menu') ?></a>
                             <a class="nav-link <?= $data->type == 'affiliates_withdrawals' ? 'active' : null ?>" href="<?= url('admin/statistics/affiliates_withdrawals?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-wallet mr-1"></i> <?= l('admin_statistics.affiliates_withdrawals.menu') ?></a>
                         <?php endif ?>
                     <?php endif ?>
-                    <?php if(\Altum\Plugin::is_active('payment-blocks')): ?>
+                    <?php if(\SeeGap\Plugin::is_active('payment-blocks')): ?>
                         <a class="nav-link <?= $data->type == 'payment_processors' ? 'active' : null ?>" href="<?= url('admin/statistics/payment_processors?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-1"></i> <?= l('admin_payment_processors.menu') ?></a>
                         <a class="nav-link <?= $data->type == 'guests_payments' ? 'active' : null ?>" href="<?= url('admin/statistics/guests_payments?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-coins mr-1"></i> <?= l('admin_guests_payments.menu') ?></a>
                     <?php endif ?>
@@ -93,18 +93,18 @@ $partial = require THEME_PATH . 'views/admin/statistics/partials/' . $data->type
 
                     
                     <!-- Teams -->
-                    <?php if(\Altum\Plugin::is_active('teams')): ?>
+                    <?php if(\SeeGap\Plugin::is_active('teams')): ?>
                         <a class="nav-link <?= $data->type == 'teams' ? 'active' : null ?>" href="<?= url('admin/statistics/teams?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-1"></i> <?= l('admin_teams.menu') ?></a>
                         <a class="nav-link <?= $data->type == 'teams_members' ? 'active' : null ?>" href="<?= url('admin/statistics/teams_members?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-user-tag mr-1"></i> <?= l('admin_statistics.teams_members.menu') ?></a>
                     <?php endif ?>
                     
                     <!-- Additional Features -->
-                    <?php if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
+                    <?php if(\SeeGap\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
                         <a class="nav-link <?= $data->type == 'signatures' ? 'active' : null ?>" href="<?= url('admin/statistics/signatures?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-file-signature mr-1"></i> <?= l('admin_statistics.signatures.menu') ?></a>
                     <?php endif ?>
                     
                     <!-- AI Features -->
-                    <?php if(\Altum\Plugin::is_active('aix')): ?>
+                    <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                         <a class="nav-link <?= $data->type == 'documents' ? 'active' : null ?>" href="<?= url('admin/statistics/documents?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-robot mr-1"></i> <?= l('admin_statistics.documents.menu') ?></a>
                         <a class="nav-link <?= $data->type == 'images' ? 'active' : null ?>" href="<?= url('admin/statistics/images?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-icons mr-1"></i> <?= l('admin_statistics.images.menu') ?></a>
                         <a class="nav-link <?= $data->type == 'transcriptions' ? 'active' : null ?>" href="<?= url('admin/statistics/transcriptions?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']) ?>"><i class="fas fa-fw fa-sm fa-microphone-alt mr-1"></i> <?= l('admin_statistics.transcriptions.menu') ?></a>
@@ -126,7 +126,7 @@ $partial = require THEME_PATH . 'views/admin/statistics/partials/' . $data->type
 
 <?php ob_start() ?>
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/daterangepicker.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php require THEME_PATH . 'views/partials/js_chart_defaults.php' ?>
 
@@ -169,8 +169,8 @@ $partial = require THEME_PATH . 'views/admin/statistics/partials/' . $data->type
     let css = window.getComputedStyle(document.body)
 </script>
 
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php ob_start() ?>
 <?= $partial->javascript ?? null ?>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

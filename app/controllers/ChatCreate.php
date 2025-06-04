@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
+use SeeGap\Alerts;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ChatCreate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.chats')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.chats')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('chats');
         }
@@ -42,10 +42,10 @@ class ChatCreate extends Controller {
         }
 
         /* Chats assistants */
-        $chats_assistants = (new \Altum\Models\ChatsAssistants())->get_chats_assistants();
+        $chats_assistants = (new \SeeGap\Models\ChatsAssistants())->get_chats_assistants();
 
         $values = [
-            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('chat_create.name_x'), \Altum\Date::get()),
+            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('chat_create.name_x'), \SeeGap\Date::get()),
             'chat_assistant_id' => $_GET['chat_assistant_id'] ?? $_POST['chat_assistant_id'] ?? array_key_first($chats_assistants),
         ];
 
@@ -55,27 +55,27 @@ class ChatCreate extends Controller {
             'chats_assistants' => $chats_assistants,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/chat-create/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/chat-create/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
 
     }
 
     public function create_ajax() {
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
 
         if(empty($_POST)) {
             redirect();
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.chats')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.chats')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -86,7 +86,7 @@ class ChatCreate extends Controller {
         }
 
         /* Chats assistants */
-        $chats_assistants = (new \Altum\Models\ChatsAssistants())->get_chats_assistants();
+        $chats_assistants = (new \SeeGap\Models\ChatsAssistants())->get_chats_assistants();
 
         $_POST['name'] = input_clean($_POST['name'], 64);
         $_POST['chat_assistant_id'] = isset($_POST['chat_assistant_id']) && array_key_exists($_POST['chat_assistant_id'], $chats_assistants) ? (int) $_POST['chat_assistant_id'] : array_key_first($chats_assistants);
@@ -99,7 +99,7 @@ class ChatCreate extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Response::json(l('global.error_message.invalid_csrf_token'), 'error');
         }
 

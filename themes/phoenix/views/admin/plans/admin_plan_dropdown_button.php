@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="dropdown">
     <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
@@ -15,6 +15,6 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/admin/plans/plan_delete_modal.php'), 'modals', 'plan_delete_modal'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/admin/plans/plan_delete_modal.php'), 'modals', 'plan_delete_modal'); ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'plan_duplicate_modal', 'resource_id' => 'plan_id', 'path' => 'admin/plans/duplicate']), 'modals', 'plan_duplicate_modal'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'plan_duplicate_modal', 'resource_id' => 'plan_id', 'path' => 'admin/plans/duplicate']), 'modals', 'plan_duplicate_modal'); ?>

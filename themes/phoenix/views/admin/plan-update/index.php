@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
     <nav aria-label="breadcrumb">
@@ -17,37 +17,37 @@
     <?= include_view(THEME_PATH . 'views/admin/plans/admin_plan_dropdown_button.php', ['id' => $data->plan->plan_id]) ?>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="card">
     <div class="card-body">
 
         <form action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
             <input type="hidden" name="type" value="update" />
 
             <?php if(is_numeric($data->plan_id)): ?>
                 <div class="form-group">
                     <label for="plan_id"><?= l('admin_plans.plan_id') ?></label>
-                    <input type="text" id="plan_id" name="plan_id" class="form-control <?= \Altum\Alerts::has_field_errors('plan_id') ? 'is-invalid' : null ?>" value="<?= $data->plan->plan_id ?>" disabled="disabled" />
-                    <?= \Altum\Alerts::output_field_error('name') ?>
+                    <input type="text" id="plan_id" name="plan_id" class="form-control <?= \SeeGap\Alerts::has_field_errors('plan_id') ? 'is-invalid' : null ?>" value="<?= $data->plan->plan_id ?>" disabled="disabled" />
+                    <?= \SeeGap\Alerts::output_field_error('name') ?>
                 </div>
             <?php endif ?>
 
             <div class="form-group">
                 <label for="name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
                 <div class="input-group">
-                    <input type="text" id="name" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->plan->name ?>" maxlength="64" required="required" />
+                    <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->plan->name ?>" maxlength="64" required="required" />
                     <div class="input-group-append">
                         <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#name_translate_container" aria-expanded="false" aria-controls="name_translate_container" data-tooltip title="<?= l('global.translate') ?>" data-tooltip-hide-on-click><i class="fas fa-fw fa-sm fa-language"></i></button>
                     </div>
                 </div>
-                <?= \Altum\Alerts::output_field_error('name') ?>
+                <?= \SeeGap\Alerts::output_field_error('name') ?>
             </div>
 
             <div class="collapse" id="name_translate_container">
                 <div class="p-3 bg-gray-50 rounded mb-4">
-                    <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                    <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                         <div class="form-group">
                             <label for="<?= 'translation_' . $language_name . '_name' ?>"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
                             <div class="input-group">
@@ -64,17 +64,17 @@
             <div class="form-group">
                 <label for="description"><i class="fas fa-fw fa-sm fa-pen text-muted mr-1"></i> <?= l('global.description') ?></label>
                 <div class="input-group">
-                    <input type="text" id="description" name="description" class="form-control <?= \Altum\Alerts::has_field_errors('description') ? 'is-invalid' : null ?>" value="<?= $data->plan->description ?>" maxlength="256" />
+                    <input type="text" id="description" name="description" class="form-control <?= \SeeGap\Alerts::has_field_errors('description') ? 'is-invalid' : null ?>" value="<?= $data->plan->description ?>" maxlength="256" />
                     <div class="input-group-append">
                         <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#description_translate_container" aria-expanded="false" aria-controls="description_translate_container" data-tooltip title="<?= l('global.translate') ?>" data-tooltip-hide-on-click><i class="fas fa-fw fa-sm fa-language"></i></button>
                     </div>
                 </div>
-                <?= \Altum\Alerts::output_field_error('description') ?>
+                <?= \SeeGap\Alerts::output_field_error('description') ?>
             </div>
 
             <div class="collapse" id="description_translate_container">
                 <div class="p-3 bg-gray-50 rounded mb-4">
-                    <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                    <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                         <div class="form-group">
                             <label for="<?= 'translation_' . $language_name . '_description' ?>"><i class="fas fa-fw fa-sm fa-pen text-muted mr-1"></i> <?= l('global.description') ?></label>
                             <div class="input-group">
@@ -92,17 +92,17 @@
                 <div class="form-group">
                     <label for="price"><i class="fas fa-fw fa-sm fa-tag text-muted mr-1"></i> <?= l('admin_plans.price') ?></label>
                     <div class="input-group">
-                        <input type="text" id="price" name="price" class="form-control <?= \Altum\Alerts::has_field_errors('price') ? 'is-invalid' : null ?>" value="<?= $data->plan->price ?>" required="required" />
+                        <input type="text" id="price" name="price" class="form-control <?= \SeeGap\Alerts::has_field_errors('price') ? 'is-invalid' : null ?>" value="<?= $data->plan->price ?>" required="required" />
                         <div class="input-group-append">
                             <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#price_translate_container" aria-expanded="false" aria-controls="price_translate_container" data-tooltip title="<?= l('global.translate') ?>" data-tooltip-hide-on-click><i class="fas fa-fw fa-sm fa-language"></i></button>
                         </div>
                     </div>
-                    <?= \Altum\Alerts::output_field_error('price') ?>
+                    <?= \SeeGap\Alerts::output_field_error('price') ?>
                 </div>
 
                 <div class="collapse" id="price_translate_container">
                     <div class="p-3 bg-gray-50 rounded mb-4">
-                        <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                        <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                             <div class="form-group">
                                 <label for="<?= 'translation_' . $language_name . '_price' ?>"><i class="fas fa-fw fa-sm fa-tag text-muted mr-1"></i> <?= l('admin_plans.price') ?></label>
                                 <div class="input-group">
@@ -120,8 +120,8 @@
             <?php if($data->plan_id == 'custom'): ?>
                 <div class="form-group">
                     <label for="custom_button_url"><i class="fas fa-fw fa-sm fa-link text-muted mr-1"></i> <?= l('admin_plans.custom_button_url') ?></label>
-                    <input type="text" id="custom_button_url" name="custom_button_url" class="form-control <?= \Altum\Alerts::has_field_errors('custom_button_url') ? 'is-invalid' : null ?>" value="<?= $data->plan->custom_button_url ?>" required="required" />
-                    <?= \Altum\Alerts::output_field_error('custom_button_url') ?>
+                    <input type="text" id="custom_button_url" name="custom_button_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('custom_button_url') ? 'is-invalid' : null ?>" value="<?= $data->plan->custom_button_url ?>" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('custom_button_url') ?>
                 </div>
             <?php endif ?>
 
@@ -144,12 +144,12 @@
                                 <div class="form-group">
                                     <label for="monthly_price[<?= $currency ?>]"><i class="fas fa-fw fa-sm fa-calendar-alt text-muted mr-1"></i> <?= l('admin_plans.monthly_price') ?></label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="monthly_price[<?= $currency ?>]" name="monthly_price[<?= $currency ?>]" class="form-control form-control-sm <?= \Altum\Alerts::has_field_errors('monthly_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->monthly->{$currency} ?? 0 ?>" required="required" />
+                                        <input type="text" id="monthly_price[<?= $currency ?>]" name="monthly_price[<?= $currency ?>]" class="form-control form-control-sm <?= \SeeGap\Alerts::has_field_errors('monthly_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->monthly->{$currency} ?? 0 ?>" required="required" />
                                         <div class="input-group-append">
                                             <span class="input-group-text"><?= $currency ?></span>
                                         </div>
                                     </div>
-                                    <?= \Altum\Alerts::output_field_error('monthly_price[' . $currency . ']') ?>
+                                    <?= \SeeGap\Alerts::output_field_error('monthly_price[' . $currency . ']') ?>
                                     <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.monthly_price')) ?></small>
                                 </div>
                             </div>
@@ -158,12 +158,12 @@
                                 <div class="form-group">
                                     <label for="quarterly_price[<?= $currency ?>]"><i class="fas fa-fw fa-sm fa-calendar-alt text-muted mr-1"></i> <?= l('admin_plans.quarterly_price') ?></label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="quarterly_price[<?= $currency ?>]" name="quarterly_price[<?= $currency ?>]" class="form-control form-control-sm <?= \Altum\Alerts::has_field_errors('quarterly_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->quarterly->{$currency} ?? 0 ?>" required="required" />
+                                        <input type="text" id="quarterly_price[<?= $currency ?>]" name="quarterly_price[<?= $currency ?>]" class="form-control form-control-sm <?= \SeeGap\Alerts::has_field_errors('quarterly_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->quarterly->{$currency} ?? 0 ?>" required="required" />
                                         <div class="input-group-append">
                                             <span class="input-group-text"><?= $currency ?></span>
                                         </div>
                                     </div>
-                                    <?= \Altum\Alerts::output_field_error('quarterly_price[' . $currency . ']') ?>
+                                    <?= \SeeGap\Alerts::output_field_error('quarterly_price[' . $currency . ']') ?>
                                     <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.quarterly_price')) ?></small>
                                 </div>
                             </div>
@@ -172,12 +172,12 @@
                                 <div class="form-group">
                                     <label for="biannual_price[<?= $currency ?>]"><i class="fas fa-fw fa-sm fa-calendar-alt text-muted mr-1"></i> <?= l('admin_plans.biannual_price') ?></label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="biannual_price[<?= $currency ?>]" name="biannual_price[<?= $currency ?>]" class="form-control form-control-sm <?= \Altum\Alerts::has_field_errors('biannual_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->biannual->{$currency} ?? 0 ?>" required="required" />
+                                        <input type="text" id="biannual_price[<?= $currency ?>]" name="biannual_price[<?= $currency ?>]" class="form-control form-control-sm <?= \SeeGap\Alerts::has_field_errors('biannual_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->biannual->{$currency} ?? 0 ?>" required="required" />
                                         <div class="input-group-append">
                                             <span class="input-group-text"><?= $currency ?></span>
                                         </div>
                                     </div>
-                                    <?= \Altum\Alerts::output_field_error('biannual_price[' . $currency . ']') ?>
+                                    <?= \SeeGap\Alerts::output_field_error('biannual_price[' . $currency . ']') ?>
                                     <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.biannual_price')) ?></small>
                                 </div>
                             </div>
@@ -186,12 +186,12 @@
                                 <div class="form-group">
                                     <label for="annual_price[<?= $currency ?>]"><i class="fas fa-fw fa-sm fa-calendar text-muted mr-1"></i> <?= l('admin_plans.annual_price') ?></label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="annual_price[<?= $currency ?>]" name="annual_price[<?= $currency ?>]" class="form-control form-control-sm <?= \Altum\Alerts::has_field_errors('annual_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->annual->{$currency} ?? 0 ?>" required="required" />
+                                        <input type="text" id="annual_price[<?= $currency ?>]" name="annual_price[<?= $currency ?>]" class="form-control form-control-sm <?= \SeeGap\Alerts::has_field_errors('annual_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->annual->{$currency} ?? 0 ?>" required="required" />
                                         <div class="input-group-append">
                                             <span class="input-group-text"><?= $currency ?></span>
                                         </div>
                                     </div>
-                                    <?= \Altum\Alerts::output_field_error('annual_price[' . $currency . ']') ?>
+                                    <?= \SeeGap\Alerts::output_field_error('annual_price[' . $currency . ']') ?>
                                     <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.annual_price')) ?></small>
                                 </div>
                             </div>
@@ -200,12 +200,12 @@
                                 <div class="form-group">
                                     <label for="lifetime_price[<?= $currency ?>]"><i class="fas fa-fw fa-sm fa-infinity text-muted mr-1"></i> <?= l('admin_plans.lifetime_price') ?></label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" id="lifetime_price[<?= $currency ?>]" name="lifetime_price[<?= $currency ?>]" class="form-control form-control-sm <?= \Altum\Alerts::has_field_errors('lifetime_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->lifetime->{$currency} ?? 0 ?>" required="required" />
+                                        <input type="text" id="lifetime_price[<?= $currency ?>]" name="lifetime_price[<?= $currency ?>]" class="form-control form-control-sm <?= \SeeGap\Alerts::has_field_errors('lifetime_price[' . $currency . ']') ? 'is-invalid' : null ?>" value="<?= $data->plan->prices->lifetime->{$currency} ?? 0 ?>" required="required" />
                                         <div class="input-group-append">
                                             <span class="input-group-text"><?= $currency ?></span>
                                         </div>
                                     </div>
-                                    <?= \Altum\Alerts::output_field_error('lifetime_price[' . $currency . ']') ?>
+                                    <?= \SeeGap\Alerts::output_field_error('lifetime_price[' . $currency . ']') ?>
                                     <small class="form-text text-muted"><?= sprintf(l('admin_plans.price_help'), l('admin_plans.lifetime_price')) ?></small>
                                 </div>
                             </div>
@@ -231,8 +231,8 @@
 
             <div class="form-group">
                 <label for="color"><i class="fas fa-fw fa-sm fa-palette text-muted mr-1"></i> <?= l('admin_plans.color') ?></label>
-                <input type="text" id="color" name="color" class="form-control <?= \Altum\Alerts::has_field_errors('color') ? 'is-invalid' : null ?>" value="<?= $data->plan->color ?>" />
-                <?= \Altum\Alerts::output_field_error('color') ?>
+                <input type="text" id="color" name="color" class="form-control <?= \SeeGap\Alerts::has_field_errors('color') ? 'is-invalid' : null ?>" value="<?= $data->plan->color ?>" />
+                <?= \SeeGap\Alerts::output_field_error('color') ?>
                 <small class="form-text text-muted"><?= l('admin_plans.color_help') ?></small>
             </div>
 
@@ -347,7 +347,7 @@
                     <small class="form-text text-muted"><?= l('admin_plans.plan.domains_limit_help') ?></small>
                 </div>
 
-                <?php if(\Altum\Plugin::is_active('payment-blocks')): ?>
+                <?php if(\SeeGap\Plugin::is_active('payment-blocks')): ?>
                     <div class="form-group">
                         <label for="payment_processors_limit"><?= l('admin_plans.plan.payment_processors_limit') ?></label>
                         <input type="number" id="payment_processors_limit" name="payment_processors_limit" min="-1" class="form-control" value="<?= $data->plan->settings->payment_processors_limit ?>" />
@@ -355,7 +355,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
+                <?php if(\SeeGap\Plugin::is_active('email-signatures')): ?>
                     <div class="form-group">
                         <label for="signatures_limit"><?= l('admin_plans.plan.signatures_limit') ?></label>
                         <input type="number" id="signatures_limit" name="signatures_limit" min="-1" class="form-control" value="<?= $data->plan->settings->signatures_limit ?>" <?= $data->plan_id == 'guest' ? 'disabled="disabled"' : null ?> />
@@ -363,7 +363,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix')): ?>
+                <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                     <div class="form-group custom-control custom-switch">
                         <input id="exclusive_personal_api_keys" name="exclusive_personal_api_keys" type="checkbox" class="custom-control-input" <?= $data->plan->settings->exclusive_personal_api_keys ? 'checked="checked"' : null ?>>
                         <label class="custom-control-label" for="exclusive_personal_api_keys"><?= l('admin_plans.plan.exclusive_personal_api_keys') ?></label>
@@ -373,7 +373,7 @@
                     <div class="form-group">
                         <label for="documents_model"><?= l('admin_plans.plan.documents_model') ?></label>
                         <select id="documents_model" name="documents_model" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_text_models.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_text_models.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->plan->settings->documents_model == $key ? 'selected="selected"' : null ?>><?= $value['name'] . ' - ' . $key ?></option>
                             <?php endforeach ?>
                         </select>
@@ -395,7 +395,7 @@
                     <div class="form-group">
                         <label for="images_api"><?= l('admin_plans.plan.images_api') ?></label>
                         <select id="images_api" name="images_api" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_image_models.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_image_models.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->plan->settings->images_api == $key ? 'selected="selected"' : null ?>><?= $value['name'] ?></option>
                             <?php endforeach ?>
                         </select>
@@ -428,7 +428,7 @@
                     <div class="form-group">
                         <label for="chats_model"><?= l('admin_plans.plan.chats_model') ?></label>
                         <select id="chats_model" name="chats_model" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_chat_models.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_chat_models.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->plan->settings->chats_model == $key ? 'selected="selected"' : null ?>><?= $value['name'] . ' - ' . $key ?></option>
                             <?php endforeach ?>
                         </select>
@@ -460,7 +460,7 @@
                     <div class="form-group">
                         <label for="syntheses_api"><?= l('admin_plans.plan.syntheses_api') ?></label>
                         <select id="syntheses_api" name="syntheses_api" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->plan->settings->syntheses_api == $key ? 'selected="selected"' : null ?>><?= $value['name'] ?></option>
                             <?php endforeach ?>
                         </select>
@@ -480,7 +480,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('teams')): ?>
+                <?php if(\SeeGap\Plugin::is_active('teams')): ?>
                     <div class="form-group">
                         <label for="teams_limit"><?= l('admin_plans.plan.teams_limit') ?></label>
                         <input type="number" id="teams_limit" name="teams_limit" min="-1" class="form-control" value="<?= $data->plan->settings->teams_limit ?>" />
@@ -494,7 +494,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+                <?php if(\SeeGap\Plugin::is_active('affiliate')): ?>
                     <div class="form-group">
                         <label for="affiliate_commission_percentage"><?= l('admin_plans.plan.affiliate_commission_percentage') ?></label>
                         <input type="number" id="affiliate_commission_percentage" name="affiliate_commission_percentage" min="0" max="100" class="form-control" value="<?= $data->plan->settings->affiliate_commission_percentage ?>" />
@@ -656,9 +656,9 @@
                     <div><small class="form-text text-muted"><?= l('admin_plans.plan.dofollow_is_enabled_help') ?></small></div>
                 </div>
 
-                <div <?= !\Altum\Plugin::is_active('pwa') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \Altum\Plugin::get('pwa')->name ?? 'pwa') . '"' : null ?>>
+                <div <?= !\SeeGap\Plugin::is_active('pwa') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \SeeGap\Plugin::get('pwa')->name ?? 'pwa') . '"' : null ?>>
                     <div class="form-group custom-control custom-switch">
-                        <input id="custom_pwa_is_enabled" name="custom_pwa_is_enabled" type="checkbox" class="custom-control-input" <?= $data->plan->settings->custom_pwa_is_enabled ? 'checked="checked"' : null ?> <?= !\Altum\Plugin::is_active('pwa') ? 'disabled="disabled"' : null ?>>
+                        <input id="custom_pwa_is_enabled" name="custom_pwa_is_enabled" type="checkbox" class="custom-control-input" <?= $data->plan->settings->custom_pwa_is_enabled ? 'checked="checked"' : null ?> <?= !\SeeGap\Plugin::is_active('pwa') ? 'disabled="disabled"' : null ?>>
                         <label class="custom-control-label" for="custom_pwa_is_enabled"><?= l('admin_plans.plan.custom_pwa_is_enabled') ?></label>
                         <div><small class="form-text text-muted"><?= l('admin_plans.plan.custom_pwa_is_enabled_help') ?></small></div>
                     </div>

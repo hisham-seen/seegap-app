@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Sitemap extends Controller {
 
@@ -18,7 +18,7 @@ class Sitemap extends Controller {
         /* Set the header as xml so the browser can read it properly */
         header('Content-Type: text/xml');
 
-        $view = new \Altum\View('sitemap/sitemap_index', (array) $this);
+        $view = new \SeeGap\View('sitemap/sitemap_index', (array) $this);
 
         echo $view->run();
 
@@ -42,7 +42,7 @@ class Sitemap extends Controller {
             $sitemap_urls[] = 'register';
         }
 
-        if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
+        if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
             $sitemap_urls[] = 'affiliate';
         }
 
@@ -69,7 +69,7 @@ class Sitemap extends Controller {
         /* Multilingual */
         $new_sitemap_urls = [];
 
-        foreach(\Altum\Language::$active_languages as $language_name => $language_code) {
+        foreach(\SeeGap\Language::$active_languages as $language_name => $language_code) {
             foreach($sitemap_urls as $url) {
                 $new_sitemap_urls[] = settings()->main->default_language == $language_name ? SITE_URL . $url : SITE_URL . $language_code . '/' . $url;
             }
@@ -80,11 +80,11 @@ class Sitemap extends Controller {
             $pages_categories = db()->get('pages_categories', null, ['url', 'language']);
 
             foreach ($pages as $page) {
-                $new_sitemap_urls[] = SITE_URL . ($page->language ? \Altum\Language::$active_languages[$page->language] . '/' : '') . 'page/' . $page->url;
+                $new_sitemap_urls[] = SITE_URL . ($page->language ? \SeeGap\Language::$active_languages[$page->language] . '/' : '') . 'page/' . $page->url;
             }
 
             foreach ($pages_categories as $pages_category) {
-                $new_sitemap_urls[] = SITE_URL . ($pages_category->language ? \Altum\Language::$active_languages[$pages_category->language] . '/' : '') . 'pages/' . $pages_category->url;
+                $new_sitemap_urls[] = SITE_URL . ($pages_category->language ? \SeeGap\Language::$active_languages[$pages_category->language] . '/' : '') . 'pages/' . $pages_category->url;
             }
         }
 
@@ -93,11 +93,11 @@ class Sitemap extends Controller {
             $blog_posts_categories = db()->get('blog_posts_categories', null, ['url', 'language']);
 
             foreach ($blog_posts as $blog_post) {
-                $new_sitemap_urls[] = SITE_URL . ($blog_post->language ? \Altum\Language::$active_languages[$blog_post->language] . '/' : '') . 'blog/' . $blog_post->url;
+                $new_sitemap_urls[] = SITE_URL . ($blog_post->language ? \SeeGap\Language::$active_languages[$blog_post->language] . '/' : '') . 'blog/' . $blog_post->url;
             }
 
             foreach ($blog_posts_categories as $blog_posts_category) {
-                $new_sitemap_urls[] = SITE_URL . ($blog_posts_category->language ? \Altum\Language::$active_languages[$blog_posts_category->language] . '/' : '') . 'blog/category/' . $blog_posts_category->url;
+                $new_sitemap_urls[] = SITE_URL . ($blog_posts_category->language ? \SeeGap\Language::$active_languages[$blog_posts_category->language] . '/' : '') . 'blog/category/' . $blog_posts_category->url;
             }
         }
 
@@ -107,7 +107,7 @@ class Sitemap extends Controller {
             'sitemap_urls' => $new_sitemap_urls,
         ];
 
-        $view = new \Altum\View('sitemap/sitemap_main', (array) $this);
+        $view = new \SeeGap\View('sitemap/sitemap_main', (array) $this);
 
         echo $view->run($data);
 
@@ -162,7 +162,7 @@ class Sitemap extends Controller {
                     'sitemap_urls' => $sitemap_urls,
                 ];
 
-                $view = new \Altum\View('sitemap/sitemap_links', (array) $this);
+                $view = new \SeeGap\View('sitemap/sitemap_links', (array) $this);
 
                 echo $view->run($data);
 
@@ -196,7 +196,7 @@ class Sitemap extends Controller {
                     'result' => $result,
                 ];
 
-                $view = new \Altum\View('sitemap/sitemap_links_list', (array) $this);
+                $view = new \SeeGap\View('sitemap/sitemap_links_list', (array) $this);
 
                 echo $view->run($data);
 

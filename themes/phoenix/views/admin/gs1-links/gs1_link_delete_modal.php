@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="gs1_link_delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -26,7 +26,7 @@
                 <button type="button" class="btn btn-gray-300" data-dismiss="modal"><?= l('global.close') ?></button>
 
                 <form action="" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                     <input type="hidden" name="gs1_link_id" value="" />
 
                     <button type="submit" class="btn btn-primary"><?= l('global.delete') ?></button>
@@ -50,4 +50,4 @@
         $(event.currentTarget).find('#gs1_link_delete_modal_subheader').html(<?= json_encode(l('gs1_link_delete_modal.subheader2')) ?>.replace('%s', `<strong>${resource_name}</strong>`));
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

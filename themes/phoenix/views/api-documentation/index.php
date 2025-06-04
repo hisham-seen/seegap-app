@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
@@ -158,7 +158,7 @@
             </div>
         <?php endif ?>
 
-        <?php if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
+        <?php if(\SeeGap\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
             <div class="col-12 col-sm-6 col-xl-4 p-3 position-relative">
                 <div class="card d-flex flex-row h-100 overflow-hidden">
                     <div class="border-right border-gray-100 px-3 d-flex flex-column justify-content-center">
@@ -204,7 +204,7 @@
             </div>
         <?php endif ?>
 
-        <?php if(\Altum\Plugin::is_active('teams')): ?>
+        <?php if(\SeeGap\Plugin::is_active('teams')): ?>
             <div class="col-12 col-sm-6 col-xl-4 p-3 position-relative">
                 <div class="card d-flex flex-row h-100 overflow-hidden">
                     <div class="border-right border-gray-100 px-3 d-flex flex-column justify-content-center">
@@ -299,4 +299,4 @@
             ]
         }
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

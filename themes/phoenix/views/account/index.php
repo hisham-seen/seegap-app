@@ -1,12 +1,12 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?= $this->views['account_header_menu'] ?>
 
     <form action="" method="post" role="form">
-        <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+        <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
         <div>
             <div class="d-flex align-items-center mb-3">
@@ -23,14 +23,14 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
-                        <input type="text" id="name" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $this->user->name ?>" maxlength="32" />
-                        <?= \Altum\Alerts::output_field_error('name') ?>
+                        <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $this->user->name ?>" maxlength="32" />
+                        <?= \SeeGap\Alerts::output_field_error('name') ?>
                     </div>
 
                     <div class="form-group">
                         <label for="email"><i class="fas fa-fw fa-sm fa-envelope text-muted mr-1"></i> <?= l('global.email') ?></label>
-                        <input type="text" id="email" name="email" class="form-control <?= \Altum\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $this->user->email ?>" maxlength="128" />
-                        <?= \Altum\Alerts::output_field_error('email') ?>
+                        <input type="text" id="email" name="email" class="form-control <?= \SeeGap\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $this->user->email ?>" maxlength="128" />
+                        <?= \SeeGap\Alerts::output_field_error('email') ?>
                     </div>
 
                     <div class="form-group">
@@ -43,21 +43,21 @@
 
                     <div class="form-group">
                         <label for="anti_phishing_code"><i class="fas fa-fw fa-sm fa-user-secret text-muted mr-1"></i> <?= l('account.settings.anti_phishing_code') ?></label>
-                        <input type="text" id="anti_phishing_code" name="anti_phishing_code" class="form-control <?= \Altum\Alerts::has_field_errors('anti_phishing_code') ? 'is-invalid' : null ?>" value="<?= $this->user->anti_phishing_code ?>" maxlength="8" />
-                        <?= \Altum\Alerts::output_field_error('anti_phishing_code') ?>
+                        <input type="text" id="anti_phishing_code" name="anti_phishing_code" class="form-control <?= \SeeGap\Alerts::has_field_errors('anti_phishing_code') ? 'is-invalid' : null ?>" value="<?= $this->user->anti_phishing_code ?>" maxlength="8" />
+                        <?= \SeeGap\Alerts::output_field_error('anti_phishing_code') ?>
                         <small class="form-text text-muted"><?= l('account.settings.anti_phishing_code_help') ?></small>
                     </div>
 
-                    <?php if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
+                    <?php if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
                         <div class="form-group">
                             <label for="referral_key"><i class="fas fa-fw fa-sm fa-wallet text-muted mr-1"></i> <?= l('account.settings.referral_key') ?></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><?= remove_url_protocol_from_url(SITE_URL) . '?ref=' ?></span>
                                 </div>
-                                <input type="text" id="referral_key" name="referral_key" class="form-control <?= \Altum\Alerts::has_field_errors('referral_key') ? 'is-invalid' : null ?>" value="<?= $this->user->referral_key ?>" maxlength="32" />
+                                <input type="text" id="referral_key" name="referral_key" class="form-control <?= \SeeGap\Alerts::has_field_errors('referral_key') ? 'is-invalid' : null ?>" value="<?= $this->user->referral_key ?>" maxlength="32" />
                             </div>
-                            <?= \Altum\Alerts::output_field_error('referral_key') ?>
+                            <?= \SeeGap\Alerts::output_field_error('referral_key') ?>
                         </div>
                     <?php endif ?>
 
@@ -205,7 +205,7 @@
             <?php endif ?>
 
         </script>
-        <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
         <hr class="border-gray-50 my-4" />
 
@@ -224,7 +224,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="twofa_is_enabled"><i class="fas fa-fw fa-sm fa-passport text-muted mr-1"></i> <?= l('account.twofa.is_enabled') ?></label>
-                        <select id="twofa_is_enabled" name="twofa_is_enabled" class="custom-select <?= \Altum\Alerts::has_field_errors('twofa_token') ? 'is-invalid' : null ?>">
+                        <select id="twofa_is_enabled" name="twofa_is_enabled" class="custom-select <?= \SeeGap\Alerts::has_field_errors('twofa_token') ? 'is-invalid' : null ?>">
                             <option value="1" <?= $this->user->twofa_secret || $_POST['twofa_is_enabled'] ? 'selected="selected"' : null ?>><?= l('global.yes') ?></option>
                             <option value="0" <?= !$this->user->twofa_secret && !$_POST['twofa_is_enabled'] ? 'selected="selected"' : null ?>><?= l('global.no') ?></option>
                         </select>
@@ -267,8 +267,8 @@
                             <div class="form-group">
                                 <span class="h6"><?= l('account.twofa.verify') ?></span>
                                 <p class="small text-muted"><?= l('account.twofa.verify_help') ?></p>
-                                <input type="text" id="twofa_token" name="twofa_token" class="form-control <?= \Altum\Alerts::has_field_errors('twofa_token') ? 'is-invalid' : null ?>" value="" autocomplete="off" placeholder="123 456" maxlength="6" />
-                                <?= \Altum\Alerts::output_field_error('twofa_token') ?>
+                                <input type="text" id="twofa_token" name="twofa_token" class="form-control <?= \SeeGap\Alerts::has_field_errors('twofa_token') ? 'is-invalid' : null ?>" value="" autocomplete="off" placeholder="123 456" maxlength="6" />
+                                <?= \SeeGap\Alerts::output_field_error('twofa_token') ?>
                             </div>
                         <?php endif ?>
                     </div>
@@ -293,21 +293,21 @@
                 <div class="card-body">
                     <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
                         <label for="old_password"><i class="fas fa-fw fa-sm fa-unlock text-muted mr-1"></i> <?= l('account.change_password.current_password') ?></label>
-                        <input type="password" id="old_password" name="old_password" class="form-control <?= \Altum\Alerts::has_field_errors('old_password') ? 'is-invalid' : null ?>" />
+                        <input type="password" id="old_password" name="old_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('old_password') ? 'is-invalid' : null ?>" />
                         <small class="form-text text-muted"><?= l('account.change_password.current_password_help') ?></small>
-                        <?= \Altum\Alerts::output_field_error('old_password') ?>
+                        <?= \SeeGap\Alerts::output_field_error('old_password') ?>
                     </div>
 
                     <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
                         <label for="new_password"><i class="fas fa-fw fa-sm fa-lock text-muted mr-1"></i> <?= l('account.change_password.new_password') ?></label>
-                        <input type="password" id="new_password" name="new_password" class="form-control <?= \Altum\Alerts::has_field_errors('new_password') ? 'is-invalid' : null ?>" />
-                        <?= \Altum\Alerts::output_field_error('new_password') ?>
+                        <input type="password" id="new_password" name="new_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('new_password') ? 'is-invalid' : null ?>" />
+                        <?= \SeeGap\Alerts::output_field_error('new_password') ?>
                     </div>
 
                     <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
                         <label for="repeat_password"><i class="fas fa-fw fa-sm fa-lock text-muted mr-1"></i> <?= l('account.change_password.repeat_password') ?></label>
-                        <input type="password" id="repeat_password" name="repeat_password" class="form-control <?= \Altum\Alerts::has_field_errors('repeat_password') ? 'is-invalid' : null ?>" />
-                        <?= \Altum\Alerts::output_field_error('repeat_password') ?>
+                        <input type="password" id="repeat_password" name="repeat_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('repeat_password') ? 'is-invalid' : null ?>" />
+                        <?= \SeeGap\Alerts::output_field_error('repeat_password') ?>
                     </div>
                 </div>
             </div>
@@ -325,7 +325,7 @@
         type_handler('select[name="twofa_is_enabled"]', 'data-twofa-is-enabled');
         document.querySelector('select[name="twofa_is_enabled"]') && document.querySelectorAll('select[name="twofa_is_enabled"]').forEach(element => element.addEventListener('change', () => { type_handler('select[name="twofa_is_enabled"]', 'data-twofa-is-enabled'); }));
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 <?php endif ?>
 
 <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>

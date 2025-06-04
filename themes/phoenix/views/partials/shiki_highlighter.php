@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <script src="https://cdn.jsdelivr.net/npm/shiki@0.14.7/dist/index.jsdelivr.iife.min.js"></script>
@@ -18,4 +18,4 @@
             })
         })
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

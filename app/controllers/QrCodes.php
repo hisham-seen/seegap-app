@@ -7,41 +7,41 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\QrCode;
+use SeeGap\Alerts;
+use SeeGap\Models\QrCode;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class QrCodes extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(!settings()->codes->qr_codes_is_enabled) {
             redirect('not-found');
         }
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['project_id', 'type'], ['name'], ['qr_code_id', 'type', 'name', 'datetime', 'last_datetime']));
+        $filters = (new \SeeGap\Filters(['project_id', 'type'], ['name'], ['qr_code_id', 'type', 'name', 'datetime', 'last_datetime']));
         $filters->set_default_order_by($this->user->preferences->qr_codes_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `qr_codes` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('qr-codes?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('qr-codes?' . $filters->get_get() . '&page=%d')));
 
         /* Get the qr_codes list for the user */
         $qr_codes = [];
         $qr_codes_result = database()->query("SELECT * FROM `qr_codes` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()} {$filters->get_sql_order_by()} {$paginator->get_sql_limit()}");
         while($row = $qr_codes_result->fetch_object()) {
             $row->settings = json_decode($row->settings ?? '');
-            $row->qr_code_url = $row->qr_code ?\Altum\Uploads::get_full_url('qr_code') . $row->qr_code : null;
-            $row->qr_code_logo_url = $row->qr_code_logo ?\Altum\Uploads::get_full_url('qr_code_logo') . $row->qr_code_logo : null;
-            $row->qr_code_background_url = $row->qr_code_background ?\Altum\Uploads::get_full_url('qr_code_background') . $row->qr_code_background : null;
-            $row->qr_code_background_url = $row->qr_code_background ?\Altum\Uploads::get_full_url('qr_code_background') . $row->qr_code_background : null;
+            $row->qr_code_url = $row->qr_code ?\SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code : null;
+            $row->qr_code_logo_url = $row->qr_code_logo ?\SeeGap\Uploads::get_full_url('qr_code_logo') . $row->qr_code_logo : null;
+            $row->qr_code_background_url = $row->qr_code_background ?\SeeGap\Uploads::get_full_url('qr_code_background') . $row->qr_code_background : null;
+            $row->qr_code_background_url = $row->qr_code_background ?\SeeGap\Uploads::get_full_url('qr_code_background') . $row->qr_code_background : null;
             $qr_codes[] = $row;
         }
 
@@ -50,10 +50,10 @@ class QrCodes extends Controller {
         process_export_json($qr_codes, 'include', ['qr_code_id', 'user_id', 'project_id', 'type', 'name', 'qr_code', 'qr_code_url', 'qr_code_logo', 'qr_code_logo_url', 'qr_code_background', 'qr_code_background_url', 'qr_code_foreground', 'qr_code_foreground_url', 'embedded_data', 'settings','last_datetime', 'datetime'], sprintf(l('qr_codes.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         $available_qr_codes = require APP_PATH . 'includes/enabled_qr_codes.php';
 
@@ -67,17 +67,17 @@ class QrCodes extends Controller {
             'projects'            => $projects,
         ];
 
-        $view = new \Altum\View('qr-codes/index', (array) $this);
+        $view = new \SeeGap\View('qr-codes/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
     }
 
     public function duplicate() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.qr_codes')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.qr_codes')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('qr-codes');
         }
@@ -95,9 +95,9 @@ class QrCodes extends Controller {
 
         $qr_code_id = (int) $_POST['qr_code_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('qr-codes');
         }
@@ -110,10 +110,10 @@ class QrCodes extends Controller {
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Duplicate the files */
-            $qr_code_image = \Altum\Uploads::copy_uploaded_file($qr_code->qr_code, \Altum\Uploads::get_path('qr_code'), \Altum\Uploads::get_path('qr_code'));
-            $qr_code_logo = \Altum\Uploads::copy_uploaded_file($qr_code->qr_code_logo, \Altum\Uploads::get_path('qr_code_logo'), \Altum\Uploads::get_path('qr_code_logo'));
-            $qr_code_background = \Altum\Uploads::copy_uploaded_file($qr_code->qr_code_background, \Altum\Uploads::get_path('qr_code_background'), \Altum\Uploads::get_path('qr_code_background'));
-            $qr_code_foreground = \Altum\Uploads::copy_uploaded_file($qr_code->qr_code_foreground, \Altum\Uploads::get_path('qr_code_foreground'), \Altum\Uploads::get_path('qr_code_foreground'));
+            $qr_code_image = \SeeGap\Uploads::copy_uploaded_file($qr_code->qr_code, \SeeGap\Uploads::get_path('qr_code'), \SeeGap\Uploads::get_path('qr_code'));
+            $qr_code_logo = \SeeGap\Uploads::copy_uploaded_file($qr_code->qr_code_logo, \SeeGap\Uploads::get_path('qr_code_logo'), \SeeGap\Uploads::get_path('qr_code_logo'));
+            $qr_code_background = \SeeGap\Uploads::copy_uploaded_file($qr_code->qr_code_background, \SeeGap\Uploads::get_path('qr_code_background'), \SeeGap\Uploads::get_path('qr_code_background'));
+            $qr_code_foreground = \SeeGap\Uploads::copy_uploaded_file($qr_code->qr_code_foreground, \SeeGap\Uploads::get_path('qr_code_foreground'), \SeeGap\Uploads::get_path('qr_code_foreground'));
 
             /* Insert to database */
             $qr_code_id = db()->insert('qr_codes', [
@@ -143,9 +143,9 @@ class QrCodes extends Controller {
 
     public function bulk() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -160,7 +160,7 @@ class QrCodes extends Controller {
             redirect('qr-codes');
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -172,7 +172,7 @@ class QrCodes extends Controller {
                 case 'delete':
 
                     /* Team checks */
-                    if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.qr_codes')) {
+                    if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.qr_codes')) {
                         Alerts::add_info(l('global.info_message.team_no_access'));
                         redirect('qr-codes');
                     }
@@ -192,11 +192,11 @@ class QrCodes extends Controller {
 
                     foreach($_POST['selected'] as $qr_code_id) {
                         if($qr_code = db()->where('qr_code_id', $qr_code_id)->where('user_id', $this->user->user_id)->getOne('qr_codes', ['qr_code'])) {
-                            $files[$qr_code->qr_code] = \Altum\Uploads::get_path('qr_code');
+                            $files[$qr_code->qr_code] = \SeeGap\Uploads::get_path('qr_code');
                         }
                     }
 
-                    \Altum\Uploads::download_files_as_zip($files, l('global.download'));
+                    \SeeGap\Uploads::download_files_as_zip($files, l('global.download'));
 
                     break;
             }
@@ -210,10 +210,10 @@ class QrCodes extends Controller {
     }
 
     public function delete() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.qr_codes')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.qr_codes')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('qr-codes');
         }
@@ -224,9 +224,9 @@ class QrCodes extends Controller {
 
         $qr_code_id = (int) query_clean($_POST['qr_code_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('qr-codes');
         }

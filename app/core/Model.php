@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-use Altum\Traits\Paramsable;
+use SeeGap\Traits\Paramsable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Model {
     use Paramsable;

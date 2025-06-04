@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?= $this->views['account_header_menu'] ?>
 
@@ -134,7 +134,7 @@
         <div class="card-body">
 
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="amount"><?= l('referrals.withdraw.amount') ?></label>
@@ -147,7 +147,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="note"><?= settings()->affiliate->translations->{\Altum\Language::$name}->withdrawal_notes ?: settings()->affiliate->withdrawal_notes; ?></label>
+                    <label for="note"><?= settings()->affiliate->translations->{\SeeGap\Language::$name}->withdrawal_notes ?: settings()->affiliate->withdrawal_notes; ?></label>
                     <textarea id="note" name="note" class="form-control"></textarea>
                 </div>
 
@@ -186,8 +186,8 @@
                                 <?php endif ?>
                             </td>
                             <td class="text-nowrap text-muted">
-                            <span class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
-                                <?= \Altum\Date::get($row->datetime, 2) ?>
+                            <span class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>">
+                                <?= \SeeGap\Date::get($row->datetime, 2) ?>
                             </span>
                             </td>
                         </tr>

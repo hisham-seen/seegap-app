@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SSO extends Controller {
 
@@ -19,7 +19,7 @@ class SSO extends Controller {
 
     public function switch() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $to = isset($_GET['to']) && array_key_exists($_GET['to'], (array) settings()->sso->websites) ? input_clean($_GET['to']) : null;
         $redirect = isset($_GET['redirect']) ? input_clean($_GET['redirect']) : 'dashboard';
@@ -42,7 +42,7 @@ class SSO extends Controller {
 
         /* Check against errors */
         if($response->code >= 400) {
-            \Altum\Alerts::add_error($response->body->errors[0]->title);
+            \SeeGap\Alerts::add_error($response->body->errors[0]->title);
             redirect('dashboard');
         }
 

@@ -1,6 +1,6 @@
-<?php defined('ALTUMCODE') || die(); ?>
+<?php defined('SEEGAP') || die(); ?>
 
-<?php if(settings()->ads->ad_blocker_detector_is_enabled && \Altum\Router::$controller_settings['ads'] && (!is_logged_in() || (is_logged_in() && !$this->user->plan_settings->no_ads))): ?>
+<?php if(settings()->ads->ad_blocker_detector_is_enabled && \SeeGap\Router::$controller_settings['ads'] && (!is_logged_in() || (is_logged_in() && !$this->user->plan_settings->no_ads))): ?>
 
     <div class="modal fade" id="ad_blocker_detector_modal" <?= settings()->ads->ad_blocker_detector_lock_is_enabled ? 'data-backdrop="static" data-keyboard="false"' : null ?> tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -55,5 +55,5 @@
 
         });
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 <?php endif ?>

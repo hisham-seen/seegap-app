@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Logger;
-use Altum\Models\User;
+use SeeGap\Logger;
+use SeeGap\Models\User;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Cron extends Controller {
 
@@ -122,7 +122,7 @@ class Cron extends Controller {
             ]);
 
             /* Clear the cache */
-            cache()->deleteItemsByTag('user_id=' .  \Altum\Authentication::$user_id);
+            cache()->deleteItemsByTag('user_id=' .  \SeeGap\Authentication::$user_id);
 
             if(DEBUG) {
                 echo sprintf('users_plan_expiry_checker() -> Plan expired for user_id %s - reverting account to free plan', $user->user_id);
@@ -344,7 +344,7 @@ class Cron extends Controller {
 
         $plans = [];
         if($result->num_rows) {
-            $plans = (new \Altum\Models\Plan())->get_plans();
+            $plans = (new \SeeGap\Models\Plan())->get_plans();
         }
 
         /* Go through each result */
@@ -382,7 +382,7 @@ class Cron extends Controller {
 
     private function guests_payments_cleanup() {
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             return;
         }
 
@@ -395,7 +395,7 @@ class Cron extends Controller {
 
     private function users_aix_reset() {
 
-        if(!\Altum\Plugin::is_active('aix')) {
+        if(!\SeeGap\Plugin::is_active('aix')) {
             return;
         }
 
@@ -581,14 +581,14 @@ class Cron extends Controller {
     }
 
     public function push_notifications() {
-        if(\Altum\Plugin::is_active('push-notifications')) {
+        if(\SeeGap\Plugin::is_active('push-notifications')) {
 
             $this->initiate();
 
             /* Update cron job last run date */
             $this->update_cron_execution_datetimes('push_notifications_datetime');
 
-            require_once \Altum\Plugin::get('push-notifications')->path . 'controllers/Cron.php';
+            require_once \SeeGap\Plugin::get('push-notifications')->path . 'controllers/Cron.php';
 
             $this->close();
         }

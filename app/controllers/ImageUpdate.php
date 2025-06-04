@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ImageUpdate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.images')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.images')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('dashboard');
         }
@@ -49,13 +49,13 @@ class ImageUpdate extends Controller {
         }
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         if(!empty($_POST)) {
             $_POST['name'] = input_clean($_POST['name'], 64);
             $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -65,7 +65,7 @@ class ImageUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -95,7 +95,7 @@ class ImageUpdate extends Controller {
             'projects' => $projects ?? [],
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/image-update/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/image-update/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }

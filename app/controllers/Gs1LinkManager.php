@@ -7,20 +7,20 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\Domain;
-use Altum\Models\Gs1Link;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Models\Domain;
+use SeeGap\Models\Gs1Link;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Gs1LinkManager extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check if GS1 links feature is enabled */
         if(!settings()->gs1_links->gs1_links_is_enabled) {
@@ -34,7 +34,7 @@ class Gs1LinkManager extends Controller {
 
         /* Team checks */
         if($mode === 'create') {
-            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.gs1_links')) {
+            if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.gs1_links')) {
                 Alerts::add_info(l('global.info_message.team_no_access'));
                 redirect('gs1-links');
             }
@@ -47,7 +47,7 @@ class Gs1LinkManager extends Controller {
                 redirect('gs1-links');
             }
         } else {
-            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('read.gs1_links')) {
+            if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('read.gs1_links')) {
                 Alerts::add_info(l('global.info_message.team_no_access'));
                 redirect('dashboard');
             }
@@ -59,7 +59,7 @@ class Gs1LinkManager extends Controller {
             }
 
             /* Team checks for editing */
-            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.gs1_links')) {
+            if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.gs1_links')) {
                 Alerts::add_info(l('global.info_message.team_no_access'));
                 redirect('gs1-links');
             }
@@ -74,17 +74,17 @@ class Gs1LinkManager extends Controller {
         /* Get available projects (only if enabled in admin settings) */
         $projects = [];
         if(settings()->gs1_links->projects_is_enabled) {
-            $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+            $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
         }
 
         /* Get available pixels (only if enabled in admin settings) */
         $pixels = [];
         if(settings()->gs1_links->pixels_is_enabled) {
-            $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
+            $pixels = (new \SeeGap\Models\Pixel())->get_pixels($this->user->user_id);
         }
 
         /* Get available splash pages */
-        $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
+        $splash_pages = (new \SeeGap\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
 
         if(!empty($_POST)) {
             $_POST['gtin'] = input_clean($_POST['gtin']);
@@ -105,8 +105,8 @@ class Gs1LinkManager extends Controller {
             /* Process advanced settings */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
             $_POST['schedule'] = (int) isset($_POST['schedule']);
-            $_POST['start_date'] = !empty($_POST['start_date']) ? \Altum\Date::get($_POST['start_date'], 2) : null;
-            $_POST['end_date'] = !empty($_POST['end_date']) ? \Altum\Date::get($_POST['end_date'], 2) : null;
+            $_POST['start_date'] = !empty($_POST['start_date']) ? \SeeGap\Date::get($_POST['start_date'], 2) : null;
+            $_POST['end_date'] = !empty($_POST['end_date']) ? \SeeGap\Date::get($_POST['end_date'], 2) : null;
             $_POST['clicks_limit'] = !empty($_POST['clicks_limit']) ? (int) $_POST['clicks_limit'] : null;
             $_POST['expiration_url'] = input_clean($_POST['expiration_url']);
             $_POST['targeting_type'] = input_clean($_POST['targeting_type']);
@@ -120,7 +120,7 @@ class Gs1LinkManager extends Controller {
             $_POST['splash_page_id'] = !empty($_POST['splash_page_id']) && array_key_exists($_POST['splash_page_id'], $splash_pages) ? (int) $_POST['splash_page_id'] : null;
             $_POST['forward_query_parameters_is_enabled'] = (int) isset($_POST['forward_query_parameters_is_enabled']);
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['gtin'];
@@ -205,7 +205,7 @@ class Gs1LinkManager extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -409,7 +409,7 @@ class Gs1LinkManager extends Controller {
             'values' => $values,
         ];
 
-        $view = new \Altum\View('gs1-link-manager/index', (array) $this);
+        $view = new \SeeGap\View('gs1-link-manager/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
 
     }

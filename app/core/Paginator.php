@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Paginator
 {

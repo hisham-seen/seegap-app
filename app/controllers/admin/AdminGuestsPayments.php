@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminGuestsPayments extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'microsite_block_id', 'link_id', 'guest_payment_id', 'project_id', 'type', 'processor'], ['email', 'name'], ['guest_payment_id', 'total_amount', 'datetime']));
+        $filters = (new \SeeGap\Filters(['user_id', 'microsite_block_id', 'link_id', 'guest_payment_id', 'project_id', 'type', 'processor'], ['email', 'name'], ['guest_payment_id', 'total_amount', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->guests_payments_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `guests_payments` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/guests-payments?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/guests-payments?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $guests_payments = [];
@@ -51,7 +51,7 @@ class AdminGuestsPayments extends Controller {
         process_export_json($guests_payments, 'include', ['guest_payment_id', 'user_id', 'name', 'processor', 'settings', 'is_enabled', 'last_datetime', 'datetime'], sprintf(l('guests_payments.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -60,7 +60,7 @@ class AdminGuestsPayments extends Controller {
             'pagination' => $pagination,
         ];
 
-        $view = new \Altum\View('admin/guests-payments/index', (array) $this);
+        $view = new \SeeGap\View('admin/guests-payments/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -81,9 +81,9 @@ class AdminGuestsPayments extends Controller {
             redirect('admin/guests-payments');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -115,9 +115,9 @@ class AdminGuestsPayments extends Controller {
 
         $guest_payment_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

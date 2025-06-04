@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminPixels extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'type'], ['name', 'pixel'], ['pixel_id', 'last_datetime', 'name', 'datetime']));
+        $filters = (new \SeeGap\Filters(['user_id', 'type'], ['name', 'pixel'], ['pixel_id', 'last_datetime', 'name', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->pixels_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `pixels` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/pixels?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/pixels?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $pixels = [];
@@ -51,7 +51,7 @@ class AdminPixels extends Controller {
         process_export_json($pixels, 'include', ['pixel_id', 'user_id', 'type', 'name', 'pixel', 'last_datetime', 'datetime'], sprintf(l('admin_pixels.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -60,7 +60,7 @@ class AdminPixels extends Controller {
             'pagination' => $pagination
         ];
 
-        $view = new \Altum\View('admin/pixels/index', (array) $this);
+        $view = new \SeeGap\View('admin/pixels/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -68,7 +68,7 @@ class AdminPixels extends Controller {
 
     public function bulk() {
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -83,7 +83,7 @@ class AdminPixels extends Controller {
             redirect('admin/pixels');
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -117,9 +117,9 @@ class AdminPixels extends Controller {
 
         $pixel_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

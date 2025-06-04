@@ -1,10 +1,10 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
-    <div <?= !\Altum\Plugin::is_active('dynamic-og-images') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \Altum\Plugin::get('dynamic-og-images')->name ?? 'dynamic-og-images') . '"' : null ?>>
-        <div class="<?= !\Altum\Plugin::is_active('dynamic-og-images') ? 'container-disabled' : null ?>">
+    <div <?= !\SeeGap\Plugin::is_active('dynamic-og-images') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \SeeGap\Plugin::get('dynamic-og-images')->name ?? 'dynamic-og-images') . '"' : null ?>>
+        <div class="<?= !\SeeGap\Plugin::is_active('dynamic-og-images') ? 'container-disabled' : null ?>">
             <div class="form-group custom-control custom-switch">
-                <input id="is_enabled" name="is_enabled" type="checkbox" class="custom-control-input" <?= \Altum\Plugin::is_active('dynamic-og-images') && settings()->dynamic_og_images->is_enabled ? 'checked="checked"' : null?>>
+                <input id="is_enabled" name="is_enabled" type="checkbox" class="custom-control-input" <?= \SeeGap\Plugin::is_active('dynamic-og-images') && settings()->dynamic_og_images->is_enabled ? 'checked="checked"' : null?>>
                 <label class="custom-control-label" for="is_enabled"><?= l('admin_settings.dynamic_og_images.is_enabled') ?></label>
             </div>
 
@@ -49,14 +49,14 @@
                 <label for="logo"><i class="fas fa-fw fa-sm fa-sun text-muted mr-1"></i> <?= l('admin_settings.dynamic_og_images.logo') ?></label>
                 <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'logo_light', 'file_key' => 'logo', 'already_existing_image' => settings()->dynamic_og_images->logo]) ?>
                 <small class="form-text text-muted"><?= l('admin_settings.dynamic_og_images.logo_help') ?></small>
-                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('logo_light')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
+                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('logo_light')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
             </div>
 
             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= get_max_upload() ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), get_max_upload()) ?>">
                 <label for="background"><i class="fas fa-fw fa-sm fa-fill text-muted mr-1"></i> <?= l('admin_settings.dynamic_og_images.background') ?></label>
                 <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'logo_light', 'file_key' => 'background', 'already_existing_image' => settings()->dynamic_og_images->background]) ?>
                 <small class="form-text text-muted"><?= l('admin_settings.dynamic_og_images.background_help') ?></small>
-                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('logo_light')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
+                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('logo_light')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
             </div>
 
             <div class="form-group">
@@ -80,7 +80,7 @@
     </div>
 </div>
 
-<?php if(\Altum\Plugin::is_active('dynamic-og-images')): ?>
+<?php if(\SeeGap\Plugin::is_active('dynamic-og-images')): ?>
     <button type="submit" name="submit" class="btn btn-lg btn-block btn-primary mt-4"><?= l('global.update') ?></button>
 <?php endif ?>
 

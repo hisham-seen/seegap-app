@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -15,25 +15,25 @@
     <h1 class="h3 mb-0 mr-1"><i class="fas fa-fw fa-xs fa-mail-bulk text-primary-900 mr-2"></i> <?= l('admin_broadcast_create.header') ?></h1>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
 
         <form id="broadcast_create_form" action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
-                <input type="text" id="name" name="name" value="<?= $data->values['name'] ?>" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" maxlength="64" required="required" />
-                <?= \Altum\Alerts::output_field_error('name') ?>
+                <input type="text" id="name" name="name" value="<?= $data->values['name'] ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" maxlength="64" required="required" />
+                <?= \SeeGap\Alerts::output_field_error('name') ?>
                 <small class="form-text text-muted"><?= l('admin_broadcasts.name_help') ?></small>
             </div>
 
             <div class="form-group">
                 <label for="subject"><i class="fas fa-fw fa-sm fa-heading text-muted mr-1"></i> <?= l('admin_broadcasts.subject') ?></label>
-                <input type="text" id="subject" name="subject" value="<?= $data->values['subject'] ?>" class="form-control <?= \Altum\Alerts::has_field_errors('subject') ? 'is-invalid' : null ?>" maxlength="128" required="required" />
-                <?= \Altum\Alerts::output_field_error('subject') ?>
+                <input type="text" id="subject" name="subject" value="<?= $data->values['subject'] ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('subject') ? 'is-invalid' : null ?>" maxlength="128" required="required" />
+                <?= \SeeGap\Alerts::output_field_error('subject') ?>
                 <small class="form-text text-muted"><?= l('admin_broadcasts.subject_help') ?></small>
                 <small class="form-text text-muted"><?= sprintf(l('global.variables'), '<code>' . implode('</code> , <code>',  ['{{WEBSITE_TITLE}}', '{{USER:NAME}}', '{{USER:EMAIL}}', '{{USER:CONTINENT_NAME}}', '{{USER:COUNTRY_NAME}}', '{{USER:CITY_NAME}}', '{{USER:DEVICE_TYPE}}', '{{USER:OS_NAME}}', '{{USER:BROWSER_NAME}}', '{{USER:BROWSER_LANGUAGE}}']) . '</code>') ?></small>
             </div>
@@ -46,21 +46,21 @@
 
             <div class="form-group">
                 <label for="segment"><i class="fas fa-fw fa-sm fa-layer-group text-muted mr-1"></i> <?= l('admin_broadcasts.segment') ?> <span id="segment_count"></span></label>
-                <select id="segment" name="segment" class="form-control <?= \Altum\Alerts::has_field_errors('segment') ? 'is-invalid' : null ?>" required="required">
+                <select id="segment" name="segment" class="form-control <?= \SeeGap\Alerts::has_field_errors('segment') ? 'is-invalid' : null ?>" required="required">
                     <option value="all" <?= $data->values['segment'] == 'all' ? 'selected="selected"' : null ?>><?= l('admin_broadcasts.segment.all') ?></option>
                     <option value="subscribers" <?= $data->values['segment'] == 'subscribers' ? 'selected="selected"' : null ?>><?= l('admin_broadcasts.segment.subscribers') ?></option>
                     <option value="custom" <?= $data->values['segment'] == 'custom' ? 'selected="selected"' : null ?>><?= l('admin_broadcasts.segment.custom') ?></option>
                     <option value="filter" <?= $data->values['segment'] == 'filter' ? 'selected="selected"' : null ?>><?= l('admin_broadcasts.segment.filter') ?></option>
                 </select>
-                <?= \Altum\Alerts::output_field_error('segment') ?>
+                <?= \SeeGap\Alerts::output_field_error('segment') ?>
                 <small class="form-text text-muted"><?= l('admin_broadcasts.segment_help') ?></small>
                 <small class="form-text text-muted"><?= l('admin_broadcasts.segment_help2') ?></small>
             </div>
 
             <div class="form-group" data-segment="custom">
                 <label for="users_ids"><i class="fas fa-fw fa-sm fa-users text-muted mr-1"></i> <?= l('admin_broadcasts.users_ids') ?></label>
-                <input type="text" id="users_ids" name="users_ids" value="<?= $data->values['users_ids'] ?>" class="form-control <?= \Altum\Alerts::has_field_errors('users_ids') ? 'is-invalid' : null ?>" placeholder="<?= l('admin_broadcasts.users_ids_placeholder') ?>" required="required" />
-                <?= \Altum\Alerts::output_field_error('users_ids') ?>
+                <input type="text" id="users_ids" name="users_ids" value="<?= $data->values['users_ids'] ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('users_ids') ? 'is-invalid' : null ?>" placeholder="<?= l('admin_broadcasts.users_ids_placeholder') ?>" required="required" />
+                <?= \SeeGap\Alerts::output_field_error('users_ids') ?>
                 <small class="form-text text-muted"><?= l('admin_broadcasts.users_ids_help') ?></small>
             </div>
 
@@ -154,7 +154,7 @@
             <div class="form-group" data-segment="filter">
                 <label for="languages"><i class="fas fa-fw fa-sm fa-language text-muted mr-1"></i> <?= l('admin_broadcasts.languages') ?></label>
                 <div class="row">
-                    <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                    <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                         <div class="col-6 mb-3">
                             <div class="custom-control custom-switch">
                                 <input id="<?= 'filters_languages###' . $language_code ?>" name="filters_languages[]" value="<?= $language_name ?>" type="checkbox" class="custom-control-input" <?= isset($data->values['filters_languages'][$language_name]) ? 'checked="checked"' : null ?>>
@@ -190,7 +190,7 @@
             <div class="form-group" data-segment="filter">
                 <label for="filters_cities"><i class="fas fa-fw fa-sm fa-city text-muted mr-1"></i> <?= l('global.cities') ?></label>
                 <input type="text" id="filters_cities" name="filters_cities" value="<?= $data->values['filters_cities'] ?>" class="form-control" placeholder="<?= l('admin_broadcasts.cities_placeholder') ?>" />
-                <?= \Altum\Alerts::output_field_error('filters_cities') ?>
+                <?= \SeeGap\Alerts::output_field_error('filters_cities') ?>
                 <small class="form-text text-muted"><?= l('admin_broadcasts.cities_help') ?></small>
             </div>
 
@@ -224,8 +224,8 @@
             <div class="form-group">
                 <label for="content"><i class="fas fa-fw fa-sm fa-paragraph text-muted mr-1"></i> <?= l('admin_broadcasts.content') ?></label>
                 <div class="bg-gray-100 rounded p-3" id="editorjs"></div>
-                <textarea name="content" id="content" class="form-control d-none <?= \Altum\Alerts::has_field_errors('content') ? 'is-invalid' : null ?>"><?= e($data->values['content']) ?></textarea>
-                <?= \Altum\Alerts::output_field_error('content') ?>
+                <textarea name="content" id="content" class="form-control d-none <?= \SeeGap\Alerts::has_field_errors('content') ? 'is-invalid' : null ?>"><?= e($data->values['content']) ?></textarea>
+                <?= \SeeGap\Alerts::output_field_error('content') ?>
                 <small class="form-text text-muted"><?= sprintf(l('global.variables'), '<code>' . implode('</code> , <code>',  ['{{WEBSITE_TITLE}}', '{{USER:NAME}}', '{{USER:EMAIL}}', '{{USER:CONTINENT_NAME}}', '{{USER:COUNTRY_NAME}}', '{{USER:CITY_NAME}}', '{{USER:DEVICE_TYPE}}', '{{USER:OS_NAME}}', '{{USER:BROWSER_NAME}}', '{{USER:BROWSER_LANGUAGE}}']) . '</code>') ?></small>
                 <small class="form-text text-muted"><?= l('global.spintax_help') ?></small>
             </div>
@@ -236,12 +236,12 @@
 
             <div class="form-group">
                 <div class="input-group">
-                    <input type="email" id="preview_email" name="preview_email" value="<?= $data->values['preview_email'] ?>" class="form-control <?= \Altum\Alerts::has_field_errors('preview_email') ? 'is-invalid' : null ?>" placeholder="<?= l('global.email_placeholder') ?>" />
+                    <input type="email" id="preview_email" name="preview_email" value="<?= $data->values['preview_email'] ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('preview_email') ? 'is-invalid' : null ?>" placeholder="<?= l('global.email_placeholder') ?>" />
                     <div class="input-group-append">
                         <button type="submit" name="preview" class="btn btn-light"><?= l('admin_broadcast_create.send_preview') ?></button>
                     </div>
                 </div>
-                <?= \Altum\Alerts::output_field_error('preview_email') ?>
+                <?= \SeeGap\Alerts::output_field_error('preview_email') ?>
             </div>
             <button type="submit" name="save" class="btn btn-block btn-outline-primary mt-3"><?= l('admin_broadcast_create.save_draft') ?></button>
             <button type="submit" name="send" class="btn btn-lg btn-block btn-primary mt-3"><?= l('admin_broadcast_create.send_broadcast') ?></button>
@@ -256,7 +256,7 @@
         padding-bottom: 0 !important;
     }
 </style>
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/editorjs/header.js?v=' . PRODUCT_CODE ?>"></script>
@@ -321,7 +321,7 @@
         document.querySelector('textarea[name="content"]').innerHTML = JSON.stringify(data);
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php ob_start() ?>
 <script>
@@ -330,7 +330,7 @@
     type_handler('[name="segment"]', 'data-segment');
     document.querySelector('[name="segment"]') && document.querySelectorAll('[name="segment"]').forEach(element => element.addEventListener('change', () => { type_handler('[name="segment"]', 'data-segment'); }));
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 
 <?php ob_start() ?>
@@ -390,4 +390,4 @@
 
     get_segment_count();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

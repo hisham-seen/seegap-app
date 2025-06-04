@@ -7,25 +7,25 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AccountLogs extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'device_type', 'country_code', 'continent_code'], ['ip', 'city_name', 'os_name', 'browser_name', 'browser_name'], ['id', 'datetime']));
+        $filters = (new \SeeGap\Filters(['user_id', 'device_type', 'country_code', 'continent_code'], ['ip', 'city_name', 'os_name', 'browser_name', 'browser_name'], ['id', 'datetime']));
         $filters->set_default_order_by('id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `users_logs` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('account-logs?' . $filters->get_get() . 'page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('account-logs?' . $filters->get_get() . 'page=%d')));
 
         /* Get the logs list for the user */
         $logs = [];
@@ -37,10 +37,10 @@ class AccountLogs extends Controller {
         process_export_csv($logs, 'include', ['id', 'user_id', 'type', 'ip', 'continent_code', 'country_code', 'city_name', 'device_type', 'os_name', 'browser_name', 'browser_name', 'datetime']);
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Get the account header menu */
-        $menu = new \Altum\View('partials/account_header_menu', (array) $this);
+        $menu = new \SeeGap\View('partials/account_header_menu', (array) $this);
         $this->add_view_content('account_header_menu', $menu->run());
 
         /* Prepare the view */
@@ -50,7 +50,7 @@ class AccountLogs extends Controller {
             'pagination' => $pagination
         ];
 
-        $view = new \Altum\View('account-logs/index', (array) $this);
+        $view = new \SeeGap\View('account-logs/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

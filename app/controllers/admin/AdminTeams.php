@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminTeams extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id'], ['name'], ['last_datetime', 'datetime', 'name', 'team_id']));
+        $filters = (new \SeeGap\Filters(['user_id'], ['name'], ['last_datetime', 'datetime', 'name', 'team_id']));
         $filters->set_default_order_by('team_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `teams` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/teams?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/teams?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $teams = [];
@@ -57,7 +57,7 @@ class AdminTeams extends Controller {
         process_export_csv($teams, 'include', ['team_id', 'user_id', 'name', 'members', 'datetime', 'last_datetime'], sprintf(l('teams.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -66,7 +66,7 @@ class AdminTeams extends Controller {
             'pagination' => $pagination
         ];
 
-        $view = new \Altum\View('admin/teams/index', (array) $this);
+        $view = new \SeeGap\View('admin/teams/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -87,9 +87,9 @@ class AdminTeams extends Controller {
             redirect('admin/teams');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -126,9 +126,9 @@ class AdminTeams extends Controller {
 
         $team_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

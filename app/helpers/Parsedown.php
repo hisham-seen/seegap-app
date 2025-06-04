@@ -20,7 +20,7 @@
 #
 #
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Parsedown
 {

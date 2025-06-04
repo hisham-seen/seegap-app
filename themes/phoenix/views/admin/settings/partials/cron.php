@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="form-group">
     <label for="cron"><?= l('admin_settings.cron.cron') ?></label>
@@ -48,7 +48,7 @@
     }
     ?>
 
-    <small class="form-text <?= $text_class ?>"><?= sprintf(l('admin_settings.cron.last_execution'), isset(settings()->cron->cron_datetime) ? \Altum\Date::get_timeago(settings()->cron->cron_datetime) : '-') ?></small>
+    <small class="form-text <?= $text_class ?>"><?= sprintf(l('admin_settings.cron.last_execution'), isset(settings()->cron->cron_datetime) ? \SeeGap\Date::get_timeago(settings()->cron->cron_datetime) : '-') ?></small>
 </div>
 
 <div class="form-group">
@@ -99,11 +99,11 @@
     }
     ?>
 
-    <small class="form-text <?= $text_class ?>"><?= sprintf(l('admin_settings.cron.last_execution'), isset(settings()->cron->broadcasts_datetime) ? \Altum\Date::get_timeago(settings()->cron->broadcasts_datetime) : '-') ?></small>
+    <small class="form-text <?= $text_class ?>"><?= sprintf(l('admin_settings.cron.last_execution'), isset(settings()->cron->broadcasts_datetime) ? \SeeGap\Date::get_timeago(settings()->cron->broadcasts_datetime) : '-') ?></small>
 </div>
 
-<div <?= !\Altum\Plugin::is_active('push-notifications') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \Altum\Plugin::get('push-notifications')->name ?? 'push-notifications') . '"' : null ?>>
-    <div class="<?= !\Altum\Plugin::is_active('push-notifications') ? 'container-disabled' : null ?>">
+<div <?= !\SeeGap\Plugin::is_active('push-notifications') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \SeeGap\Plugin::get('push-notifications')->name ?? 'push-notifications') . '"' : null ?>>
+    <div class="<?= !\SeeGap\Plugin::is_active('push-notifications') ? 'container-disabled' : null ?>">
         <div class="form-group">
             <label for="cron_push_notifications"><?= l('admin_settings.cron.push_notifications') ?></label>
             <div class="input-group">
@@ -151,7 +151,7 @@
             }
             ?>
 
-            <small class="form-text <?= $text_class ?>"><?= sprintf(l('admin_settings.cron.last_execution'), isset(settings()->cron->push_notifications_datetime) ? \Altum\Date::get_timeago(settings()->cron->push_notifications_datetime) : '-') ?></small>
+            <small class="form-text <?= $text_class ?>"><?= sprintf(l('admin_settings.cron.last_execution'), isset(settings()->cron->push_notifications_datetime) ? \SeeGap\Date::get_timeago(settings()->cron->push_notifications_datetime) : '-') ?></small>
         </div>
     </div>
 </div>

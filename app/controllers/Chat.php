@@ -7,25 +7,25 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Response;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Chat extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.chats')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.chats')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('dashboard');
         }
@@ -54,7 +54,7 @@ class Chat extends Controller {
         }
 
         /* Chats assistants */
-        $chats_assistants = (new \Altum\Models\ChatsAssistants())->get_chats_assistants();
+        $chats_assistants = (new \SeeGap\Models\ChatsAssistants())->get_chats_assistants();
         $chat_assistant = $chats_assistants[$chat->chat_assistant_id];
 
         /* Set a custom title */
@@ -70,13 +70,13 @@ class Chat extends Controller {
             'parsedown' => new \Parsedown(),
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/chat/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/chat/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }
 
     public function create_ajax() {
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
 
         if(empty($_POST)) {
             redirect();
@@ -84,9 +84,9 @@ class Chat extends Controller {
 
         set_time_limit(0);
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
             redirect('not-found');
         }
 
@@ -101,16 +101,16 @@ class Chat extends Controller {
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.chats')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.chats')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
         /* Chats assistants */
-        $chats_assistants = (new \Altum\Models\ChatsAssistants())->get_chats_assistants();
+        $chats_assistants = (new \SeeGap\Models\ChatsAssistants())->get_chats_assistants();
         $chat_assistant = $chats_assistants[$chat->chat_assistant_id];
 
         /* Ai image models */
-        $ai_chats_models = require \Altum\Plugin::get('aix')->path . 'includes/ai_chat_models.php';
+        $ai_chats_models = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_chat_models.php';
 
         /* Selected AI model */
         $this->user->plan_settings->chats_model = $this->user->plan_settings->chats_model ?? 'gpt-3.5-turbo-1106';
@@ -122,7 +122,7 @@ class Chat extends Controller {
         /* Vision */
         $image = null;
         if(in_array($this->user->plan_settings->chats_model, ['gpt-4o', 'gpt-4o-mini'])) {
-            $image = \Altum\Uploads::process_upload(null, 'chats_images', 'image', 'image_remove', $this->user->plan_settings->chat_image_size_limit, 'json_error');
+            $image = \SeeGap\Uploads::process_upload(null, 'chats_images', 'image', 'image_remove', $this->user->plan_settings->chat_image_size_limit, 'json_error');
         }
 
         /* Check for any errors */
@@ -133,7 +133,7 @@ class Chat extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Response::json(l('global.error_message.invalid_csrf_token'), 'error');
         }
 
@@ -225,7 +225,7 @@ class Chat extends Controller {
             [
                 'type' => 'image_url',
                 'image_url' => [
-                    'url' => \Altum\Uploads::get_full_url('chats_images') . $image
+                    'url' => \SeeGap\Uploads::get_full_url('chats_images') . $image
                 ]
             ]
         ] : $_POST['content'];
@@ -348,9 +348,9 @@ class Chat extends Controller {
             [
                 'role' => $role,
                 'content' => $content,
-                'image_url' => $image ? \Altum\Uploads::get_full_url('chats_images') . $image : null,
-                'datetime_his' => \Altum\Date::get(get_date(), 3),
-                'datetime_full' => \Altum\Date::get(get_date(), 1)
+                'image_url' => $image ? \SeeGap\Uploads::get_full_url('chats_images') . $image : null,
+                'datetime_his' => \SeeGap\Date::get(get_date(), 3),
+                'datetime_full' => \SeeGap\Date::get(get_date(), 1)
             ]
         );
 

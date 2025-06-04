@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class PixelCreate extends Controller {
 
@@ -21,10 +21,10 @@ class PixelCreate extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.pixels')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.pixels')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('pixels');
         }
@@ -42,7 +42,7 @@ class PixelCreate extends Controller {
             $_POST['type'] = array_key_exists($_POST['type'], require APP_PATH . 'includes/pixels.php') ? $_POST['type'] : '';
             $_POST['pixel'] = trim(query_clean($_POST['pixel']));
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name', 'type', 'pixel'];
@@ -52,7 +52,7 @@ class PixelCreate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -88,7 +88,7 @@ class PixelCreate extends Controller {
             'values' => $values
         ];
 
-        $view = new \Altum\View('pixel-create/index', (array) $this);
+        $view = new \SeeGap\View('pixel-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

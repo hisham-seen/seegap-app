@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks\Blocks;
+namespace SeeGap\Controllers\MicrositeBlocks\Blocks;
 
-use Altum\Controllers\MicrositeBlocks\BaseBlockHandler;
-use Altum\Response;
+use SeeGap\Controllers\MicrositeBlocks\BaseBlockHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Product Block Handler
@@ -136,8 +136,8 @@ class ProductBlock extends BaseBlockHandler {
         /* File upload */
         $db_file = $this->handle_file_upload($microsite_block->settings->file, 'products_files/', settings()->links->file_size_limit);
 
-        $image_url = $db_image ? \Altum\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
-        $file_url = $db_file ? \Altum\Uploads::get_full_url('products_files') . $db_file : null;
+        $image_url = $db_image ? \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
+        $file_url = $db_file ? \SeeGap\Uploads::get_full_url('products_files') . $db_file : null;
 
         $settings = json_encode([
             'name' => $_POST['name'],

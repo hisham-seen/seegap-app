@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <div class="card mb-5">
@@ -60,7 +60,7 @@
                     <?php foreach ($data->plans as $plan => $total): ?>
                         <tr>
                             <td class="text-nowrap">
-                                <?= (new \Altum\Models\Plan())->get_plan_by_id($plan)->name ?>
+                                <?= (new \SeeGap\Models\Plan())->get_plan_by_id($plan)->name ?>
                             </td>
                             <td class="text-nowrap">
                                 <?= nr($total / $data->total['plans'] * 100, 2) . '%' ?>

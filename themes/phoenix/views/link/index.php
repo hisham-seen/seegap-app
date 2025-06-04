@@ -1,9 +1,9 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <input type="hidden" name="link_base" value="<?= $this->link->domain ? $this->link->domain->url : SITE_URL ?>" />
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -94,11 +94,11 @@
 <?php ob_start() ?>
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/daterangepicker.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/fontawesome-iconpicker.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>
 <?php include_view(THEME_PATH . 'views/partials/color_picker_js.php', ['exclude_js' => true]) ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'link_duplicate_modal', 'resource_id' => 'link_id', 'path' => 'link-ajax/duplicate']), 'modals'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'microsite_block_duplicate_modal', 'resource_id' => 'microsite_block_id', 'path' => 'microsite-block-ajax/duplicate']), 'modals'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'link_reset_modal', 'resource_id' => 'link_id', 'path' => 'links/reset']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'link_duplicate_modal', 'resource_id' => 'link_id', 'path' => 'link-ajax/duplicate']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'microsite_block_duplicate_modal', 'resource_id' => 'microsite_block_id', 'path' => 'microsite-block-ajax/duplicate']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'link_reset_modal', 'resource_id' => 'link_id', 'path' => 'links/reset']), 'modals'); ?>

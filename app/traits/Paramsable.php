@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Traits;
+namespace SeeGap\Traits;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 trait Paramsable {
 

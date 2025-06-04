@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Domain;
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Models\Domain;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminApiDomains extends Controller {
     use Apiable;
@@ -57,14 +57,14 @@ class AdminApiDomains extends Controller {
     private function get_all() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], [], []));
+        $filters = (new \SeeGap\Filters([], [], []));
         $filters->set_default_order_by('domain_id', $this->api_user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->api_user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
         $filters->process();
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `domains`")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/domains?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/domains?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $data = [];

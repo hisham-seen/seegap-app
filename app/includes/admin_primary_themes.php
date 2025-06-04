@@ -1,20 +1,20 @@
 <?php
 /*
- * Copyright (c) 2025 AltumCode (https://altumcode.com/)
+ * Copyright (c) 2025 SeeGap (https://Seegap.com/)
  *
- * This software is licensed exclusively by AltumCode and is sold only via https://altumcode.com/.
+ * This software is licensed exclusively by SeeGap and is sold only via https://Seegap.com/.
  * Unauthorized distribution, modification, or use of this software without a valid license is not permitted and may be subject to applicable legal actions.
  *
- *  View all other existing AltumCode projects via https://altumcode.com/
- *  Get in touch for support or general queries via https://altumcode.com/contact
- *  Download the latest version via https://altumcode.com/downloads
+ *  View all other existing SeeGap projects via https://Seegap.com/
+ *  Get in touch for support or general queries via https://Seegap.com/contact
+ *  Download the latest version via https://Seegap.com/downloads
  *
- *  X/Twitter: https://x.com/AltumCode
+ *  X/Twitter: https://x.com/SeeGap
  *  Facebook: https://facebook.com/altumcode
  *  Instagram: https://instagram.com/altumcode
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return [
     'light' => [

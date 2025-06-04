@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-use Altum\Models\User;
+use SeeGap\Models\User;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Authentication {
 
@@ -23,7 +23,7 @@ class Authentication {
     public static function check() {
 
         /* Verify if the current route allows use to do the check */
-        if(\Altum\Router::$controller_settings['no_authentication_check']) {
+        if(\SeeGap\Router::$controller_settings['no_authentication_check']) {
             return false;
         }
 
@@ -93,7 +93,7 @@ class Authentication {
             case 'user':
 
                 if(!self::check()) {
-                    redirect('login?redirect=' . \Altum\Router::$original_request . (\Altum\Router::$original_request_query ? '?' . \Altum\Router::$original_request_query : null));
+                    redirect('login?redirect=' . \SeeGap\Router::$original_request . (\SeeGap\Router::$original_request_query ? '?' . \SeeGap\Router::$original_request_query : null));
                 }
 
                 /* Check if user is banned */
@@ -108,7 +108,7 @@ class Authentication {
             case 'admin':
 
                 if(!self::check()) {
-                    redirect('login?redirect=' . \Altum\Router::$original_request . (\Altum\Router::$original_request_query ? '?' . \Altum\Router::$original_request_query : null));
+                    redirect('login?redirect=' . \SeeGap\Router::$original_request . (\SeeGap\Router::$original_request_query ? '?' . \SeeGap\Router::$original_request_query : null));
                 }
 
                 /* Check if user is banned */

@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminMicrositeThemeUpdate extends Controller {
 
@@ -47,9 +47,9 @@ class AdminMicrositeThemeUpdate extends Controller {
             $_POST['hover_animation'] = isset($_POST['microsite_hover_animation']) && in_array($_POST['microsite_hover_animation'], ['false', 'smooth', 'instant',]) ? input_clean($_POST['microsite_hover_animation']) : 'smooth';
 
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -57,12 +57,12 @@ class AdminMicrositeThemeUpdate extends Controller {
             $background_new_name = $microsite_theme->settings->microsite->background_type == 'image' ? $microsite_theme->settings->microsite->background : null;
 
             if($_POST['microsite_background_type'] == 'image') {
-                $background_new_name = \Altum\Uploads::process_upload($microsite_theme->settings->microsite->background, 'microsite_background', 'microsite_background_image', 'microsite_background_image_remove', null);
+                $background_new_name = \SeeGap\Uploads::process_upload($microsite_theme->settings->microsite->background, 'microsite_background', 'microsite_background_image', 'microsite_background_image_remove', null);
             }
 
             if($background_new_name && $_POST['microsite_background_type'] != 'image') {
                 $background_new_name = null;
-                \Altum\Uploads::delete_uploaded_file($background_new_name, 'microsite_background');
+                \SeeGap\Uploads::delete_uploaded_file($background_new_name, 'microsite_background');
             }
 
             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
@@ -149,7 +149,7 @@ class AdminMicrositeThemeUpdate extends Controller {
             'links_types' => $links_types,
         ];
 
-        $view = new \Altum\View('admin/microsite-theme-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/microsite-theme-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,18 +9,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
         <?php if(!empty($data->cloaking->cloaking_favicon)): ?>
-            <link href="<?= \Altum\Uploads::get_full_url('favicons') . $data->cloaking->cloaking_favicon ?>" rel="icon" />
+            <link href="<?= \SeeGap\Uploads::get_full_url('favicons') . $data->cloaking->cloaking_favicon ?>" rel="icon" />
         <?php elseif(!empty(settings()->main->favicon)): ?>
             <link href="<?= settings()->main->favicon_full_url ?>" rel="icon" />
         <?php endif ?>
 
-        <?php if(\Altum\Meta::$description): ?>
-            <meta name="description" content="<?= \Altum\Meta::$description ?>" />
+        <?php if(\SeeGap\Meta::$description): ?>
+            <meta name="description" content="<?= \SeeGap\Meta::$description ?>" />
         <?php endif ?>
 
-        <?php \Altum\Meta::output() ?>
+        <?php \SeeGap\Meta::output() ?>
 
-        <?= \Altum\Event::get_content('head') ?>
+        <?= \SeeGap\Event::get_content('head') ?>
 
         <?php if(is_logged_in() && !user()->plan_settings->export->pdf): ?>
             <style>@media print { body { display: none; } }</style>
@@ -105,7 +105,7 @@
                     }, is_android ? 2000 : 650);
                 <?php endif ?>
             </script>
-            <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+            <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
         <?php endif ?>
 
         <?php if(settings()->cookie_consent->is_enabled): ?>
@@ -116,6 +116,6 @@
             <?php endforeach ?>
         <?php endif ?>
 
-        <?= \Altum\Event::get_content('javascript') ?>
+        <?= \SeeGap\Event::get_content('javascript') ?>
     </body>
 </html>

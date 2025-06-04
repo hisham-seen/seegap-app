@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
         <nav aria-label="breadcrumb">
@@ -26,12 +26,12 @@
         <div class="card-body">
 
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="user_email"><i class="fas fa-fw fa-envelope fa-sm text-muted mr-1"></i> <?= l('global.email') ?></label>
-                    <input type="email" id="user_email" name="user_email" class="form-control <?= \Altum\Alerts::has_field_errors('user_email') ? 'is-invalid' : null ?>" value="<?= $data->values['user_email'] ?>" placeholder="<?= l('global.email_placeholder') ?>" required="required" />
-                    <?= \Altum\Alerts::output_field_error('user_email') ?>
+                    <input type="email" id="user_email" name="user_email" class="form-control <?= \SeeGap\Alerts::has_field_errors('user_email') ? 'is-invalid' : null ?>" value="<?= $data->values['user_email'] ?>" placeholder="<?= l('global.email_placeholder') ?>" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('user_email') ?>
                 </div>
 
                 <?php

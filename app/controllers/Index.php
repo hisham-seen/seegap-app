@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Meta;
-use Altum\Models\Domain;
+use SeeGap\Meta;
+use SeeGap\Models\Domain;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Index extends Controller {
 
@@ -30,7 +30,7 @@ class Index extends Controller {
         }
 
         /* Plans View */
-        $view = new \Altum\View('partials/plans', (array) $this);
+        $view = new \SeeGap\View('partials/plans', (array) $this);
         $this->add_view_content('plans', $view->run());
 
         /* Check if the cache exists */
@@ -43,7 +43,7 @@ class Index extends Controller {
             $total_links = database()->query("SELECT MAX(`link_id`) AS `total` FROM `links`")->fetch_object()->total ?? 0;
             $total_qr_codes = database()->query("SELECT MAX(`qr_code_id`) AS `total` FROM `qr_codes`")->fetch_object()->total ?? 0;
             $total_track_links = database()->query("SELECT MAX(`id`) AS `total` FROM `track_links`")->fetch_object()->total ?? 0;
-            if(\Altum\Plugin::is_active('aix')) {
+            if(\SeeGap\Plugin::is_active('aix')) {
                 if(settings()->aix->documents_is_enabled) {
                     $total_documents = database()->query("SELECT MAX(`document_id`) AS `total` FROM `documents`")->fetch_object()->total ?? 0;
                 }
@@ -75,7 +75,7 @@ class Index extends Controller {
         }
 
         if(settings()->main->display_index_latest_blog_posts) {
-            $language = \Altum\Language::$name;
+            $language = \SeeGap\Language::$name;
 
             /* Blog posts query */
             $blog_posts_result_query = "
@@ -86,7 +86,7 @@ class Index extends Controller {
                 LIMIT 3
             ";
 
-            $blog_posts = \Altum\Cache::cache_function_result('blog_posts?hash=' . md5($blog_posts_result_query), 'blog_posts', function() use ($blog_posts_result_query) {
+            $blog_posts = \SeeGap\Cache::cache_function_result('blog_posts?hash=' . md5($blog_posts_result_query), 'blog_posts', function() use ($blog_posts_result_query) {
                 $blog_posts_result = database()->query($blog_posts_result_query);
 
                 /* Iterate over the blog posts */
@@ -107,7 +107,7 @@ class Index extends Controller {
         $domains = (new Domain())->get_available_additional_domains();
 
         /* Main View */
-        $view = new \Altum\View('index/index', (array) $this);
+        $view = new \SeeGap\View('index/index', (array) $this);
         $this->add_view_content('content', $view->run([
             'total_users' => $total_users,
             'total_links' => $total_links,

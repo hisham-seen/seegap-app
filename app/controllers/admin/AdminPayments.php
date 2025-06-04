@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Date;
-use Altum\Models\Payments;
+use SeeGap\Alerts;
+use SeeGap\Date;
+use SeeGap\Models\Payments;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminPayments extends Controller {
 
@@ -22,13 +22,13 @@ class AdminPayments extends Controller {
         $payment_processors = require APP_PATH . 'includes/payment_processors.php';
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['status', 'plan_id', 'user_id', 'type', 'processor', 'frequency', 'taxes_ids'], ['payment_id', 'code'], ['id', 'total_amount', 'email', 'datetime', 'name'], [], ['taxes_ids' => 'json_contains']));
+        $filters = (new \SeeGap\Filters(['status', 'plan_id', 'user_id', 'type', 'processor', 'frequency', 'taxes_ids'], ['payment_id', 'code'], ['id', 'total_amount', 'email', 'datetime', 'name'], [], ['taxes_ids' => 'json_contains']));
         $filters->set_default_order_by('id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `payments` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/payments?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/payments?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $payments = [];
@@ -56,10 +56,10 @@ class AdminPayments extends Controller {
         process_export_csv($payments, 'include', ['id', 'user_id', 'plan_id', 'payment_id', 'email', 'name', 'processor', 'type', 'frequency', 'base_amount', 'code', 'discount_amount', 'total_amount', 'currency', 'status', 'datetime']);
 
         /* Requested plan details */
-        $plans = (new \Altum\Models\Plan())->get_plans();
+        $plans = (new \SeeGap\Models\Plan())->get_plans();
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -70,7 +70,7 @@ class AdminPayments extends Controller {
             'payment_processors' => $payment_processors,
         ];
 
-        $view = new \Altum\View('admin/payments/index', (array) $this);
+        $view = new \SeeGap\View('admin/payments/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -81,9 +81,9 @@ class AdminPayments extends Controller {
 
         $payment_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('admin/users');
         }
@@ -93,7 +93,7 @@ class AdminPayments extends Controller {
             $payment = db()->where('id', $payment_id)->getOne('payments', ['payment_proof']);
 
             /* Delete the saved proof, if any */
-            \Altum\Uploads::delete_uploaded_file($payment->payment_proof, 'offline_payment_proofs');
+            \SeeGap\Uploads::delete_uploaded_file($payment->payment_proof, 'offline_payment_proofs');
 
             /* Delete the payment */
             db()->where('id', $payment_id)->delete('payments');
@@ -110,9 +110,9 @@ class AdminPayments extends Controller {
 
         $payment_id = (isset($this->params[0])) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('admin/users');
         }
@@ -126,7 +126,7 @@ class AdminPayments extends Controller {
             $user = db()->where('user_id', $payment->user_id)->getOne('users');
 
             /* plan that the user has paid for */
-            $plan = (new \Altum\Models\Plan())->get_plan_by_id($payment->plan_id);
+            $plan = (new \SeeGap\Models\Plan())->get_plan_by_id($payment->plan_id);
 
             /* Make sure the code that was potentially used exists */
             $codes_code = db()->where('code', $payment->code)->where('type', 'discount')->getOne('codes');

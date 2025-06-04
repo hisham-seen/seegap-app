@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Domain;
+use SeeGap\Models\Domain;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class MicrositesTemplates extends Controller {
 
@@ -21,16 +21,16 @@ class MicrositesTemplates extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], ['name'], ['microsite_template_id', 'order', 'name']));
+        $filters = (new \SeeGap\Filters([], ['name'], ['microsite_template_id', 'order', 'name']));
         $filters->set_default_order_by('order', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `microsites_templates` WHERE `is_enabled` = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('microsites-templates?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('microsites-templates?' . $filters->get_get() . '&page=%d')));
 
         /* Get the links list for the project */
         $result = database()->query("
@@ -53,14 +53,14 @@ class MicrositesTemplates extends Controller {
         }
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Get domains */
         $domains = (new Domain())->get_available_domains_by_user($this->user);
 
         /* Create Link Modal */
-        $view = new \Altum\View('links/create_link_modals', (array) $this);
-        \Altum\Event::add_content($view->run(['domains' => $domains]), 'modals');
+        $view = new \SeeGap\View('links/create_link_modals', (array) $this);
+        \SeeGap\Event::add_content($view->run(['domains' => $domains]), 'modals');
 
         /* Prepare the view */
         $data = [
@@ -70,7 +70,7 @@ class MicrositesTemplates extends Controller {
             'filters'            => $filters,
         ];
 
-        $view = new \Altum\View('microsites-templates/index', (array) $this);
+        $view = new \SeeGap\View('microsites-templates/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

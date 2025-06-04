@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 $access = [
     'read' => [
@@ -58,20 +58,20 @@ if(settings()->links->domains_is_enabled) {
     $access['delete']['delete.domains'] = l('domains.title');
 }
 
-if(\Altum\Plugin::is_active('payment-blocks')) {
+if(\SeeGap\Plugin::is_active('payment-blocks')) {
     $access['delete']['delete.guests_payments'] = l('guests_payments.title');
     $access['create']['create.payment_processors'] = l('payment_processors.title');
     $access['update']['update.payment_processors'] = l('payment_processors.title');
     $access['delete']['delete.payment_processors'] = l('payment_processors.title');
 }
 
-if(\Altum\Plugin::is_active('email-signatures')) {
+if(\SeeGap\Plugin::is_active('email-signatures')) {
     $access['create']['create.signatures'] = l('signatures.title');
     $access['update']['update.signatures'] = l('signatures.title');
     $access['delete']['delete.signatures'] = l('signatures.title');
 }
 
-if(\Altum\Plugin::is_active('aix')) {
+if(\SeeGap\Plugin::is_active('aix')) {
     if(settings()->aix->documents_is_enabled) {
         $access['create']['create.documents'] = l('documents.title');
         $access['update']['update.documents'] = l('documents.title');

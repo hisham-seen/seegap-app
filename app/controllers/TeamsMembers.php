@@ -7,21 +7,21 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class TeamsMembers extends Controller {
 
     public function delete() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(empty($_POST)) {
             redirect('teams-system');
@@ -29,9 +29,9 @@ class TeamsMembers extends Controller {
 
         $team_member_id = (int) $_POST['team_member_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('teams-system');
         }
@@ -84,11 +84,11 @@ class TeamsMembers extends Controller {
 
     public function join() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(empty($_POST)) {
             redirect('teams-member');
@@ -96,9 +96,9 @@ class TeamsMembers extends Controller {
 
         $team_member_id = (int) $_POST['team_member_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('teams-member');
         }
@@ -130,11 +130,11 @@ class TeamsMembers extends Controller {
 
     public function login() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(empty($_POST)) {
             redirect('teams-member');
@@ -142,9 +142,9 @@ class TeamsMembers extends Controller {
 
         $team_member_id = (int) $_POST['team_member_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('teams-member');
         }

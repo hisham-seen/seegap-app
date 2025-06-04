@@ -9,7 +9,7 @@
 
 const PRODUCT_NAME = '66microsites';
 const PRODUCT_KEY = '66microsites';
-const PRODUCT_URL = 'https://altumco.de/66microsites';
-const PRODUCT_DOCUMENTATION_URL = 'https://altumco.de/66microsites-docs';
-const PRODUCT_CHANGELOG_URL = 'https://altumco.de/66microsites-changelog';
+const PRODUCT_URL = 'https://Seegap.com/66microsites';
+const PRODUCT_DOCUMENTATION_URL = 'https://Seegap.com/66microsites-docs';
+const PRODUCT_CHANGELOG_URL = 'https://Seegap.com/66microsites-changelog';
 

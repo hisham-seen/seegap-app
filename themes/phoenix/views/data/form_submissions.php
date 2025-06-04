@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <section class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg d-flex align-items-center mb-3 mb-lg-0 text-truncate">
@@ -153,10 +153,10 @@
 
     <?php if(count($data->form['submissions'])): ?>
         <form id="table" action="<?= SITE_URL . 'data/bulk' ?>" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
             <input type="hidden" name="type" value="" data-bulk-type />
-            <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
-            <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
+            <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
+            <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
             <div class="table-responsive table-custom-container">
                 <table class="table table-custom">
@@ -212,9 +212,9 @@
                             </td>
 
                             <td class="text-nowrap text-muted">
-                                <span data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                                <span data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                                     <i class="fas fa-fw fa-calendar text-muted mr-1"></i>
-                                    <?= \Altum\Date::get($row->datetime, 1) ?>
+                                    <?= \SeeGap\Date::get($row->datetime, 1) ?>
                                 </span>
                             </td>
 
@@ -243,4 +243,4 @@
 </section>
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>

@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
 /* Simple wrapper for phpFastCache */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Cache {
     public static $adapter;

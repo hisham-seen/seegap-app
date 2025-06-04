@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
         <nav aria-label="breadcrumb">
@@ -25,24 +25,24 @@
     <div class="card">
         <div class="card-body">
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="email"><i class="fas fa-fw fa-sm fa-envelope text-muted mr-1"></i> <?= l('contact.email') ?></label>
-                    <input id="email" type="email" name="email" class="form-control <?= \Altum\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" maxlength="64" required="required" />
-                    <?= \Altum\Alerts::output_field_error('email') ?>
+                    <input id="email" type="email" name="email" class="form-control <?= \SeeGap\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" maxlength="64" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('email') ?>
                 </div>
 
                 <div class="form-group">
                     <label for="name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('contact.name') ?></label>
-                    <input id="name" type="text" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?>" maxlength="320" required="required" />
-                    <?= \Altum\Alerts::output_field_error('name') ?>
+                    <input id="name" type="text" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?>" maxlength="320" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('name') ?>
                 </div>
 
                 <div class="form-group">
                     <label for="subject"><i class="fas fa-fw fa-sm fa-pen text-muted mr-1"></i> <?= l('contact.subject') ?></label>
-                    <input id="subject" type="text" name="subject" class="form-control <?= \Altum\Alerts::has_field_errors('subject') ? 'is-invalid' : null ?>" value="<?= $data->values['subject'] ?>" maxlength="128" required="required" />
-                    <?= \Altum\Alerts::output_field_error('subject') ?>
+                    <input id="subject" type="text" name="subject" class="form-control <?= \SeeGap\Alerts::has_field_errors('subject') ? 'is-invalid' : null ?>" value="<?= $data->values['subject'] ?>" maxlength="128" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('subject') ?>
                 </div>
 
                 <div class="form-group" data-character-counter="textarea">
@@ -50,8 +50,8 @@
                         <span><i class="fas fa-fw fa-sm fa-paragraph text-muted mr-1"></i> <?= l('contact.message') ?></span>
                         <small class="text-muted" data-character-counter-wrapper></small>
                     </label>
-                    <textarea id="message" name="message" class="form-control <?= \Altum\Alerts::has_field_errors('message') ? 'is-invalid' : null ?>" minlength="32" maxlength="2048" required="required"><?= $data->values['message'] ?></textarea>
-                    <?= \Altum\Alerts::output_field_error('message') ?>
+                    <textarea id="message" name="message" class="form-control <?= \SeeGap\Alerts::has_field_errors('message') ? 'is-invalid' : null ?>" minlength="32" maxlength="2048" required="required"><?= $data->values['message'] ?></textarea>
+                    <?= \SeeGap\Alerts::output_field_error('message') ?>
                 </div>
 
                 <?php if(settings()->captcha->contact_is_enabled): ?>
@@ -87,4 +87,4 @@
             ]
         }
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

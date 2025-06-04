@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
 use MaxMind\Db\Reader;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Logger {
 

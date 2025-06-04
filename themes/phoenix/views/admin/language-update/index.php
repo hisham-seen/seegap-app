@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
     <nav aria-label="breadcrumb">
@@ -17,10 +17,10 @@
     <?= include_view(THEME_PATH . 'views/admin/languages/admin_language_dropdown_button.php', ['id' => $data->language['name'], 'resource_name' => $data->language['name']]) ?>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <?php if($data->type): ?>
-    <?php if($data->language['name'] == \Altum\Language::$main_name): ?>
+    <?php if($data->language['name'] == \SeeGap\Language::$main_name): ?>
         <div class="alert alert-warning" role="alert">
             <?= l('admin_languages.info_message.main') ?>
         </div>
@@ -29,8 +29,8 @@
     <?php
     $total_translated = 0;
     $total = 0;
-    foreach(\Altum\Language::$languages[\Altum\Language::$main_name]['content'] as $key => $value) {
-        if(!empty(\Altum\Language::$languages[$data->language['name']]['content'][$key])) $total_translated++;
+    foreach(\SeeGap\Language::$languages[\SeeGap\Language::$main_name]['content'] as $key => $value) {
+        if(!empty(\SeeGap\Language::$languages[$data->language['name']]['content'][$key])) $total_translated++;
         $total++;
     }
     ?>
@@ -40,7 +40,7 @@
     </div>
 <?php endif ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
         <div class="row mb-4">
             <div class="col-12 col-lg-4 mb-3 mb-lg-0">
@@ -63,19 +63,19 @@
         </div>
 
         <form action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="language_name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('admin_languages.language_name') ?></label>
-                <input id="language_name" type="text" name="language_name" class="form-control <?= \Altum\Alerts::has_field_errors('language_name') ? 'is-invalid' : null ?>" value="<?= $data->language['name'] ?>" <?= ($data->language['name'] == \Altum\Language::$main_name || $data->type) ? 'readonly="readonly"' : null ?> required="required" />
-                <?= \Altum\Alerts::output_field_error('language_name') ?>
+                <input id="language_name" type="text" name="language_name" class="form-control <?= \SeeGap\Alerts::has_field_errors('language_name') ? 'is-invalid' : null ?>" value="<?= $data->language['name'] ?>" <?= ($data->language['name'] == \SeeGap\Language::$main_name || $data->type) ? 'readonly="readonly"' : null ?> required="required" />
+                <?= \SeeGap\Alerts::output_field_error('language_name') ?>
                 <small class="form-text text-muted"><?= l('admin_languages.language_name_help') ?></small>
             </div>
 
             <div class="form-group">
                 <label for="language_code"><i class="fas fa-fw fa-sm fa-language text-muted mr-1"></i> <?= l('admin_languages.language_code') ?></label>
-                <input id="language_code" type="text" name="language_code" class="form-control <?= \Altum\Alerts::has_field_errors('language_code') ? 'is-invalid' : null ?>" value="<?= $data->language['code'] ?>" <?= ($data->language['name'] == \Altum\Language::$main_name || $data->type) ? 'readonly="readonly"' : null ?> required="required" />
-                <?= \Altum\Alerts::output_field_error('language_code') ?>
+                <input id="language_code" type="text" name="language_code" class="form-control <?= \SeeGap\Alerts::has_field_errors('language_code') ? 'is-invalid' : null ?>" value="<?= $data->language['code'] ?>" <?= ($data->language['name'] == \SeeGap\Language::$main_name || $data->type) ? 'readonly="readonly"' : null ?> required="required" />
+                <?= \SeeGap\Alerts::output_field_error('language_code') ?>
                 <small class="form-text text-muted"><?= l('admin_languages.language_code_help') ?></small>
             </div>
 
@@ -96,7 +96,7 @@
 
             <?php if($data->type): ?>
                 <div class="d-flex flex-column flex-lg-row align-items-lg-center my-5">
-                    <?php if(\Altum\Language::$main_name != $data->language['name']): ?>
+                    <?php if(\SeeGap\Language::$main_name != $data->language['name']): ?>
                         <div class="mr-3">
                             <button type="button" class="btn btn-dark" data-translate-all data-toggle="tooltip" title="<?= l('admin_languages.auto_translate_all_help') ?>" data-is-ajax><?= l('admin_languages.auto_translate') ?></button>
                         </div>
@@ -134,7 +134,7 @@
 
                 <div id="translations">
                     <?php $index = 1; ?>
-                    <?php foreach(\Altum\Language::$languages[\Altum\Language::$main_name]['content'] as $key => $value): ?>
+                    <?php foreach(\SeeGap\Language::$languages[\SeeGap\Language::$main_name]['content'] as $key => $value): ?>
                         <?php if(string_starts_with('admin_', $key) && $data->type != 'admin') continue ?>
                         <?php if(!string_starts_with('admin_', $key) && $data->type != 'app') continue ?>
 
@@ -144,17 +144,17 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="<?= \Altum\Language::$main_name . '_' . $form_key ?>"><?= $key ?></label>
-                                        <input id="<?= \Altum\Language::$main_name . '_' . $form_key ?>" value="<?= $value ?>" class="form-control" readonly="readonly" />
+                                        <label for="<?= \SeeGap\Language::$main_name . '_' . $form_key ?>"><?= $key ?></label>
+                                        <input id="<?= \SeeGap\Language::$main_name . '_' . $form_key ?>" value="<?= $value ?>" class="form-control" readonly="readonly" />
                                     </div>
                                 </div>
 
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="<?= $form_key ?>">&nbsp;</label>
-                                        <select id="<?= $form_key ?>" name="<?= $form_key ?>" class="custom-select <?= \Altum\Alerts::has_field_errors($form_key) ? 'is-invalid' : null ?> <?= !isset(\Altum\Language::get($data->language['name'])[$key]) || (isset(\Altum\Language::get($data->language['name'])[$key]) && empty(\Altum\Language::get($data->language['name'])[$key])) ? 'border-info' : null ?>" <?= $index++ >= (int) ini_get('max_input_vars') ? 'readonly="readonly"' : null ?>>
-                                            <option value="ltr" <?= (\Altum\Language::get($data->language['name'])[$key] ?? null) == 'ltr' ? 'selected="selected"' : null ?>>ltr</option>
-                                            <option value="rtl" <?= (\Altum\Language::get($data->language['name'])[$key] ?? null) == 'rtl' ? 'selected="selected"' : null ?>>rtl</option>
+                                        <select id="<?= $form_key ?>" name="<?= $form_key ?>" class="custom-select <?= \SeeGap\Alerts::has_field_errors($form_key) ? 'is-invalid' : null ?> <?= !isset(\SeeGap\Language::get($data->language['name'])[$key]) || (isset(\SeeGap\Language::get($data->language['name'])[$key]) && empty(\SeeGap\Language::get($data->language['name'])[$key])) ? 'border-info' : null ?>" <?= $index++ >= (int) ini_get('max_input_vars') ? 'readonly="readonly"' : null ?>>
+                                            <option value="ltr" <?= (\SeeGap\Language::get($data->language['name'])[$key] ?? null) == 'ltr' ? 'selected="selected"' : null ?>>ltr</option>
+                                            <option value="rtl" <?= (\SeeGap\Language::get($data->language['name'])[$key] ?? null) == 'rtl' ? 'selected="selected"' : null ?>>rtl</option>
                                         </select>
                                     </div>
                                 </div>
@@ -164,22 +164,22 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                            <label for="<?= \Altum\Language::$main_name . '_' . $form_key ?>"><?= $key ?></label>
+                                            <label for="<?= \SeeGap\Language::$main_name . '_' . $form_key ?>"><?= $key ?></label>
 
                                             <div>
-                                                <?php if($value && \Altum\Language::$main_name != $data->language['name']): ?>
-                                                    <button type="button" class="btn btn-sm btn-light" data-translate="<?= '#' . \Altum\Language::$main_name . '_' . $form_key ?>" data-translate-target="<?= '#' . $form_key ?>" data-toggle="tooltip" title="<?= l('admin_languages.auto_translate_help') ?>" data-is-ajax><?= l('admin_languages.auto_translate') ?></button>
+                                                <?php if($value && \SeeGap\Language::$main_name != $data->language['name']): ?>
+                                                    <button type="button" class="btn btn-sm btn-light" data-translate="<?= '#' . \SeeGap\Language::$main_name . '_' . $form_key ?>" data-translate-target="<?= '#' . $form_key ?>" data-toggle="tooltip" title="<?= l('admin_languages.auto_translate_help') ?>" data-is-ajax><?= l('admin_languages.auto_translate') ?></button>
                                                 <?php endif ?>
                                             </div>
                                         </div>
-                                        <textarea id="<?= \Altum\Language::$main_name . '_' . $form_key ?>" class="form-control" readonly="readonly"><?= $value ?></textarea>
+                                        <textarea id="<?= \SeeGap\Language::$main_name . '_' . $form_key ?>" class="form-control" readonly="readonly"><?= $value ?></textarea>
                                     </div>
                                 </div>
 
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="<?= $form_key ?>">&nbsp;</label>
-                                        <textarea data-display-input id="<?= $form_key ?>" name="<?= $form_key ?>" class="form-control <?= \Altum\Alerts::has_field_errors($form_key) ? 'is-invalid' : null ?> <?= !isset(\Altum\Language::get($data->language['name'])[$key]) || (isset(\Altum\Language::get($data->language['name'])[$key]) && empty(\Altum\Language::get($data->language['name'])[$key])) ? 'border-info' : null ?>" <?= $index++ >= (int) ini_get('max_input_vars') ? 'readonly="readonly" data-toggle="tooltip" data-html="true" title="' . (str_replace('"', '\'', sprintf(l('admin_languages.info_message.max_input_vars'), (int) ini_get('max_input_vars')))) . '"' : null ?>><?= \Altum\Language::get($data->language['name'])[$key] ?? null ?></textarea>
+                                        <textarea data-display-input id="<?= $form_key ?>" name="<?= $form_key ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors($form_key) ? 'is-invalid' : null ?> <?= !isset(\SeeGap\Language::get($data->language['name'])[$key]) || (isset(\SeeGap\Language::get($data->language['name'])[$key]) && empty(\SeeGap\Language::get($data->language['name'])[$key])) ? 'border-info' : null ?>" <?= $index++ >= (int) ini_get('max_input_vars') ? 'readonly="readonly" data-toggle="tooltip" data-html="true" title="' . (str_replace('"', '\'', sprintf(l('admin_languages.info_message.max_input_vars'), (int) ini_get('max_input_vars')))) . '"' : null ?>><?= \SeeGap\Language::get($data->language['name'])[$key] ?? null ?></textarea>
                                         <div class="invalid-feedback"></div>
                                     </div>
                                 </div>
@@ -194,8 +194,8 @@
                     </div>
 
                     <div id="custom_translations">
-                    <?php foreach(\Altum\Language::$languages[$data->language['name']]['content'] as $key => $value): ?>
-                        <?php if(array_key_exists($key, \Altum\Language::$languages[\Altum\Language::$main_name]['content'])) continue ?>
+                    <?php foreach(\SeeGap\Language::$languages[$data->language['name']]['content'] as $key => $value): ?>
+                        <?php if(array_key_exists($key, \SeeGap\Language::$languages[\SeeGap\Language::$main_name]['content'])) continue ?>
                             <div class="row" data-display-container>
                                 <div class="col-6">
                                     <div class="form-group">
@@ -213,7 +213,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="<?= 'translation_value_' . $key ?>">&nbsp;</label>
-                                        <textarea data-display-input id="<?= 'translation_value_' . $key ?>" name="<?= 'translation_value[' . $key . ']' ?>" class="form-control <?= !isset(\Altum\Language::get($data->language['name'])[$key]) || (isset(\Altum\Language::get($data->language['name'])[$key]) && empty(\Altum\Language::get($data->language['name'])[$key])) ? 'border-info' : null ?>" <?= $index++ >= (int) ini_get('max_input_vars') ? 'readonly="readonly" data-toggle="tooltip" data-html="true" title="' . (str_replace('"', '\'', sprintf(l('admin_languages.info_message.max_input_vars'), (int) ini_get('max_input_vars')))) . '"' : null ?>><?= \Altum\Language::get($data->language['name'])[$key] ?? null ?></textarea>
+                                        <textarea data-display-input id="<?= 'translation_value_' . $key ?>" name="<?= 'translation_value[' . $key . ']' ?>" class="form-control <?= !isset(\SeeGap\Language::get($data->language['name'])[$key]) || (isset(\SeeGap\Language::get($data->language['name'])[$key]) && empty(\SeeGap\Language::get($data->language['name'])[$key])) ? 'border-info' : null ?>" <?= $index++ >= (int) ini_get('max_input_vars') ? 'readonly="readonly" data-toggle="tooltip" data-html="true" title="' . (str_replace('"', '\'', sprintf(l('admin_languages.info_message.max_input_vars'), (int) ini_get('max_input_vars')))) . '"' : null ?>><?= \SeeGap\Language::get($data->language['name'])[$key] ?? null ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +270,7 @@
 
 <?php ob_start() ?>
 <script>
-    let unused_features = <?= json_encode(\Altum\CustomHooks::generate_language_prefixes_to_skip()) ?>;
+    let unused_features = <?= json_encode(\SeeGap\CustomHooks::generate_language_prefixes_to_skip()) ?>;
 
     let display_handler = () => {
         let display = document.querySelector('#display').value;
@@ -485,7 +485,7 @@
     initiate_delete_translation_handler();
 
     /* Error checker for variable presence in the fields */
-    let language_main_name = <?= json_encode(\Altum\Language::$main_name) ?>;
+    let language_main_name = <?= json_encode(\SeeGap\Language::$main_name) ?>;
     let language_missing_variables = <?= json_encode(l('admin_languages.error_message.missing_variables')) ?>;
 
     document.querySelectorAll('[data-display-input]').forEach(element => {
@@ -522,9 +522,9 @@
         return ((string || '').match(re) || []).length
     }
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
     'name' => 'language',
     'resource_id' => 'language_name',
     'has_dynamic_resource_name' => true,

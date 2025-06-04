@@ -7,10 +7,10 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class CookieConsent extends Controller {
 
@@ -23,7 +23,7 @@ class CookieConsent extends Controller {
         $payload = @file_get_contents('php://input');
         $_POST = json_decode($payload, true);
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             redirect();
         }
 

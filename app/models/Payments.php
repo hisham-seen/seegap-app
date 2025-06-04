@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Payments extends Model {
 
@@ -121,7 +121,7 @@ class Payments extends Model {
         ]);
 
         /* Run potential hooks */
-        \Altum\CustomHooks::user_payment_finished(['user' => $user, 'plan' => $plan]);
+        \SeeGap\CustomHooks::user_payment_finished(['user' => $user, 'plan' => $plan]);
 
         /* Clear the cache */
         cache()->deleteItemsByTag('user_id=' . $user_id);
@@ -133,7 +133,7 @@ class Payments extends Model {
             [
                 '{{NAME}}' => $user->name,
                 '{{PLAN_NAME}}' => $plan->name,
-                '{{PLAN_EXPIRATION_DATE}}' => \Altum\Date::get($plan_expiration_date, 2),
+                '{{PLAN_EXPIRATION_DATE}}' => \SeeGap\Date::get($plan_expiration_date, 2),
                 '{{USER_PLAN_LINK}}' => url('account-plan'),
                 '{{USER_PAYMENTS_LINK}}' => url('account-payments'),
             ],
@@ -229,7 +229,7 @@ class Payments extends Model {
     }
 
     public function affiliate_payment_check($payment_id, $payment_total, $payment_currency, $user) {
-        if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled && $user->referred_by) {
+        if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled && $user->referred_by) {
             if((settings()->affiliate->commission_type == 'once' && !$user->referred_by_has_converted) || settings()->affiliate->commission_type == 'forever') {
                 $referral_user = db()->where('user_id', $user->referred_by)->getOne('users', ['user_id', 'email', 'status', 'plan_settings']);
                 $referral_user->plan_settings = json_decode($referral_user->plan_settings);

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
     <h1 class="h3 mb-3 mb-md-0"><i class="fas fa-fw fa-xs fa-clipboard-list text-primary-900 mr-2"></i> <?= l('admin_logs.header') ?></h1>
@@ -23,13 +23,13 @@
     </div>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <form id="table" action="<?= SITE_URL . 'admin/logs/bulk' ?>" method="post" role="form">
-    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
     <input type="hidden" name="type" value="" data-bulk-type />
-    <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
-    <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
+    <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
+    <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
     <div class="table-responsive table-custom-container">
         <table class="table table-custom">
@@ -76,8 +76,8 @@
                         </span>
                     </td>
                     <td class="text-nowrap">
-                        <span class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_modified) ?>">
-                            <?= \Altum\Date::get_timeago($row->last_modified) ?>
+                        <span class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->last_modified) ?>">
+                            <?= \SeeGap\Date::get_timeago($row->last_modified) ?>
                         </span>
                     </td>
                     <td>
@@ -104,4 +104,4 @@
 </form>
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>

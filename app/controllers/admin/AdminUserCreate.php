@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Logger;
-use Altum\Models\User;
+use SeeGap\Alerts;
+use SeeGap\Logger;
+use SeeGap\Models\User;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminUserCreate extends Controller {
 
@@ -37,7 +37,7 @@ class AdminUserCreate extends Controller {
             $values['email'] = $_POST['email'];
             $values['password'] = $_POST['password'];
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             $required_fields = ['name', 'email' ,'password'];
@@ -47,7 +47,7 @@ class AdminUserCreate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
             if(mb_strlen($_POST['name']) < 1 || mb_strlen($_POST['name']) > 64) {
@@ -112,7 +112,7 @@ class AdminUserCreate extends Controller {
             'values' => $values
         ];
 
-        $view = new \Altum\View('admin/user-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/user-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

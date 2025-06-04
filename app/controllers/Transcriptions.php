@@ -7,18 +7,18 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Transcriptions extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
             redirect('not-found');
         }
 
@@ -28,13 +28,13 @@ class Transcriptions extends Controller {
         }
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'project_id', 'language'], ['name'], ['transcription_id', 'last_datetime', 'datetime', 'name', 'words']));
+        $filters = (new \SeeGap\Filters(['user_id', 'project_id', 'language'], ['name'], ['transcription_id', 'last_datetime', 'datetime', 'name', 'words']));
         $filters->set_default_order_by($this->user->preferences->transcriptions_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `transcriptions` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('transcriptions?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('transcriptions?' . $filters->get_get() . '&page=%d')));
 
         /* Get the transcriptions */
         $transcriptions = [];
@@ -59,17 +59,17 @@ class Transcriptions extends Controller {
         process_export_json($transcriptions, 'include', ['transcription_id', 'project_id', 'user_id', 'name', 'input', 'content', 'words', 'language', 'settings', 'datetime', 'last_datetime'], sprintf(l('transcriptions.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Available transcriptions */
         $transcriptions_current_month = db()->where('user_id', $this->user->user_id)->getValue('users', '`aix_transcriptions_current_month`');
         $available_transcriptions = $this->user->plan_settings->transcriptions_per_month_limit - $transcriptions_current_month;
 
         /* AI Languages */
-        $ai_transcriptions_languages = require \Altum\Plugin::get('aix')->path . 'includes/ai_transcriptions_languages.php';
+        $ai_transcriptions_languages = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_transcriptions_languages.php';
 
         /* Prepare the view */
         $data = [
@@ -83,21 +83,21 @@ class Transcriptions extends Controller {
             'ai_transcriptions_languages' => $ai_transcriptions_languages,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/transcriptions/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/transcriptions/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }
 
     public function delete() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.transcriptions')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.transcriptions')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('transcriptions');
         }
@@ -108,9 +108,9 @@ class Transcriptions extends Controller {
 
         $transcription_id = (int) query_clean($_POST['transcription_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

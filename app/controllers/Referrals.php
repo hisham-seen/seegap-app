@@ -7,21 +7,21 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Referrals extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('affiliate') || (\Altum\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
+        if(!\SeeGap\Plugin::is_active('affiliate') || (\SeeGap\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Get details for statistics */
         $referrals_statistics = database()->query("SELECT COUNT(`user_id`) AS `referrals`, SUM(`referred_by_has_converted`) AS `converted_referrals` FROM `users` WHERE `referred_by` = {$this->user->user_id}")->fetch_object() ?? null;
@@ -32,13 +32,13 @@ class Referrals extends Controller {
         $approved_affiliate_commissions = number_format($approved_affiliate_commissions, 2, '.', '');
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters());
+        $filters = (new \SeeGap\Filters());
         $filters->set_default_order_by('affiliate_withdrawal_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `affiliates_withdrawals` WHERE `user_id` = {$this->user->user_id}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('referrals?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('referrals?' . $filters->get_get() . '&page=%d')));
 
         /* Get withdrawals */
         $affiliate_commission_is_pending = false;
@@ -53,14 +53,14 @@ class Referrals extends Controller {
         }
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         if(!empty($_POST)) {
             $_POST['amount'] = number_format((float) $_POST['amount'], 2, '.', '');
             $_POST['note'] = trim(query_clean($_POST['note']));
 
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -143,7 +143,7 @@ class Referrals extends Controller {
         }
 
         /* Get the account header menu */
-        $menu = new \Altum\View('partials/account_header_menu', (array) $this);
+        $menu = new \SeeGap\View('partials/account_header_menu', (array) $this);
         $this->add_view_content('account_header_menu', $menu->run());
 
         /* Prepare the view */
@@ -157,7 +157,7 @@ class Referrals extends Controller {
             'pagination' => $pagination
         ];
 
-        $view = new \Altum\View('referrals/index', (array) $this);
+        $view = new \SeeGap\View('referrals/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

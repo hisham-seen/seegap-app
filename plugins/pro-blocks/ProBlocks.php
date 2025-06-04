@@ -1,8 +1,8 @@
 <?php
 
-namespace Altum\Plugin;
+namespace SeeGap\Plugin;
 
-use Altum\Plugin;
+use SeeGap\Plugin;
 
 class ProBlocks {
     public static $plugin_id = 'pro-blocks';

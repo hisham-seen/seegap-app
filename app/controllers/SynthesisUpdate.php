@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SynthesisUpdate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.syntheses')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.syntheses')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('dashboard');
         }
@@ -39,29 +39,29 @@ class SynthesisUpdate extends Controller {
         $synthesis->settings = json_decode($synthesis->settings ?? '');
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* AI Syntheses */
-        $ai_syntheses_apis = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php';
+        $ai_syntheses_apis = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php';
 
         /* Selected AI model */
         $this->user->plan_settings->syntheses_api = $this->user->plan_settings->syntheses_api ?? 'aws_polly';
         $ai_api = $ai_syntheses_apis[$this->user->plan_settings->syntheses_api];
 
         /* Languages */
-        $ai_languages = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_languages.php';
+        $ai_languages = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_languages.php';
 
         /* Voices */
-        $ai_voices = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_voices.php';
+        $ai_voices = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_voices.php';
 
         /* Engines/Models */
-        $ai_engines = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_engines.php';
+        $ai_engines = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_engines.php';
 
         if(!empty($_POST)) {
             $_POST['name'] = input_clean($_POST['name'], 64);
             $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -71,7 +71,7 @@ class SynthesisUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -102,7 +102,7 @@ class SynthesisUpdate extends Controller {
             'projects' => $projects ?? [],
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/synthesis-update/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/synthesis-update/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }

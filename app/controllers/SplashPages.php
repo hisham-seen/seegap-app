@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SplashPages extends Controller {
 
@@ -21,16 +21,16 @@ class SplashPages extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], ['name'], ['splash_page_id', 'last_datetime', 'name', 'datetime']));
+        $filters = (new \SeeGap\Filters([], ['name'], ['splash_page_id', 'last_datetime', 'name', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->splash_pages_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `splash_pages` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('splash-pages?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('splash-pages?' . $filters->get_get() . '&page=%d')));
 
         /* Get the splash_pages list for the user */
         $splash_pages = [];
@@ -45,7 +45,7 @@ class SplashPages extends Controller {
         process_export_json($splash_pages, 'include', ['splash_page_id', 'user_id', 'name', 'color', 'last_datetime', 'datetime'], sprintf(l('splash_pages.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Prepare the view */
         $data = [
@@ -55,7 +55,7 @@ class SplashPages extends Controller {
             'filters' => $filters,
         ];
 
-        $view = new \Altum\View('splash-pages/index', (array) $this);
+        $view = new \SeeGap\View('splash-pages/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -67,7 +67,7 @@ class SplashPages extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -82,9 +82,9 @@ class SplashPages extends Controller {
             redirect('splash-pages');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -96,14 +96,14 @@ class SplashPages extends Controller {
                 case 'delete':
 
                     /* Team checks */
-                    if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.splash_pages')) {
+                    if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.splash_pages')) {
                         Alerts::add_info(l('global.info_message.team_no_access'));
                         redirect('splash-pages');
                     }
 
                     foreach($_POST['selected'] as $splash_page_id) {
                         if($splash_page = db()->where('splash_page_id', $splash_page_id)->where('user_id', $this->user->user_id)->getOne('splash_pages', ['splash_page_id'])) {
-                            (new \Altum\Models\SplashPages())->delete($splash_page->splash_page_id);
+                            (new \SeeGap\Models\SplashPages())->delete($splash_page->splash_page_id);
                         }
                     }
 
@@ -124,10 +124,10 @@ class SplashPages extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.splash_pages')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.splash_pages')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('splash-pages');
         }
@@ -138,9 +138,9 @@ class SplashPages extends Controller {
 
         $splash_page_id = (int) $_POST['splash_page_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -150,7 +150,7 @@ class SplashPages extends Controller {
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
-            (new \Altum\Models\SplashPages())->delete($splash_page->splash_page_id);
+            (new \SeeGap\Models\SplashPages())->delete($splash_page->splash_page_id);
 
             /* Set a nice success message */
             Alerts::add_success(sprintf(l('global.success_message.delete1'), '<strong>' . $splash_page->name . '</strong>'));

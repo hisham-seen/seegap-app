@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white border border-gray-100 mt-4 index-highly-rounded d-lg-none">
     <div class="container">
@@ -13,8 +13,8 @@
             data-dark-class="<?= settings()->main->logo_dark != '' ? 'img-fluid navbar-logo' : '' ?>"
             data-dark-tag="<?= settings()->main->logo_dark != '' ? 'img' : 'span' ?>"
         >
-            <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()} != ''): ?>
-                <img src="<?= settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
+            <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()} != ''): ?>
+                <img src="<?= settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
             <?php else: ?>
                 <?= settings()->main->title ?>
             <?php endif ?>

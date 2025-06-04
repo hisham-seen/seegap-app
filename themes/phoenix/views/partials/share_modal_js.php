@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <div class="modal fade" id="share_modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -47,7 +47,7 @@
         </div>
     </div>
 </div>
-<?php \Altum\Event::add_content(ob_get_clean(), 'modals') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'modals') ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/jquery-qrcode.min.js?v=' . PRODUCT_CODE ?>"></script>
@@ -104,6 +104,6 @@
         });
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>

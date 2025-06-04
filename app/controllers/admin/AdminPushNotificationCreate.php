@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminPushNotificationCreate extends Controller {
 
@@ -40,9 +40,9 @@ class AdminPushNotificationCreate extends Controller {
                 }
             }
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -160,7 +160,7 @@ class AdminPushNotificationCreate extends Controller {
             'values' => $values,
         ];
 
-        $view = new \Altum\View('admin/push-notification-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/push-notification-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

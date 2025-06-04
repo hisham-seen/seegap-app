@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminLinks extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled', 'link_id', 'user_id', 'project_id', 'domain_id', 'type', 'is_verified', 'microsite_theme_id'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'url', 'location_url', 'clicks']));
+        $filters = (new \SeeGap\Filters(['is_enabled', 'link_id', 'user_id', 'project_id', 'domain_id', 'type', 'is_verified', 'microsite_theme_id'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'url', 'location_url', 'clicks']));
         $filters->set_default_order_by($this->user->preferences->links_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/links?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/links?' . $filters->get_get() . '&page=%d')));
 
         /* Get the users */
         $links = [];
@@ -52,7 +52,7 @@ class AdminLinks extends Controller {
         process_export_json($links, 'include', ['link_id', 'user_id', 'project_id', 'pixels_ids', 'type', 'url', 'location_url', 'settings', 'start_date', 'end_date', 'clicks', 'is_verified', 'is_enabled', 'last_datetime', 'datetime'], sprintf(l('admin_links.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -62,7 +62,7 @@ class AdminLinks extends Controller {
             'links_types' => require APP_PATH . 'includes/links_types.php',
         ];
 
-        $view = new \Altum\View('admin/links/index', (array) $this);
+        $view = new \SeeGap\View('admin/links/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -70,7 +70,7 @@ class AdminLinks extends Controller {
 
     public function bulk() {
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -85,7 +85,7 @@ class AdminLinks extends Controller {
             redirect('admin/links');
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -97,7 +97,7 @@ class AdminLinks extends Controller {
                 case 'delete':
 
                     foreach($_POST['selected'] as $link_id) {
-                        (new \Altum\Models\Link())->delete($link_id);
+                        (new \SeeGap\Models\Link())->delete($link_id);
                     }
                     break;
             }
@@ -114,9 +114,9 @@ class AdminLinks extends Controller {
 
         $link_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -126,7 +126,7 @@ class AdminLinks extends Controller {
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
-            (new \Altum\Models\Link())->delete($link->link_id);
+            (new \SeeGap\Models\Link())->delete($link->link_id);
 
             /* Set a nice success message */
             Alerts::add_success(sprintf(l('global.success_message.delete1'), '<strong>' . $link->url . '</strong>'));
@@ -145,9 +145,9 @@ class AdminLinks extends Controller {
         $link_id = (int) $_POST['link_id'];
         $_POST['email'] = mb_substr(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL), 0, 320);
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -190,9 +190,9 @@ class AdminLinks extends Controller {
 
         $link_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

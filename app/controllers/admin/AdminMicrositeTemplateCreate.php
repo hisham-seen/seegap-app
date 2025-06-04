@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminMicrositeTemplateCreate extends Controller {
 
@@ -44,10 +44,10 @@ class AdminMicrositeTemplateCreate extends Controller {
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
             $_POST['url'] = $microsites[$_POST['link_id']]->full_url ?? '';
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for errors & process potential uploads */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -94,7 +94,7 @@ class AdminMicrositeTemplateCreate extends Controller {
             'microsites' => $microsites,
         ];
 
-        $view = new \Altum\View('admin/microsite-template-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/microsite-template-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

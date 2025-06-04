@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
     <nav aria-label="breadcrumb">
@@ -17,32 +17,32 @@
     <?= include_view(THEME_PATH . 'views/admin/users/admin_user_dropdown_button.php', ['id' => $data->user->user_id, 'resource_name' => $data->user->name]) ?>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<?php //ALTUMCODE:DEMO if(DEMO) {$data->user->email = 'hidden@demo.com'; $data->user->name = $data->user->ip = 'hidden on demo';} ?>
+<?php //SEEGAP:DEMO if(DEMO) {$data->user->email = 'hidden@demo.com'; $data->user->name = $data->user->ip = 'hidden on demo';} ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
 
         <form action="" method="post" role="form" enctype="multipart/form-data">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="user_id"><i class="fas fa-fw fa-sm fa-fingerprint text-muted mr-1"></i> <?= l('admin_users.user_id') ?></label>
-                <input type="text" id="user_id" name="user_id" class="form-control <?= \Altum\Alerts::has_field_errors('user_id') ? 'is-invalid' : null ?>" value="<?= $data->user->user_id ?>" disabled="disabled" />
-                <?= \Altum\Alerts::output_field_error('name') ?>
+                <input type="text" id="user_id" name="user_id" class="form-control <?= \SeeGap\Alerts::has_field_errors('user_id') ? 'is-invalid' : null ?>" value="<?= $data->user->user_id ?>" disabled="disabled" />
+                <?= \SeeGap\Alerts::output_field_error('name') ?>
             </div>
 
             <div class="form-group">
                 <label for="name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
-                <input id="name" type="text" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->user->name ?>" required="required" />
-                <?= \Altum\Alerts::output_field_error('name') ?>
+                <input id="name" type="text" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->user->name ?>" required="required" />
+                <?= \SeeGap\Alerts::output_field_error('name') ?>
             </div>
 
             <div class="form-group">
                 <label for="email"><i class="fas fa-fw fa-sm fa-envelope text-muted mr-1"></i> <?= l('global.email') ?></label>
-                <input id="email" type="email" name="email" class="form-control <?= \Altum\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->user->email ?>" required="required" />
-                <?= \Altum\Alerts::output_field_error('email') ?>
+                <input id="email" type="email" name="email" class="form-control <?= \SeeGap\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->user->email ?>" required="required" />
+                <?= \SeeGap\Alerts::output_field_error('email') ?>
             </div>
 
             <div class="form-group">
@@ -63,11 +63,11 @@
                 <small class="form-text text-muted"><?= l('admin_users.type_help') ?></small>
             </div>
 
-            <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+            <?php if(\SeeGap\Plugin::is_active('affiliate')): ?>
                 <div class="form-group">
                     <label for="referred_by"><i class="fas fa-fw fa-sm fa-user-plus text-muted mr-1"></i> <?= l('admin_users.referred_by') ?></label>
-                    <input id="referred_by" type="number" name="referred_by" class="form-control <?= \Altum\Alerts::has_field_errors('referred_by') ? 'is-invalid' : null ?>" value="<?= $data->user->referred_by ?>" />
-                    <?= \Altum\Alerts::output_field_error('referred_by') ?>
+                    <input id="referred_by" type="number" name="referred_by" class="form-control <?= \SeeGap\Alerts::has_field_errors('referred_by') ? 'is-invalid' : null ?>" value="<?= $data->user->referred_by ?>" />
+                    <?= \SeeGap\Alerts::output_field_error('referred_by') ?>
                 </div>
             <?php endif ?>
 
@@ -194,7 +194,7 @@
                     <small class="form-text text-muted"><?= l('admin_plans.plan.domains_limit_help') ?></small>
                 </div>
 
-                <?php if(\Altum\Plugin::is_active('payment-blocks')): ?>
+                <?php if(\SeeGap\Plugin::is_active('payment-blocks')): ?>
                     <div class="form-group">
                         <label for="payment_processors_limit"><?= l('admin_plans.plan.payment_processors_limit') ?></label>
                         <input type="number" id="payment_processors_limit" name="payment_processors_limit" min="-1" class="form-control" value="<?= $data->user->plan_settings->payment_processors_limit ?>" />
@@ -202,7 +202,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
+                <?php if(\SeeGap\Plugin::is_active('email-signatures')): ?>
                     <div class="form-group">
                         <label for="signatures_limit"><?= l('admin_plans.plan.signatures_limit') ?></label>
                         <input type="number" id="signatures_limit" name="signatures_limit" min="-1" class="form-control" value="<?= $data->user->plan_settings->signatures_limit ?>" />
@@ -210,7 +210,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('aix')): ?>
+                <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                     <div class="form-group custom-control custom-switch">
                         <input id="exclusive_personal_api_keys" name="exclusive_personal_api_keys" type="checkbox" class="custom-control-input" <?= $data->user->plan_settings->exclusive_personal_api_keys ? 'checked="checked"' : null ?>>
                         <label class="custom-control-label" for="exclusive_personal_api_keys"><?= l('admin_plans.plan.exclusive_personal_api_keys') ?></label>
@@ -220,7 +220,7 @@
                     <div class="form-group">
                         <label for="documents_model"><?= l('admin_plans.plan.documents_model') ?></label>
                         <select id="documents_model" name="documents_model" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_text_models.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_text_models.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->user->plan_settings->documents_model == $key ? 'selected="selected"' : null ?>><?= $value['name'] . ' - ' . $key ?></option>
                             <?php endforeach ?>
                         </select>
@@ -242,7 +242,7 @@
                     <div class="form-group">
                         <label for="images_api"><?= l('admin_plans.plan.images_api') ?></label>
                         <select id="images_api" name="images_api" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_image_models.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_image_models.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->user->plan_settings->images_api == $key ? 'selected="selected"' : null ?>><?= $value['name'] ?></option>
                             <?php endforeach ?>
                         </select>
@@ -275,7 +275,7 @@
                     <div class="form-group">
                         <label for="chats_model"><?= l('admin_plans.plan.chats_model') ?></label>
                         <select id="chats_model" name="chats_model" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_chat_models.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_chat_models.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->user->plan_settings->chats_model == $key ? 'selected="selected"' : null ?>><?= $value['name'] . ' - ' . $key ?></option>
                             <?php endforeach ?>
                         </select>
@@ -307,7 +307,7 @@
                     <div class="form-group">
                         <label for="syntheses_api"><?= l('admin_plans.plan.syntheses_api') ?></label>
                         <select id="syntheses_api" name="syntheses_api" class="custom-select">
-                            <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php' as $key => $value): ?>
+                            <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php' as $key => $value): ?>
                                 <option value="<?= $key ?>" <?= $data->user->plan_settings->syntheses_api == $key ? 'selected="selected"' : null ?>><?= $value['name'] ?></option>
                             <?php endforeach ?>
                         </select>
@@ -327,7 +327,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('teams')): ?>
+                <?php if(\SeeGap\Plugin::is_active('teams')): ?>
                     <div class="form-group">
                         <label for="teams_limit"><?= l('admin_plans.plan.teams_limit') ?></label>
                         <input type="number" id="teams_limit" name="teams_limit" min="-1" class="form-control" value="<?= $data->user->plan_settings->teams_limit ?>" />
@@ -341,7 +341,7 @@
                     </div>
                 <?php endif ?>
 
-                <?php if(\Altum\Plugin::is_active('affiliate')): ?>
+                <?php if(\SeeGap\Plugin::is_active('affiliate')): ?>
                     <div class="form-group">
                         <label for="affiliate_commission_percentage"><?= l('admin_plans.plan.affiliate_commission_percentage') ?></label>
                         <input type="number" id="affiliate_commission_percentage" name="affiliate_commission_percentage" min="0" max="100" class="form-control" value="<?= $data->user->plan_settings->affiliate_commission_percentage ?>" />
@@ -503,9 +503,9 @@
                     <div><small class="form-text text-muted"><?= l('admin_plans.plan.dofollow_is_enabled_help') ?></small></div>
                 </div>
 
-                <div <?= !\Altum\Plugin::is_active('pwa') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \Altum\Plugin::get('pwa')->name ?? 'pwa') . '"' : null ?>>
+                <div <?= !\SeeGap\Plugin::is_active('pwa') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \SeeGap\Plugin::get('pwa')->name ?? 'pwa') . '"' : null ?>>
                     <div class="form-group custom-control custom-switch">
-                        <input id="custom_pwa_is_enabled" name="custom_pwa_is_enabled" type="checkbox" class="custom-control-input" <?= $data->user->plan_settings->custom_pwa_is_enabled ? 'checked="checked"' : null ?> <?= !\Altum\Plugin::is_active('pwa') ? 'disabled="disabled"' : null ?>>
+                        <input id="custom_pwa_is_enabled" name="custom_pwa_is_enabled" type="checkbox" class="custom-control-input" <?= $data->user->plan_settings->custom_pwa_is_enabled ? 'checked="checked"' : null ?> <?= !\SeeGap\Plugin::is_active('pwa') ? 'disabled="disabled"' : null ?>>
                         <label class="custom-control-label" for="custom_pwa_is_enabled"><?= l('admin_plans.plan.custom_pwa_is_enabled') ?></label>
                         <div><small class="form-text text-muted"><?= l('admin_plans.plan.custom_pwa_is_enabled_help') ?></small></div>
                     </div>
@@ -587,14 +587,14 @@
 
             <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
                 <label for="new_password"><i class="fas fa-fw fa-sm fa-key text-muted mr-1"></i> <?= l('admin_user_update.change_password.new_password') ?></label>
-                <input id="new_password" type="password" name="new_password" class="form-control <?= \Altum\Alerts::has_field_errors('new_password') ? 'is-invalid' : null ?>" />
-                <?= \Altum\Alerts::output_field_error('new_password') ?>
+                <input id="new_password" type="password" name="new_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('new_password') ? 'is-invalid' : null ?>" />
+                <?= \SeeGap\Alerts::output_field_error('new_password') ?>
             </div>
 
             <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
                 <label for="repeat_password"><i class="fas fa-fw fa-sm fa-key text-muted mr-1"></i> <?= l('admin_user_update.change_password.repeat_password') ?></label>
-                <input id="repeat_password" type="password" name="repeat_password" class="form-control <?= \Altum\Alerts::has_field_errors('new_password') ? 'is-invalid' : null ?>" />
-                <?= \Altum\Alerts::output_field_error('new_password') ?>
+                <input id="repeat_password" type="password" name="repeat_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('new_password') ? 'is-invalid' : null ?>" />
+                <?= \SeeGap\Alerts::output_field_error('new_password') ?>
             </div>
 
             <button type="submit" name="submit" class="btn btn-lg btn-block btn-primary mt-4"><?= l('global.update') ?></button>
@@ -604,7 +604,7 @@
 
 <?php ob_start() ?>
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/daterangepicker.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/moment.min.js?v=' . PRODUCT_CODE ?>"></script>
@@ -667,4 +667,4 @@
     });
 
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

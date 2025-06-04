@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="dropdown">
     <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
@@ -7,7 +7,7 @@
 
     <div class="dropdown-menu dropdown-menu-right">
         <?php if($data->processor == 'offline_payment'): ?>
-            <a href="<?= \Altum\Uploads::get_full_url('offline_payment_proofs') . $data->payment_proof ?>" target="_blank" class="dropdown-item"><i class="fas fa-fw fa-sm fa-download mr-2"></i> <?= l('admin_payments.action_view_proof') ?></a>
+            <a href="<?= \SeeGap\Uploads::get_full_url('offline_payment_proofs') . $data->payment_proof ?>" target="_blank" class="dropdown-item"><i class="fas fa-fw fa-sm fa-download mr-2"></i> <?= l('admin_payments.action_view_proof') ?></a>
 
             <?php if(!$data->status): ?>
                 <a href="#" data-toggle="modal" data-target="#payment_approve_modal" data-payment-id="<?= $data->id ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-check mr-2"></i> <?= l('admin_payments.action_approve_proof') ?></a>
@@ -22,10 +22,10 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
     'name' => 'payment',
     'resource_id' => 'id',
     'has_dynamic_resource_name' => false,
     'path' => 'admin/payments/delete/'
 ]), 'modals', 'payment_delete_modal'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/admin/payments/payment_approve_modal.php'), 'modals', 'payment_approve_modal'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/admin/payments/payment_approve_modal.php'), 'modals', 'payment_approve_modal'); ?>

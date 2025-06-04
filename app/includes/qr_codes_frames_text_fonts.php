@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return [
     'times_new_roman' => [

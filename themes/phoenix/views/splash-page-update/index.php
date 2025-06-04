@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
         <nav aria-label="breadcrumb">
@@ -24,19 +24,19 @@
         <div class="card-body">
 
             <form action="" method="post" role="form" enctype="multipart/form-data">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('global.name') ?></label>
-                    <input type="text" id="name" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->splash_page->name ?>" maxlength="64" required="required" />
-                    <?= \Altum\Alerts::output_field_error('name') ?>
+                    <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->splash_page->name ?>" maxlength="64" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('name') ?>
                 </div>
 
                 <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->avatar_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->avatar_size_limit) ?>">
                     <label for="logo"><i class="fas fa-fw fa-sm fa-image text-muted mr-1"></i> <?= l('splash_pages.logo') ?></label>
                     <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'splash_pages', 'file_key' => 'logo', 'already_existing_image' => $data->splash_page->settings->logo]) ?>
-                    <?= \Altum\Alerts::output_field_error('logo') ?>
-                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('splash_pages')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
+                    <?= \SeeGap\Alerts::output_field_error('logo') ?>
+                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('splash_pages')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
                 </div>
 
                 <div class="form-group">
@@ -93,15 +93,15 @@
                     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->favicon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->favicon_size_limit) ?>">
                         <label for="favicon"><i class="fas fa-fw fa-sm fa-image text-muted mr-1"></i> <?= l('splash_pages.favicon') ?></label>
                         <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'splash_pages', 'file_key' => 'favicon', 'already_existing_image' => $data->splash_page->settings->favicon, 'input_data' => 'data-crop data-aspect-ratio="1"']) ?>
-                        <?= \Altum\Alerts::output_field_error('favicon') ?>
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('splash_pages')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
+                        <?= \SeeGap\Alerts::output_field_error('favicon') ?>
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('splash_pages')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
                     </div>
 
                     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->seo_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->seo_image_size_limit) ?>">
                         <label for="opengraph"><i class="fas fa-fw fa-sm fa-image text-muted mr-1"></i> <?= l('splash_pages.opengraph') ?></label>
                         <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'splash_pages', 'file_key' => 'opengraph', 'already_existing_image' => $data->splash_page->settings->opengraph, 'input_data' => 'data-crop data-aspect-ratio="1.91"']) ?>
-                        <?= \Altum\Alerts::output_field_error('opengraph') ?>
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('splash_pages')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
+                        <?= \SeeGap\Alerts::output_field_error('opengraph') ?>
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('splash_pages')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
                     </div>
 
                     <div <?= $this->user->plan_settings->custom_css_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
@@ -154,7 +154,7 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'splash_page',
     'resource_id' => 'splash_page_id',
     'has_dynamic_resource_name' => true,

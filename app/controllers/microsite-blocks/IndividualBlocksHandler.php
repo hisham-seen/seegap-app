@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks;
+namespace SeeGap\Controllers\MicrositeBlocks;
 
-use Altum\Response;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Handler for individual microsite blocks
@@ -177,7 +177,7 @@ class IndividualBlocksHandler extends BaseBlockHandler {
         /* Image upload */
         $db_image = $this->handle_image_upload($microsite_block->settings->image, 'block_thumbnail_images/', settings()->links->thumbnail_image_size_limit);
 
-        $image_url = $db_image ? \Altum\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
+        $image_url = $db_image ? \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
 
         $settings = json_encode([
             'name' => $_POST['name'],
@@ -430,7 +430,7 @@ class IndividualBlocksHandler extends BaseBlockHandler {
         /* Image upload */
         $db_image = $this->handle_image_upload($microsite_block->settings->image, 'block_thumbnail_images/', settings()->links->thumbnail_image_size_limit);
 
-        $image_url = $db_image ? \Altum\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
+        $image_url = $db_image ? \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
 
         $settings = json_encode([
             'name' => $_POST['name'],

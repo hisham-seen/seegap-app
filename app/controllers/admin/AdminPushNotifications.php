@@ -7,25 +7,25 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
+use SeeGap\Alerts;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminPushNotifications extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['status'], ['title', 'description'], ['push_notification_id', 'title', 'datetime', 'last_datetime', 'total_push_notifications', 'sent_push_notifications']));
+        $filters = (new \SeeGap\Filters(['status'], ['title', 'description'], ['push_notification_id', 'title', 'datetime', 'last_datetime', 'total_push_notifications', 'sent_push_notifications']));
         $filters->set_default_order_by('push_notification_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `push_notifications` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/push-notifications?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/push-notifications?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $push_notifications = [];
@@ -50,7 +50,7 @@ class AdminPushNotifications extends Controller {
         process_export_csv($push_notifications, 'include', ['push_notification_id', 'title', 'description', 'url', 'status', 'push_subscribers_ids', 'sent_push_subscribers_ids', 'sent_push_notifications', 'total_push_notifications', 'last_sent_datetime', 'datetime', 'last_datetime',]);
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -60,7 +60,7 @@ class AdminPushNotifications extends Controller {
             'filters' => $filters
         ];
 
-        $view = new \Altum\View('admin/push-notifications/index', (array) $this);
+        $view = new \SeeGap\View('admin/push-notifications/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -72,7 +72,7 @@ class AdminPushNotifications extends Controller {
             redirect();
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $segment = isset($_GET['segment']) ? input_clean($_GET['segment']) : 'all';
 
@@ -144,9 +144,9 @@ class AdminPushNotifications extends Controller {
 
         $push_notification_id = (int) $_POST['push_notification_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -195,9 +195,9 @@ class AdminPushNotifications extends Controller {
             redirect('admin/push-notifications');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -226,9 +226,9 @@ class AdminPushNotifications extends Controller {
 
         $push_notification_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

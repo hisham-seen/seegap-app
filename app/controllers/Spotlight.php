@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Response;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Spotlight extends Controller {
 
@@ -25,7 +25,7 @@ class Spotlight extends Controller {
             redirect();
         }
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Response::json(l('global.error_message.invalid_csrf_token'), 'error');
         }
 
@@ -154,7 +154,7 @@ class Spotlight extends Controller {
             }
 
 
-            if(\Altum\Plugin::is_active('payment-blocks')) {
+            if(\SeeGap\Plugin::is_active('payment-blocks')) {
                 $available_pages[] = [
                     'name' => l('guests_payments_statistics.title'),
                     'url' => 'guests-payments-statistics'
@@ -207,7 +207,7 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled) {
+            if(\SeeGap\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled) {
                 $available_pages[] = [
                     'name' => l('signature_create.title'),
                     'url' => 'signature-create'
@@ -218,7 +218,7 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(\Altum\Plugin::is_active('aix') && settings()->aix->documents_is_enabled) {
+            if(\SeeGap\Plugin::is_active('aix') && settings()->aix->documents_is_enabled) {
                 $available_pages[] = [
                     'name' => l('document_create.title'),
                     'url' => 'document-create'
@@ -233,7 +233,7 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(\Altum\Plugin::is_active('aix') && settings()->aix->images_is_enabled) {
+            if(\SeeGap\Plugin::is_active('aix') && settings()->aix->images_is_enabled) {
                 $available_pages[] = [
                     'name' => l('image_create.title'),
                     'url' => 'image-create'
@@ -244,7 +244,7 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(\Altum\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled) {
+            if(\SeeGap\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled) {
                 $available_pages[] = [
                     'name' => l('transcriptions.title'),
                     'url' => 'transcriptions'
@@ -255,7 +255,7 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(\Altum\Plugin::is_active('aix') && settings()->aix->chats_is_enabled) {
+            if(\SeeGap\Plugin::is_active('aix') && settings()->aix->chats_is_enabled) {
                 $available_pages[] = [
                     'name' => l('chats.title'),
                     'url' => 'chats'
@@ -266,7 +266,7 @@ class Spotlight extends Controller {
                 ];
             }
 
-            if(\Altum\Plugin::is_active('aix') && settings()->aix->syntheses_is_enabled) {
+            if(\SeeGap\Plugin::is_active('aix') && settings()->aix->syntheses_is_enabled) {
                 $available_pages[] = [
                     'name' => l('syntheses.title'),
                     'url' => 'syntheses'
@@ -298,7 +298,7 @@ class Spotlight extends Controller {
                 'url' => 'account-plan'
             ];
 
-            if(\Altum\Plugin::is_active('teams')) {
+            if(\SeeGap\Plugin::is_active('teams')) {
                 $available_pages[] = [
                     'name' => l('teams_system.title'),
                     'url' => 'teams-system'
@@ -329,7 +329,7 @@ class Spotlight extends Controller {
                     'url' => 'account-payments'
                 ];
 
-                if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
+                if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
                     $available_pages[] = [
                         'name' => l('referrals.title'),
                         'url' => 'referrals'
@@ -355,9 +355,9 @@ class Spotlight extends Controller {
             ];
 
             if(user()->type == 1) {
-                if(file_exists(APP_PATH . 'languages/admin/' . \Altum\Language::$name . '#' . \Altum\Language::$code . '.php')) {
-                    $admin_language = require APP_PATH . 'languages/admin/' . \Altum\Language::$name . '#' . \Altum\Language::$code . '.php';
-                    \Altum\Language::$languages[\Altum\Language::$name]['content'] = \Altum\Language::$languages[\Altum\Language::$name]['content'] + $admin_language;
+                if(file_exists(APP_PATH . 'languages/admin/' . \SeeGap\Language::$name . '#' . \SeeGap\Language::$code . '.php')) {
+                    $admin_language = require APP_PATH . 'languages/admin/' . \SeeGap\Language::$name . '#' . \SeeGap\Language::$code . '.php';
+                    \SeeGap\Language::$languages[\SeeGap\Language::$name]['content'] = \SeeGap\Language::$languages[\SeeGap\Language::$name]['content'] + $admin_language;
                 }
 
                 $available_pages[] = [
@@ -455,7 +455,7 @@ class Spotlight extends Controller {
                     'url' => 'admin/tax-create'
                 ];
 
-                if(\Altum\Plugin::is_active('affiliate')) {
+                if(\SeeGap\Plugin::is_active('affiliate')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . l('admin_affiliates_withdrawals.title'),
                         'url' => 'admin/affiliates-withdrawals'
@@ -510,14 +510,14 @@ class Spotlight extends Controller {
                     'url'  => 'admin/settings/codes'
                 ];
 
-                if(\Altum\Plugin::is_active('email-signatures')) {
+                if(\SeeGap\Plugin::is_active('email-signatures')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . sprintf(l('admin_settings.title'), l('admin_settings.signatures.tab')),
                         'url'  => 'admin/settings/signatures'
                     ];
                 }
 
-                if(\Altum\Plugin::is_active('aix')) {
+                if(\SeeGap\Plugin::is_active('aix')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . sprintf(l('admin_settings.title'), l('admin_settings.aix.tab')),
                         'url'  => 'admin/settings/aix'
@@ -585,7 +585,7 @@ class Spotlight extends Controller {
                     'url' => 'admin/api-documentation'
                 ];
 
-                if(\Altum\Plugin::is_active('teams')) {
+                if(\SeeGap\Plugin::is_active('teams')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . l('admin_teams.title'),
                         'url' => 'admin/teams'
@@ -617,7 +617,7 @@ class Spotlight extends Controller {
                     'url' => 'admin/internal-notification-create'
                 ];
 
-                if(\Altum\Plugin::is_active('push-notifications')) {
+                if(\SeeGap\Plugin::is_active('push-notifications')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . l('admin_push_subscribers.title'),
                         'url' => 'admin/push-subscribers'
@@ -665,14 +665,14 @@ class Spotlight extends Controller {
                     'url' => 'admin/microsite-template-create'
                 ];
 
-                if(\Altum\Plugin::is_active('email-signatures')) {
+                if(\SeeGap\Plugin::is_active('email-signatures')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . l('admin_signatures.title'),
                         'url' => 'admin/signatures'
                     ];
                 }
 
-                if(\Altum\Plugin::is_active('aix')) {
+                if(\SeeGap\Plugin::is_active('aix')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . l('admin_templates_categories.title'),
                         'url' => 'admin/templates-categories'
@@ -744,7 +744,7 @@ class Spotlight extends Controller {
                     'url' => 'admin/data'
                 ];
 
-                if(\Altum\Plugin::is_active('payment-blocks')) {
+                if(\SeeGap\Plugin::is_active('payment-blocks')) {
                     $available_pages[] = [
                         'name' => l('global.menu.admin') . ' - ' . l('admin_payment_processors.title'),
                         'url' => 'admin/payment-processors'
@@ -803,7 +803,7 @@ class Spotlight extends Controller {
         }
 
         if(settings()->payment->is_enabled) {
-            if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
+            if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled) {
                 $available_pages[] = [
                     'name' => l('affiliate.title'),
                     'url' => 'affiliate'

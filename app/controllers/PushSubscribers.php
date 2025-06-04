@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 use MaxMind\Db\Reader;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class PushSubscribers extends Controller {
 
@@ -21,7 +21,7 @@ class PushSubscribers extends Controller {
 
     public function create_ajax() {
 
-        if(!\Altum\Plugin::is_active('push-notifications') || !settings()->push_notifications->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('push-notifications') || !settings()->push_notifications->is_enabled) {
             redirect('not-found');
         }
 
@@ -116,7 +116,7 @@ class PushSubscribers extends Controller {
 
     public function delete_ajax() {
 
-        if(!\Altum\Plugin::is_active('push-notifications') || !settings()->push_notifications->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('push-notifications') || !settings()->push_notifications->is_enabled) {
             redirect('not-found');
         }
 

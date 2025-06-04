@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Helpers;
+namespace SeeGap\Helpers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class MysqliDb
 {
@@ -592,12 +592,12 @@ class MysqliDb
         $this->_stmtError = $stmt->error;
         $this->_stmtErrno = $stmt->errno;
 
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
         if($this->getLastErrno()) {
             if(DEBUG) { echo $this->getLastError(); }
             error_log('Database Query Error: ' . $this->getLastError());
         }
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
 
         $this->_lastQuery = $this->replacePlaceHolders($this->_query, $params);
         $res = $this->_dynamicBindResults($stmt);
@@ -675,12 +675,12 @@ class MysqliDb
         $this->_stmtError = $stmt->error;
         $this->_stmtErrno = $stmt->errno;
 
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
         if($this->getLastErrno()) {
             if(DEBUG) { echo $this->getLastError(); }
             error_log('Database Query Error: ' . $this->getLastError());
         }
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
 
         $res = $this->_dynamicBindResults($stmt);
         $this->reset();
@@ -777,12 +777,12 @@ class MysqliDb
         $this->_stmtError = $stmt->error;
         $this->_stmtErrno = $stmt->errno;
 
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
         if($this->getLastErrno()) {
             if(DEBUG) { echo $this->getLastError(); }
             error_log('Database Query Error: ' . $this->getLastError());
         }
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
 
         $res = $this->_dynamicBindResults($stmt);
         $this->reset();
@@ -963,12 +963,12 @@ class MysqliDb
         $this->_stmtError = $stmt->error;
         $this->_stmtErrno = $stmt->errno;
 
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
         if($this->getLastErrno()) {
             if(DEBUG) { echo $this->getLastError(); }
             error_log('Database Query Error: ' . $this->getLastError());
         }
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
 
         $this->count = $stmt->affected_rows;
 
@@ -1004,12 +1004,12 @@ class MysqliDb
         $this->_stmtError = $stmt->error;
         $this->_stmtErrno = $stmt->errno;
 
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
         if($this->getLastErrno()) {
             if(DEBUG) { echo $this->getLastError(); }
             error_log('Database Query Error: ' . $this->getLastError());
         }
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
 
         $this->count = $stmt->affected_rows;
         $this->reset();
@@ -1593,12 +1593,12 @@ class MysqliDb
         $this->_stmtError = $stmt->error;
         $this->_stmtErrno = $stmt->errno;
 
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
         if($this->getLastErrno()) {
             if(DEBUG) { echo $this->getLastError(); }
             error_log('Database Query Error: ' . $this->getLastError());
         }
-        /* ALTUMCODE CUSTOM */
+        /* SEEGAP CUSTOM */
 
         $haveOnDuplicate = !empty ($this->_updateColumns);
         $this->reset();

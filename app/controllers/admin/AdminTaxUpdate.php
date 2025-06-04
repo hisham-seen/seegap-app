@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminTaxUpdate extends Controller {
 
@@ -27,9 +27,9 @@ class AdminTaxUpdate extends Controller {
 
         if(!empty($_POST)) {
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -54,7 +54,7 @@ class AdminTaxUpdate extends Controller {
             'tax'          => $tax,
         ];
 
-        $view = new \Altum\View('admin/tax-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/tax-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

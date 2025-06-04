@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Controllers\Controller;
-use Altum\Models\Plan;
-use Altum\Title;
+use SeeGap\Controllers\Controller;
+use SeeGap\Models\Plan;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminInvoice extends Controller {
 
@@ -35,7 +35,7 @@ class AdminInvoice extends Controller {
         $payment->plan_db = (new Plan())->get_plan_by_id($payment->plan_id);
 
         /* Check for potential taxes */
-        $payment_taxes = (new \Altum\Models\Plan())->get_plan_taxes_by_taxes_ids($payment->taxes_ids);
+        $payment_taxes = (new \SeeGap\Models\Plan())->get_plan_taxes_by_taxes_ids($payment->taxes_ids);
 
         /* Calculate the price if a discount was used */
         $payment->price = $payment->discount_amount ? $payment->base_amount - $payment->discount_amount : $payment->base_amount;
@@ -90,7 +90,7 @@ class AdminInvoice extends Controller {
             'payment_taxes' => $payment_taxes
         ];
 
-        $view = new \Altum\View('admin/invoice/index', (array) $this);
+        $view = new \SeeGap\View('admin/invoice/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

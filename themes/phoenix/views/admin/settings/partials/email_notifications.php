@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <div class="form-group">
@@ -37,9 +37,9 @@
         <small class="form-text text-muted"><?= l('admin_settings.email_notifications.contact_help') ?></small>
     </div>
 
-    <div <?= \Altum\Plugin::is_active('affiliate') ? null : 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \Altum\Plugin::get('affiliate')->name ?? 'affiliate') . '"' ?>>
-        <div class="form-group custom-control custom-switch <?= \Altum\Plugin::is_active('affiliate') ? null : 'container-disabled' ?>">
-            <input id="new_affiliate_withdrawal" name="new_affiliate_withdrawal" type="checkbox" class="custom-control-input" <?= \Altum\Plugin::is_active('affiliate') && settings()->email_notifications->new_affiliate_withdrawal ? 'checked="checked"' : null ?> <?= \Altum\Plugin::is_active('affiliate') ? null : 'disabled="disabled"' ?>>
+    <div <?= \SeeGap\Plugin::is_active('affiliate') ? null : 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \SeeGap\Plugin::get('affiliate')->name ?? 'affiliate') . '"' ?>>
+        <div class="form-group custom-control custom-switch <?= \SeeGap\Plugin::is_active('affiliate') ? null : 'container-disabled' ?>">
+            <input id="new_affiliate_withdrawal" name="new_affiliate_withdrawal" type="checkbox" class="custom-control-input" <?= \SeeGap\Plugin::is_active('affiliate') && settings()->email_notifications->new_affiliate_withdrawal ? 'checked="checked"' : null ?> <?= \SeeGap\Plugin::is_active('affiliate') ? null : 'disabled="disabled"' ?>>
             <label class="custom-control-label" for="new_affiliate_withdrawal"><?= l('admin_settings.email_notifications.new_affiliate_withdrawal') ?></label>
             <small class="form-text text-muted"><?= l('admin_settings.email_notifications.new_affiliate_withdrawal_help') ?></small>
         </div>

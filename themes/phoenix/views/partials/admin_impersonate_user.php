@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die(); ?>
+<?php defined('SEEGAP') || die(); ?>
 <?php if(is_logged_in() && isset($_SESSION['admin_user_id'])): ?>
     <div class="team-delegate-access-wrapper py-2 bg-dark small text-light">
         <div class="container d-flex justify-content-between">

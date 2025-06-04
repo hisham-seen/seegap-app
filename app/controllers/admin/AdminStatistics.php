@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Title;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminStatistics extends Controller {
     public $type;
@@ -21,7 +21,7 @@ class AdminStatistics extends Controller {
 
         $this->type = isset($this->params[0]) && method_exists($this, $this->params[0]) ? input_clean($this->params[0]) : 'growth';
 
-        $this->datetime = \Altum\Date::get_start_end_dates_new();
+        $this->datetime = \SeeGap\Date::get_start_end_dates_new();
 
         /* Process only data that is needed for that specific page */
         $type_data = $this->{$this->type}();
@@ -37,14 +37,14 @@ class AdminStatistics extends Controller {
         ];
         $data = array_merge($data, $type_data);
 
-        $view = new \Altum\View('admin/statistics/index', (array) $this);
+        $view = new \SeeGap\View('admin/statistics/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
     }
 
     protected function database() {
-        //ALTUMCODE:DEMO if(DEMO) { \Altum\Alerts::add_error('This command is blocked on the demo.'); redirect('admin/statistics'); };
+        //SEEGAP:DEMO if(DEMO) { \SeeGap\Alerts::add_error('This command is blocked on the demo.'); redirect('admin/statistics'); };
 
         /* Database details */
         $database_name = DATABASE_NAME;
@@ -457,7 +457,7 @@ class AdminStatistics extends Controller {
             'types' => $types,
             'processors' => $processors,
             'payment_processors' => require APP_PATH . 'includes/payment_processors.php',
-            'plans' => (new \Altum\Models\Plan())->get_plans(),
+            'plans' => (new \SeeGap\Models\Plan())->get_plans(),
         ];
 
     }

@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Title {
     public static $full_title;
@@ -23,14 +23,14 @@ class Title {
         self::$site_title = $site_title;
 
         /* Add the prefix if needed */
-        $language_key = preg_replace('/-/', '_', \Altum\Router::$controller_key);
+        $language_key = preg_replace('/-/', '_', \SeeGap\Router::$controller_key);
 
-        if(\Altum\Router::$path != '') {
-            $language_key = \Altum\Router::$path . '_' . $language_key;
+        if(\SeeGap\Router::$path != '') {
+            $language_key = \SeeGap\Router::$path . '_' . $language_key;
         }
 
         /* Check if the default is viable and use it */
-        $page_title = (l($language_key . '.title')) ? l($language_key . '.title') : \Altum\Router::$controller;
+        $page_title = (l($language_key . '.title')) ? l($language_key . '.title') : \SeeGap\Router::$controller;
 
         self::set($page_title);
     }

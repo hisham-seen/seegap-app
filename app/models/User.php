@@ -7,15 +7,15 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-use Altum\Logger;
-use Altum\PaymentGateways\Lemonsqueezy;
-use Altum\PaymentGateways\Paystack;
+use SeeGap\Logger;
+use SeeGap\PaymentGateways\Lemonsqueezy;
+use SeeGap\PaymentGateways\Paystack;
 use MaxMind\Db\Reader;
 use Razorpay\Api\Api;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class User extends Model {
 
@@ -139,7 +139,7 @@ class User extends Model {
         }
 
         /* Run potential hooks */
-        \Altum\CustomHooks::user_delete(['user' => $user]);
+        \SeeGap\CustomHooks::user_delete(['user' => $user]);
 
         /* Delete the record from the database */
         db()->where('user_id', $user_id)->delete('users');
@@ -187,7 +187,7 @@ class User extends Model {
         $total_logins = $status == '1' && !$is_admin_created && !in_array($source, ['admin_create', 'admin_api_create']) ? 1 : 0;
         $plan_expiration_date = $plan_expiration_date ?? get_date();
         $plan_trial_done = 0;
-        $language = \Altum\Language::$name;
+        $language = \SeeGap\Language::$name;
         $api_key = md5($email . microtime() . microtime());
         $referral_key = md5(rand() . $email . microtime() . $email. microtime());
         $ip = $is_admin_created ? null : get_ip();
@@ -266,7 +266,7 @@ class User extends Model {
             setcookie('referred_by', '', time()-30, COOKIE_PATH);
         }
 
-        \Altum\CustomHooks::user_finished_registration(['user_id' => $registered_user_id, 'email' => $email, 'plan_settings' => $plan_settings]);
+        \SeeGap\CustomHooks::user_finished_registration(['user_id' => $registered_user_id, 'email' => $email, 'plan_settings' => $plan_settings]);
 
         return [
             'user_id' => $registered_user_id,
@@ -344,8 +344,8 @@ class User extends Model {
 
             case 'paypal':
 
-                $paypal_api_url = \Altum\PaymentGateways\Paypal::get_api_url();
-                $headers = \Altum\PaymentGateways\Paypal::get_headers();
+                $paypal_api_url = \SeeGap\PaymentGateways\Paypal::get_api_url();
+                $headers = \SeeGap\PaymentGateways\Paypal::get_headers();
 
                 $response = \Unirest\Request::post($paypal_api_url . 'v1/billing/subscriptions/' . $user->payment_subscription_id . '/cancel', $headers, \Unirest\Request\Body::json([
                     'reason' => sprintf(l('account_plan.cancel.reason'), settings()->main->title)

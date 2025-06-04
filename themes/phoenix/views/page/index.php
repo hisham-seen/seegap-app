@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
@@ -19,10 +19,10 @@
             <h1 class="h4 mb-1"><?= $data->page->title ?></h1>
 
             <p class="small text-muted">
-                <span data-toggle="tooltip" title="<?= sprintf(l('global.last_datetime_tooltip'), \Altum\Date::get($data->page->last_datetime, 2)) ?>"><?= sprintf(l('global.datetime_tooltip'), \Altum\Date::get($data->page->datetime, 2)) ?></span>
+                <span data-toggle="tooltip" title="<?= sprintf(l('global.last_datetime_tooltip'), \SeeGap\Date::get($data->page->last_datetime, 2)) ?>"><?= sprintf(l('global.datetime_tooltip'), \SeeGap\Date::get($data->page->datetime, 2)) ?></span>
 
                 <?php if($data->pages_category): ?>
-                    &bull; <a href="<?= SITE_URL . ($data->pages_category->language ? \Altum\Language::$active_languages[$data->pages_category->language] . '/' : null) . 'pages/' . $data->pages_category->url ?>" class="text-muted"><?= $data->pages_category->title ?></a>
+                    &bull; <a href="<?= SITE_URL . ($data->pages_category->language ? \SeeGap\Language::$active_languages[$data->pages_category->language] . '/' : null) . 'pages/' . $data->pages_category->url ?>" class="text-muted"><?= $data->pages_category->title ?></a>
                 <?php endif ?>
 
                 <?php if(settings()->content->pages_views_is_enabled): ?>
@@ -50,7 +50,7 @@
         <div class="card mt-4">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between flex-wrap">
-                    <?= include_view(THEME_PATH . 'views/partials/share_buttons.php', ['url' => url(\Altum\Router::$original_request), 'class' => 'btn btn-gray-100 mb-2 mb-md-0 mr-md-3']) ?>
+                    <?= include_view(THEME_PATH . 'views/partials/share_buttons.php', ['url' => url(\SeeGap\Router::$original_request), 'class' => 'btn btn-gray-100 mb-2 mb-md-0 mr-md-3']) ?>
                 </div>
             </div>
         </div>
@@ -79,9 +79,9 @@
                     "@type": "ListItem",
                     "position": 3,
                     "name": "<?= $data->page->title ?>",
-                    "item": "<?= SITE_URL . ($data->page->language ? \Altum\Language::$active_languages[$data->page->language] . '/' : null) . 'page/' . $data->page->url ?>"
+                    "item": "<?= SITE_URL . ($data->page->language ? \SeeGap\Language::$active_languages[$data->page->language] . '/' : null) . 'page/' . $data->page->url ?>"
                 }
             ]
         }
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

@@ -1,9 +1,9 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
     <a href="#" data-toggle="modal" data-target="<?= '#share_' . $data->link->microsite_block_id ?>" data-track-microsite-block-id="<?= $data->link->microsite_block_id ?>" class="btn btn-block btn-primary link-btn <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?> <?= 'link-btn-' . $data->link->settings->border_radius ?> <?= $data->link->design->link_class ?>" style="<?= $data->link->design->link_style ?>" data-text-color data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-animation data-background-color data-text-alignment>
         <div class="link-btn-image-wrapper <?= 'link-btn-' . $data->link->settings->border_radius ?>" <?= $data->link->settings->image ? null : 'style="display: none;"' ?>>
-            <img src="<?= $data->link->settings->image ? \Altum\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image : null ?>" class="link-btn-image" loading="lazy" />
+            <img src="<?= $data->link->settings->image ? \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image : null ?>" class="link-btn-image" loading="lazy" />
         </div>
 
         <span data-icon>
@@ -64,10 +64,10 @@
         </div>
     </div>
 </div>
-<?php \Altum\Event::add_content(ob_get_clean(), 'modals') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'modals') ?>
 
 
-<?php if(!\Altum\Event::exists_content_type_key('javascript', 'share')): ?>
+<?php if(!\SeeGap\Event::exists_content_type_key('javascript', 'share')): ?>
     <?php ob_start() ?>
     <script src="<?= ASSETS_FULL_URL . 'js/libraries/jquery-qrcode.min.js?v=' . PRODUCT_CODE ?>"></script>
 
@@ -109,6 +109,6 @@
 
     <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>
 
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'share') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'share') ?>
 <?php endif ?>
 

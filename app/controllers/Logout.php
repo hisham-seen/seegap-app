@@ -7,10 +7,10 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Logout extends Controller {
 
@@ -21,7 +21,7 @@ class Logout extends Controller {
             $admin_user_id = $_SESSION['admin_user_id'];
 
             /* Logout of the current users */
-            \Altum\Authentication::logout(false);
+            \SeeGap\Authentication::logout(false);
 
             $admin_user = db()->where('user_id', $admin_user_id)->getOne('users', ['user_id', 'password']);
 
@@ -43,7 +43,7 @@ class Logout extends Controller {
 
         /* Normal logout */
         else {
-            \Altum\Authentication::logout();
+            \SeeGap\Authentication::logout();
         }
 
     }

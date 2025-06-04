@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class CustomHooks {
 
@@ -62,7 +62,7 @@ class CustomHooks {
         /* Delete everything related to the domain that the user owns */
         $result = database()->query("SELECT `link_id` FROM `links` WHERE `user_id` = {$user_id}");
         while($link = $result->fetch_object()) {
-            (new \Altum\Models\Link())->delete($link->link_id);
+            (new \SeeGap\Models\Link())->delete($link->link_id);
         }
 
         /* Delete everything related to the qr codes that the user owns */
@@ -70,16 +70,16 @@ class CustomHooks {
             $result = database()->query("SELECT `qr_code_id` FROM `qr_codes` WHERE `user_id` = {$user_id}");
 
             while($qr_code = $result->fetch_object()) {
-                (new \Altum\Models\QrCode())->delete($qr_code->qr_code_id);
+                (new \SeeGap\Models\QrCode())->delete($qr_code->qr_code_id);
             }
         }
 
-        if(\Altum\Plugin::is_installed('aix')) {
+        if(\SeeGap\Plugin::is_installed('aix')) {
             /* Delete everything related to the images that the user owns */
             $result = database()->query("SELECT `image_id`, `image` FROM `images` WHERE `user_id` = {$user_id}");
 
             while($image = $result->fetch_object()) {
-                \Altum\Uploads::delete_uploaded_file($image->image, 'images');
+                \SeeGap\Uploads::delete_uploaded_file($image->image, 'images');
 
                 /* Delete the resource */
                 db()->where('image_id', $image->image_id)->delete('images');
@@ -89,7 +89,7 @@ class CustomHooks {
             $result = database()->query("SELECT `synthesis_id`, `file` FROM `syntheses` WHERE `user_id` = {$user_id}");
 
             while($synthesis = $result->fetch_object()) {
-                \Altum\Uploads::delete_uploaded_file($synthesis->file, 'syntheses');
+                \SeeGap\Uploads::delete_uploaded_file($synthesis->file, 'syntheses');
 
                 /* Delete the resource */
                 db()->where('synthesis_id', $synthesis->synthesis_id)->delete('images');
@@ -101,7 +101,7 @@ class CustomHooks {
     public static function user_payment_finished($data = []) {
         extract($data);
 
-        if(\Altum\Plugin::is_active('aix')) {
+        if(\SeeGap\Plugin::is_active('aix')) {
             db()->where('user_id', $user->user_id)->update('users', [
                 'aix_documents_current_month' => 0,
                 'aix_words_current_month' => 0,
@@ -171,19 +171,19 @@ class CustomHooks {
 
 
         /* Plugins */
-        if(!\Altum\Plugin::is_active('pwa') || !settings()->pwa->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('pwa') || !settings()->pwa->is_enabled) {
             $prefixes = array_merge($prefixes, ['pwa_install.']);
         }
 
-        if(!\Altum\Plugin::is_active('push-notifications') || !settings()->push_notifications->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('push-notifications') || !settings()->push_notifications->is_enabled) {
             $prefixes = array_merge($prefixes, ['push_notifications_modal.']);
         }
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             $prefixes = array_merge($prefixes, ['teams.', 'team.', 'team_create.', 'team_update.', 'team_members.', 'team_member_create.', 'team_member_update.', 'teams_member.', 'teams_member_delete_modal.', 'teams_member_join_modal.', 'teams_member_login_modal.']);
         }
 
-        if(!\Altum\Plugin::is_active('affiliate') || (\Altum\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
+        if(!\SeeGap\Plugin::is_active('affiliate') || (\SeeGap\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
             $prefixes = array_merge($prefixes, ['referrals.', 'affiliate.']);
         }
 
@@ -196,11 +196,11 @@ class CustomHooks {
             $prefixes = array_merge($prefixes, ['qr_codes.', 'qr_code_update.', 'qr_code_create.']);
         }
 
-        if(!\Altum\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
             $prefixes = array_merge($prefixes, ['signatures.', 'signature_update.', 'signature_create.']);
         }
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             $prefixes = array_merge($prefixes, [
                 'guests_payments.',
                 'guests_payments_statistics.',
@@ -240,23 +240,23 @@ class CustomHooks {
             $prefixes = array_merge($prefixes, ['link_create.']);
         }
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
             $prefixes = array_merge($prefixes, ['documents.', 'document_create.', 'document_update.', 'templates.']);
         }
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
             $prefixes = array_merge($prefixes, ['images.', 'image_create.', 'image_update.']);
         }
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
             $prefixes = array_merge($prefixes, ['transcriptions.', 'transcription_create.', 'transcription_update.']);
         }
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->chats_is_enabled) {
             $prefixes = array_merge($prefixes, ['chats.', 'chat.', 'chat_create.', 'chat_settings_modal.']);
         }
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
             $prefixes = array_merge($prefixes, ['syntheses.', 'synthesis_create.', 'synthesis_update.']);
         }
 

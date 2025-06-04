@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(count((array) $data->link->settings->items)): ?>
     <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
@@ -9,10 +9,10 @@
                         <li class="splide__slide">
                             <?php if($item->location_url): ?>
                                 <a href="<?= $item->location_url . $data->link->utm_query ?>" data-track-microsite-block-id="<?= $data->link->microsite_block_id ?>" target="<?= $data->link->settings->open_in_new_tab ? '_blank' : '_self' ?>" class="<?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>">
-                                    <img src="<?= \Altum\Uploads::get_full_url('block_images') . $item->image ?>" class="link-image-slider-image rounded <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>" style="<?= 'width: ' . $data->link->settings->width_height . 'rem;' . 'height: ' . $data->link->settings->width_height . 'rem;' ?>" alt="<?= $item->image_alt ?>" loading="lazy" />
+                                    <img src="<?= \SeeGap\Uploads::get_full_url('block_images') . $item->image ?>" class="link-image-slider-image rounded <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>" style="<?= 'width: ' . $data->link->settings->width_height . 'rem;' . 'height: ' . $data->link->settings->width_height . 'rem;' ?>" alt="<?= $item->image_alt ?>" loading="lazy" />
                                 </a>
                             <?php else: ?>
-                                <img src="<?= \Altum\Uploads::get_full_url('block_images') . $item->image ?>" class="link-image-slider-image rounded <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>" style="<?= 'width: ' . $data->link->settings->width_height . 'rem;' . 'height: ' . $data->link->settings->width_height . 'rem;' ?>" alt="<?= $item->image_alt ?>" loading="lazy" />
+                                <img src="<?= \SeeGap\Uploads::get_full_url('block_images') . $item->image ?>" class="link-image-slider-image rounded <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>" style="<?= 'width: ' . $data->link->settings->width_height . 'rem;' . 'height: ' . $data->link->settings->width_height . 'rem;' ?>" alt="<?= $item->image_alt ?>" loading="lazy" />
                             <?php endif ?>
                     <?php endforeach ?>
                 </ul>
@@ -20,14 +20,14 @@
         </section>
     </div>
 
-    <?php if(!\Altum\Event::exists_content_type_key('javascript', 'image_slider')): ?>
+    <?php if(!\SeeGap\Event::exists_content_type_key('javascript', 'image_slider')): ?>
         <?php ob_start() ?>
         <link href="<?= ASSETS_FULL_URL . 'css/libraries/splide.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-        <?php \Altum\Event::add_content(ob_get_clean(), 'head', 'image_slider') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'head', 'image_slider') ?>
 
         <?php ob_start() ?>
         <script src="<?= ASSETS_FULL_URL . 'js/libraries/splide.min.js?v=' . PRODUCT_CODE ?>"></script>
-        <?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'image_slider') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'image_slider') ?>
     <?php endif ?>
 
     <?php ob_start() ?>
@@ -47,5 +47,5 @@
             splide.mount();
         });
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 <?php endif ?>

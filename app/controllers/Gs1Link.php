@@ -7,20 +7,20 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\Domain;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Models\Domain;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Gs1Link extends Controller {
     public $gs1_link;
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $gs1_link_id = isset($this->params[0]) ? (int) $this->params[0] : null;
         $method = isset($this->params[1]) && in_array($this->params[1], ['settings', 'statistics']) ? $this->params[1] : 'settings';
@@ -50,13 +50,13 @@ class Gs1Link extends Controller {
                 $domains = (new Domain())->get_available_domains_by_user($this->user);
 
                 /* Existing projects */
-                $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+                $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
                 /* Existing splash pages */
-                $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
+                $splash_pages = (new \SeeGap\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
 
                 /* Existing pixels */
-                $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
+                $pixels = (new \SeeGap\Models\Pixel())->get_pixels($this->user->user_id);
 
                 /* Prepare variables for the view */
                 $data = [
@@ -88,19 +88,19 @@ class Gs1Link extends Controller {
                             }
 
                             /* Team checks */
-                            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.gs1_links')) {
+                            if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.gs1_links')) {
                                 Alerts::add_info(l('global.info_message.team_no_access'));
                                 redirect('gs1-link/' . $this->gs1_link->gs1_link_id . '/statistics');
                             }
 
-                            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+                            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-                            if(!\Altum\Csrf::check()) {
+                            if(!\SeeGap\Csrf::check()) {
                                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
                                 redirect('gs1-link/' . $this->gs1_link->gs1_link_id . '/statistics');
                             }
 
-                            $datetime = \Altum\Date::get_start_end_dates_new($_POST['start_date'], $_POST['end_date']);
+                            $datetime = \SeeGap\Date::get_start_end_dates_new($_POST['start_date'], $_POST['end_date']);
 
                             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
@@ -122,7 +122,7 @@ class Gs1Link extends Controller {
 
                 $type = isset($_GET['type']) && in_array($_GET['type'], ['overview', 'entries', 'referrer_host', 'referrer_path', 'continent_code', 'country', 'city_name', 'os', 'browser', 'device', 'language', 'utm_source', 'utm_medium', 'utm_campaign']) ? input_clean($_GET['type']) : 'overview';
 
-                $datetime = \Altum\Date::get_start_end_dates_new();
+                $datetime = \SeeGap\Date::get_start_end_dates_new();
 
                 /* Get data based on what statistics are needed */
                 switch($type) {
@@ -183,13 +183,13 @@ class Gs1Link extends Controller {
                     case 'entries':
 
                         /* Prepare the filtering system */
-                        $filters = (new \Altum\Filters([], [], ['datetime']));
+                        $filters = (new \SeeGap\Filters([], [], ['datetime']));
                         $filters->set_default_order_by('id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
                         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
                         /* Prepare the paginator */
                         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `track_gs1_links` WHERE `gs1_link_id` = {$this->gs1_link->gs1_link_id} AND (`datetime` BETWEEN '{$datetime['query_start_date']}' AND '{$datetime['query_end_date']}') {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-                        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('gs1-link/' . $this->gs1_link->gs1_link_id . '/statistics?type=' . $type . '&start_date=' . $datetime['start_date'] . '&end_date=' . $datetime['end_date'] . $filters->get_get() . '&page=%d')));
+                        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('gs1-link/' . $this->gs1_link->gs1_link_id . '/statistics?type=' . $type . '&start_date=' . $datetime['start_date'] . '&end_date=' . $datetime['end_date'] . $filters->get_get() . '&page=%d')));
 
                         $result = database()->query("
                             SELECT
@@ -426,7 +426,7 @@ class Gs1Link extends Controller {
                         }
 
                         /* Prepare the pagination view */
-                        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+                        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
                         /* Prepare the statistics method View */
                         $data = [
@@ -492,7 +492,7 @@ class Gs1Link extends Controller {
                 process_export_csv($statistics, 'basic');
                 process_export_json($statistics, 'basic');
 
-                $view = new \Altum\View('gs1-link/statistics/statistics_' . $type, (array) $this);
+                $view = new \SeeGap\View('gs1-link/statistics/statistics_' . $type, (array) $this);
                 $this->add_view_content('statistics', $view->run($data));
 
                 /* Prepare variables for the view */
@@ -509,11 +509,11 @@ class Gs1Link extends Controller {
         }
 
         /* Delete Modal */
-        $view = new \Altum\View('gs1-links/gs1_link_delete_modal', (array) $this);
-        \Altum\Event::add_content($view->run(), 'modals');
+        $view = new \SeeGap\View('gs1-links/gs1_link_delete_modal', (array) $this);
+        \SeeGap\Event::add_content($view->run(), 'modals');
 
         /* Prepare the method View */
-        $view = new \Altum\View('gs1-link/' . $method, (array) $this);
+        $view = new \SeeGap\View('gs1-link/' . $method, (array) $this);
         $this->add_view_content('method', $view->run($data));
 
         /* Prepare the view */
@@ -522,7 +522,7 @@ class Gs1Link extends Controller {
             'method' => $method,
         ];
 
-        $view = new \Altum\View('gs1-link/index', (array) $this);
+        $view = new \SeeGap\View('gs1-link/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
 
     }

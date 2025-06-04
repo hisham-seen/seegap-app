@@ -7,15 +7,15 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 function url($append = '') {
-    return SITE_URL . (\Altum\Language::$default_name != \Altum\Language::$name ? \Altum\Language::$code . '/' : null)  . $append;
+    return SITE_URL . (\SeeGap\Language::$default_name != \SeeGap\Language::$name ? \SeeGap\Language::$code . '/' : null)  . $append;
 }
 
 function redirect($append = '', $no_language_code = false, $response_code = 0) {
     $where_to = $append;
-    $language_code = $no_language_code ? null : (\Altum\Language::$default_name != \Altum\Language::$name ? \Altum\Language::$code . '/' : null);
+    $language_code = $no_language_code ? null : (\SeeGap\Language::$default_name != \SeeGap\Language::$name ? \SeeGap\Language::$code . '/' : null);
 
     //if(!empty($_GET['original_request'])) {
     if(!empty($_GET['original_request']) && !empty($_GET['original_request_query'])) {

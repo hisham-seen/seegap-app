@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ReportView extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $report_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
@@ -26,21 +26,21 @@ class ReportView extends Controller {
         }
 
         /* Get the report */
-        $report = (new \Altum\Models\Report())->get_report_by_id($report_id, $this->user->user_id);
+        $report = (new \SeeGap\Models\Report())->get_report_by_id($report_id, $this->user->user_id);
 
         if(!$report) {
             redirect('reports');
         }
 
         /* Set page title */
-        \Altum\Title::set(sprintf(l('report_view.title'), $report->name));
+        \SeeGap\Title::set(sprintf(l('report_view.title'), $report->name));
 
         /* Prepare the view */
         $data = [
             'report' => $report
         ];
 
-        $view = new \Altum\View('report-view/index', (array) $this);
+        $view = new \SeeGap\View('report-view/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

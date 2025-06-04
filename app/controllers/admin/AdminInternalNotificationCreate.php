@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminInternalNotificationCreate extends Controller {
 
     public function index() {
 
-        $plans = (new \Altum\Models\Plan())->get_plans();
+        $plans = (new \SeeGap\Models\Plan())->get_plans();
 
         /* Clear $_GET */
         foreach($_GET as $key => $value) {
@@ -44,9 +44,9 @@ class AdminInternalNotificationCreate extends Controller {
                 }
             }
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -269,7 +269,7 @@ class AdminInternalNotificationCreate extends Controller {
             'plans' => $plans,
         ];
 
-        $view = new \Altum\View('admin/internal-notification-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/internal-notification-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -7,18 +7,18 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class MicrositeBlock extends Controller {
     public $microsite_block;
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $microsite_block_id = isset($this->params[0]) ? (int) $this->params[0] : null;
         $method = isset($this->params[1]) && in_array($this->params[1], ['statistics']) ? $this->params[1] : 'statistics';
@@ -50,19 +50,19 @@ class MicrositeBlock extends Controller {
                             }
 
                             /* Team checks */
-                            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.microsites_blocks')) {
+                            if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.microsites_blocks')) {
                                 Alerts::add_info(l('global.info_message.team_no_access'));
                                 redirect('microsite-block/' . $this->microsite_block->microsite_block_id . '/statistics');
                             }
 
-                            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+                            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-                            if(!\Altum\Csrf::check()) {
+                            if(!\SeeGap\Csrf::check()) {
                                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
                                 redirect('microsite-block/' . $this->microsite_block->microsite_block_id . '/statistics');
                             }
 
-                            $datetime = \Altum\Date::get_start_end_dates_new($_POST['start_date'], $_POST['end_date']);
+                            $datetime = \SeeGap\Date::get_start_end_dates_new($_POST['start_date'], $_POST['end_date']);
 
                             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
@@ -84,7 +84,7 @@ class MicrositeBlock extends Controller {
 
                 $type = isset($_GET['type']) && in_array($_GET['type'], ['overview', 'entries', 'referrer_host', 'referrer_path', 'continent_code', 'country', 'city_name', 'os', 'browser', 'device', 'language', 'utm_source', 'utm_medium', 'utm_campaign']) ? query_clean($_GET['type']) : 'overview';
 
-                $datetime = \Altum\Date::get_start_end_dates_new();
+                $datetime = \SeeGap\Date::get_start_end_dates_new();
 
                 /* Get the required statistics */
                 $pageviews = [];
@@ -143,13 +143,13 @@ class MicrositeBlock extends Controller {
                     case 'entries':
 
                         /* Prepare the filtering system */
-                        $filters = (new \Altum\Filters([], [], ['datetime']));
+                        $filters = (new \SeeGap\Filters([], [], ['datetime']));
                         $filters->set_default_order_by('id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
                         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
                         /* Prepare the paginator */
                         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `track_links` WHERE `microsite_block_id` = {$this->microsite_block->microsite_block_id} AND (`datetime` BETWEEN '{$datetime['query_start_date']}' AND '{$datetime['query_end_date']}') {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-                        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('microsite-block/' . $this->microsite_block->microsite_block_id . '/statistics?type=' . $type . '&start_date=' . $datetime['start_date'] . '&end_date=' . $datetime['end_date'] . $filters->get_get() . '&page=%d')));
+                        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('microsite-block/' . $this->microsite_block->microsite_block_id . '/statistics?type=' . $type . '&start_date=' . $datetime['start_date'] . '&end_date=' . $datetime['end_date'] . $filters->get_get() . '&page=%d')));
 
                         $result = database()->query("
                             SELECT
@@ -383,7 +383,7 @@ class MicrositeBlock extends Controller {
                         }
 
                         /* Prepare the pagination view */
-                        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+                        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
                         /* Prepare the statistics method View */
                         $data = [
@@ -448,7 +448,7 @@ class MicrositeBlock extends Controller {
                 process_export_csv($statistics, 'basic');
                 process_export_json($statistics, 'basic');
 
-                $view = new \Altum\View('link/statistics/statistics_' . $type, (array) $this);
+                $view = new \SeeGap\View('link/statistics/statistics_' . $type, (array) $this);
                 $this->add_view_content('statistics', $view->run($data));
 
                 /* Prepare variables for the view */
@@ -470,7 +470,7 @@ class MicrositeBlock extends Controller {
         $data['microsite_blocks'] = $microsite_blocks;
 
         /* Prepare the method View */
-        $view = new \Altum\View('link/' . $method, (array) $this);
+        $view = new \SeeGap\View('link/' . $method, (array) $this);
         $this->add_view_content('method', $view->run($data));
 
         /* Prepare the view */
@@ -479,7 +479,7 @@ class MicrositeBlock extends Controller {
             'method' => $method
         ];
 
-        $view = new \Altum\View('microsite-block/index', (array) $this);
+        $view = new \SeeGap\View('microsite-block/index', (array) $this);
         $this->add_view_content('content', $view->run($data));
 
     }

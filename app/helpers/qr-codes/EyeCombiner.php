@@ -7,7 +7,7 @@
  *
  */
 
-namespace Altum\QrCodes;
+namespace SeeGap\QrCodes;
 
 use BaconQrCode\Renderer\Eye\EyeInterface;
 use BaconQrCode\Renderer\Eye\SquareEye;

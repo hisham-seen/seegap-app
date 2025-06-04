@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Date;
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Date;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ApiLinks extends Controller {
     use Apiable;
@@ -57,14 +57,14 @@ class ApiLinks extends Controller {
     private function get_all() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], [], []));
+        $filters = (new \SeeGap\Filters([], [], []));
         $filters->set_default_order_by($this->api_user->preferences->links_default_order_by, $this->api_user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->api_user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
         $filters->process();
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->api_user->user_id}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/links?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/links?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $data = [];
@@ -187,7 +187,7 @@ class ApiLinks extends Controller {
             }
         }
 
-        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
+        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\SeeGap\Authentication::is_admin()) {
             $this->response_error(l('create_link_modal.error_message.main_domain_is_disabled'), 401);
         }
 
@@ -207,8 +207,8 @@ class ApiLinks extends Controller {
         $_POST['is_enabled'] = isset($_POST['is_enabled']) ? (int) (bool) $_POST['is_enabled'] : 1;
         $_POST['schedule'] = (int) isset($_POST['schedule']);
         if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
-            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
         } else {
             $_POST['start_date'] = $_POST['end_date'] = null;
         }
@@ -222,8 +222,8 @@ class ApiLinks extends Controller {
         $_POST['cloaking_title'] = input_clean($_POST['cloaking_title'] ?? '', 70);
         $_POST['cloaking_meta_description'] = input_clean($_POST['cloaking_meta_description'] ?? '', 160);
         $_POST['cloaking_custom_js'] = isset($_POST['cloaking_custom_js']) ? mb_substr(trim($_POST['cloaking_custom_js']), 0, 10000) : null;
-        $cloaking_favicon = \Altum\Uploads::process_upload(null, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
-        $cloaking_opengraph = \Altum\Uploads::process_upload(null, 'opengraphs', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
+        $cloaking_favicon = \SeeGap\Uploads::process_upload(null, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
+        $cloaking_opengraph = \SeeGap\Uploads::process_upload(null, 'opengraphs', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
         $_POST['http_status_code'] = isset($_POST['http_status_code']) && in_array($_POST['http_status_code'], [301, 302, 307, 308]) ? (int) $_POST['http_status_code'] : 301;
 
         /* Query parameters forwarding */
@@ -235,7 +235,7 @@ class ApiLinks extends Controller {
         $_POST['utm_campaign'] = input_clean($_POST['utm_campaign'] ?? '', 128);
 
         /* Existing pixels */
-        $pixels = (new \Altum\Models\Pixel())->get_pixels($this->api_user->user_id);
+        $pixels = (new \SeeGap\Models\Pixel())->get_pixels($this->api_user->user_id);
         $_POST['pixels_ids'] = isset($_POST['pixels_ids']) ? array_map(
             function($pixel_id) {
                 return (int) $pixel_id;
@@ -490,7 +490,7 @@ class ApiLinks extends Controller {
         $link->settings = json_decode($link->settings ?? '');
         $link->pixels_ids = json_decode($link->pixels_ids);
 
-        if(isset($_POST['domain_id']) && $_POST['domain_id'] == 0 && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
+        if(isset($_POST['domain_id']) && $_POST['domain_id'] == 0 && !settings()->links->main_domain_is_enabled && !\SeeGap\Authentication::is_admin()) {
             $this->response_error(l('create_link_modal.error_message.main_domain_is_disabled'), 401);
         }
 
@@ -507,8 +507,8 @@ class ApiLinks extends Controller {
         $_POST['is_enabled'] = isset($_POST['is_enabled']) ? (int) $_POST['is_enabled'] : $link->is_enabled;
         $_POST['schedule'] = isset($_POST['schedule']) ? (int) (bool) $_POST['schedule'] : $link->settings->schedule;
         if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
-            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->api_user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
         } else {
             $_POST['start_date'] = $link->start_date;
             $_POST['end_date'] = $link->end_date;
@@ -523,8 +523,8 @@ class ApiLinks extends Controller {
         $_POST['cloaking_title'] = isset($_POST['cloaking_title']) ? input_clean($_POST['cloaking_title'], 70) : $link->settings->cloaking_title;
         $_POST['cloaking_meta_description'] = isset($_POST['cloaking_meta_description']) ? input_clean($_POST['cloaking_meta_description'], 160) : $link->settings->cloaking_meta_description;
         $_POST['cloaking_custom_js'] = isset($_POST['cloaking_custom_js']) ? mb_substr(trim($_POST['cloaking_custom_js']), 0, 10000) : $link->settings->cloaking_custom_js;
-        $link->settings->cloaking_favicon = \Altum\Uploads::process_upload($link->settings->cloaking_favicon, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
-        $link->settings->cloaking_opengraph = \Altum\Uploads::process_upload($link->settings->cloaking_opengraph, 'opengraphs', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
+        $link->settings->cloaking_favicon = \SeeGap\Uploads::process_upload($link->settings->cloaking_favicon, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
+        $link->settings->cloaking_opengraph = \SeeGap\Uploads::process_upload($link->settings->cloaking_opengraph, 'opengraphs', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
         $_POST['http_status_code'] = isset($_POST['http_status_code']) && in_array($_POST['http_status_code'], [301, 302, 307, 308]) ? (int) $_POST['http_status_code'] : $link->settings->http_status_code;;
 
         /* Query parameters forwarding */
@@ -536,7 +536,7 @@ class ApiLinks extends Controller {
         $_POST['utm_campaign'] = input_clean($_POST['utm_campaign'] ?? $link->settings->utm->campaign, 128);
 
         /* Existing pixels */
-        $pixels = (new \Altum\Models\Pixel())->get_pixels($this->api_user->user_id);
+        $pixels = (new \SeeGap\Models\Pixel())->get_pixels($this->api_user->user_id);
         $_POST['pixels_ids'] = isset($_POST['pixels_ids']) ? array_map(
             function($pixel_id) {
                 return (int) $pixel_id;
@@ -697,7 +697,7 @@ class ApiLinks extends Controller {
         }
 
         /* Delete the resource */
-        (new \Altum\Models\Link())->delete($link->link_id);
+        (new \SeeGap\Models\Link())->delete($link->link_id);
 
         http_response_code(200);
         die();
@@ -708,7 +708,7 @@ class ApiLinks extends Controller {
     private function check_url($url) {
         if($url) {
             /* Make sure the url alias is not blocked by a route of the product */
-            if(array_key_exists($url, \Altum\Router::$routes['']) || in_array($url, \Altum\Language::$active_languages) || file_exists(ROOT_PATH . $url)) {
+            if(array_key_exists($url, \SeeGap\Router::$routes['']) || in_array($url, \SeeGap\Language::$active_languages) || file_exists(ROOT_PATH . $url)) {
                 $this->response_error(l('link.error_message.blacklisted_url'), 401);
             }
 

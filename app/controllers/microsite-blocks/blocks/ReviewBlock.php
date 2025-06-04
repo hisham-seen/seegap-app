@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks\Blocks;
+namespace SeeGap\Controllers\MicrositeBlocks\Blocks;
 
-use Altum\Controllers\MicrositeBlocks\BaseBlockHandler;
-use Altum\Response;
+use SeeGap\Controllers\MicrositeBlocks\BaseBlockHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Review Block Handler
@@ -111,7 +111,7 @@ class ReviewBlock extends BaseBlockHandler {
         /* Image upload */
         $db_image = $this->handle_image_upload($microsite_block->settings->reviewer_image, 'block_thumbnail_images/', settings()->links->thumbnail_image_size_limit);
 
-        $image_url = $db_image ? \Altum\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
+        $image_url = $db_image ? \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $db_image : null;
 
         $settings = json_encode([
             'review_text' => $_POST['review_text'],

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 
@@ -6,7 +6,7 @@
     <div class="card-body">
 
         <form name="update_file" action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
             <input type="hidden" name="request_type" value="update" />
             <input type="hidden" name="type" value="file" />
             <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
@@ -17,11 +17,11 @@
                 <label for="file"><i class="fas fa-fw fa-sm fa-eye text-muted mr-1"></i> <?= l('create_file_modal.input.file') ?></label>
                 <div class="row">
                     <div class="col">
-                        <input id="file" type="file" name="file" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('files') ?>" class="form-control-file altum-file-input" />
+                        <input id="file" type="file" name="file" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('files') ?>" class="form-control-file seegap-file-input" />
                     </div>
 
                     <div class="col-3 <?= !empty($data->link->settings->file) ? null : 'd-none' ?>">
-                        <a href="<?= $data->link->settings->file ? \Altum\Uploads::get_full_url('files') . $data->link->settings->file : '#' ?>" id="file_url" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
+                        <a href="<?= $data->link->settings->file ? \SeeGap\Uploads::get_full_url('files') . $data->link->settings->file : '#' ?>" id="file_url" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
                             <div class="card h-100 d-flex justify-content-center align-items-center bg-gray-100">
                                 <div class="card-body">
                                     <i class="fas fa-fw fa-external-link"></i>
@@ -30,7 +30,7 @@
                         </a>
                     </div>
                 </div>
-                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('files')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->file_size_limit) ?></small>
+                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('files')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->file_size_limit) ?></small>
             </div>
 
             <div class="form-group">
@@ -39,7 +39,7 @@
                     <div class="input-group-prepend">
                         <?php if(count($data->domains)): ?>
                             <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                     <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                 <?php endif ?>
 
@@ -154,7 +154,7 @@
                                                 type="text"
                                                 class="form-control"
                                                 name="start_date"
-                                                value="<?= \Altum\Date::get($data->link->start_date, 1) ?>"
+                                                value="<?= \SeeGap\Date::get($data->link->start_date, 1) ?>"
                                                 placeholder="<?= l('link.settings.start_date') ?>"
                                                 autocomplete="off"
                                                 data-daterangepicker
@@ -169,7 +169,7 @@
                                                 type="text"
                                                 class="form-control"
                                                 name="end_date"
-                                                value="<?= \Altum\Date::get($data->link->end_date, 1) ?>"
+                                                value="<?= \SeeGap\Date::get($data->link->end_date, 1) ?>"
                                                 placeholder="<?= l('link.settings.end_date') ?>"
                                                 autocomplete="off"
                                                 data-daterangepicker

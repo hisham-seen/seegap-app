@@ -1,10 +1,10 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?php if(!\Altum\Event::exists_content_type_key('javascript', 'pickr')): ?>
+<?php if(!\SeeGap\Event::exists_content_type_key('javascript', 'pickr')): ?>
     <?php if(!isset($data->exclude_css)): ?>
         <?php ob_start() ?>
         <link href="<?= ASSETS_FULL_URL . 'css/libraries/pickr.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen">
-        <?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
     <?php endif ?>
 
     <?php ob_start() ?>
@@ -57,5 +57,5 @@
 
         initiate_color_pickers();
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'pickr') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'pickr') ?>
 <?php endif ?>

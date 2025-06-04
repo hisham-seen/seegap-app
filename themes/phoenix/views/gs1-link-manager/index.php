@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container-fluid">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
         <nav aria-label="breadcrumb">
@@ -44,19 +44,19 @@
                     </h6>
 
                     <form action="" method="post" role="form" id="gs1_link_form">
-                        <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                        <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                         <div class="form-group">
                             <label for="gtin"><i class="fas fa-fw fa-sm fa-barcode text-muted mr-1"></i> <?= l('gs1_links.input.gtin') ?></label>
-                            <input type="text" id="gtin" name="gtin" class="form-control <?= \Altum\Alerts::has_field_errors('gtin') ? 'is-invalid' : null ?>" value="<?= $data->values['gtin'] ?>" maxlength="14" placeholder="<?= l('gs1_links.input.gtin_placeholder') ?>" required="required" />
+                            <input type="text" id="gtin" name="gtin" class="form-control <?= \SeeGap\Alerts::has_field_errors('gtin') ? 'is-invalid' : null ?>" value="<?= $data->values['gtin'] ?>" maxlength="14" placeholder="<?= l('gs1_links.input.gtin_placeholder') ?>" required="required" />
                             <small class="form-text text-muted"><?= l('gs1_links.input.gtin_help') ?></small>
-                            <?= \Altum\Alerts::output_field_error('gtin') ?>
+                            <?= \SeeGap\Alerts::output_field_error('gtin') ?>
                         </div>
 
                         <div class="form-group">
                             <label for="target_url"><i class="fas fa-fw fa-sm fa-link text-muted mr-1"></i> <?= l('gs1_links.input.target_url') ?></label>
-                            <input type="url" id="target_url" name="target_url" class="form-control <?= \Altum\Alerts::has_field_errors('target_url') ? 'is-invalid' : null ?>" value="<?= $data->values['target_url'] ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" required="required" />
-                            <?= \Altum\Alerts::output_field_error('target_url') ?>
+                            <input type="url" id="target_url" name="target_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('target_url') ? 'is-invalid' : null ?>" value="<?= $data->values['target_url'] ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" required="required" />
+                            <?= \SeeGap\Alerts::output_field_error('target_url') ?>
                         </div>
 
                         <div class="form-group">
@@ -65,7 +65,7 @@
                                 <div class="input-group-prepend">
                                     <?php if(count($data->domains)): ?>
                                         <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                            <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                            <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                                 <option value="" <?= $data->values['domain_id'] ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                             <?php endif ?>
 
@@ -129,7 +129,7 @@
                             </div>
                         <?php endif ?>
 
-                        <button class="btn btn-block btn-gray-200 my-4 <?= \Altum\Alerts::has_field_errors(['expiration_url']) ? 'border-danger' : null ?>" type="button" data-toggle="collapse" data-target="#temporary_url_container" aria-expanded="false" aria-controls="temporary_url_container">
+                        <button class="btn btn-block btn-gray-200 my-4 <?= \SeeGap\Alerts::has_field_errors(['expiration_url']) ? 'border-danger' : null ?>" type="button" data-toggle="collapse" data-target="#temporary_url_container" aria-expanded="false" aria-controls="temporary_url_container">
                             <i class="fas fa-fw fa-clock fa-sm mr-1"></i> <?= l('link.settings.temporary_url_header') ?>
                         </button>
 
@@ -155,7 +155,7 @@
                                                     type="text"
                                                     class="form-control"
                                                     name="start_date"
-                                                    value="<?= \Altum\Date::get($data->values['start_date'], 1) ?>"
+                                                    value="<?= \SeeGap\Date::get($data->values['start_date'], 1) ?>"
                                                     placeholder="<?= l('link.settings.start_date') ?>"
                                                     autocomplete="off"
                                                     data-daterangepicker
@@ -170,7 +170,7 @@
                                                     type="text"
                                                     class="form-control"
                                                     name="end_date"
-                                                    value="<?= \Altum\Date::get($data->values['end_date'], 1) ?>"
+                                                    value="<?= \SeeGap\Date::get($data->values['end_date'], 1) ?>"
                                                     placeholder="<?= l('link.settings.end_date') ?>"
                                                     autocomplete="off"
                                                     data-daterangepicker
@@ -188,13 +188,13 @@
 
                             <div class="form-group">
                                 <label for="expiration_url"><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.expiration_url') ?></label>
-                                <input id="expiration_url" type="url" class="form-control <?= \Altum\Alerts::has_field_errors('expiration_url') ? 'is-invalid' : null ?>" name="expiration_url" value="<?= $data->values['expiration_url'] ?>" maxlength="2048" />
-                                <?= \Altum\Alerts::output_field_error('expiration_url') ?>
+                                <input id="expiration_url" type="url" class="form-control <?= \SeeGap\Alerts::has_field_errors('expiration_url') ? 'is-invalid' : null ?>" name="expiration_url" value="<?= $data->values['expiration_url'] ?>" maxlength="2048" />
+                                <?= \SeeGap\Alerts::output_field_error('expiration_url') ?>
                                 <small class="form-text text-muted"><?= l('link.settings.expiration_url_help') ?></small>
                             </div>
                         </div>
 
-                        <button class="btn btn-block btn-gray-200 my-4 <?= \Altum\Alerts::has_field_errors(['targeting_*']) ? 'border-danger' : null ?>" type="button" data-toggle="collapse" data-target="#targeting_container" aria-expanded="false" aria-controls="targeting_container">
+                        <button class="btn btn-block btn-gray-200 my-4 <?= \SeeGap\Alerts::has_field_errors(['targeting_*']) ? 'border-danger' : null ?>" type="button" data-toggle="collapse" data-target="#targeting_container" aria-expanded="false" aria-controls="targeting_container">
                             <i class="fas fa-fw fa-bullseye fa-sm mr-1"></i> <?= l('link.settings.targeting_header') ?>
                         </button>
 
@@ -236,8 +236,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_continent_code_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_continent_code_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_continent_code_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_continent_code_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_continent_code_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_continent_code_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -269,8 +269,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_country_code_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_country_code_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_country_code_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_country_code_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_country_code_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_country_code_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -298,8 +298,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_city_name_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_city_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_city_name_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_city_name_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_city_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_city_name_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -331,8 +331,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_device_type_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_device_type_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_device_type_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_device_type_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_device_type_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_device_type_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -364,8 +364,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_os_name_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_os_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_os_name_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_os_name_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_os_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_os_name_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -397,8 +397,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_browser_name_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_browser_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_browser_name_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_browser_name_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_browser_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_browser_name_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -430,8 +430,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_browser_language_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_browser_language_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_browser_language_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_browser_language_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_browser_language_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_browser_language_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -459,8 +459,8 @@
                                                         </div>
 
                                                         <div class="form-group col-lg-5">
-                                                            <input type="url" name="targeting_rotation_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_rotation_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                            <?= \Altum\Alerts::output_field_error('targeting_rotation_value[' . $key . ']') ?>
+                                                            <input type="url" name="targeting_rotation_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_rotation_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                            <?= \SeeGap\Alerts::output_field_error('targeting_rotation_value[' . $key . ']') ?>
                                                         </div>
 
                                                         <div class="form-group col-lg-2 text-center">
@@ -546,15 +546,15 @@
                             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->favicon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->favicon_size_limit) ?>">
                                 <label><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_favicon') ?></label>
                                 <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'favicons', 'file_key' => 'cloaking_favicon', 'already_existing_image' => null, 'input_data' => 'data-crop data-aspect-ratio="1"']) ?>
-                                <?= \Altum\Alerts::output_field_error('cloaking_favicon') ?>
-                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
+                                <?= \SeeGap\Alerts::output_field_error('cloaking_favicon') ?>
+                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
                             </div>
 
                             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->seo_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->seo_image_size_limit) ?>">
                                 <label for="cloaking_opengraph"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_opengraph') ?></label>
                                 <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'microsite_seo_image', 'file_key' => 'cloaking_opengraph', 'already_existing_image' => null, 'input_data' => 'data-crop data-aspect-ratio="1.91"']) ?>
-                                <?= \Altum\Alerts::output_field_error('cloaking_opengraph') ?>
-                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
+                                <?= \SeeGap\Alerts::output_field_error('cloaking_opengraph') ?>
+                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
                             </div>
 
                             <div <?= 1 ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
@@ -949,7 +949,7 @@
 
 <?php ob_start() ?>
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/daterangepicker.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/moment.min.js?v=' . PRODUCT_CODE ?>"></script>
@@ -1194,6 +1194,6 @@
     // Initial update
     update_gs1_flow_and_preview();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php include_view(THEME_PATH . 'views/partials/js_cropper.php') ?>

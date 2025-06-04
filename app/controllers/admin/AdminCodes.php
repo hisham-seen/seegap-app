@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminCodes extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['type'], ['name', 'code'], ['code_id', 'name', 'days', 'quantity', 'datetime', 'code', 'redeemed']));
+        $filters = (new \SeeGap\Filters(['type'], ['name', 'code'], ['code_id', 'name', 'days', 'quantity', 'datetime', 'code', 'redeemed']));
         $filters->set_default_order_by('code_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `codes` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/codes?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/codes?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $codes = [];
@@ -49,7 +49,7 @@ class AdminCodes extends Controller {
         process_export_csv($codes, 'include', ['code_id', 'name', 'type', 'days', 'code', 'discount', 'quantity', 'redeemed', 'datetime']);
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -59,7 +59,7 @@ class AdminCodes extends Controller {
             'filters' => $filters
         ];
 
-        $view = new \Altum\View('admin/codes/index', (array) $this);
+        $view = new \SeeGap\View('admin/codes/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -80,9 +80,9 @@ class AdminCodes extends Controller {
             redirect('admin/codes');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -111,9 +111,9 @@ class AdminCodes extends Controller {
 
         $code_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

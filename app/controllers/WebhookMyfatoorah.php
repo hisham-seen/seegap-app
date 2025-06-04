@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\controllers;
+namespace SeeGap\controllers;
 
-use Altum\Models\Payments;
+use SeeGap\Models\Payments;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class WebhookMyfatoorah extends Controller {
 

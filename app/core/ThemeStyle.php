@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ThemeStyle {
     public static $themes = [
@@ -33,7 +33,7 @@ class ThemeStyle {
     }
 
     public static function get_file() {
-        return (\Altum\Router::$path != 'admin' && settings()->theme->{self::get() . '_is_enabled'} ? 'custom-bootstrap/' : null ) . self::$themes[self::get()][l('direction')];
+        return (\SeeGap\Router::$path != 'admin' && settings()->theme->{self::get() . '_is_enabled'} ? 'custom-bootstrap/' : null ) . self::$themes[self::get()][l('direction')];
     }
 
     public static function set_default($theme) {

@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Response;
-use Altum\Traits\Apiable;
-use Altum\Uploads;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
+use SeeGap\Uploads;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminApiDynamicOgImages extends Controller {
     use Apiable;
@@ -72,7 +72,7 @@ class AdminApiDynamicOgImages extends Controller {
             $return_error(l('global.error_message.invalid_file_type'));
         }
 
-        if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+        if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
             if(!is_writable(UPLOADS_PATH . Uploads::get_path('dynamic_og_images'))) {
                 $return_error(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . Uploads::get_path('dynamic_og_images')));
             }
@@ -86,7 +86,7 @@ class AdminApiDynamicOgImages extends Controller {
         $image_new_name = get_slug($_POST['image_name']);
 
         /* Offload uploading */
-        if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+        if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
             try {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 

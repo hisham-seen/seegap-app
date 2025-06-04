@@ -1,6 +1,6 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <h1 class="h5"><?= l('not_found.header') ?></h1>
 <p class="text-muted mt-3"><?= l('not_found.subheader') ?></p>
@@ -42,4 +42,4 @@
             ]
         }
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

@@ -1,11 +1,11 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="settings_send_test_email_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
             <form action="<?= url('admin/settings/send_test_email') ?>" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="modal-body">
                     <div class="d-flex justify-content-between mb-3">
@@ -44,4 +44,4 @@
         $(event.currentTarget).find('#settings_send_test_email_modal_url').attr('href', `${url}admin/users/login/${user_id}&global_token=${global_token}`);
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

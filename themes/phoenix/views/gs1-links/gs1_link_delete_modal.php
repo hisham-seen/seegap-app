@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="gs1_link_delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -43,7 +43,7 @@
                 <button type="button" class="btn btn-gray-300" data-dismiss="modal"><?= l('global.close') ?></button>
 
                 <form method="post" action="<?= url('gs1-link-ajax') ?>" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                     <input type="hidden" name="request_type" value="delete" />
                     <input type="hidden" name="gs1_link_id" value="" />
                     <button type="submit" class="btn btn-danger"><?= l('global.delete') ?></button>
@@ -71,4 +71,4 @@
         $(event.currentTarget).find('#gs1_link_delete_modal_target_url').html(target_url);
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

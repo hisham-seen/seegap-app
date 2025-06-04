@@ -7,19 +7,19 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\User;
-use Altum\PaymentGateways\Coinbase;
-use Altum\PaymentGateways\Lemonsqueezy;
-use Altum\PaymentGateways\Paddle;
-use Altum\PaymentGateways\Paystack;
-use Altum\Response;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Models\User;
+use SeeGap\PaymentGateways\Coinbase;
+use SeeGap\PaymentGateways\Lemonsqueezy;
+use SeeGap\PaymentGateways\Paddle;
+use SeeGap\PaymentGateways\Paystack;
+use SeeGap\Response;
+use SeeGap\Title;
 use Razorpay\Api\Api;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Pay extends Controller {
     public $plan_id;
@@ -33,7 +33,7 @@ class Pay extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(!settings()->payment->is_enabled) {
             redirect('not-found');
@@ -64,7 +64,7 @@ class Pay extends Controller {
 
                 $this->plan_id = (int) $this->plan_id;
 
-                $plans = (new \Altum\Models\Plan())->get_plans();
+                $plans = (new \SeeGap\Models\Plan())->get_plans();
 
                 /* Check if plan exists */
                 $this->plan = $plans[$this->plan_id] ?? null;
@@ -73,7 +73,7 @@ class Pay extends Controller {
                 }
 
                 /* Check for potential taxes */
-                $this->plan_taxes = (new \Altum\Models\Plan())->get_plan_taxes_by_taxes_ids($this->plan->taxes_ids);
+                $this->plan_taxes = (new \SeeGap\Models\Plan())->get_plan_taxes_by_taxes_ids($this->plan->taxes_ids);
 
                 /* Filter them out */
                 if($this->plan_taxes) {
@@ -118,8 +118,8 @@ class Pay extends Controller {
         /* Make sure that this only runs on user click submit post and not on callbacks / webhooks */
         if(!empty($_POST) && !$this->return_type) {
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-            //ALTUMCODE:DEMO if(DEMO) redirect('pay/' . $this->plan_id . (isset($_GET['trial_skip']) ? '?trial_skip=true' : null));
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) redirect('pay/' . $this->plan_id . (isset($_GET['trial_skip']) ? '?trial_skip=true' : null));
 
             /* Check for code usage */
             if(settings()->payment->codes_is_enabled && isset($_POST['code'])) {
@@ -140,7 +140,7 @@ class Pay extends Controller {
             }
 
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -277,7 +277,7 @@ class Pay extends Controller {
         $this->payment_return_process();
 
         /* Set a custom title */
-        Title::set(sprintf(l('pay.title'), $this->plan->translations->{\Altum\Language::$name}->name ?? $this->plan->name));
+        Title::set(sprintf(l('pay.title'), $this->plan->translations->{\SeeGap\Language::$name}->name ?? $this->plan->name));
 
         /* Prepare the view */
         $data = [
@@ -288,7 +288,7 @@ class Pay extends Controller {
             'payment_extra_data'=> $this->payment_extra_data,
         ];
 
-        $view = new \Altum\View('pay/index', (array) $this);
+        $view = new \SeeGap\View('pay/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -305,8 +305,8 @@ class Pay extends Controller {
         $price = in_array(currency(), ['JPY', 'TWD', 'HUF']) ? number_format($price, 0, '.', '') : number_format($price, 2, '.', '');
 
         try {
-            $paypal_api_url = \Altum\PaymentGateways\Paypal::get_api_url();
-            $headers = \Altum\PaymentGateways\Paypal::get_headers();
+            $paypal_api_url = \SeeGap\PaymentGateways\Paypal::get_api_url();
+            $headers = \SeeGap\PaymentGateways\Paypal::get_headers();
         } catch (\Exception $exception) {
             Alerts::add_error($exception->getMessage());
             redirect('pay/' . $this->plan_id . '?' . (isset($_GET['trial_skip']) ? '&trial_skip=true' : null) . (isset($_GET['code']) ? '&code=' . $_GET['code'] : null));
@@ -355,7 +355,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->name . ':' . $response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -388,7 +388,7 @@ class Pay extends Controller {
 
                     /* Check against errors */
                     if($response->code >= 400) {
-                        if(DEBUG || \Altum\Authentication::is_admin()) {
+                        if(DEBUG || \SeeGap\Authentication::is_admin()) {
                             Alerts::add_error($response->body->name . ':' . $response->body->message);
                         } else {
                             Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -431,7 +431,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->name . ':' . $response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -460,7 +460,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->name . ':' . $response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -531,7 +531,7 @@ class Pay extends Controller {
                         'cancel_url' => url('pay/' . $this->plan_id . $this->return_url_parameters('cancel', $base_amount, $price, $code, $discount_amount)),
                     ]);
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -593,7 +593,7 @@ class Pay extends Controller {
                         'cancel_url' => url('pay/' . $this->plan_id . $this->return_url_parameters('cancel', $base_amount, $price, $code, $discount_amount)),
                     ]);
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -644,7 +644,7 @@ class Pay extends Controller {
 
         /* Check against errors */
         if($response->code >= 400) {
-            if(DEBUG || \Altum\Authentication::is_admin()) {
+            if(DEBUG || \SeeGap\Authentication::is_admin()) {
                 Alerts::add_error($response->body->error->type . ':' . $response->body->error->message);
             } else {
                 Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -679,7 +679,7 @@ class Pay extends Controller {
             redirect('pay/' . $this->plan_id . '?' . (isset($_GET['trial_skip']) ? '&trial_skip=true' : null) . (isset($_GET['code']) ? '&code=' . $_GET['code'] : null));
         }
 
-        $offline_payment_proof_file = \Altum\Uploads::process_upload(null, 'offline_payment_proofs', 'offline_payment_proof', 'offline_payment_proof_remove', settings()->offline_payment->proof_size_limit);
+        $offline_payment_proof_file = \SeeGap\Uploads::process_upload(null, 'offline_payment_proofs', 'offline_payment_proof', 'offline_payment_proof_remove', settings()->offline_payment->proof_size_limit);
 
         if(Alerts::has_field_errors() && !Alerts::has_errors()) {
             redirect('pay/' . $this->plan_id . '?' . (isset($_GET['trial_skip']) ? '&trial_skip=true' : null) . (isset($_GET['code']) ? '&code=' . $_GET['code'] : null));
@@ -786,7 +786,7 @@ class Pay extends Controller {
             $status_description = \OpenPayU_Util::statusDesc($response->getStatus());
 
             if($response->getStatus() != 'SUCCESS') {
-                if(DEBUG || \Altum\Authentication::is_admin()) {
+                if(DEBUG || \SeeGap\Authentication::is_admin()) {
                     Alerts::add_error($status_description);
                 } else {
                     Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -821,7 +821,7 @@ class Pay extends Controller {
             header('Location: ' . $response->getResponse()->redirectUri); die();
 
         } catch (\OpenPayU_Exception $exception) {
-            if(DEBUG || \Altum\Authentication::is_admin()) {
+            if(DEBUG || \SeeGap\Authentication::is_admin()) {
                 Alerts::add_error($exception->getMessage());
             } else {
                 Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -890,7 +890,7 @@ class Pay extends Controller {
         $response = \Iyzipay\Model\Iyzilink\IyziLinkSaveProduct::create($request, $options);
 
         if($response->getStatus() != 'success') {
-            if(DEBUG || \Altum\Authentication::is_admin()) {
+            if(DEBUG || \SeeGap\Authentication::is_admin()) {
                 Alerts::add_error($response->getErrorCode() . ':' . $response->getErrorMessage());
             } else {
                 Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -936,7 +936,7 @@ class Pay extends Controller {
                 ]));
 
                 if(!$response->body->status) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -962,7 +962,7 @@ class Pay extends Controller {
                 ]));
 
                 if(!$response->body->status) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -993,7 +993,7 @@ class Pay extends Controller {
                 ]));
 
                 if(!$response->body->status) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1053,7 +1053,7 @@ class Pay extends Controller {
                         'callback_method' => 'get'
                     ]);
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1080,7 +1080,7 @@ class Pay extends Controller {
                         ],
                     ]);
                 }  catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1113,7 +1113,7 @@ class Pay extends Controller {
                         ]
                     ]);
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1167,7 +1167,7 @@ class Pay extends Controller {
                     ]);
 
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1189,7 +1189,7 @@ class Pay extends Controller {
                         'email' => $this->user->email,
                     ]);
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1219,7 +1219,7 @@ class Pay extends Controller {
                         'webhookUrl'  => SITE_URL . 'webhook-mollie',
                     ]);
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1274,7 +1274,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->error->type . ':' . $response->body->error->error_message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1315,14 +1315,14 @@ class Pay extends Controller {
                         'customer_email' => $this->user->email,
                         'passthrough' => $custom_id,
                         'return_url' => url('pay/' . $this->plan_id . $this->return_url_parameters('success', $base_amount, $price, $code, $discount_amount)),
-                        'image_url' => settings()->main->{'logo_' . \Altum\ThemeStyle::get()} != '' ? settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} : '',
+                        'image_url' => settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()} != '' ? settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} : '',
                         'quantity_variable' => 0,
                     ])
                 );
 
                 /* Check against errors */
                 if(!$response->body->success) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->error->code . ':' . $response->body->error->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1397,7 +1397,7 @@ class Pay extends Controller {
                     ], uniqid('', true));
 
                 } catch (\Exception $exception) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($exception->getMessage());
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1457,7 +1457,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->error . ':' . $response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1516,7 +1516,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->error_messages);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1575,7 +1575,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1601,7 +1601,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1642,7 +1642,7 @@ class Pay extends Controller {
 
                     /* Check against errors */
                     if($response->code >= 400) {
-                        if(DEBUG || \Altum\Authentication::is_admin()) {
+                        if(DEBUG || \SeeGap\Authentication::is_admin()) {
                             Alerts::add_error($response->body->message);
                         } else {
                             Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1685,7 +1685,7 @@ class Pay extends Controller {
 
                 /* Check against errors */
                 if($response->code >= 400) {
-                    if(DEBUG || \Altum\Authentication::is_admin()) {
+                    if(DEBUG || \SeeGap\Authentication::is_admin()) {
                         Alerts::add_error($response->body->message);
                     } else {
                         Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1768,7 +1768,7 @@ class Pay extends Controller {
                 redirect('pay/' . $this->plan_id . '?' . (isset($_GET['trial_skip']) ? '&trial_skip=true' : null) . (isset($_GET['code']) ? '&code=' . $_GET['code'] : null));
             }
         } else {
-            if(DEBUG || \Altum\Authentication::is_admin()) {
+            if(DEBUG || \SeeGap\Authentication::is_admin()) {
                 Alerts::add_error(print_r($response->body->errors, true));
             } else {
                 Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1811,7 +1811,7 @@ class Pay extends Controller {
                 ])
             );
         } catch (\Exception $exception) {
-            if(DEBUG || \Altum\Authentication::is_admin()) {
+            if(DEBUG || \SeeGap\Authentication::is_admin()) {
                 Alerts::add_error($exception->getMessage());
             } else {
                 Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1828,7 +1828,7 @@ class Pay extends Controller {
                 redirect('pay/' . $this->plan_id . '?' . (isset($_GET['trial_skip']) ? '&trial_skip=true' : null) . (isset($_GET['code']) ? '&code=' . $_GET['code'] : null));
             }
         } else {
-            if(DEBUG || \Altum\Authentication::is_admin()) {
+            if(DEBUG || \SeeGap\Authentication::is_admin()) {
                 Alerts::add_error(print_r($response->body, true));
             } else {
                 Alerts::add_error(l('pay.error_message.failed_payment'));
@@ -1857,11 +1857,11 @@ class Pay extends Controller {
 
     /* Ajax to check if discount codes are available */
     public function code() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $_POST = json_decode(file_get_contents('php://input'), true);
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             die();
         }
 
@@ -1944,7 +1944,7 @@ class Pay extends Controller {
             $thank_you_url_parameters .= '&' . $key . '=' . $value;
         }
 
-        $thank_you_url_parameters .= '&unique_transaction_identifier=' . md5(\Altum\Date::get('', 4) . $thank_you_url_parameters);
+        $thank_you_url_parameters .= '&unique_transaction_identifier=' . md5(\SeeGap\Date::get('', 4) . $thank_you_url_parameters);
 
         redirect('pay-thank-you?' . $thank_you_url_parameters);
     }

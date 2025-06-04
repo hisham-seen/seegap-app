@@ -1,10 +1,10 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <script>
     'use strict';
     /* PWA */
-    <?php if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
+    <?php if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
     if('setAppBadge' in navigator) {
         navigator.setAppBadge(<?= (int) $data->has_pending_internal_notifications ?>);
     }
@@ -110,7 +110,7 @@
             }
 
             /* PWA */
-            <?php if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
+            <?php if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
             if('setAppBadge' in navigator) {
                 navigator.setAppBadge(0);
             }
@@ -118,4 +118,4 @@
         }
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Controllers\LinkHandlers\Interfaces;
+namespace SeeGap\Controllers\LinkHandlers\Interfaces;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Interface for link handlers

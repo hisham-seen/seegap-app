@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 
@@ -6,7 +6,7 @@
     <div class="card-body">
 
         <form name="update_event" action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
             <input type="hidden" name="request_type" value="update" />
             <input type="hidden" name="type" value="event" />
             <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
@@ -19,7 +19,7 @@
                     <div class="input-group-prepend">
                         <?php if(count($data->domains)): ?>
                             <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                     <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                 <?php endif ?>
 
@@ -171,7 +171,7 @@
                                                 type="text"
                                                 class="form-control"
                                                 name="start_date"
-                                                value="<?= \Altum\Date::get($data->link->start_date, 1) ?>"
+                                                value="<?= \SeeGap\Date::get($data->link->start_date, 1) ?>"
                                                 placeholder="<?= l('link.settings.start_date') ?>"
                                                 autocomplete="off"
                                                 data-daterangepicker
@@ -186,7 +186,7 @@
                                                 type="text"
                                                 class="form-control"
                                                 name="end_date"
-                                                value="<?= \Altum\Date::get($data->link->end_date, 1) ?>"
+                                                value="<?= \SeeGap\Date::get($data->link->end_date, 1) ?>"
                                                 placeholder="<?= l('link.settings.end_date') ?>"
                                                 autocomplete="off"
                                                 data-daterangepicker

@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks\Interfaces;
+namespace SeeGap\Controllers\MicrositeBlocks\Interfaces;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Interface for microsite block handlers

@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks\Blocks;
+namespace SeeGap\Controllers\MicrositeBlocks\Blocks;
 
-use Altum\Controllers\MicrositeBlocks\BaseBlockHandler;
-use Altum\Response;
+use SeeGap\Controllers\MicrositeBlocks\BaseBlockHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * PowerPoint Presentation Block Handler
@@ -84,7 +84,7 @@ class PowerpointPresentationBlock extends BaseBlockHandler {
         /* File upload */
         $db_file = $this->handle_file_upload($microsite_block->settings->file, 'files/', settings()->links->file_size_limit, ['ppt', 'pptx']);
 
-        $file_url = $db_file ? \Altum\Uploads::get_full_url('files') . $db_file : null;
+        $file_url = $db_file ? \SeeGap\Uploads::get_full_url('files') . $db_file : null;
 
         $settings = json_encode([
             'file' => $db_file,

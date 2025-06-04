@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-use Altum\Models\User;
+use SeeGap\Models\User;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Teams {
     public static $team = null;
@@ -19,13 +19,13 @@ class Teams {
     public static $team_user = null;
 
     public static function initialize() {
-        if(isset($_SESSION['team_id']) && \Altum\Plugin::is_active('teams')) {
+        if(isset($_SESSION['team_id']) && \SeeGap\Plugin::is_active('teams')) {
             /* Get requested team */
-            self::$team = (new \Altum\Models\Teams())->get_team_by_team_id($_SESSION['team_id']);
+            self::$team = (new \SeeGap\Models\Teams())->get_team_by_team_id($_SESSION['team_id']);
 
             if(self::$team) {
                 /* Get team member */
-                self::$team_member = (new \Altum\Models\TeamsMembers())->get_team_member_by_team_id_and_user_id(self::$team->team_id, \Altum\Authentication::$user_id);
+                self::$team_member = (new \SeeGap\Models\TeamsMembers())->get_team_member_by_team_id_and_user_id(self::$team->team_id, \SeeGap\Authentication::$user_id);
 
                 if(self::$team_member) {
                     self::$team_member->access = json_decode(self::$team_member->access);

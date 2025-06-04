@@ -7,15 +7,15 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Affiliate {
 
     public static function initiate() {
-        if(is_logged_in() || !\Altum\Plugin::is_active('affiliate') || (\Altum\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
+        if(is_logged_in() || !\SeeGap\Plugin::is_active('affiliate') || (\SeeGap\Plugin::is_active('affiliate') && !settings()->affiliate->is_enabled)) {
             return;
         }
 

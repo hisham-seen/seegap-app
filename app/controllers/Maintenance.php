@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\controllers;
+namespace SeeGap\controllers;
 
-use Altum\Alerts;
-use Altum\Captcha;
-use Altum\Logger;
+use SeeGap\Alerts;
+use SeeGap\Captcha;
+use SeeGap\Logger;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Maintenance extends Controller {
 
@@ -29,7 +29,7 @@ class Maintenance extends Controller {
         /* Prepare the view */
         $data = [];
 
-        $view = new \Altum\View('maintenance/index', (array) $this);
+        $view = new \SeeGap\View('maintenance/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

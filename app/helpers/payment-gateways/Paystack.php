@@ -7,10 +7,10 @@
  *
  */
 
-namespace Altum\PaymentGateways;
+namespace SeeGap\PaymentGateways;
 
 /* Helper class for Paystack v2 */
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Paystack {
     static public $api_url = 'https://api.paystack.co/';

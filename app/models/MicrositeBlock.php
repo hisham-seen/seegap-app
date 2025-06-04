@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class MicrositeBlock extends Model {
 
@@ -45,7 +45,7 @@ class MicrositeBlock extends Model {
             foreach($blocks_with_storage[$microsite_block->type] as $block_with_storage) {
                 if(!empty($microsite_block->settings->{$block_with_storage['uploaded_file_key']})) {
                     /* Offload deleting */
-                    if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                    if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                         $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
                         if($s3->doesObjectExist(settings()->offload->storage_name, 'uploads/' . $block_with_storage['path'] . '/' . $microsite_block->settings->{$block_with_storage['uploaded_file_key']})) {
@@ -72,7 +72,7 @@ class MicrositeBlock extends Model {
             $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
             foreach($microsite_block->settings->items as $item) {
-                \Altum\Uploads::delete_uploaded_file($item->image, 'block_images');
+                \SeeGap\Uploads::delete_uploaded_file($item->image, 'block_images');
             }
         }
 

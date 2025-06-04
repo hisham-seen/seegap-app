@@ -7,33 +7,33 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\User;
+use SeeGap\Alerts;
+use SeeGap\Models\User;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AccountRedeemCode extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(!settings()->payment->is_enabled || !settings()->payment->codes_is_enabled) {
             redirect('not-found');
         }
 
         /* Get all plans */
-        $plans = (new \Altum\Models\Plan())->get_plans();
+        $plans = (new \SeeGap\Models\Plan())->get_plans();
 
         if(!empty($_POST)) {
             $_POST['plan_id'] = (int) $_POST['plan_id'];
             $code = $_POST['code'] = trim(query_clean($_POST['code']));
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token')); redirect('account-redeem-code');
             }
 
@@ -110,9 +110,9 @@ class AccountRedeemCode extends Controller {
 
                 /* Set a nice success message */
                 if($code->days >= 10*365) {
-                    Alerts::add_success(sprintf(l('account_redeem_code.success_message_lifetime'), $plan->translations->{\Altum\Language::$name}->name ?: $plan->name));
+                    Alerts::add_success(sprintf(l('account_redeem_code.success_message_lifetime'), $plan->translations->{\SeeGap\Language::$name}->name ?: $plan->name));
                 } else {
-                    Alerts::add_success(sprintf(l('account_redeem_code.success_message'), $code->days, $plan->translations->{\Altum\Language::$name}->name ?: $plan->name));
+                    Alerts::add_success(sprintf(l('account_redeem_code.success_message'), $code->days, $plan->translations->{\SeeGap\Language::$name}->name ?: $plan->name));
                 }
 
                 redirect('account-redeem-code');
@@ -127,7 +127,7 @@ class AccountRedeemCode extends Controller {
         ];
 
         /* Get the account header menu */
-        $menu = new \Altum\View('partials/account_header_menu', (array) $this);
+        $menu = new \SeeGap\View('partials/account_header_menu', (array) $this);
         $this->add_view_content('account_header_menu', $menu->run());
 
         /* Prepare the view */
@@ -136,7 +136,7 @@ class AccountRedeemCode extends Controller {
             'values' => $values,
         ];
 
-        $view = new \Altum\View('account-redeem-code/index', (array) $this);
+        $view = new \SeeGap\View('account-redeem-code/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

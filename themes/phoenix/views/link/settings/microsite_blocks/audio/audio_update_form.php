@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <form name="update_microsite_" method="post" role="form" enctype="multipart/form-data">
-    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
     <input type="hidden" name="request_type" value="update" />
     <input type="hidden" name="block_type" value="audio" />
     <input type="hidden" name="microsite_block_id" value="<?= $row->microsite_block_id ?>" />
@@ -12,11 +12,11 @@
         <label for="<?= 'audio_file_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-file fa-sm text-muted mr-1"></i> <?= l('microsite_file.file') ?></label>
         <div class="row">
             <div class="col">
-                <input id="<?= 'audio_file_' . $row->microsite_block_id ?>" type="file" name="file" accept="<?= \Altum\Uploads::array_to_list_format($data->microsite_blocks['audio']['whitelisted_file_extensions']) ?>" class="form-control-file altum-file-input" />
+                <input id="<?= 'audio_file_' . $row->microsite_block_id ?>" type="file" name="file" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['audio']['whitelisted_file_extensions']) ?>" class="form-control-file seegap-file-input" />
             </div>
 
             <div class="col-3 <?= !empty($row->settings->file) ? null : 'd-none' ?>">
-                <a href="<?= $row->settings->file ? \Altum\Uploads::get_full_url('files') . $row->settings->file : '#' ?>" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
+                <a href="<?= $row->settings->file ? \SeeGap\Uploads::get_full_url('files') . $row->settings->file : '#' ?>" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
                     <div class="card h-100 d-flex justify-content-center align-items-center bg-gray-100">
                         <div class="card-body">
                             <i class="fas fa-fw fa-external-link"></i>
@@ -25,7 +25,7 @@
                 </a>
             </div>
         </div>
-        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format($data->microsite_blocks['audio']['whitelisted_file_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->audio_size_limit) ?></small>
+        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['audio']['whitelisted_file_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->audio_size_limit) ?></small>
     </div>
 
     <div class="form-group">
@@ -110,7 +110,7 @@
                                         type="text"
                                         class="form-control"
                                         name="start_date"
-                                        value="<?= \Altum\Date::get($row->start_date, 1) ?>"
+                                        value="<?= \SeeGap\Date::get($row->start_date, 1) ?>"
                                         placeholder="<?= l('link.settings.start_date') ?>"
                                         autocomplete="off"
                                         data-daterangepicker
@@ -126,7 +126,7 @@
                                         type="text"
                                         class="form-control"
                                         name="end_date"
-                                        value="<?= \Altum\Date::get($row->end_date, 1) ?>"
+                                        value="<?= \SeeGap\Date::get($row->end_date, 1) ?>"
                                         placeholder="<?= l('link.settings.end_date') ?>"
                                         autocomplete="off"
                                         data-daterangepicker

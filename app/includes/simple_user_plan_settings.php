@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 $features = [
     'custom_url',
@@ -51,7 +51,7 @@ if(settings()->main->white_labeling_is_enabled) {
     ]);
 }
 
-if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled) {
+if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled) {
     $features = array_merge($features, [
         'custom_pwa_is_enabled',
     ]);

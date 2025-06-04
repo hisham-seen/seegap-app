@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -27,12 +27,12 @@
         <div class="card-body">
 
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('global.name') ?></label>
-                    <input type="text" id="name" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->team->name ?>" required="required" />
-                    <?= \Altum\Alerts::output_field_error('name') ?>
+                    <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->team->name ?>" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('name') ?>
                 </div>
 
                 <button type="submit" name="submit" class="btn btn-block btn-primary"><?= l('global.update') ?></button>
@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'team',
     'resource_id' => 'team_id',
     'has_dynamic_resource_name' => true,

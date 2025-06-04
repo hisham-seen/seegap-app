@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks\Blocks;
+namespace SeeGap\Controllers\MicrositeBlocks\Blocks;
 
-use Altum\Controllers\MicrositeBlocks\BaseBlockHandler;
-use Altum\Response;
+use SeeGap\Controllers\MicrositeBlocks\BaseBlockHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Image Slider Block Handler
@@ -99,9 +99,9 @@ class ImageSliderBlock extends BaseBlockHandler {
                 $file_temp = $_FILES['images']['tmp_name'][$key];
 
                 if($_FILES['images']['error'][$key] == UPLOAD_ERR_OK && $_FILES['images']['size'][$key] <= settings()->links->thumbnail_image_size_limit * 1000000) {
-                    if(in_array($file_extension, \Altum\Uploads::get_whitelisted_file_extensions('images'))) {
+                    if(in_array($file_extension, \SeeGap\Uploads::get_whitelisted_file_extensions('images'))) {
                         $new_file_name = md5(time() . $file_name . $key) . '.' . $file_extension;
-                        $full_path = \Altum\Uploads::get_full_path('block_thumbnail_images') . $new_file_name;
+                        $full_path = \SeeGap\Uploads::get_full_path('block_thumbnail_images') . $new_file_name;
 
                         if(move_uploaded_file($file_temp, $full_path)) {
                             $images[] = [

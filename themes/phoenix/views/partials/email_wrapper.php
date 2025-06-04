@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <!doctype html>
-<html lang="<?= \Altum\Language::$active_languages[$data->language] ?>" dir="<?= l('direction', $data->language) ?>">
+<html lang="<?= \SeeGap\Language::$active_languages[$data->language] ?>" dir="<?= l('direction', $data->language) ?>">
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta charset="UTF-8">
@@ -267,7 +267,7 @@
                 <div class="header align-center">
                     <a href="<?= url() ?>">
                         <?php if(!empty(settings()->main->logo_email)): ?>
-                            <img src="<?= \Altum\Uploads::get_full_url('logo_email') . settings()->main->logo_email ?>" class="logo" alt="<?= settings()->main->title ?>" />
+                            <img src="<?= \SeeGap\Uploads::get_full_url('logo_email') . settings()->main->logo_email ?>" class="logo" alt="<?= settings()->main->title ?>" />
                         <?php else: ?>
                             <h1><?= settings()->main->title ?></h1>
                         <?php endif ?>

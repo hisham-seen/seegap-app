@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Payments;
+use SeeGap\Models\Payments;
 use YooKassa\Model\Notification\NotificationSucceeded;
 use YooKassa\Model\NotificationEventType;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class WebhookYookassa extends Controller {
 

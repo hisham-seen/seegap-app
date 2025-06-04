@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="dropdown">
     <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
@@ -12,4 +12,4 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'microsite_theme_duplicate_modal', 'resource_id' => 'microsite_theme_id', 'path' => 'admin/microsites-themes/duplicate']), 'modals', 'microsite_theme_duplicate'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'microsite_theme_duplicate_modal', 'resource_id' => 'microsite_theme_id', 'path' => 'admin/microsites-themes/duplicate']), 'modals', 'microsite_theme_duplicate'); ?>

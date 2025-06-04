@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class PaymentProcessorCreate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.payment_processors')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.payment_processors')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('payment-processors');
         }
@@ -74,7 +74,7 @@ class PaymentProcessorCreate extends Controller {
                     break;
             }
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -84,7 +84,7 @@ class PaymentProcessorCreate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -129,7 +129,7 @@ class PaymentProcessorCreate extends Controller {
             'values' => $values
         ];
 
-        $view = new \Altum\View('payment-processor-create/index', (array) $this);
+        $view = new \SeeGap\View('payment-processor-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

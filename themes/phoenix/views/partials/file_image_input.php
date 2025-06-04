@@ -1,14 +1,14 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="row">
     <div class="col">
-        <input id="<?= $data->file_key ?>" type="file" name="<?= $data->file_key ?>" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept($data->uploads_file_key) ?>" class="form-control-file altum-file-input" <?= $data->input_data ?? null ?> />
+        <input id="<?= $data->file_key ?>" type="file" name="<?= $data->file_key ?>" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept($data->uploads_file_key) ?>" class="form-control-file seegap-file-input" <?= $data->input_data ?? null ?> />
     </div>
 
     <div id="<?= $data->file_key . '_preview' ?>" class="col-3 <?= !empty($data->already_existing_image) ? null : 'd-none' ?>">
         <div class="d-flex justify-content-center align-items-center">
-            <a href="<?= $data->already_existing_image ? \Altum\Uploads::get_full_url($data->uploads_file_key) . $data->already_existing_image : '#' ?>" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
-                <img src="<?= $data->already_existing_image ? \Altum\Uploads::get_full_url($data->uploads_file_key) . $data->already_existing_image : null ?>" class="altum-file-input-preview rounded <?= !empty($data->already_existing_image) ? null : 'd-none' ?>" loading="lazy" onerror="image_on_error(this)" />
+            <a href="<?= $data->already_existing_image ? \SeeGap\Uploads::get_full_url($data->uploads_file_key) . $data->already_existing_image : '#' ?>" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
+                <img src="<?= $data->already_existing_image ? \SeeGap\Uploads::get_full_url($data->uploads_file_key) . $data->already_existing_image : null ?>" class="seegap-file-input-preview rounded <?= !empty($data->already_existing_image) ? null : 'd-none' ?>" loading="lazy" onerror="image_on_error(this)" />
             </a>
         </div>
     </div>
@@ -46,4 +46,4 @@
         }
     }
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'head', 'image_on_error') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head', 'image_on_error') ?>

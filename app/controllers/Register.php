@@ -7,31 +7,31 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Captcha;
-use Altum\Logger;
-use Altum\Models\User;
+use SeeGap\Alerts;
+use SeeGap\Captcha;
+use SeeGap\Logger;
+use SeeGap\Models\User;
 use MaxMind\Db\Reader;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Register extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard('guest');
+        \SeeGap\Authentication::guard('guest');
 
         /* Check for a special registration identifier */
         $unique_registration_identifier = isset($_GET['unique_registration_identifier'], $_GET['email']) && $_GET['unique_registration_identifier'] == md5($_GET['email'] . $_GET['email']) ? query_clean($_GET['unique_registration_identifier']) : null;
 
         /* Check if Registration is enabled first */
-        if(!settings()->users->register_is_enabled && (!\Altum\Plugin::is_active('teams') || (\Altum\Plugin::is_active('teams') && !$unique_registration_identifier))) {
+        if(!settings()->users->register_is_enabled && (!\SeeGap\Plugin::is_active('teams') || (\SeeGap\Plugin::is_active('teams') && !$unique_registration_identifier))) {
             redirect('not-found');
         }
 
-        \Altum\CustomHooks::user_initiate_registration();
+        \SeeGap\CustomHooks::user_initiate_registration();
 
         $redirect = process_and_get_redirect_params() ?? 'dashboard';
         $redirect_append = $redirect ? '?redirect=' . $redirect : null;
@@ -262,7 +262,7 @@ class Register extends Controller {
             'redirect_append' => $redirect_append,
         ];
 
-        $view = new \Altum\View('register/index', (array) $this);
+        $view = new \SeeGap\View('register/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

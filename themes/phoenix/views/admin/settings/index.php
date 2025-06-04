@@ -1,10 +1,10 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex mb-4">
     <h1 class="h3 m-0"><i class="fas fa-fw fa-xs fa-wrench text-primary-900 mr-2"></i> <?= sprintf(l('admin_settings.header'), l('admin_settings.' . $data->method . '.tab')) ?></h1>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="row">
     <div class="mb-3 mb-xl-5 mb-xl-0 col-12 col-xl-4">
@@ -18,10 +18,10 @@
                 <option value="<?= url('admin/settings/gs1_links') ?>" class="nav-link" <?= $data->method == 'gs1_links' ? 'selected="selected"' : null ?>>📊 <?= l('admin_settings.gs1_links.tab') ?></option>
                 
                 <option value="<?= url('admin/settings/codes') ?>" class="nav-link" <?= $data->method == 'codes' ? 'selected="selected"' : null ?>>💻 <?= l('admin_settings.codes.tab') ?></option>
-                <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
+                <?php if(\SeeGap\Plugin::is_active('email-signatures')): ?>
                     <option value="<?= url('admin/settings/signatures') ?>" class="nav-link" <?= $data->method == 'signatures' ? 'selected="selected"' : null ?>>✍️ <?= l('admin_settings.signatures.tab') ?></option>
                 <?php endif ?>
-                <?php if(\Altum\Plugin::is_active('aix')): ?>
+                <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                     <option value="<?= url('admin/settings/aix') ?>" class="nav-link" <?= $data->method == 'aix' ? 'selected="selected"' : null ?>>🤖 <?= l('admin_settings.aix.tab') ?></option>
                 <?php endif ?>
                 <option value="<?= url('admin/settings/payment') ?>" class="nav-link" <?= $data->method == 'payment' ? 'selected="selected"' : null ?>>💳 <?= l('admin_settings.payment.tab') ?></option>
@@ -65,7 +65,7 @@
                 document.querySelector(`a[href="${event.currentTarget.value}"]`).click();
             })
         </script>
-        <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
         <div class="card d-none d-xl-flex">
             <div class="card-body">
@@ -78,10 +78,10 @@
                     <a class="nav-link <?= $data->method == 'gs1_links' ? 'active' : null ?>" href="<?= url('admin/settings/gs1_links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('admin_settings.gs1_links.tab') ?></a>
                     
                     <a class="nav-link <?= $data->method == 'codes' ? 'active' : null ?>" href="<?= url('admin/settings/codes') ?>"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('admin_settings.codes.tab') ?></a>
-                    <?php if(\Altum\Plugin::is_active('email-signatures')): ?>
+                    <?php if(\SeeGap\Plugin::is_active('email-signatures')): ?>
                         <a class="nav-link <?= $data->method == 'signatures' ? 'active' : null ?>" href="<?= url('admin/settings/signatures') ?>"><i class="fas fa-fw fa-sm fa-file-signature mr-2"></i> <?= l('admin_settings.signatures.tab') ?></a>
                     <?php endif ?>
-                    <?php if(\Altum\Plugin::is_active('aix')): ?>
+                    <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                         <a class="nav-link <?= $data->method == 'aix' ? 'active' : null ?>" href="<?= url('admin/settings/aix') ?>"><i class="fas fa-fw fa-sm fa-robot mr-2"></i> <?= l('admin_settings.aix.tab') ?></a>
                     <?php endif ?>
                     <a class="nav-link <?= $data->method == 'payment' ? 'active' : null ?>" href="<?= url('admin/settings/payment') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('admin_settings.payment.tab') ?></a>
@@ -144,7 +144,7 @@
             <div class="card-body">
 
                 <form action="<?= url('admin/settings/' . $data->method) ?>" method="post" role="form" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                     <?= $this->views['method'] ?>
                 </form>

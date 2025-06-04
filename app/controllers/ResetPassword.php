@@ -7,19 +7,19 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Logger;
-use Altum\Models\User;
+use SeeGap\Alerts;
+use SeeGap\Logger;
+use SeeGap\Models\User;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ResetPassword extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard('guest');
+        \SeeGap\Authentication::guard('guest');
 
         $md5email = (isset($this->params[0])) ? $this->params[0] : null;
         $lost_password_code = (isset($this->params[1])) ? $this->params[1] : null;
@@ -41,7 +41,7 @@ class ResetPassword extends Controller {
 
         if(!empty($_POST)) {
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             if(mb_strlen($_POST['new_password']) < 6 || mb_strlen($_POST['new_password']) > 64) {
@@ -84,7 +84,7 @@ class ResetPassword extends Controller {
         /* Prepare the view */
         $data = [];
 
-        $view = new \Altum\View('reset-password/index', (array) $this);
+        $view = new \SeeGap\View('reset-password/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <section class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg d-flex align-items-center mb-3 mb-lg-0 text-truncate">
@@ -58,7 +58,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
@@ -135,10 +135,10 @@
     <?php if(count($data->splash_pages)): ?>
 
         <form id="table" action="<?= SITE_URL . 'splash-pages/bulk' ?>" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
             <input type="hidden" name="type" value="" data-bulk-type />
-            <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
-            <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
+            <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
+            <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
             <div class="table-responsive table-custom-container">
                 <table class="table table-custom">
@@ -174,7 +174,7 @@
                                 <div class="d-flex align-items-center">
                                     <a href="<?= url('splash-page-update/' . $row->splash_page_id) ?>">
                                         <?php if($row->settings->logo): ?>
-                                            <img src="<?= \Altum\Uploads::get_full_url('splash_pages') . $row->settings->logo ?>" class="signature-avatar rounded-circle mr-3" alt="<?= $row->name ?>" />
+                                            <img src="<?= \SeeGap\Uploads::get_full_url('splash_pages') . $row->settings->logo ?>" class="signature-avatar rounded-circle mr-3" alt="<?= $row->name ?>" />
                                         <?php else: ?>
                                             <div class="signature-avatar rounded-circle mr-3"></div>
                                         <?php endif ?>
@@ -201,15 +201,15 @@
                             </td>
 
                             <td class="text-nowrap text-muted">
-                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
-                                    <?= \Altum\Date::get($row->datetime, 2) ?>
+                                <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>">
+                                    <?= \SeeGap\Date::get($row->datetime, 2) ?>
                                 </span>
                             </td>
 
                             <td class="text-nowrap text-muted">
                                 <?php if($row->last_datetime): ?>
-                                    <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
-                                        <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                    <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->last_datetime, 1) ?>">
+                                        <?= \SeeGap\Date::get($row->last_datetime, 2) ?>
                                     </span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
@@ -250,11 +250,11 @@
     <?php endif ?>
 </section>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'splash_page',
     'resource_id' => 'splash_page_id',
     'has_dynamic_resource_name' => true,
     'path' => 'splash-pages/delete'
 ]), 'modals'); ?>
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>

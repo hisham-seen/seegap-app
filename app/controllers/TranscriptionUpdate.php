@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class TranscriptionUpdate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->transcriptions_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.transcriptions')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.transcriptions')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('dashboard');
         }
@@ -49,10 +49,10 @@ class TranscriptionUpdate extends Controller {
         }
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Languages */
-        $ai_transcriptions_languages = require \Altum\Plugin::get('aix')->path . 'includes/ai_transcriptions_languages.php';
+        $ai_transcriptions_languages = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_transcriptions_languages.php';
 
         if(!empty($_POST)) {
             $_POST['name'] = input_clean($_POST['name'], 64);
@@ -60,7 +60,7 @@ class TranscriptionUpdate extends Controller {
             $_POST['content'] = $purifier->purify($_POST['content']);
             $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -70,7 +70,7 @@ class TranscriptionUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -102,7 +102,7 @@ class TranscriptionUpdate extends Controller {
             'projects' => $projects ?? [],
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/transcription-update/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/transcription-update/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }

@@ -7,14 +7,14 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 function settings() {
-    if(!\Altum\Settings::$settings) {
-        \Altum\Settings::initialize();
+    if(!\SeeGap\Settings::$settings) {
+        \SeeGap\Settings::initialize();
     }
 
-    return \Altum\Settings::$settings;
+    return \SeeGap\Settings::$settings;
 }
 
 function get_settings_custom_head_js($key = 'head_js') {
@@ -23,17 +23,17 @@ function get_settings_custom_head_js($key = 'head_js') {
     /* Dynamic variables processing */
     $replacers = [
         '{{WEBSITE_TITLE}}' => settings()->main->title,
-        '{{USER:NAME}}' => is_logged_in() ? \Altum\Authentication::$user->name : '',
-        '{{USER:EMAIL}}' => is_logged_in() ? \Altum\Authentication::$user->email : '',
-        '{{USER:CONTINENT_NAME}}' => is_logged_in() ? get_continent_from_continent_code(\Altum\Authentication::$user->continent_code) : '',
-        '{{USER:COUNTRY_NAME}}' => is_logged_in() ? get_country_from_country_code(\Altum\Authentication::$user->country) : '',
-        '{{USER:CITY_NAME}}' => is_logged_in() ? \Altum\Authentication::$user->city_name : '',
-        '{{USER:DEVICE_TYPE}}' => is_logged_in() ? l('global.device.' . \Altum\Authentication::$user->device_type) : '',
-        '{{USER:OS_NAME}}' => is_logged_in() ? \Altum\Authentication::$user->os_name : '',
-        '{{USER:BROWSER_NAME}}' => is_logged_in() ? \Altum\Authentication::$user->browser_name : '',
-        '{{USER:BROWSER_LANGUAGE}}' => is_logged_in() ? get_language_from_locale(\Altum\Authentication::$user->browser_language) : '',
-        '{{USER:USER_ID}}' => json_encode(is_logged_in() ? \Altum\Authentication::$user->user_id : ''),
-        '{{USER:PLAN_ID}}' => json_encode(is_logged_in() ? \Altum\Authentication::$user->plan_id : ''),
+        '{{USER:NAME}}' => is_logged_in() ? \SeeGap\Authentication::$user->name : '',
+        '{{USER:EMAIL}}' => is_logged_in() ? \SeeGap\Authentication::$user->email : '',
+        '{{USER:CONTINENT_NAME}}' => is_logged_in() ? get_continent_from_continent_code(\SeeGap\Authentication::$user->continent_code) : '',
+        '{{USER:COUNTRY_NAME}}' => is_logged_in() ? get_country_from_country_code(\SeeGap\Authentication::$user->country) : '',
+        '{{USER:CITY_NAME}}' => is_logged_in() ? \SeeGap\Authentication::$user->city_name : '',
+        '{{USER:DEVICE_TYPE}}' => is_logged_in() ? l('global.device.' . \SeeGap\Authentication::$user->device_type) : '',
+        '{{USER:OS_NAME}}' => is_logged_in() ? \SeeGap\Authentication::$user->os_name : '',
+        '{{USER:BROWSER_NAME}}' => is_logged_in() ? \SeeGap\Authentication::$user->browser_name : '',
+        '{{USER:BROWSER_LANGUAGE}}' => is_logged_in() ? get_language_from_locale(\SeeGap\Authentication::$user->browser_language) : '',
+        '{{USER:USER_ID}}' => json_encode(is_logged_in() ? \SeeGap\Authentication::$user->user_id : ''),
+        '{{USER:PLAN_ID}}' => json_encode(is_logged_in() ? \SeeGap\Authentication::$user->plan_id : ''),
     ];
 
     $head_js = str_replace(
@@ -46,39 +46,39 @@ function get_settings_custom_head_js($key = 'head_js') {
 }
 
 function db() {
-    if(!\Altum\Database::$db) {
-        \Altum\Database::initialize();
+    if(!\SeeGap\Database::$db) {
+        \SeeGap\Database::initialize();
     }
 
-    return \Altum\Database::$db;
+    return \SeeGap\Database::$db;
 }
 
 function database() {
-    if(!\Altum\Database::$database) {
-        \Altum\Database::initialize();
+    if(!\SeeGap\Database::$database) {
+        \SeeGap\Database::initialize();
     }
 
-    return \Altum\Database::$database;
+    return \SeeGap\Database::$database;
 }
 
 function language($language = null) {
-    return \Altum\Language::get($language);
+    return \SeeGap\Language::get($language);
 }
 
 function l($key, $language = null, $null_coalesce = false) {
-    return \Altum\Language::get($language)[$key] ?? \Altum\Language::get(\Altum\Language::$main_name)[$key] ?? ($null_coalesce ? null : $key);
+    return \SeeGap\Language::get($language)[$key] ?? \SeeGap\Language::get(\SeeGap\Language::$main_name)[$key] ?? ($null_coalesce ? null : $key);
 }
 
 function currency() {
-    if(!\Altum\Currency::$currency) {
-        \Altum\Currency::initialize();
+    if(!\SeeGap\Currency::$currency) {
+        \SeeGap\Currency::initialize();
     }
 
-    return \Altum\Currency::$currency;
+    return \SeeGap\Currency::$currency;
 }
 
 function cache($adapter = 'adapter') {
-    return \Altum\Cache::${$adapter};
+    return \SeeGap\Cache::${$adapter};
 }
 
 function get_date($format = 'Y-m-d H:i:s') {
@@ -86,9 +86,9 @@ function get_date($format = 'Y-m-d H:i:s') {
 }
 
 function is_logged_in() {
-    return \Altum\Authentication::check();
+    return \SeeGap\Authentication::check();
 }
 
 function user() {
-    return \Altum\Authentication::$user;
+    return \SeeGap\Authentication::$user;
 }

@@ -7,27 +7,27 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Date;
-use Altum\Models\User;
-use Altum\Response;
-use Altum\Traits\Paramsable;
+use SeeGap\Alerts;
+use SeeGap\Date;
+use SeeGap\Models\User;
+use SeeGap\Response;
+use SeeGap\Traits\Paramsable;
 
-class AdminGs1Links extends \Altum\Controllers\Controller {
+class AdminGs1Links extends \SeeGap\Controllers\Controller {
     use Paramsable;
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled', 'user_id'], ['gtin', 'target_url', 'title'], ['last_datetime', 'datetime', 'gtin', 'clicks']));
+        $filters = (new \SeeGap\Filters(['is_enabled', 'user_id'], ['gtin', 'target_url', 'title'], ['last_datetime', 'datetime', 'gtin', 'clicks']));
         $filters->set_default_order_by('gs1_link_id', settings()->main->default_order_type);
         $filters->set_default_results_per_page(settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `gs1_links` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/gs1-links?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/gs1-links?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $gs1_links = [];
@@ -53,11 +53,11 @@ class AdminGs1Links extends \Altum\Controllers\Controller {
         process_export_json($gs1_links, 'include', ['gs1_link_id', 'user_id', 'gtin', 'target_url', 'title', 'clicks', 'is_enabled', 'datetime'], sprintf(l('admin_gs1_links.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Delete Modal */
-        $view = new \Altum\View('admin/gs1-links/gs1_link_delete_modal', (array) $this);
-        \Altum\Event::add_content($view->run(), 'modals');
+        $view = new \SeeGap\View('admin/gs1-links/gs1_link_delete_modal', (array) $this);
+        \SeeGap\Event::add_content($view->run(), 'modals');
 
         /* Main View */
         $data = [
@@ -66,7 +66,7 @@ class AdminGs1Links extends \Altum\Controllers\Controller {
             'pagination' => $pagination
         ];
 
-        $view = new \Altum\View('admin/gs1-links/index', (array) $this);
+        $view = new \SeeGap\View('admin/gs1-links/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -74,10 +74,10 @@ class AdminGs1Links extends \Altum\Controllers\Controller {
 
     public function delete() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.gs1_links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('admin/gs1-links');
         }
@@ -88,9 +88,9 @@ class AdminGs1Links extends \Altum\Controllers\Controller {
 
         $gs1_link_id = (int) $_POST['gs1_link_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Settings extends Model {
 
@@ -49,7 +49,7 @@ class Settings extends Model {
         $assets_url = SITE_URL . ASSETS_URL_PATH;
         $uploads_url = SITE_URL . UPLOADS_URL_PATH;
 
-        if(\Altum\Plugin::is_active('offload')) {
+        if(\SeeGap\Plugin::is_active('offload')) {
             if(!empty($data->offload->assets_url)) {
                 $assets_url = $data->offload->assets_url;
             }

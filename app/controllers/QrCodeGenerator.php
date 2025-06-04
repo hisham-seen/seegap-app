@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
-use Altum\Uploads;
+use SeeGap\Alerts;
+use SeeGap\Response;
+use SeeGap\Uploads;
 use BaconQrCode\Common\ErrorCorrectionLevel;
 use BaconQrCode\Encoder\Encoder;
 use SimpleSoftwareIO\QrCode\Generator;
@@ -23,7 +23,7 @@ use SVG\Nodes\Structures\SVGGroup;
 use SVG\Nodes\Structures\SVGPattern;
 use SVG\SVG;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class QrCodeGenerator extends Controller {
 
@@ -503,83 +503,83 @@ class QrCodeGenerator extends Controller {
         /* Style */
         switch($_POST['style']) {
             case 'heart':
-                $qr->style(\Altum\QrCodes\HeartModule::class, 0.8);
+                $qr->style(\SeeGap\QrCodes\HeartModule::class, 0.8);
                 break;
 
             case 'diamond':
-                $qr->style(\Altum\QrCodes\DiamondModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\DiamondModule::class, 0.9);
                 break;
 
             case 'star':
-                $qr->style(\Altum\QrCodes\StarModule::class, 0.99);
+                $qr->style(\SeeGap\QrCodes\StarModule::class, 0.99);
                 break;
 
             case 'triangle':
-                $qr->style(\Altum\QrCodes\TriangleModule::class, 0.99);
+                $qr->style(\SeeGap\QrCodes\TriangleModule::class, 0.99);
                 break;
 
             case 'hexagon':
-                $qr->style(\Altum\QrCodes\HexagonModule::class, 0.99);
+                $qr->style(\SeeGap\QrCodes\HexagonModule::class, 0.99);
                 break;
 
             case 'spaced_square':
-                $qr->style(\Altum\QrCodes\SpacedSquareModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\SpacedSquareModule::class, 0.9);
                 break;
 
             case 'octagon':
-                $qr->style(\Altum\QrCodes\OctagonModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\OctagonModule::class, 0.9);
                 break;
 
             case 'rounded':
-                $qr->style(\Altum\QrCodes\RoundedModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\RoundedModule::class, 0.9);
                 break;
 
             case 'elastic_square':
-                $qr->style(\Altum\QrCodes\ElasticSquareModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\ElasticSquareModule::class, 0.9);
                 break;
 
             case 'cross_x':
-                $qr->style(\Altum\QrCodes\CrossXModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\CrossXModule::class, 0.9);
                 break;
 
             case 'curvy_x':
-                $qr->style(\Altum\QrCodes\CurvyXModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\CurvyXModule::class, 0.9);
                 break;
 
             case 'rounded_cross':
-                $qr->style(\Altum\QrCodes\RoundedCrossModule::class, 0.95);
+                $qr->style(\SeeGap\QrCodes\RoundedCrossModule::class, 0.95);
                 break;
 
             case 'ninja':
-                $qr->style(\Altum\QrCodes\NinjaModule::class, 0.99);
+                $qr->style(\SeeGap\QrCodes\NinjaModule::class, 0.99);
                 break;
 
             case 'sun':
-                $qr->style(\Altum\QrCodes\SunModule::class, 0.99);
+                $qr->style(\SeeGap\QrCodes\SunModule::class, 0.99);
                 break;
 
             case 'shine':
-                $qr->style(\Altum\QrCodes\ShineModule::class, 0.99);
+                $qr->style(\SeeGap\QrCodes\ShineModule::class, 0.99);
                 break;
 
             case 'bold_plus':
-                $qr->style(\Altum\QrCodes\BoldPlusModule::class, 0.999);
+                $qr->style(\SeeGap\QrCodes\BoldPlusModule::class, 0.999);
                 break;
 
             case 'teardrop':
-                $qr->style(\Altum\QrCodes\TeardropModule::class, 0.85);
+                $qr->style(\SeeGap\QrCodes\TeardropModule::class, 0.85);
                 break;
 
             case 'corner_cut':
-                $qr->style(\Altum\QrCodes\CornerCutModule::class, 0.85);
+                $qr->style(\SeeGap\QrCodes\CornerCutModule::class, 0.85);
                 break;
 
             case 'randomized_square':
-                $qr->style(\Altum\QrCodes\RandomizedSquareModule::class, 0.9);
+                $qr->style(\SeeGap\QrCodes\RandomizedSquareModule::class, 0.9);
                 break;
 
             case 'bold_x':
-                $qr->style(\Altum\QrCodes\BoldXModule::class, 0.99);
+                $qr->style(\SeeGap\QrCodes\BoldXModule::class, 0.99);
                 break;
 
             default:
@@ -587,7 +587,7 @@ class QrCodeGenerator extends Controller {
                 break;
         }
 
-        $qr->eye(\Altum\QrCodes\EyeCombiner::instance($_POST['inner_eye_style'], $_POST['outer_eye_style']));
+        $qr->eye(\SeeGap\QrCodes\EyeCombiner::instance($_POST['inner_eye_style'], $_POST['outer_eye_style']));
 
         /* Colors */
         $background_color = hex_to_rgb($_POST['background_color']);
@@ -680,7 +680,7 @@ class QrCodeGenerator extends Controller {
                     Alerts::add_error(l('global.error_message.invalid_file_type'));
                 }
 
-                if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                     if(!is_writable(Uploads::get_full_path('qr_code_foreground'))) {
                         Response::json(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_foreground')), 'error');
                     }
@@ -765,7 +765,7 @@ class QrCodeGenerator extends Controller {
                     Alerts::add_error(l('global.error_message.invalid_file_type'));
                 }
 
-                if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                     if(!is_writable(Uploads::get_full_path('qr_code_logo'))) {
                         Response::json(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_logo')), 'error');
                     }
@@ -833,7 +833,7 @@ class QrCodeGenerator extends Controller {
                     Alerts::add_error(l('global.error_message.invalid_file_type'));
                 }
 
-                if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                     if(!is_writable(Uploads::get_full_path('qr_code_background'))) {
                         Response::json(sprintf(l('global.error_message.directory_not_writable'), Uploads::get_full_path('qr_code_background')), 'error');
                     }

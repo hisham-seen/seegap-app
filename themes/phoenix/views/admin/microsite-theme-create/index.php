@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
     <nav aria-label="breadcrumb">
@@ -15,13 +15,13 @@
     <h1 class="h3 mb-0 mr-1"><i class="fas fa-fw fa-xs fa-palette text-primary-900 mr-2"></i> <?= l('admin_microsite_theme_create.header') ?></h1>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
 
         <form action="" method="post" role="form" enctype="multipart/form-data">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
@@ -93,8 +93,8 @@
                 <div id="microsite_background_type_image">
                     <div class="form-group">
                         <label for="microsite_background_type_image"><?= l('link.settings.background_type_image') ?></label>
-                        <input id="microsite_background_type_image" type="file" name="microsite_background_image" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('microsite_background') ?>" class="form-control-file altum-file-input" />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('microsite_background')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->background_size_limit) ?></small>
+                        <input id="microsite_background_type_image" type="file" name="microsite_background_image" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_background') ?>" class="form-control-file seegap-file-input" />
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_background')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->background_size_limit) ?></small>
                     </div>
                 </div>
 
@@ -371,13 +371,13 @@
     microsite_background_type_handler();
     document.querySelector('#microsite_background_type').addEventListener('change', microsite_background_type_handler);
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php include_view(THEME_PATH . 'views/partials/color_picker_js.php', ['opacity' => true]) ?>
 
 <?php ob_start() ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php ob_start() ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
@@ -413,4 +413,4 @@
             }
         })
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

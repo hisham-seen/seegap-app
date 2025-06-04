@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <div class="form-group custom-control custom-switch">
@@ -9,13 +9,13 @@
     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= get_max_upload() ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), get_max_upload()) ?>">
         <label for="qr_codes_branding_logo"><i class="fas fa-fw fa-sm fa-icons text-muted mr-1"></i> <?= l('admin_settings.codes.qr_codes_branding_logo') ?></label>
         <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_logo', 'file_key' => 'qr_codes_branding_logo', 'already_existing_image' => settings()->codes->qr_codes_branding_logo]) ?>
-        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('qr_code_logo')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
+        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('qr_code_logo')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
     </div>
 
     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= get_max_upload() ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), get_max_upload()) ?>">
         <label for="qr_codes_default_image"><i class="fas fa-fw fa-sm fa-image text-muted mr-1"></i> <?= l('admin_settings.codes.qr_codes_default_image') ?></label>
         <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_default_image', 'file_key' => 'qr_codes_default_image', 'already_existing_image' => settings()->codes->qr_codes_default_image]) ?>
-        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('qr_code_default_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
+        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('qr_code_default_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
     </div>
 
     <?php foreach(['logo', 'background'] as $key): ?>

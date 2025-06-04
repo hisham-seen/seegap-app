@@ -1,18 +1,18 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <?php
-//ALTUMCODE:DEMO if(DEMO) {
-//ALTUMCODE:DEMO echo '<div class="card mb-4">';
-//ALTUMCODE:DEMO echo '<div class="card-body">';
-//ALTUMCODE:DEMO echo '<div class="h6">Demo</div>';
-//ALTUMCODE:DEMO echo '<div><small class="text-muted">📱 Some features are disabled as this is a demo version.</small></div>';
-//ALTUMCODE:DEMO echo '<div><small class="text-muted">🛠️ You can login as the admin with the prefilled credentials below.</small></div>';
-//ALTUMCODE:DEMO echo '<div><small class="text-muted">👨‍💻 You can also register your own account to test it as a normal user</small></div>';
-//ALTUMCODE:DEMO echo '</div>';
-//ALTUMCODE:DEMO echo '</div>';
-//ALTUMCODE:DEMO }
+//SEEGAP:DEMO if(DEMO) {
+//SEEGAP:DEMO echo '<div class="card mb-4">';
+//SEEGAP:DEMO echo '<div class="card-body">';
+//SEEGAP:DEMO echo '<div class="h6">Demo</div>';
+//SEEGAP:DEMO echo '<div><small class="text-muted">📱 Some features are disabled as this is a demo version.</small></div>';
+//SEEGAP:DEMO echo '<div><small class="text-muted">🛠️ You can login as the admin with the prefilled credentials below.</small></div>';
+//SEEGAP:DEMO echo '<div><small class="text-muted">👨‍💻 You can also register your own account to test it as a normal user</small></div>';
+//SEEGAP:DEMO echo '</div>';
+//SEEGAP:DEMO echo '</div>';
+//SEEGAP:DEMO }
 ?>
 
 <h1 class="h5"><?= sprintf(l('login.header'), settings()->main->title) ?></h1>
@@ -25,8 +25,8 @@
 
         <div class="form-group">
             <label for="twofa_token"><?= l('login.twofa_token') ?></label>
-            <input id="twofa_token" type="text" name="twofa_token" class="form-control <?= \Altum\Alerts::has_field_errors('twofa_token') ? 'is-invalid' : null ?>" required="required" autocomplete="off" autofocus="autofocus" placeholder="123 456" maxlength="6" />
-            <?= \Altum\Alerts::output_field_error('twofa_token') ?>
+            <input id="twofa_token" type="text" name="twofa_token" class="form-control <?= \SeeGap\Alerts::has_field_errors('twofa_token') ? 'is-invalid' : null ?>" required="required" autocomplete="off" autofocus="autofocus" placeholder="123 456" maxlength="6" />
+            <?= \SeeGap\Alerts::output_field_error('twofa_token') ?>
         </div>
 
         <div class="form-group mt-3">
@@ -36,14 +36,14 @@
 
         <div class="form-group">
             <label for="email"><?= l('global.email') ?></label>
-            <input id="email" type="text" name="email" class="form-control <?= \Altum\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" required="required" autofocus="autofocus" />
-            <?= \Altum\Alerts::output_field_error('email') ?>
+            <input id="email" type="text" name="email" class="form-control <?= \SeeGap\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" required="required" autofocus="autofocus" />
+            <?= \SeeGap\Alerts::output_field_error('email') ?>
         </div>
 
         <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
             <label for="password"><?= l('global.password') ?></label>
-            <input id="password" type="password" name="password" class="form-control <?= \Altum\Alerts::has_field_errors('password') ? 'is-invalid' : null ?>" value="<?= $data->user ? $data->values['password'] : null ?>" required="required" />
-            <?= \Altum\Alerts::output_field_error('password') ?>
+            <input id="password" type="password" name="password" class="form-control <?= \SeeGap\Alerts::has_field_errors('password') ? 'is-invalid' : null ?>" value="<?= $data->user ? $data->values['password'] : null ?>" required="required" />
+            <?= \SeeGap\Alerts::output_field_error('password') ?>
         </div>
 
         <?php if(settings()->captcha->login_is_enabled): ?>
@@ -154,4 +154,4 @@
             ]
         }
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

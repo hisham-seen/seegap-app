@@ -7,20 +7,20 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Date;
-use Altum\Uploads;
+use SeeGap\Alerts;
+use SeeGap\Date;
+use SeeGap\Uploads;
 use Unirest\Request;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class QrCodeManager extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(!settings()->codes->qr_codes_is_enabled) {
             redirect('not-found');
@@ -33,7 +33,7 @@ class QrCodeManager extends Controller {
 
         /* Team checks */
         if($mode == 'create') {
-            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.qr_codes')) {
+            if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.qr_codes')) {
                 Alerts::add_info(l('global.info_message.team_no_access'));
                 redirect('qr-codes');
             }
@@ -46,7 +46,7 @@ class QrCodeManager extends Controller {
                 redirect('qr-codes');
             }
         } else {
-            if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.qr_codes')) {
+            if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.qr_codes')) {
                 Alerts::add_info(l('global.info_message.team_no_access'));
                 redirect('qr-codes');
             }
@@ -67,13 +67,13 @@ class QrCodeManager extends Controller {
         $outer_eyes = require APP_PATH . 'includes/qr_codes_outer_eyes.php';
 
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Existing links */
-        $links = (new \Altum\Models\Link())->get_full_links_by_user_id($this->user->user_id);
+        $links = (new \SeeGap\Models\Link())->get_full_links_by_user_id($this->user->user_id);
 
         /* Existing GS1 links */
-        $gs1_links = (new \Altum\Models\Gs1Link())->get_gs1_links_by_user_id($this->user->user_id);
+        $gs1_links = (new \SeeGap\Models\Gs1Link())->get_gs1_links_by_user_id($this->user->user_id);
 
         $settings = [
             'style' => 'square',
@@ -376,7 +376,7 @@ class QrCodeManager extends Controller {
                     break;
             }
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             foreach($required_fields as $field) {
@@ -385,7 +385,7 @@ class QrCodeManager extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -458,13 +458,13 @@ class QrCodeManager extends Controller {
 
             else {
                 if($mode == 'edit') {
-                    $qr_code->qr_code_logo = \Altum\Uploads::process_upload($qr_code->qr_code_logo, 'qr_code_logo', 'qr_code_logo', 'qr_code_logo_remove', settings()->codes->logo_size_limit);
-                    $qr_code->qr_code_background = \Altum\Uploads::process_upload($qr_code->qr_code_background, 'qr_code_background', 'qr_code_background', 'qr_code_background_remove', settings()->codes->background_size_limit);
-                    $qr_code->qr_code_foreground = \Altum\Uploads::process_upload($qr_code->qr_code_foreground, 'qr_code_foreground', 'qr_code_foreground', 'qr_code_foreground_remove', settings()->codes->background_size_limit);
+                    $qr_code->qr_code_logo = \SeeGap\Uploads::process_upload($qr_code->qr_code_logo, 'qr_code_logo', 'qr_code_logo', 'qr_code_logo_remove', settings()->codes->logo_size_limit);
+                    $qr_code->qr_code_background = \SeeGap\Uploads::process_upload($qr_code->qr_code_background, 'qr_code_background', 'qr_code_background', 'qr_code_background_remove', settings()->codes->background_size_limit);
+                    $qr_code->qr_code_foreground = \SeeGap\Uploads::process_upload($qr_code->qr_code_foreground, 'qr_code_foreground', 'qr_code_foreground', 'qr_code_foreground_remove', settings()->codes->background_size_limit);
                 } else {
-                    $qr_code_logo = \Altum\Uploads::process_upload(null, 'qr_code_logo', 'qr_code_logo', 'qr_code_logo_remove', settings()->codes->logo_size_limit);
-                    $qr_code_background = \Altum\Uploads::process_upload(null, 'qr_code_background', 'qr_code_background', 'qr_code_background_remove', settings()->codes->background_size_limit);
-                    $qr_code_foreground = \Altum\Uploads::process_upload(null, 'qr_code_foreground', 'qr_code_foreground', 'qr_code_foreground_remove', settings()->codes->background_size_limit);
+                    $qr_code_logo = \SeeGap\Uploads::process_upload(null, 'qr_code_logo', 'qr_code_logo', 'qr_code_logo_remove', settings()->codes->logo_size_limit);
+                    $qr_code_background = \SeeGap\Uploads::process_upload(null, 'qr_code_background', 'qr_code_background', 'qr_code_background_remove', settings()->codes->background_size_limit);
+                    $qr_code_foreground = \SeeGap\Uploads::process_upload(null, 'qr_code_foreground', 'qr_code_foreground', 'qr_code_foreground_remove', settings()->codes->background_size_limit);
                 }
 
                 if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
@@ -478,7 +478,7 @@ class QrCodeManager extends Controller {
                         $image_new_name = md5(time() . rand()) . '.svg';
 
                         /* Offload uploading */
-                        if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                        if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                             try {
                                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -619,7 +619,7 @@ class QrCodeManager extends Controller {
             'values' => $values,
         ];
 
-        $view = new \Altum\View('qr-code-manager/index', (array) $this);
+        $view = new \SeeGap\View('qr-code-manager/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

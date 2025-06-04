@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminBroadcastCreate extends Controller {
 
     public function index() {
 
-        $plans = (new \Altum\Models\Plan())->get_plans();
+        $plans = (new \SeeGap\Models\Plan())->get_plans();
 
         if(!empty($_POST)) {
             /* Filter some the variables */
@@ -37,9 +37,9 @@ class AdminBroadcastCreate extends Controller {
                 }
             }
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -306,7 +306,7 @@ class AdminBroadcastCreate extends Controller {
             'plans' => $plans,
         ];
 
-        $view = new \Altum\View('admin/broadcast-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/broadcast-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -7,28 +7,28 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminDocuments extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('aix')) {
+        if(!\SeeGap\Plugin::is_active('aix')) {
             redirect('not-found');
         }
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'project_id', 'template_id', 'template_category_id'], ['name'], ['document_id', 'last_datetime', 'datetime', 'name', 'words']));
+        $filters = (new \SeeGap\Filters(['user_id', 'project_id', 'template_id', 'template_category_id'], ['name'], ['document_id', 'last_datetime', 'datetime', 'name', 'words']));
         $filters->set_default_order_by($this->user->preferences->documents_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `documents` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/documents?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/documents?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $documents = [];
@@ -56,13 +56,13 @@ class AdminDocuments extends Controller {
         process_export_json($documents, 'include', ['document_id', 'template_id', 'template_category_id', 'project_id', 'user_id', 'name', 'type', 'content', 'words', 'model', 'api_response_time', 'settings', 'datetime', 'last_datetime'], sprintf(l('documents.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Get available templates categories */
-        $templates_categories = (new \Altum\Models\TemplatesCategories())->get_templates_categories();
+        $templates_categories = (new \SeeGap\Models\TemplatesCategories())->get_templates_categories();
 
         /* Templates */
-        $templates = (new \Altum\Models\Templates())->get_templates();
+        $templates = (new \SeeGap\Models\Templates())->get_templates();
 
         /* Main View */
         $data = [
@@ -73,7 +73,7 @@ class AdminDocuments extends Controller {
             'templates_categories' => $templates_categories,
         ];
 
-        $view = new \Altum\View('admin/documents/index', (array) $this);
+        $view = new \SeeGap\View('admin/documents/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -94,9 +94,9 @@ class AdminDocuments extends Controller {
             redirect('admin/documents');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -131,9 +131,9 @@ class AdminDocuments extends Controller {
 
         $document_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

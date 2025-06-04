@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
 
@@ -94,5 +94,5 @@
     initiate_captcha_type();
     document.querySelector('select[name="type"]').addEventListener('change', initiate_captcha_type);
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 

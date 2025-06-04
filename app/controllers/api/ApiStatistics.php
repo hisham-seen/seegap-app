@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ApiStatistics extends Controller {
     use Apiable;
@@ -51,7 +51,7 @@ class ApiStatistics extends Controller {
         }
 
         /* :) */
-        $this->datetime = \Altum\Date::get_start_end_dates_new();
+        $this->datetime = \SeeGap\Date::get_start_end_dates_new();
 
         $type = isset($_GET['type']) && in_array($_GET['type'], [
             'overview',

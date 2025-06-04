@@ -1,6 +1,6 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?php if(count(\Altum\Language::$languages)): ?>
+<?php if(count(\SeeGap\Language::$languages)): ?>
 
     <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
         <h1 class="h3 mb-3 mb-md-0"><i class="fas fa-fw fa-xs fa-language text-primary-900 mr-2"></i> <?= l('admin_languages.header') ?></h1>
@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="table-responsive table-custom-container">
         <table class="table table-custom">
@@ -27,7 +27,7 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach(\Altum\Language::$languages as $language): ?>
+            <?php foreach(\SeeGap\Language::$languages as $language): ?>
 
                 <tr>
                     <td>
@@ -41,7 +41,7 @@
                             <span class="mx-1 badge badge-success"><?= l('admin_languages.default_language') ?></span>
                         <?php endif ?>
 
-                        <?php if($language['name'] == \Altum\Language::$main_name): ?>
+                        <?php if($language['name'] == \SeeGap\Language::$main_name): ?>
                             <span class="mx-1 badge badge-info"><?= l('admin_languages.main') ?></span>
                         <?php endif ?>
                     </td>
@@ -99,7 +99,7 @@
 
 <?php endif ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
     'name' => 'language',
     'resource_id' => 'language_name',
     'has_dynamic_resource_name' => true,

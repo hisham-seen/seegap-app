@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminChatAssistantUpdate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('aix')) {
+        if(!\SeeGap\Plugin::is_active('aix')) {
             redirect('not-found');
         }
 
@@ -41,7 +41,7 @@ class AdminChatAssistantUpdate extends Controller {
                 foreach($array as $key => $value) {
                     $_POST['translations'][$language_name][$key] = input_clean($value);
                 }
-                if(!array_key_exists($language_name, \Altum\Language::$active_languages)) {
+                if(!array_key_exists($language_name, \SeeGap\Language::$active_languages)) {
                     unset($_POST['translations'][$language_name]);
                 }
             }
@@ -51,11 +51,11 @@ class AdminChatAssistantUpdate extends Controller {
                 'translations' => $_POST['translations'],
             ]);
 
-            $image = \Altum\Uploads::process_upload($chat_assistant->image, 'chats_assistants', 'image', 'image_remove', null);
+            $image = \SeeGap\Uploads::process_upload($chat_assistant->image, 'chats_assistants', 'image', 'image_remove', null);
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -91,7 +91,7 @@ class AdminChatAssistantUpdate extends Controller {
             'chat_assistant' => $chat_assistant,
         ];
 
-        $view = new \Altum\View('admin/chat-assistant-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/chat-assistant-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

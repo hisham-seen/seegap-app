@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminPlanUpdate extends Controller {
 
@@ -55,14 +55,14 @@ class AdminPlanUpdate extends Controller {
         }
 
         $additional_domains = db()->where('is_enabled', 1)->where('type', 1)->get('domains');
-        $microsites_templates = (new \Altum\Models\MicrositesTemplates())->get_microsites_templates();
-        $microsites_themes = (new \Altum\Models\MicrositesThemes())->get_microsites_themes();
+        $microsites_templates = (new \SeeGap\Models\MicrositesTemplates())->get_microsites_templates();
+        $microsites_themes = (new \SeeGap\Models\MicrositesThemes())->get_microsites_themes();
 
         if(!empty($_POST)) {
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -78,7 +78,7 @@ class AdminPlanUpdate extends Controller {
                 foreach($array as $key => $value) {
                     $_POST['translations'][$language_name][$key] = input_clean($value);
                 }
-                if(!array_key_exists($language_name, \Altum\Language::$active_languages)) {
+                if(!array_key_exists($language_name, \SeeGap\Language::$active_languages)) {
                     unset($_POST['translations'][$language_name]);
                 }
             }
@@ -360,7 +360,7 @@ class AdminPlanUpdate extends Controller {
             'microsites_themes' => $microsites_themes,
         ];
 
-        $view = new \Altum\View('admin/plan-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/plan-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

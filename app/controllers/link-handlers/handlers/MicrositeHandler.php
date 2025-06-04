@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers\LinkHandlers\Handlers;
+namespace SeeGap\Controllers\LinkHandlers\Handlers;
 
-use Altum\Controllers\LinkHandlers\BaseLinkHandler;
-use Altum\Response;
-use Altum\Models\MicrositesThemes;
+use SeeGap\Controllers\LinkHandlers\BaseLinkHandler;
+use SeeGap\Response;
+use SeeGap\Models\MicrositesThemes;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Microsite Handler
@@ -109,7 +109,7 @@ class MicrositeHandler extends BaseLinkHandler {
 
         /* Check for microsite templates */
         if($_POST['microsite_template_id']) {
-            $microsites_templates = (new \Altum\Models\MicrositesTemplates())->get_microsites_templates();
+            $microsites_templates = (new \SeeGap\Models\MicrositesTemplates())->get_microsites_templates();
 
             if(array_key_exists($_POST['microsite_template_id'], $microsites_templates)) {
                 $microsite_template = $microsites_templates[$_POST['microsite_template_id']];
@@ -120,9 +120,9 @@ class MicrositeHandler extends BaseLinkHandler {
                 if($microsite) {
                     /* Get all the microsite blocks as well */
                     $microsite->settings = json_decode($microsite->settings ?? '');
-                    $microsite->settings->seo->image = \Altum\Uploads::copy_uploaded_file($microsite->settings->seo->image, 'block_images/', 'block_images/', 'json_error');
-                    $microsite->settings->favicon = \Altum\Uploads::copy_uploaded_file($microsite->settings->favicon, 'favicons/', 'favicons/', 'json_error');
-                    if($microsite->settings->background_type == 'image') $microsite->settings->background = \Altum\Uploads::copy_uploaded_file($microsite->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                    $microsite->settings->seo->image = \SeeGap\Uploads::copy_uploaded_file($microsite->settings->seo->image, 'block_images/', 'block_images/', 'json_error');
+                    $microsite->settings->favicon = \SeeGap\Uploads::copy_uploaded_file($microsite->settings->favicon, 'favicons/', 'favicons/', 'json_error');
+                    if($microsite->settings->background_type == 'image') $microsite->settings->background = \SeeGap\Uploads::copy_uploaded_file($microsite->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                     $microsite->settings->pwa_is_enabled = false;
                     $microsite->settings->pwa_icon = null;
                     $additional = $microsite->additional;
@@ -192,25 +192,25 @@ class MicrositeHandler extends BaseLinkHandler {
                     case 'pdf_document':
                     case 'powerpoint_presentation':
                     case 'excel_spreadsheet':
-                        $microsite_block->settings->file = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
+                        $microsite_block->settings->file = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->file, \SeeGap\Uploads::get_path('files'), \SeeGap\Uploads::get_path('files'), 'json_error');
                         break;
 
                     case 'review':
-                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, \Altum\Uploads::get_path('block_images'), \Altum\Uploads::get_path('block_images'), 'json_error');
+                        $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, \SeeGap\Uploads::get_path('block_images'), \SeeGap\Uploads::get_path('block_images'), 'json_error');
                         break;
 
                     case 'avatar':
-                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
+                        $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
                         break;
 
                     case 'header':
-                        $microsite_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
-                        $microsite_block->settings->background = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                        $microsite_block->settings->avatar = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
+                        $microsite_block->settings->background = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                         break;
 
                     case 'image':
                     case 'image_grid':
-                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
+                        $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
                         break;
 
                     case 'heading':
@@ -221,12 +221,12 @@ class MicrositeHandler extends BaseLinkHandler {
                         $microsite_block->settings->items = (array) $microsite_block->settings->items;
 
                         foreach($microsite_block->settings->items as $key => $item) {
-                            $microsite_block->settings->items[$key]->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
+                            $microsite_block->settings->items[$key]->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
                         }
                         break;
 
                     default:
-                        $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
+                        $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
                         break;
                 }
 
@@ -303,10 +303,10 @@ class MicrositeHandler extends BaseLinkHandler {
 
         /* Image uploads */
         $image_allowed_extensions = [
-            'pwa_icon' => \Altum\Uploads::get_whitelisted_file_extensions('app_icon'),
-            'seo_image' => \Altum\Uploads::get_whitelisted_file_extensions('microsite_seo_image'),
-            'favicon' => \Altum\Uploads::get_whitelisted_file_extensions('favicons'),
-            'background' => \Altum\Uploads::get_whitelisted_file_extensions('microsite_background'),
+            'pwa_icon' => \SeeGap\Uploads::get_whitelisted_file_extensions('app_icon'),
+            'seo_image' => \SeeGap\Uploads::get_whitelisted_file_extensions('microsite_seo_image'),
+            'favicon' => \SeeGap\Uploads::get_whitelisted_file_extensions('favicons'),
+            'background' => \SeeGap\Uploads::get_whitelisted_file_extensions('microsite_background'),
         ];
         $image = [
             'pwa_icon' => !empty($_FILES['pwa_icon']['name']) && !isset($_POST['pwa_icon_remove']),
@@ -315,10 +315,10 @@ class MicrositeHandler extends BaseLinkHandler {
             'background' => !empty($_FILES['background']['name']) && !isset($_POST['background_remove']),
         ];
         $image_upload_path = [
-            'pwa_icon' => \Altum\Uploads::get_path('app_icon'),
-            'seo_image' => \Altum\Uploads::get_path('microsite_seo_image'),
-            'favicon' => \Altum\Uploads::get_path('favicons'),
-            'background' => \Altum\Uploads::get_path('microsite_background'),
+            'pwa_icon' => \SeeGap\Uploads::get_path('app_icon'),
+            'seo_image' => \SeeGap\Uploads::get_path('microsite_seo_image'),
+            'favicon' => \SeeGap\Uploads::get_path('favicons'),
+            'background' => \SeeGap\Uploads::get_path('microsite_background'),
         ];
         $image_uploaded_file = [
             'pwa_icon' => $link->settings->pwa_icon,
@@ -351,7 +351,7 @@ class MicrositeHandler extends BaseLinkHandler {
                     Response::json(l('global.error_message.invalid_file_type'), 'error');
                 }
 
-                if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                     if(!is_writable(UPLOADS_PATH . $image_upload_path[$image_key])) {
                         Response::json(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . $image_upload_path[$image_key]), 'error');
                     }
@@ -365,12 +365,12 @@ class MicrositeHandler extends BaseLinkHandler {
                 $image_new_name = md5(time() . rand()) . '.' . $file_extension;
 
                 /* Try to compress the image */
-                if(\Altum\Plugin::is_active('image-optimizer')) {
-                    \Altum\Plugin\ImageOptimizer::optimize($file_temp, $image_new_name);
+                if(\SeeGap\Plugin::is_active('image-optimizer')) {
+                    \SeeGap\Plugin\ImageOptimizer::optimize($file_temp, $image_new_name);
                 }
 
                 /* Offload uploading */
-                if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                     try {
                         $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -411,7 +411,7 @@ class MicrositeHandler extends BaseLinkHandler {
             if(isset($_POST[$image_key . '_remove'])) {
 
                 /* Offload deleting */
-                if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                     $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
                     $s3->deleteObject([
                         'Bucket' => settings()->offload->storage_name,
@@ -485,12 +485,12 @@ class MicrositeHandler extends BaseLinkHandler {
                     $background_new_name = md5(time() . rand()) . '.' . $background_file_extension;
 
                     /* Try to compress the image */
-                    if(\Altum\Plugin::is_active('image-optimizer')) {
-                        \Altum\Plugin\ImageOptimizer::optimize($background_file_temp, $background_new_name);
+                    if(\SeeGap\Plugin::is_active('image-optimizer')) {
+                        \SeeGap\Plugin\ImageOptimizer::optimize($background_file_temp, $background_new_name);
                     }
 
                     /* Offload uploading */
-                    if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                    if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                         try {
                             $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -540,7 +540,7 @@ class MicrositeHandler extends BaseLinkHandler {
         )
         {
             /* Offload deleting */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
                 $s3->deleteObject([
                     'Bucket' => settings()->offload->storage_name,
@@ -597,7 +597,7 @@ class MicrositeHandler extends BaseLinkHandler {
         $_POST['pwa_display_install_bar_delay'] = max(1, (int) $_POST['pwa_display_install_bar_delay'] ?? 3);
         $_POST['pwa_theme_color'] = isset($_POST['pwa_theme_color']) && verify_hex_color($_POST['pwa_theme_color']) ? $_POST['pwa_theme_color'] : '#000000';
 
-        if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled && $this->user->plan_settings->custom_pwa_is_enabled && $_POST['pwa_is_enabled']) {
+        if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled && $this->user->plan_settings->custom_pwa_is_enabled && $_POST['pwa_is_enabled']) {
             $pwa_file_name = $link->settings->pwa_file_name ?? 'microsites-' . md5(time() . rand() . rand());
 
             $full_url = $domain_id ? $domains[$_POST['domain_id']]->scheme . $domains[$_POST['domain_id']]->host . '/' . ($_POST['is_main_link'] ? null : $_POST['url']) : SITE_URL . $_POST['url'];
@@ -615,8 +615,8 @@ class MicrositeHandler extends BaseLinkHandler {
                 'short_name' => $_POST['url'],
                 'description' => $_POST['seo_meta_description'] ?: $_POST['url'],
                 'theme_color' => $_POST['pwa_theme_color'],
-                'app_icon_url' => $image_uploaded_file['pwa_icon'] ? \Altum\Uploads::get_full_url('app_icon') . $image_uploaded_file['pwa_icon'] : (settings()->pwa->app_icon ? \Altum\Uploads::get_full_url('app_icon') . settings()->pwa->app_icon : null),
-                'app_icon_maskable_url' => $image_uploaded_file['pwa_icon'] ? \Altum\Uploads::get_full_url('app_icon') . $image_uploaded_file['pwa_icon'] : (settings()->pwa->app_icon_maskable ? \Altum\Uploads::get_full_url('app_icon') . settings()->pwa->app_icon_maskable : null),
+                'app_icon_url' => $image_uploaded_file['pwa_icon'] ? \SeeGap\Uploads::get_full_url('app_icon') . $image_uploaded_file['pwa_icon'] : (settings()->pwa->app_icon ? \SeeGap\Uploads::get_full_url('app_icon') . settings()->pwa->app_icon : null),
+                'app_icon_maskable_url' => $image_uploaded_file['pwa_icon'] ? \SeeGap\Uploads::get_full_url('app_icon') . $image_uploaded_file['pwa_icon'] : (settings()->pwa->app_icon_maskable ? \SeeGap\Uploads::get_full_url('app_icon') . settings()->pwa->app_icon_maskable : null),
                 'start_url' => $full_url,
                 'scope' => $full_url,
                 'mobile_screenshots' => [],

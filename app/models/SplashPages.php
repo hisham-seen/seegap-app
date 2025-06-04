@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SplashPages extends Model {
 
@@ -56,7 +56,7 @@ class SplashPages extends Model {
         $splash_page->settings = json_decode($splash_page->settings ?? '');
 
         /* Delete file */
-        \Altum\Uploads::delete_uploaded_file($splash_page->settings->logo, 'splash_pages');
+        \SeeGap\Uploads::delete_uploaded_file($splash_page->settings->logo, 'splash_pages');
 
         /* Delete from database */
         db()->where('splash_page_id', $splash_page_id)->delete('splash_pages');

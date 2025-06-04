@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Logger;
+use SeeGap\Alerts;
+use SeeGap\Logger;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ActivateUser extends Controller {
 

@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\models;
+namespace SeeGap\models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class MicrositesTemplates extends Model {
 

@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Language {
     /* Selected language */
@@ -102,7 +102,7 @@ class Language {
         }
 
         /* Caching system */
-        if(\Altum\Router::$path !== 'admin' && ALTUMCODE == 66) {
+        if(\SeeGap\Router::$path !== 'admin' && SEEGAP == 66) {
             /* Try to access the cached file */
             if(file_exists(self::$path . 'cache/' . $name . '#' . self::$languages[$name]['code'] . '.php')) {
                 self::$languages[$name]['content'] = require self::$path . 'cache/' . $name . '#' . self::$languages[$name]['code'] . '.php';
@@ -117,7 +117,7 @@ class Language {
                     /* Only generate the caching if permissions allow */
                     if(is_writable(self::$path . 'cache/')) {
                         /* Run processing hook */
-                        $prefixes_to_skip = \Altum\CustomHooks::generate_language_prefixes_to_skip();
+                        $prefixes_to_skip = \SeeGap\CustomHooks::generate_language_prefixes_to_skip();
                         self::$languages[$name]['content'] = self::generate_cached_language_file(self::$languages[$name], $prefixes_to_skip);
                     }
                 }
@@ -139,7 +139,7 @@ class Language {
         }
 
         /* Include the admin language file if needed */
-        if(\Altum\Router::$path == 'admin') {
+        if(\SeeGap\Router::$path == 'admin') {
             if(file_exists(self::$path . 'admin/' . $name . '#' . self::$languages[$name]['code'] . '.php')) {
                 $admin_language = require self::$path . 'admin/' . $name . '#' . self::$languages[$name]['code'] . '.php';
             }
@@ -188,7 +188,7 @@ class Language {
     }
 
     public static function clear_cache(){
-        if(ALTUMCODE != 66) return;
+        if(SEEGAP != 66) return;
 
         /* Determine all the languages available in the directory */
         foreach(glob(self::$path . 'cache/*.php') as $file_path) {

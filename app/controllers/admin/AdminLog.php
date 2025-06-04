@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Title;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminLog extends Controller {
 
@@ -50,7 +50,7 @@ class AdminLog extends Controller {
             'log' => $log,
         ];
 
-        $view = new \Altum\View('admin/log/index', (array) $this);
+        $view = new \SeeGap\View('admin/log/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

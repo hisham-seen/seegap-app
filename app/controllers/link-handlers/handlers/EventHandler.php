@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers\LinkHandlers\Handlers;
+namespace SeeGap\Controllers\LinkHandlers\Handlers;
 
-use Altum\Controllers\LinkHandlers\BaseLinkHandler;
-use Altum\Response;
-use Altum\Date;
+use SeeGap\Controllers\LinkHandlers\BaseLinkHandler;
+use SeeGap\Response;
+use SeeGap\Date;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Event Handler

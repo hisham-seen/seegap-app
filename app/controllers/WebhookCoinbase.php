@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Payments;
-use Altum\PaymentGateways\Coinbase;
+use SeeGap\Models\Payments;
+use SeeGap\PaymentGateways\Coinbase;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class WebhookCoinbase extends Controller {
 

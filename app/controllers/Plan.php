@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 
-use Altum\Title;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Plan extends Controller {
 
@@ -37,7 +37,7 @@ class Plan extends Controller {
         /* Plans View */
         $data = [];
 
-        $view = new \Altum\View('partials/plans', (array) $this);
+        $view = new \SeeGap\View('partials/plans', (array) $this);
 
         $this->add_view_content('plans', $view->run($data));
 
@@ -47,7 +47,7 @@ class Plan extends Controller {
             'type' => $type
         ];
 
-        $view = new \Altum\View('plan/index', (array) $this);
+        $view = new \SeeGap\View('plan/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

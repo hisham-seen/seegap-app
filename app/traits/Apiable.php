@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Traits;
+namespace SeeGap\Traits;
 
-use Altum\Response;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 trait Apiable {
     public $api_user = null;
@@ -19,7 +19,7 @@ trait Apiable {
     /* Function to check the request authentication */
     private function verify_request($require_to_be_admin = false, $require_to_have_plan_setting = true, $require_to_have_api_enabled = true) {
 
-        //ALTUMCODE:DEMO if(DEMO) $this->response_error('This feature is blocked on the demo.', 400);
+        //SEEGAP:DEMO if(DEMO) $this->response_error('This feature is blocked on the demo.', 400);
 
         if(!settings()->main->api_is_enabled && !$require_to_be_admin && $require_to_have_api_enabled) {
             redirect('not-found');
@@ -29,7 +29,7 @@ trait Apiable {
         header('Content-Type: application/json');
 
         /* Make sure to check for the Auth header */
-        $api_key = \Altum\Authentication::get_authorization_bearer();
+        $api_key = \SeeGap\Authentication::get_authorization_bearer();
 
         if(!$api_key) {
             Response::jsonapi_error([[
@@ -39,7 +39,7 @@ trait Apiable {
         }
 
         /* Get the user data of the API key owner, if any */
-        $this->api_user = \Altum\Cache::cache_function_result('user?api_key=' . $api_key, null, function() use ($api_key) {
+        $this->api_user = \SeeGap\Cache::cache_function_result('user?api_key=' . $api_key, null, function() use ($api_key) {
             return db()->where('api_key', $api_key)->where('status', 1)->getOne('users');
         });
 

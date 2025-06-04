@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(count($data->taxes) || $data->filters->has_applied_filters): ?>
 
@@ -41,7 +41,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
@@ -127,7 +127,7 @@
         </div>
     </div>
 
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="table-responsive table-custom-container">
         <table class="table table-custom">
@@ -171,7 +171,7 @@
                     </td>
 
                     <td class="text-nowrap">
-                        <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                        <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                             <i class="fas fa-fw fa-calendar text-muted"></i>
                         </span>
                     </td>
@@ -192,7 +192,7 @@
 
 <?php else: ?>
 
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="card">
         <div class="card-body">

@@ -6,7 +6,7 @@ INSERT INTO `settings` (`key`, `value`) VALUES ('mercadopago', '{}');
 
 -- SEPARATOR --
 
-CREATE PROCEDURE `altum`()
+CREATE PROCEDURE `seegap`()
 BEGIN
 
    	IF
@@ -47,8 +47,8 @@ END;
 
 -- SEPARATOR --
 
-call altum;
+call seegap;
 
 -- SEPARATOR --
 
-drop procedure altum;
+drop procedure seegap;

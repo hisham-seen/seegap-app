@@ -7,21 +7,21 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class TeamUpdate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $team_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
@@ -32,7 +32,7 @@ class TeamUpdate extends Controller {
         if(!empty($_POST)) {
             $_POST['name'] = trim(input_clean($_POST['name']));
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -42,7 +42,7 @@ class TeamUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -69,7 +69,7 @@ class TeamUpdate extends Controller {
             'team' => $team
         ];
 
-        $view = new \Altum\View('team-update/index', (array) $this);
+        $view = new \SeeGap\View('team-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

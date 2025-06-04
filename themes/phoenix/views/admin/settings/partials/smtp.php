@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <div class="form-row">
@@ -159,8 +159,8 @@
         }) ;
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/admin/settings/settings_send_test_email_modal.php', ['email' => $this->user->email]), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/admin/settings/settings_send_test_email_modal.php', ['email' => $this->user->email]), 'modals'); ?>
 
 <?php include_view(THEME_PATH . 'views/partials/color_picker_js.php') ?>

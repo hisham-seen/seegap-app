@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\LinkHandlers\Handlers;
+namespace SeeGap\Controllers\LinkHandlers\Handlers;
 
-use Altum\Controllers\LinkHandlers\BaseLinkHandler;
-use Altum\Response;
+use SeeGap\Controllers\LinkHandlers\BaseLinkHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Link Handler
@@ -177,8 +177,8 @@ class LinkHandler extends BaseLinkHandler {
         $link->settings = json_decode($link->settings ?? '');
 
         /* Cloaking */
-        $link->settings->cloaking_favicon = \Altum\Uploads::process_upload($link->settings->cloaking_favicon, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
-        $link->settings->cloaking_opengraph = \Altum\Uploads::process_upload($link->settings->cloaking_opengraph, 'microsite_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
+        $link->settings->cloaking_favicon = \SeeGap\Uploads::process_upload($link->settings->cloaking_favicon, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
+        $link->settings->cloaking_opengraph = \SeeGap\Uploads::process_upload($link->settings->cloaking_opengraph, 'microsite_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
 
         /* Check for a password set */
         $_POST['password'] = $this->process_password($link->settings->password);

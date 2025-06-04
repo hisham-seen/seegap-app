@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
     <div class="row mb-4">
@@ -24,7 +24,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 

@@ -7,22 +7,22 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Captcha;
-use Altum\Language;
-use Altum\Meta;
-use Altum\Models\Domain;
-use Altum\Models\User;
-use Altum\PaymentGateways\Paystack;
-use Altum\Response;
-use Altum\Title;
-use Altum\Uploads;
+use SeeGap\Alerts;
+use SeeGap\Captcha;
+use SeeGap\Language;
+use SeeGap\Meta;
+use SeeGap\Models\Domain;
+use SeeGap\Models\User;
+use SeeGap\PaymentGateways\Paystack;
+use SeeGap\Response;
+use SeeGap\Title;
+use SeeGap\Uploads;
 use MaxMind\Db\Reader;
 use Razorpay\Api\Api;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Link extends Controller {
     public $link = null;
@@ -34,11 +34,11 @@ class Link extends Controller {
 
     public function index() {
 
-        $domain_id = isset(\Altum\Router::$data['domain']) ? \Altum\Router::$data['domain']->domain_id : 0;
+        $domain_id = isset(\SeeGap\Router::$data['domain']) ? \SeeGap\Router::$data['domain']->domain_id : 0;
 
         /* Detect if access to url comes from id linking or url alias */
-        if(isset(\Altum\Router::$data['link'])) {
-            $this->link = \Altum\Router::$data['link'];
+        if(isset(\SeeGap\Router::$data['link'])) {
+            $this->link = \SeeGap\Router::$data['link'];
             $this->type = 'link';
         } else {
 
@@ -65,7 +65,7 @@ class Link extends Controller {
             $this->is_preview = true;
 
             /* Get available themes */
-            $this->microsites_themes = (new \Altum\Models\MicrositesThemes())->get_microsites_themes();
+            $this->microsites_themes = (new \SeeGap\Models\MicrositesThemes())->get_microsites_themes();
             $this->microsite_theme = isset($_GET['microsite_theme_id']) && array_key_exists($_GET['microsite_theme_id'], $this->microsites_themes) ? $this->microsites_themes[$_GET['microsite_theme_id']] : null;
         }
 
@@ -97,7 +97,7 @@ class Link extends Controller {
 
         /* Determine the actual full url */
         if(in_array($this->type, ['link', 'file', 'event'])) {
-            $this->link->full_url = $domain_id && !isset($_GET['link_id']) ? \Altum\Router::$data['domain']->scheme . \Altum\Router::$data['domain']->host . '/' . (\Altum\Router::$data['domain']->link_id == $this->link->link_id ? null : $this->link->url) : SITE_URL . $this->link->url;
+            $this->link->full_url = $domain_id && !isset($_GET['link_id']) ? \SeeGap\Router::$data['domain']->scheme . \SeeGap\Router::$data['domain']->host . '/' . (\SeeGap\Router::$data['domain']->link_id == $this->link->link_id ? null : $this->link->url) : SITE_URL . $this->link->url;
         } else {
             $this->link->full_url = SITE_URL . 'l/link?microsite_block_id=' . $this->link->microsite_block_id;
         }
@@ -127,7 +127,7 @@ class Link extends Controller {
             $splash_page = null;
 
             if($this->link->splash_page_id && $this->user->plan_settings->splash_pages_limit) {
-                $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
+                $splash_pages = (new \SeeGap\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
                 $splash_page = $splash_pages[$this->link->splash_page_id] ?? null;
             }
 
@@ -143,16 +143,16 @@ class Link extends Controller {
             /* Meta */
             if($splash_page->settings->opengraph) {
                 Meta::set_description(string_truncate($splash_page->description, 160));
-                Meta::set_social_url(url(\Altum\Router::$original_request));
-                Meta::set_social_image(\Altum\Uploads::get_full_url('splash_pages') . $splash_page->settings->opengraph);
+                Meta::set_social_url(url(\SeeGap\Router::$original_request));
+                Meta::set_social_image(\SeeGap\Uploads::get_full_url('splash_pages') . $splash_page->settings->opengraph);
             }
 
             /* Prepare the view */
-            $view = new \Altum\View('l/partials/splash', (array) $this);
+            $view = new \SeeGap\View('l/partials/splash', (array) $this);
             $this->add_view_content('content', $view->run($data));
 
             /* Prepare the view */
-            $splash_wrapper = new \Altum\View('l/splash_wrapper', (array) $this);
+            $splash_wrapper = new \SeeGap\View('l/splash_wrapper', (array) $this);
             echo $splash_wrapper->run($data);
             die();
         }
@@ -168,8 +168,8 @@ class Link extends Controller {
                 (
                     ($this->link->settings->schedule ?? false) && !empty($this->link->start_date) && !empty($this->link->end_date) &&
                     (
-                        \Altum\Date::get('', null) < \Altum\Date::get($this->link->start_date, null, \Altum\Date::$default_timezone) ||
-                        \Altum\Date::get('', null) > \Altum\Date::get($this->link->end_date, null, \Altum\Date::$default_timezone)
+                        \SeeGap\Date::get('', null) < \SeeGap\Date::get($this->link->start_date, null, \SeeGap\Date::$default_timezone) ||
+                        \SeeGap\Date::get('', null) > \SeeGap\Date::get($this->link->end_date, null, \SeeGap\Date::$default_timezone)
                     )
                 )
                 || (isset($current_clicks) && $current_clicks >= $this->link->settings->clicks_limit)
@@ -194,7 +194,7 @@ class Link extends Controller {
         /* Check if the password form is submitted */
         if(!$has_access && !empty($_POST) && isset($_POST['type']) && $_POST['type'] == 'password') {
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -223,7 +223,7 @@ class Link extends Controller {
         /* Check if the password form is submitted */
         if(!$can_see_content && !empty($_POST) && isset($_POST['type']) && $_POST['type'] == 'sensitive_content') {
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -244,11 +244,11 @@ class Link extends Controller {
             Title::set(l('link.password.title'));
 
             /* Main View */
-            $view = new \Altum\View('l/partials/password', (array) $this);
+            $view = new \SeeGap\View('l/partials/password', (array) $this);
             $this->add_view_content('content', $view->run());
 
             /* Prepare the view */
-            $microsite_wrapper = new \Altum\View('l/microsite_wrapper', (array) $this);
+            $microsite_wrapper = new \SeeGap\View('l/microsite_wrapper', (array) $this);
             echo $microsite_wrapper->run();
             die();
         }
@@ -259,11 +259,11 @@ class Link extends Controller {
             Title::set(l('link.sensitive_content.title'));
 
             /* Main View */
-            $view = new \Altum\View('l/partials/sensitive_content', (array) $this);
+            $view = new \SeeGap\View('l/partials/sensitive_content', (array) $this);
             $this->add_view_content('content', $view->run());
 
             /* Prepare the view */
-            $microsite_wrapper = new \Altum\View('l/microsite_wrapper', (array) $this);
+            $microsite_wrapper = new \SeeGap\View('l/microsite_wrapper', (array) $this);
             echo $microsite_wrapper->run();
             die();
         }
@@ -471,8 +471,8 @@ class Link extends Controller {
         Title::set($this->link->url);
 
         /* Dynamic OG images plugin */
-        if(\Altum\Plugin::is_active('dynamic-og-images') && settings()->dynamic_og_images->is_enabled) {
-            \Altum\Plugin\DynamicOgImages::process();
+        if(\SeeGap\Plugin::is_active('dynamic-og-images') && settings()->dynamic_og_images->is_enabled) {
+            \SeeGap\Plugin\DynamicOgImages::process();
         }
 
 
@@ -484,25 +484,25 @@ class Link extends Controller {
             Meta::set_social_url($this->link->full_url);
             Meta::set_social_title($this->link->settings->seo->title);
             Meta::set_social_description(string_truncate($this->link->settings->seo->meta_description, 160));
-            if(!empty($this->link->settings->seo->image)) Meta::set_social_image(\Altum\Uploads::get_full_url('block_images') . $this->link->settings->seo->image);
+            if(!empty($this->link->settings->seo->image)) Meta::set_social_image(\SeeGap\Uploads::get_full_url('block_images') . $this->link->settings->seo->image);
         }
 
         if(count($this->link->pixels_ids)) {
             /* Get the needed pixels */
-            $pixels = (new \Altum\Models\Pixel())->get_pixels_by_pixels_ids_and_user_id($this->link->pixels_ids, $this->link->user_id);
+            $pixels = (new \SeeGap\Models\Pixel())->get_pixels_by_pixels_ids_and_user_id($this->link->pixels_ids, $this->link->user_id);
 
             /* Prepare the pixels view */
-            $pixels_view = new \Altum\View('l/partials/pixels');
+            $pixels_view = new \SeeGap\View('l/partials/pixels');
             $this->add_view_content('pixels', $pixels_view->run(['pixels' => $pixels, 'type' => 'microsite']));
         }
 
         /* Prepare the view */
-        $view_content = \Altum\Link::get_microsite($this, $this->link, $this->user, $microsite_blocks);
+        $view_content = \SeeGap\Link::get_microsite($this, $this->link, $this->user, $microsite_blocks);
 
         $this->add_view_content('content', $view_content);
 
         /* Prepare the view */
-        $microsite_wrapper = new \Altum\View('l/microsite_wrapper', (array) $this);
+        $microsite_wrapper = new \SeeGap\View('l/microsite_wrapper', (array) $this);
         echo $microsite_wrapper->run();
     }
 
@@ -544,7 +544,7 @@ class Link extends Controller {
             header('Content-Disposition: attachment; filename="' . $this->link->settings->file . '"');
 
             /* Output file data to be downloaded */
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
 
                 /* Make sure the file exists */
                 if(!file_exists(Uploads::get_full_path('files') . $this->link->settings->file)) {
@@ -595,7 +595,7 @@ class Link extends Controller {
 
         /* Display or download, based on what the file type */
         else {
-            $this->redirect_to(\Altum\Uploads::get_full_url('files') . $this->link->settings->file);
+            $this->redirect_to(\SeeGap\Uploads::get_full_url('files') . $this->link->settings->file);
         }
     }
 
@@ -603,7 +603,7 @@ class Link extends Controller {
         $params = $this->params;
 
         /* Remove main url alias if needed */
-        if(!(\Altum\Router::$data['domain']->link_id ?? false)) {
+        if(!(\SeeGap\Router::$data['domain']->link_id ?? false)) {
             array_shift($params);
         }
 
@@ -682,8 +682,8 @@ class Link extends Controller {
 
         /* Check for query forwarding */
         $append_query = null;
-        if($this->link->settings->forward_query_parameters_is_enabled && \Altum\Router::$original_request_query) {
-            $append_query = \Altum\Router::$original_request_query;
+        if($this->link->settings->forward_query_parameters_is_enabled && \SeeGap\Router::$original_request_query) {
+            $append_query = \SeeGap\Router::$original_request_query;
         }
 
         if($this->user->plan_settings->utm) {
@@ -898,21 +898,21 @@ class Link extends Controller {
 
             if(count($this->link->pixels_ids)) {
                 /* Get the needed pixels */
-                $pixels = count($this->link->pixels_ids) ? (new \Altum\Models\Pixel())->get_pixels_by_pixels_ids_and_user_id($this->link->pixels_ids, $this->link->user_id) : [];
+                $pixels = count($this->link->pixels_ids) ? (new \SeeGap\Models\Pixel())->get_pixels_by_pixels_ids_and_user_id($this->link->pixels_ids, $this->link->user_id) : [];
 
                 /* Prepare the pixels view */
-                $pixels_view = new \Altum\View('l/partials/pixels');
+                $pixels_view = new \SeeGap\View('l/partials/pixels');
                 $this->add_view_content('pixels', $pixels_view->run(['pixels' => $pixels]));
             }
 
             /* Meta */
-            Meta::set_social_url(url(\Altum\Router::$original_request));
-            if($cloaking->cloaking_opengraph) Meta::set_social_image(\Altum\Uploads::get_full_url('opengraph') . $cloaking->cloaking_opengraph);
+            Meta::set_social_url(url(\SeeGap\Router::$original_request));
+            if($cloaking->cloaking_opengraph) Meta::set_social_image(\SeeGap\Uploads::get_full_url('opengraph') . $cloaking->cloaking_opengraph);
             if($cloaking->cloaking_title) Meta::set_social_title($cloaking->cloaking_title);
             if($cloaking->cloaking_meta_description) Meta::set_description($cloaking->cloaking_meta_description);
 
             /* Prepare & Output the view */
-            $pixels_redirect_wrapper = new \Altum\View('l/pixels_redirect_wrapper', (array) $this);
+            $pixels_redirect_wrapper = new \SeeGap\View('l/pixels_redirect_wrapper', (array) $this);
 
             echo $pixels_redirect_wrapper->run([
                 'app_linking_location_url' => $app_linking_location_url ?? null,
@@ -1347,7 +1347,7 @@ class Link extends Controller {
         }
 
         /* Get the payment processor */
-        $payment_processors = (new \Altum\Models\PaymentProcessor())->get_payment_processors_by_user_id($microsite_block->user_id);
+        $payment_processors = (new \SeeGap\Models\PaymentProcessor())->get_payment_processors_by_user_id($microsite_block->user_id);
         $payment_processor = $payment_processors[$_POST['payment_processor_id']];
 
         /* Prepare the data */

@@ -7,10 +7,10 @@
  *
  */
 
-namespace Altum\PaymentGateways;
+namespace SeeGap\PaymentGateways;
 
 /* Helper class for LemonSqueezy */
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Lemonsqueezy {
     static public $api_url = 'https://api.lemonsqueezy.com/v1/';

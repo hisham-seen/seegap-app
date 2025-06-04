@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -20,15 +20,15 @@
                     id="daterangepicker"
                     type="button"
                     class="btn btn-sm btn-light"
-                    data-min-date="<?= \Altum\Date::get($data->broadcast->datetime, 4) ?>"
-                    data-max-date="<?= \Altum\Date::get('', 4) ?>"
+                    data-min-date="<?= \SeeGap\Date::get($data->broadcast->datetime, 4) ?>"
+                    data-max-date="<?= \SeeGap\Date::get('', 4) ?>"
             >
                 <i class="fas fa-fw fa-calendar mr-lg-1"></i>
                 <span class="d-none d-lg-inline-block">
                 <?php if($data->datetime['start_date'] == $data->datetime['end_date']): ?>
-                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) ?>
+                    <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) ?>
                 <?php else: ?>
-                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) . ' - ' . \Altum\Date::get($data->datetime['end_date'], 6, \Altum\Date::$default_timezone) ?>
+                    <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) . ' - ' . \SeeGap\Date::get($data->datetime['end_date'], 6, \SeeGap\Date::$default_timezone) ?>
                 <?php endif ?>
             </span>
                 <i class="fas fa-fw fa-caret-down d-none d-lg-inline-block ml-lg-1"></i>
@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 
 <div class="mb-4 row justify-content-between">
@@ -139,21 +139,21 @@
                 <div class="form-group">
                     <label class="font-weight-bold">
                         <i class="fas fa-fw fa-sm fa-paper-plane text-muted mr-1"></i>
-                        <?= sprintf(l('admin_broadcasts.last_sent_email_datetime'), ($data->broadcast->last_sent_email_datetime ? \Altum\Date::get($data->broadcast->last_sent_email_datetime, 2) . ' - <small>' . \Altum\Date::get($data->broadcast->last_sent_email_datetime, 3) . '</small>' : '-')) ?>
+                        <?= sprintf(l('admin_broadcasts.last_sent_email_datetime'), ($data->broadcast->last_sent_email_datetime ? \SeeGap\Date::get($data->broadcast->last_sent_email_datetime, 2) . ' - <small>' . \SeeGap\Date::get($data->broadcast->last_sent_email_datetime, 3) . '</small>' : '-')) ?>
                     </label>
                 </div>
 
                 <div class="form-group">
                     <label class="font-weight-bold">
                         <i class="fas fa-fw fa-sm fa-clock text-muted mr-1"></i>
-                        <?= sprintf(l('global.datetime_tooltip'), ($data->broadcast->datetime ? \Altum\Date::get($data->broadcast->datetime, 2) . ' - <small>' . \Altum\Date::get($data->broadcast->datetime, 3) . '</small>' : '-')) ?>
+                        <?= sprintf(l('global.datetime_tooltip'), ($data->broadcast->datetime ? \SeeGap\Date::get($data->broadcast->datetime, 2) . ' - <small>' . \SeeGap\Date::get($data->broadcast->datetime, 3) . '</small>' : '-')) ?>
                     </label>
                 </div>
 
                 <div class="form-group">
                     <label class="font-weight-bold">
                         <i class="fas fa-fw fa-sm fa-history text-muted mr-1"></i>
-                        <?= sprintf(l('global.last_datetime_tooltip'), ($data->broadcast->last_datetime ? \Altum\Date::get($data->broadcast->last_datetime, 2) . ' - <small>' . \Altum\Date::get($data->broadcast->last_datetime, 3) . '</small>' : '-')) ?>
+                        <?= sprintf(l('global.last_datetime_tooltip'), ($data->broadcast->last_datetime ? \SeeGap\Date::get($data->broadcast->last_datetime, 2) . ' - <small>' . \SeeGap\Date::get($data->broadcast->last_datetime, 3) . '</small>' : '-')) ?>
                     </label>
                 </div>
 
@@ -187,7 +187,7 @@
                                     </div>
 
                                     <div>
-                                        <span class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($user->datetime, 1) ?>"><?= \Altum\Date::get_timeago($user->datetime) ?></span>
+                                        <span class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($user->datetime, 1) ?>"><?= \SeeGap\Date::get_timeago($user->datetime) ?></span>
                                     </div>
                                 </div>
                             <?php endforeach ?>
@@ -251,7 +251,7 @@
 
 <?php ob_start() ?>
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/daterangepicker.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php require THEME_PATH . 'views/partials/js_chart_defaults.php' ?>
 
@@ -332,5 +332,5 @@
         options: chart_options
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 

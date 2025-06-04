@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container-fluid">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="mb-4">
         <div class="row m-n3 justify-content-between">
@@ -221,7 +221,7 @@
                     });
                 }
             </script>
-            <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+            <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
         <?php endif ?>
 
         <?php if(!empty($data->analytics_data) || true): ?>

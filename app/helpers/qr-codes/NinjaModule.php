@@ -1,6 +1,6 @@
 <?php
 
-namespace Altum\QrCodes;
+namespace SeeGap\QrCodes;
 
 use BaconQrCode\Encoder\ByteMatrix;
 use BaconQrCode\Exception\InvalidArgumentException;

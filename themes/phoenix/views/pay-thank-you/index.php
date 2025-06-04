@@ -1,9 +1,9 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <?= \Altum\Alerts::output_alerts() ?>
+            <?= \SeeGap\Alerts::output_alerts() ?>
 
             <div class="d-flex flex-column align-items-center justify-content-center text-center">
                 <?= sprintf(file_get_contents(ROOT_PATH . ASSETS_URL_PATH . 'images/thank_you.svg'), 'var(--primary)', 'col-10 col-md-6 col-lg-4 mb-4') ?>
@@ -75,4 +75,4 @@
     let user_id = current_url.searchParams.get('user_id');
 
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

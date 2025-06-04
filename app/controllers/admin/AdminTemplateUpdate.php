@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminTemplateUpdate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('aix')) {
+        if(!\SeeGap\Plugin::is_active('aix')) {
             redirect('not-found');
         }
 
@@ -30,7 +30,7 @@ class AdminTemplateUpdate extends Controller {
         $template->settings = json_decode($template->settings ?? '');
 
         /* Get available templates categories */
-        $templates_categories = (new \Altum\Models\TemplatesCategories())->get_templates_categories();
+        $templates_categories = (new \SeeGap\Models\TemplatesCategories())->get_templates_categories();
 
         if(!empty($_POST)) {
             /* Filter some the variables */
@@ -60,7 +60,7 @@ class AdminTemplateUpdate extends Controller {
                         $inputs[$key]['translations'][$language_name][$array_key] = input_clean($array_value);
                     }
 
-                    if(!array_key_exists($language_name, \Altum\Language::$active_languages)) {
+                    if(!array_key_exists($language_name, \SeeGap\Language::$active_languages)) {
                         unset($inputs[$key]['translations'][$language_name]);
                     }
                 }
@@ -71,7 +71,7 @@ class AdminTemplateUpdate extends Controller {
                 foreach($array as $key => $value) {
                     $_POST['translations'][$language_name][$key] = input_clean($value);
                 }
-                if(!array_key_exists($language_name, \Altum\Language::$active_languages)) {
+                if(!array_key_exists($language_name, \SeeGap\Language::$active_languages)) {
                     unset($_POST['translations'][$language_name]);
                 }
             }
@@ -82,9 +82,9 @@ class AdminTemplateUpdate extends Controller {
                 'inputs' => $inputs,
             ]);
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -122,7 +122,7 @@ class AdminTemplateUpdate extends Controller {
             'templates_categories' => $templates_categories
         ];
 
-        $view = new \Altum\View('admin/template-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/template-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

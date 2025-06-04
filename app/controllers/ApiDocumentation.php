@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Title;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ApiDocumentation extends Controller {
 
@@ -40,10 +40,10 @@ class ApiDocumentation extends Controller {
             Title::set(sprintf(l('api_documentation.title_dynamic'), $title));
 
             /* Prepare the view */
-            $view = new \Altum\View('api-documentation/' . $endpoint, (array) $this);
+            $view = new \SeeGap\View('api-documentation/' . $endpoint, (array) $this);
         } else {
             /* Prepare the view */
-            $view = new \Altum\View('api-documentation/index', (array) $this);
+            $view = new \SeeGap\View('api-documentation/index', (array) $this);
         }
 
         

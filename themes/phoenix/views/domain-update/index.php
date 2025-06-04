@@ -1,8 +1,8 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -28,26 +28,26 @@
         <div class="card-body">
 
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="host"><i class="fas fa-fw fa-globe fa-sm text-muted mr-1"></i> <?= l('domains.host') ?></label>
-                    <input type="text" id="host" name="host" class="form-control <?= \Altum\Alerts::has_field_errors('host') ? 'is-invalid' : null ?>" value="<?= $data->domain->host ?>" placeholder="<?= l('global.host_placeholder') ?>" required="required" />
-                    <?= \Altum\Alerts::output_field_error('host') ?>
+                    <input type="text" id="host" name="host" class="form-control <?= \SeeGap\Alerts::has_field_errors('host') ? 'is-invalid' : null ?>" value="<?= $data->domain->host ?>" placeholder="<?= l('global.host_placeholder') ?>" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('host') ?>
                 </div>
 
                 <div class="form-group">
                     <label for="custom_index_url"><i class="fas fa-fw fa-sitemap fa-sm text-muted mr-1"></i> <?= l('domains.custom_index_url') ?></label>
-                    <input type="url" id="custom_index_url" name="custom_index_url" class="form-control <?= \Altum\Alerts::has_field_errors('custom_index_url') ? 'is-invalid' : null ?>" value="<?= $data->domain->custom_index_url ?>" placeholder="<?= l('global.url_placeholder') ?>" />
-                    <?= \Altum\Alerts::output_field_error('custom_index_url') ?>
+                    <input type="url" id="custom_index_url" name="custom_index_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('custom_index_url') ? 'is-invalid' : null ?>" value="<?= $data->domain->custom_index_url ?>" placeholder="<?= l('global.url_placeholder') ?>" />
+                    <?= \SeeGap\Alerts::output_field_error('custom_index_url') ?>
 
                     <small class="form-text text-muted"><?= l('domains.custom_index_url_help') ?></small>
                 </div>
 
                 <div class="form-group">
                     <label for="custom_not_found_url"><i class="fas fa-fw fa-location-arrow fa-sm text-muted mr-1"></i> <?= l('domains.custom_not_found_url') ?></label>
-                    <input type="url" id="custom_not_found_url" name="custom_not_found_url" class="form-control <?= \Altum\Alerts::has_field_errors('custom_not_found_url') ? 'is-invalid' : null ?>" value="<?= $data->domain->custom_not_found_url ?>" placeholder="<?= l('global.url_placeholder') ?>" />
-                    <?= \Altum\Alerts::output_field_error('custom_not_found_url') ?>
+                    <input type="url" id="custom_not_found_url" name="custom_not_found_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('custom_not_found_url') ? 'is-invalid' : null ?>" value="<?= $data->domain->custom_not_found_url ?>" placeholder="<?= l('global.url_placeholder') ?>" />
+                    <?= \SeeGap\Alerts::output_field_error('custom_not_found_url') ?>
                     <small class="form-text text-muted"><?= l('domains.custom_not_found_url_help') ?></small>
                 </div>
 
@@ -58,4 +58,4 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/domains/domain_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/domains/domain_delete_modal.php'), 'modals'); ?>

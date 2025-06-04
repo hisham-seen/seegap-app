@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
     <nav aria-label="breadcrumb">
@@ -17,50 +17,50 @@
     <?= include_view(THEME_PATH . 'views/admin/push-notifications/admin_push_notification_dropdown_button.php', ['id' => $data->push_notification->push_notification_id, 'resource_name' => $data->push_notification->title]) ?>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
 
         <form id="form" action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="title"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('admin_push_notifications.main.title') ?></label>
-                <input type="text" id="title" name="title" value="<?= $data->push_notification->title ?>" class="form-control <?= \Altum\Alerts::has_field_errors('title') ? 'is-invalid' : null ?>" maxlength="64" required="required" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
-                <?= \Altum\Alerts::output_field_error('title') ?>
+                <input type="text" id="title" name="title" value="<?= $data->push_notification->title ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('title') ? 'is-invalid' : null ?>" maxlength="64" required="required" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
+                <?= \SeeGap\Alerts::output_field_error('title') ?>
                 <small class="form-text text-muted"><?= sprintf(l('global.variables'), '<code>' . implode('</code> , <code>',  ['{{WEBSITE_TITLE}}', '{{SUBSCRIBER:CONTINENT_NAME}}', '{{SUBSCRIBER:COUNTRY_NAME}}', '{{SUBSCRIBER:CITY_NAME}}', '{{SUBSCRIBER:DEVICE_TYPE}}', '{{SUBSCRIBER:OS_NAME}}', '{{SUBSCRIBER:BROWSER_NAME}}', '{{SUBSCRIBER:BROWSER_LANGUAGE}}']) . '</code>') ?></small>
                 <small class="form-text text-muted"><?= l('global.spintax_help') ?></small>
             </div>
 
             <div class="form-group">
                 <label for="description"><i class="fas fa-fw fa-sm fa-paragraph text-muted mr-1"></i> <?= l('global.description') ?></label>
-                <input type="text" id="description" name="description" value="<?= $data->push_notification->description ?>" class="form-control <?= \Altum\Alerts::has_field_errors('description') ? 'is-invalid' : null ?>" maxlength="64" required="required" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
-                <?= \Altum\Alerts::output_field_error('description') ?>
+                <input type="text" id="description" name="description" value="<?= $data->push_notification->description ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('description') ? 'is-invalid' : null ?>" maxlength="64" required="required" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
+                <?= \SeeGap\Alerts::output_field_error('description') ?>
                 <small class="form-text text-muted"><?= sprintf(l('global.variables'), '<code>' . implode('</code> , <code>',  ['{{WEBSITE_TITLE}}', '{{SUBSCRIBER:CONTINENT_NAME}}', '{{SUBSCRIBER:COUNTRY_NAME}}', '{{SUBSCRIBER:CITY_NAME}}', '{{SUBSCRIBER:DEVICE_TYPE}}', '{{SUBSCRIBER:OS_NAME}}', '{{SUBSCRIBER:BROWSER_NAME}}', '{{SUBSCRIBER:BROWSER_LANGUAGE}}']) . '</code>') ?></small>
                 <small class="form-text text-muted"><?= l('global.spintax_help') ?></small>
             </div>
 
             <div class="form-group">
                 <label for="url"><i class="fas fa-fw fa-sm fa-link text-muted mr-1"></i> <?= l('global.url') ?></label>
-                <input type="url" id="url" name="url" value="<?= $data->push_notification->url ?>" class="form-control <?= \Altum\Alerts::has_field_errors('url') ? 'is-invalid' : null ?>" maxlength="512" placeholder="<?= l('global.url_placeholder') ?>" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
-                <?= \Altum\Alerts::output_field_error('url') ?>
+                <input type="url" id="url" name="url" value="<?= $data->push_notification->url ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('url') ? 'is-invalid' : null ?>" maxlength="512" placeholder="<?= l('global.url_placeholder') ?>" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
+                <?= \SeeGap\Alerts::output_field_error('url') ?>
             </div>
 
             <div class="form-group">
                 <label for="segment"><i class="fas fa-fw fa-sm fa-layer-group text-muted mr-1"></i> <?= l('admin_push_notifications.main.segment') ?> <?= $data->push_notification->status == 'sent' ? '<span>(' . $data->push_notification->total_push_notifications .')</span>' : '<span id="segment_count"></span>' ?></label>
-                <select id="segment" name="segment" class="form-control <?= \Altum\Alerts::has_field_errors('segment') ? 'is-invalid' : null ?>" required="required" <?= $data->push_notification->status == 'sent' ? 'disabled="disabled"' : null ?>>
+                <select id="segment" name="segment" class="form-control <?= \SeeGap\Alerts::has_field_errors('segment') ? 'is-invalid' : null ?>" required="required" <?= $data->push_notification->status == 'sent' ? 'disabled="disabled"' : null ?>>
                     <option value="all" <?= $data->push_notification->segment == 'all' ? 'selected="selected"' : null ?>><?= l('admin_push_notifications.main.segment.all') ?></option>
                     <option value="custom" <?= $data->push_notification->segment == 'custom' ? 'selected="selected"' : null ?>><?= l('admin_push_notifications.main.segment.custom') ?></option>
                     <option value="filter" <?= $data->push_notification->segment == 'filter' ? 'selected="selected"' : null ?>><?= l('admin_push_notifications.main.segment.filter') ?></option>
                 </select>
-                <?= \Altum\Alerts::output_field_error('segment') ?>
+                <?= \SeeGap\Alerts::output_field_error('segment') ?>
             </div>
 
             <div class="form-group" data-segment="custom">
                 <label for="push_subscribers_ids"><i class="fas fa-fw fa-sm fa-users text-muted mr-1"></i> <?= l('admin_push_notifications.main.push_subscribers_ids') ?></label>
-                <input type="text" id="push_subscribers_ids" name="push_subscribers_ids" value="<?= $data->push_notification->push_subscribers_ids ?>" class="form-control <?= \Altum\Alerts::has_field_errors('push_subscribers_ids') ? 'is-invalid' : null ?>" placeholder="<?= l('admin_push_notifications.main.push_subscribers_ids_placeholder') ?>" required="required" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
-                <?= \Altum\Alerts::output_field_error('push_subscribers_ids') ?>
+                <input type="text" id="push_subscribers_ids" name="push_subscribers_ids" value="<?= $data->push_notification->push_subscribers_ids ?>" class="form-control <?= \SeeGap\Alerts::has_field_errors('push_subscribers_ids') ? 'is-invalid' : null ?>" placeholder="<?= l('admin_push_notifications.main.push_subscribers_ids_placeholder') ?>" required="required" <?= $data->push_notification->status == 'sent' ? 'readonly="readonly"' : null ?> />
+                <?= \SeeGap\Alerts::output_field_error('push_subscribers_ids') ?>
                 <small class="form-text text-muted"><?= l('admin_push_notifications.main.push_subscribers_ids_help') ?></small>
             </div>
 
@@ -138,7 +138,7 @@
     type_handler('[name="segment"]', 'data-segment');
     document.querySelector('[name="segment"]') && document.querySelectorAll('[name="segment"]').forEach(element => element.addEventListener('change', () => { type_handler('[name="segment"]', 'data-segment'); }));
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php ob_start() ?>
 <script>
@@ -197,4 +197,4 @@
 
     get_segment_count();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

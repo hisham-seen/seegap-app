@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\LinkHandlers;
+namespace SeeGap\Controllers\LinkHandlers;
 
-use Altum\Response;
-use Altum\Models\Domain;
+use SeeGap\Response;
+use SeeGap\Models\Domain;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Base Link Handler
@@ -30,7 +30,7 @@ abstract class BaseLinkHandler implements Interfaces\LinkHandlerInterface {
     protected function check_url($url) {
         if($url) {
             /* Make sure the url alias is not blocked by a route of the product */
-            if(array_key_exists($url, \Altum\Router::$routes['']) || in_array($url, \Altum\Language::$active_languages) || file_exists(ROOT_PATH . $url)) {
+            if(array_key_exists($url, \SeeGap\Router::$routes['']) || in_array($url, \SeeGap\Language::$active_languages) || file_exists(ROOT_PATH . $url)) {
                 Response::json(l('link.error_message.blacklisted_url'), 'error');
             }
 
@@ -216,7 +216,7 @@ abstract class BaseLinkHandler implements Interfaces\LinkHandlerInterface {
         $_POST['url'] = !empty($_POST['url']) ? get_slug($_POST['url'], '-', false) : false;
         
         /* Domain validation */
-        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\Altum\Authentication::is_admin()) {
+        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\SeeGap\Authentication::is_admin()) {
             Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
         }
     }
@@ -226,9 +226,9 @@ abstract class BaseLinkHandler implements Interfaces\LinkHandlerInterface {
      */
     protected function process_schedule_data() {
         $_POST['schedule'] = (int) isset($_POST['schedule']);
-        if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && \Altum\Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && \Altum\Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
-            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
+        if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && \SeeGap\Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && \SeeGap\Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
+            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
         } else {
             $_POST['start_date'] = $_POST['end_date'] = null;
         }
@@ -238,7 +238,7 @@ abstract class BaseLinkHandler implements Interfaces\LinkHandlerInterface {
      * Process pixels data
      */
     protected function process_pixels_data() {
-        $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
+        $pixels = (new \SeeGap\Models\Pixel())->get_pixels($this->user->user_id);
         $_POST['pixels_ids'] = isset($_POST['pixels_ids']) ? array_map(
             function($pixel_id) {
                 return (int) $pixel_id;
@@ -255,11 +255,11 @@ abstract class BaseLinkHandler implements Interfaces\LinkHandlerInterface {
      */
     protected function process_projects_and_splash_pages() {
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
         $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
 
         /* Existing splash pages */
-        $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
+        $splash_pages = (new \SeeGap\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
         $_POST['splash_page_id'] = !empty($_POST['splash_page_id']) && array_key_exists($_POST['splash_page_id'], $splash_pages) ? (int) $_POST['splash_page_id'] : null;
     }
 

@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Uploads {
     public static $uploads = null;
@@ -83,8 +83,8 @@ class Uploads {
             $image_new_name = md5(time() . rand() . rand()) . '.' . $file_extension;
 
             /* Try to compress the image */
-            if(\Altum\Plugin::is_active('image-optimizer')) {
-                \Altum\Plugin\ImageOptimizer::optimize($file_temp, $image_new_name);
+            if(\SeeGap\Plugin::is_active('image-optimizer')) {
+                \SeeGap\Plugin\ImageOptimizer::optimize($file_temp, $image_new_name);
             }
 
             /* Sanitize SVG uploads */
@@ -95,14 +95,14 @@ class Uploads {
                 file_put_contents($file_temp, $clean_svg);
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                 if(!is_writable(UPLOADS_PATH . Uploads::get_path($uploads_file_key))) {
                     $return_error(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . Uploads::get_path($uploads_file_key)));
                 }
             }
 
             /* Offload uploading */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 try {
                     $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -177,7 +177,7 @@ class Uploads {
                 $return_error(l('global.error_message.invalid_file_type'));
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                 if(!is_writable(UPLOADS_PATH . Uploads::get_path($uploads_file_key))) {
                     $return_error(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . Uploads::get_path($uploads_file_key)));
                 }
@@ -193,8 +193,8 @@ class Uploads {
                 $image_new_name = md5(time() . rand() . rand()) . '.' . $file_extension;
 
                 /* Try to compress the image */
-                if(\Altum\Plugin::is_active('image-optimizer')) {
-                    \Altum\Plugin\ImageOptimizer::optimize($file_temp, $image_new_name);
+                if(\SeeGap\Plugin::is_active('image-optimizer')) {
+                    \SeeGap\Plugin\ImageOptimizer::optimize($file_temp, $image_new_name);
                 }
 
                 /* Sanitize SVG uploads */
@@ -206,7 +206,7 @@ class Uploads {
                 }
 
                 /* Offload uploading */
-                if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                     try {
                         $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -251,7 +251,7 @@ class Uploads {
         if(isset($_POST[$file_key_remove])) {
             if(!empty($already_existing_file_name)) {
                 /* Offload deleting */
-                if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                     $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
                     $s3->deleteObject([
                         'Bucket' => settings()->offload->storage_name,
@@ -312,7 +312,7 @@ class Uploads {
                 $return_error(l('global.error_message.invalid_file_type'));
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
                 if(!is_writable(UPLOADS_PATH . Uploads::get_path($uploads_file_key))) {
                     $return_error(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . Uploads::get_path($uploads_file_key)));
                 }
@@ -356,7 +356,7 @@ class Uploads {
         $file_new_name = md5(time() . rand()) . '.' . $file_extension;
 
         /* Offload uploading */
-        if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+        if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
             try {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -384,7 +384,7 @@ class Uploads {
     public static function delete_uploaded_file($already_existing_file_name, $uploads_file_key) {
         if(!empty($already_existing_file_name)) {
             /* Offload deleting */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
                 /* Delete */
@@ -402,8 +402,8 @@ class Uploads {
     }
 
     public static function download_files_as_zip($files = [], $file_name = null) {
-        if(is_null($file_name) && \Altum\Title::get()) {
-            $file_name = \Altum\Title::get();
+        if(is_null($file_name) && \SeeGap\Title::get()) {
+            $file_name = \SeeGap\Title::get();
         }
 
         /* Create zipstream object */
@@ -421,7 +421,7 @@ class Uploads {
         );
 
         /* Output file data to be downloaded */
-        if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+        if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
 
             /* Add all files to the zip */
             foreach($files as $file_name => $file_path) {

@@ -7,19 +7,19 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Captcha;
-use Altum\Logger;
+use SeeGap\Alerts;
+use SeeGap\Captcha;
+use SeeGap\Logger;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ResendActivation extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard('guest');
+        \SeeGap\Authentication::guard('guest');
 
         if(!settings()->users->email_confirmation) {
             redirect('not-found');
@@ -41,7 +41,7 @@ class ResendActivation extends Controller {
             $_POST['email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             $values['email'] = $_POST['email'];
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             if(settings()->captcha->resend_activation_is_enabled && !$captcha->is_valid()) {
@@ -104,7 +104,7 @@ class ResendActivation extends Controller {
             'redirect_append' => $redirect_append,
         ];
 
-        $view = new \Altum\View('resend-activation/index', (array) $this);
+        $view = new \SeeGap\View('resend-activation/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

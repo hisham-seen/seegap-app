@@ -7,18 +7,18 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Documents extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
             redirect('not-found');
         }
 
@@ -28,13 +28,13 @@ class Documents extends Controller {
         }
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'project_id', 'template_id', 'template_category_id'], ['name'], ['document_id', 'last_datetime', 'datetime', 'name', 'words']));
+        $filters = (new \SeeGap\Filters(['user_id', 'project_id', 'template_id', 'template_category_id'], ['name'], ['document_id', 'last_datetime', 'datetime', 'name', 'words']));
         $filters->set_default_order_by($this->user->preferences->documents_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `documents` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('documents?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('documents?' . $filters->get_get() . '&page=%d')));
 
         /* Get the documents */
         $documents = [];
@@ -60,10 +60,10 @@ class Documents extends Controller {
         process_export_json($documents, 'include', ['document_id', 'template_id', 'template_category_id', 'project_id', 'user_id', 'name', 'type', 'content', 'words', 'model', 'api_response_time', 'settings', 'datetime', 'last_datetime'], sprintf(l('documents.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Available words */
         $words_current_month = db()->where('user_id', $this->user->user_id)->getValue('users', '`aix_words_current_month`');
@@ -73,10 +73,10 @@ class Documents extends Controller {
         $documents_current_month = db()->where('user_id', $this->user->user_id)->getValue('users', '`aix_documents_current_month`');
 
         /* Get available templates categories */
-        $templates_categories = (new \Altum\Models\TemplatesCategories())->get_templates_categories();
+        $templates_categories = (new \SeeGap\Models\TemplatesCategories())->get_templates_categories();
 
         /* Templates */
-        $templates = (new \Altum\Models\Templates())->get_templates();
+        $templates = (new \SeeGap\Models\Templates())->get_templates();
 
         /* Prepare the view */
         $data = [
@@ -92,21 +92,21 @@ class Documents extends Controller {
             'templates_categories' => $templates_categories,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/documents/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/documents/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }
 
     public function delete() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.documents')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.documents')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('documents');
         }
@@ -117,9 +117,9 @@ class Documents extends Controller {
 
         $document_id = (int) query_clean($_POST['document_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

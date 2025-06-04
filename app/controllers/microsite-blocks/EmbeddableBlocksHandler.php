@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks;
+namespace SeeGap\Controllers\MicrositeBlocks;
 
-use Altum\Response;
+use SeeGap\Response;
 use Unirest\Request;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Handler for embeddable microsite blocks

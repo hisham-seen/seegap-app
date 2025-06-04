@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Date;
-use Altum\Models\MicrositesThemes;
-use Altum\Response;
+use SeeGap\Alerts;
+use SeeGap\Date;
+use SeeGap\Models\MicrositesThemes;
+use SeeGap\Response;
 use Unirest\Request;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class MicrositeBlockAjax extends Controller {
     public $microsite_blocks = null;
     public $total_microsite_blocks = 0;
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!empty($_POST) && (\Altum\Csrf::check('token') || \Altum\Csrf::check('global_token')) && isset($_POST['request_type'])) {
+        if(!empty($_POST) && (\SeeGap\Csrf::check('token') || \SeeGap\Csrf::check('global_token')) && isset($_POST['request_type'])) {
 
             switch($_POST['request_type']) {
 
@@ -55,7 +55,7 @@ class MicrositeBlockAjax extends Controller {
 
     private function is_enabled_toggle() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.microsites_blocks')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.microsites_blocks')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -78,15 +78,15 @@ class MicrositeBlockAjax extends Controller {
 
     public function duplicate() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.microsites_blocks')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.microsites_blocks')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('links');
         }
@@ -115,25 +115,25 @@ class MicrositeBlockAjax extends Controller {
                 case 'pdf_document':
                 case 'powerpoint_presentation':
                 case 'excel_spreadsheet':
-                    $microsite_block->settings->file = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
+                    $microsite_block->settings->file = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->file, \SeeGap\Uploads::get_path('files'), \SeeGap\Uploads::get_path('files'), 'json_error');
                     break;
 
                 case 'review':
-                    $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, \Altum\Uploads::get_path('block_images'), \Altum\Uploads::get_path('block_images'), 'json_error');
+                    $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, \SeeGap\Uploads::get_path('block_images'), \SeeGap\Uploads::get_path('block_images'), 'json_error');
                     break;
 
                 case 'avatar':
-                    $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
+                    $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
                     break;
 
                 case 'header':
-                    $microsite_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
-                    $microsite_block->settings->background = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                    $microsite_block->settings->avatar = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
+                    $microsite_block->settings->background = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                     break;
 
                 case 'image':
                 case 'image_grid':
-                    $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
+                    $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
                     break;
 
                 case 'heading':
@@ -145,13 +145,13 @@ class MicrositeBlockAjax extends Controller {
                     $microsite_block->settings->items = (array) $microsite_block->settings->items;
 
                     foreach($microsite_block->settings->items as $key => $item) {
-                        $microsite_block->settings->items[$key]->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
+                        $microsite_block->settings->items[$key]->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
                     }
 
                     break;
 
                 default:
-                    $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
+                    $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
                     break;
             }
 
@@ -186,7 +186,7 @@ class MicrositeBlockAjax extends Controller {
 
     private function order() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.microsites_blocks')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.microsites_blocks')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -220,7 +220,7 @@ class MicrositeBlockAjax extends Controller {
 
     private function create() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.microsites_blocks')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.microsites_blocks')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -246,7 +246,7 @@ class MicrositeBlockAjax extends Controller {
 
     private function update() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.microsites_blocks')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.microsites_blocks')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -358,7 +358,7 @@ class MicrositeBlockAjax extends Controller {
         
         /* Include and instantiate the handler */
         require_once $handler_file;
-        $full_class_name = '\\Altum\\Controllers\\MicrositeBlocks\\Blocks\\' . $handler_class;
+        $full_class_name = '\\SeeGap\\Controllers\\MicrositeBlocks\\Blocks\\' . $handler_class;
         
         if(!class_exists($full_class_name)) {
             Response::json(l('global.error_message.invalid_request'), 'error');
@@ -381,7 +381,7 @@ class MicrositeBlockAjax extends Controller {
 
     private function delete() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.microsites_blocks')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.microsites_blocks')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -392,7 +392,7 @@ class MicrositeBlockAjax extends Controller {
             die();
         }
 
-        (new \Altum\Models\MicrositeBlock())->delete($microsite_block->microsite_block_id);
+        (new \SeeGap\Models\MicrositeBlock())->delete($microsite_block->microsite_block_id);
 
         Response::json(l('global.success_message.delete2'), 'success', ['url' => url('link/' . $microsite_block->link_id . '?tab=blocks')]);
     }
@@ -433,8 +433,8 @@ class MicrositeBlockAjax extends Controller {
             $file_new_name = md5(time() . rand()) . '.' . $file_extension;
 
             /* Try to compress the image */
-            if(\Altum\Plugin::is_active('image-optimizer')) {
-                \Altum\Plugin\ImageOptimizer::optimize($file_temp, $file_new_name);
+            if(\SeeGap\Plugin::is_active('image-optimizer')) {
+                \SeeGap\Plugin\ImageOptimizer::optimize($file_temp, $file_new_name);
             }
 
             /* Sanitize SVG uploads */
@@ -446,7 +446,7 @@ class MicrositeBlockAjax extends Controller {
             }
 
             /* Offload uploading */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 try {
                     $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -488,7 +488,7 @@ class MicrositeBlockAjax extends Controller {
         /* Check for the removal of the already uploaded file */
         if(isset($_POST['image_remove'])) {
             /* Offload deleting */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
                 $s3->deleteObject([
                     'Bucket' => settings()->offload->storage_name,
@@ -552,8 +552,8 @@ class MicrositeBlockAjax extends Controller {
     private function process_display_settings() {
         $_POST['schedule'] = (int) isset($_POST['schedule']);
         if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
-            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
         } else {
             $_POST['start_date'] = $_POST['end_date'] = null;
         }

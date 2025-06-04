@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <script>
@@ -18,10 +18,10 @@
 
     window.altum.taxes = <?= json_encode($data->plan_taxes ? $data->plan_taxes : null) ?>;
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
         <nav aria-label="breadcrumb">
@@ -31,14 +31,14 @@
                 <?php if(settings()->payment->taxes_and_billing_is_enabled): ?>
                 <li><a href="<?= url('pay-billing/' . $data->plan_id) ?>"><?= l('pay_billing.breadcrumb') ?></a> <i class="fas fa-fw fa-angle-right"></i></li>
                 <?php endif ?>
-                <li class="active" aria-current="page"><?= sprintf(l('pay.breadcrumb'), $data->plan->translations->{\Altum\Language::$name}->name ?? $data->plan->name) ?></li>
+                <li class="active" aria-current="page"><?= sprintf(l('pay.breadcrumb'), $data->plan->translations->{\SeeGap\Language::$name}->name ?? $data->plan->name) ?></li>
             </ol>
         </nav>
     <?php endif ?>
 
     <?php if($data->plan->trial_days && !$this->user->plan_trial_done && !isset($_GET['trial_skip'])): ?>
         <div class="d-flex align-items-center mb-5">
-            <h1 class="h3 m-0"><?= sprintf(l('pay.trial.header'), $data->plan->translations->{\Altum\Language::$name}->name ?? $data->plan->name) ?></h1>
+            <h1 class="h3 m-0"><?= sprintf(l('pay.trial.header'), $data->plan->translations->{\SeeGap\Language::$name}->name ?? $data->plan->name) ?></h1>
 
             <div class="ml-2">
                 <span data-toggle="tooltip" title="<?= l('pay.trial.subheader') ?>">
@@ -48,7 +48,7 @@
         </div>
 
         <form action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="row">
                 <div class="col-12 col-xl-8 order-1 order-xl-0">
@@ -76,7 +76,7 @@
 
                             <div class="card">
                                 <div class="card-body">
-                                    <?= (new \Altum\View('partials/plan_features'))->run(['plan_settings' => $data->plan->settings]) ?>
+                                    <?= (new \SeeGap\View('partials/plan_features'))->run(['plan_settings' => $data->plan->settings]) ?>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
         ?>
 
         <div class="d-flex align-items-center mb-5">
-            <h1 class="h3 m-0"><?= sprintf(l('pay.custom_plan.header'), $data->plan->translations->{\Altum\Language::$name}->name ?? $data->plan->name) ?></h1>
+            <h1 class="h3 m-0"><?= sprintf(l('pay.custom_plan.header'), $data->plan->translations->{\SeeGap\Language::$name}->name ?? $data->plan->name) ?></h1>
 
             <div class="ml-2">
                 <span data-toggle="tooltip" title="<?= l('pay.custom_plan.subheader') ?>">
@@ -112,7 +112,7 @@
             <input type="hidden" name="biannual_price" value="<?= $data->plan->prices->biannual->{currency()} ?>" />
             <input type="hidden" name="annual_price" value="<?= $data->plan->prices->annual->{currency()} ?>" />
             <input type="hidden" name="lifetime_price" value="<?= $data->plan->prices->lifetime->{currency()} ?>" />
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="row">
                 <div class="col-12 col-xl-8">
@@ -291,8 +291,8 @@
 
                                 <div class="form-group mt-4">
                                     <label><?= l('pay.custom_plan.offline_payment_proof') ?></label>
-                                    <input id="offline_payment_proof" type="file" name="offline_payment_proof" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('offline_payment_proofs') ?>" class="form-control-file altum-file-input" />
-                                    <div class="mt-2"><span class="text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('offline_payment_proofs'))  . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->offline_payment->proof_size_limit) ?></span></div>
+                                    <input id="offline_payment_proof" type="file" name="offline_payment_proof" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('offline_payment_proofs') ?>" class="form-control-file seegap-file-input" />
+                                    <div class="mt-2"><span class="text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('offline_payment_proofs'))  . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->offline_payment->proof_size_limit) ?></span></div>
                                 </div>
                             </div>
                         </div>
@@ -350,7 +350,7 @@
                             <div class="pt-2">
                                 <div class="card">
                                     <div class="card-body">
-                                        <?= (new \Altum\View('partials/plan_features'))->run(['plan_settings' => $data->plan->settings]) ?>
+                                        <?= (new \SeeGap\View('partials/plan_features'))->run(['plan_settings' => $data->plan->settings]) ?>
                                     </div>
                                 </div>
                             </div>
@@ -370,7 +370,7 @@
                                         </span>
 
                                         <span>
-                                            <?= $data->plan->translations->{\Altum\Language::$name}->name ?? $data->plan->name ?>
+                                            <?= $data->plan->translations->{\SeeGap\Language::$name}->name ?? $data->plan->name ?>
                                         </span>
                                     </div>
 
@@ -656,7 +656,7 @@
                                         }
 
                                     </script>
-                                    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+                                    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
                                 <?php endif ?>
 
                             </div>
@@ -717,7 +717,7 @@
     document.addEventListener('visibilitychange', event => {
         let is_page_active = !document.hidden;
 
-        document.title = is_page_active ? default_page_title : <?= json_encode(l('pay.attention_title') . ' - ' . \Altum\Title::$site_title) ?>;
+        document.title = is_page_active ? default_page_title : <?= json_encode(l('pay.attention_title') . ' - ' . \SeeGap\Title::$site_title) ?>;
     })
 
     /* Handlers */
@@ -963,7 +963,7 @@
 
 <?php endif ?>
 
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 
 

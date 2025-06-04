@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Plugin {
     public static $plugins = [];
@@ -104,12 +104,12 @@ class Plugin {
 
     public static function save_status($plugin_id, $new_status) {
         /* Enable the plugin from the config file */
-        $new_settings = \Altum\Plugin::get($plugin_id)->settings ? clone \Altum\Plugin::get($plugin_id)->settings : (object) [];
+        $new_settings = \SeeGap\Plugin::get($plugin_id)->settings ? clone \SeeGap\Plugin::get($plugin_id)->settings : (object) [];
         $new_settings->status = $new_status;
 
         /* Save the new config file */
-        $settings_saved = file_put_contents(\Altum\Plugin::get($plugin_id)->path . 'settings.json', json_encode($new_settings));
-        chmod(\Altum\Plugin::get($plugin_id)->path . 'settings.json', 0777);
+        $settings_saved = file_put_contents(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json', json_encode($new_settings));
+        chmod(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json', 0777);
 
         return (bool) $settings_saved;
     }

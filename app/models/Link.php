@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Link extends Model {
 
@@ -56,7 +56,7 @@ class Link extends Model {
         if($link->type == 'file') {
             $link->settings = json_decode($link->settings ?? '');
 
-            \Altum\Uploads::delete_uploaded_file($link->settings->file, 'files');
+            \SeeGap\Uploads::delete_uploaded_file($link->settings->file, 'files');
         }
 
         /* Process to delete the stored files of the link */
@@ -64,22 +64,22 @@ class Link extends Model {
             $link->settings = json_decode($link->settings ?? '');
 
             if(!empty($link->settings->pwa_file_name)) {
-                \Altum\Uploads::delete_uploaded_file($link->settings->pwa_file_name, 'pwa');
+                \SeeGap\Uploads::delete_uploaded_file($link->settings->pwa_file_name, 'pwa');
             }
 
-            \Altum\Uploads::delete_uploaded_file($link->settings->favicon, 'favicons');
-            \Altum\Uploads::delete_uploaded_file($link->settings->seo->image, 'block_images');
-            \Altum\Uploads::delete_uploaded_file($link->settings->pwa_icon, 'app_icon');
+            \SeeGap\Uploads::delete_uploaded_file($link->settings->favicon, 'favicons');
+            \SeeGap\Uploads::delete_uploaded_file($link->settings->seo->image, 'block_images');
+            \SeeGap\Uploads::delete_uploaded_file($link->settings->pwa_icon, 'app_icon');
 
             if($link->settings->background_type == 'image' && !$link->microsite_theme_id) {
-                \Altum\Uploads::delete_uploaded_file($link->settings->background, 'backgrounds');
+                \SeeGap\Uploads::delete_uploaded_file($link->settings->background, 'backgrounds');
             }
 
             /* Get all the available microsite blocks and iterate over them to delete the stored images */
             $result = database()->query("SELECT `microsite_block_id` FROM `microsites_blocks` WHERE `link_id` = {$link->link_id}");
             while($row = $result->fetch_object()) {
 
-                (new \Altum\Models\MicrositeBlock())->delete($row->microsite_block_id);
+                (new \SeeGap\Models\MicrositeBlock())->delete($row->microsite_block_id);
 
             }
         }
@@ -89,7 +89,7 @@ class Link extends Model {
             $link->settings = json_decode($link->settings ?? '');
 
             /* Clear the already existing folder and contents */
-            remove_directory_and_contents(\Altum\Uploads::get_full_path('static') . $link->settings->static_folder);
+            remove_directory_and_contents(\SeeGap\Uploads::get_full_path('static') . $link->settings->static_folder);
         }
 
         /* Delete from database */

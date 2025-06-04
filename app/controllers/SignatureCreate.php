@@ -7,23 +7,23 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SignatureCreate extends Controller {
 
     public function index() {
-        if(!\Altum\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.signatures')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.signatures')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('signatures');
         }
@@ -39,7 +39,7 @@ class SignatureCreate extends Controller {
         if(!empty($_POST)) {
             $_POST['name'] = input_clean($_POST['name']);
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -49,12 +49,12 @@ class SignatureCreate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
-                $signature_templates = require \Altum\Plugin::get('email-signatures')->path . 'includes/signature_templates.php';
+                $signature_templates = require \SeeGap\Plugin::get('email-signatures')->path . 'includes/signature_templates.php';
 
                 $settings = json_encode([
                     'direction' => 'ltr',
@@ -107,7 +107,7 @@ class SignatureCreate extends Controller {
             'values' => $values
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('email-signatures')->path . 'views/signature-create/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('email-signatures')->path . 'views/signature-create/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
 

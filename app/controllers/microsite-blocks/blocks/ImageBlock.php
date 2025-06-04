@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks\Blocks;
+namespace SeeGap\Controllers\MicrositeBlocks\Blocks;
 
-use Altum\Controllers\MicrositeBlocks\BaseBlockHandler;
-use Altum\Response;
+use SeeGap\Controllers\MicrositeBlocks\BaseBlockHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Image Block Handler
@@ -92,7 +92,7 @@ class ImageBlock extends BaseBlockHandler {
         /* Image upload */
         $db_image = $this->handle_image_upload($microsite_block->settings->image, 'block_images/', settings()->links->image_size_limit);
 
-        $image_url = $db_image ? \Altum\Uploads::get_full_url('block_images') . $db_image : null;
+        $image_url = $db_image ? \SeeGap\Uploads::get_full_url('block_images') . $db_image : null;
 
         $settings = json_encode([
             'image' => $db_image,

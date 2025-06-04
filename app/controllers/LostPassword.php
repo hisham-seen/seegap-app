@@ -7,19 +7,19 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Captcha;
-use Altum\Logger;
+use SeeGap\Alerts;
+use SeeGap\Captcha;
+use SeeGap\Logger;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class LostPassword extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard('guest');
+        \SeeGap\Authentication::guard('guest');
 
         $redirect = process_and_get_redirect_params() ?? 'dashboard';
         $redirect_append = $redirect ? '?redirect=' . $redirect : null;
@@ -37,7 +37,7 @@ class LostPassword extends Controller {
             $_POST['email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             $values['email'] = $_POST['email'];
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             if(settings()->captcha->lost_password_is_enabled && !$captcha->is_valid()) {
@@ -100,7 +100,7 @@ class LostPassword extends Controller {
             'redirect_append' => $redirect_append,
         ];
 
-        $view = new \Altum\View('lost-password/index', (array) $this);
+        $view = new \SeeGap\View('lost-password/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

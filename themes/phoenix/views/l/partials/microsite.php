@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <body class="<?= l('direction') == 'rtl' ? 'rtl' : null ?> link-body <?= $data->link->design->background_class ?>" style="<?= $data->link->design->background_style ?>">
 <?php if(!empty(settings()->custom->body_content_microsite)): ?>
@@ -7,7 +7,7 @@
 
 <?php if((is_string($data->link->settings->background) && string_ends_with('.mp4', $data->link->settings->background)) || isset($_GET['preview'])): ?>
     <video autoplay muted loop playsinline class="link-video-background <?= is_string($data->link->settings->background) && string_ends_with('.mp4', $data->link->settings->background) ? '' : 'd-none' ?>">
-        <source src="<?= is_string($data->link->settings->background) && string_ends_with('.mp4', $data->link->settings->background) ? \Altum\Uploads::get_full_url('backgrounds') . $data->link->settings->background : null; ?>" type="video/mp4">
+        <source src="<?= is_string($data->link->settings->background) && string_ends_with('.mp4', $data->link->settings->background) ? \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background : null; ?>" type="video/mp4">
     </video>
 <?php endif ?>
 
@@ -61,8 +61,8 @@
                                 !empty($row->start_date) &&
                                 !empty($row->end_date) &&
                                 (
-                                    \Altum\Date::get('', null) < \Altum\Date::get($row->start_date, null, \Altum\Date::$default_timezone) ||
-                                    \Altum\Date::get('', null) > \Altum\Date::get($row->end_date, null, \Altum\Date::$default_timezone)
+                                    \SeeGap\Date::get('', null) < \SeeGap\Date::get($row->start_date, null, \SeeGap\Date::$default_timezone) ||
+                                    \SeeGap\Date::get('', null) > \SeeGap\Date::get($row->end_date, null, \SeeGap\Date::$default_timezone)
                                 )
                             ) {
                                 continue;
@@ -99,7 +99,7 @@
                             $row->utm = $data->link->settings->utm;
                             ?>
 
-                            <?= \Altum\Link::get_microsite_link($row, $data->user, $this->microsite_theme ?? null, $data->link) ?? null ?>
+                            <?= \SeeGap\Link::get_microsite_link($row, $data->user, $this->microsite_theme ?? null, $data->link) ?? null ?>
 
                         <?php endforeach ?>
                     <?php endif ?>
@@ -126,7 +126,7 @@
                                 '{{URL}}' => url(),
                                 '{{DASHBOARD_LINK}}' => url('dashboard'),
                                 '{{WEBSITE_TITLE}}' => settings()->main->title,
-                                '{{AFFILIATE_URL_TAG}}' => \Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled ? '?ref=' . $data->user->referral_key : null,
+                                '{{AFFILIATE_URL_TAG}}' => \SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled ? '?ref=' . $data->user->referral_key : null,
                             ];
 
                             settings()->links->branding = str_replace(
@@ -154,7 +154,7 @@
     </div>
 <?php endif ?>
 
-<?= \Altum\Event::get_content('modals') ?>
+<?= \SeeGap\Event::get_content('modals') ?>
 </body>
 
 <?php ob_start() ?>
@@ -189,5 +189,5 @@
 
 <?= $this->views['pixels'] ?? null ?>
 
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 

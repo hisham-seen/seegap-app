@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class PaymentProcessorUpdate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.payment_processors')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.payment_processors')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('payment-processors');
         }
@@ -77,7 +77,7 @@ class PaymentProcessorUpdate extends Controller {
                     break;
             }
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -87,7 +87,7 @@ class PaymentProcessorUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -117,7 +117,7 @@ class PaymentProcessorUpdate extends Controller {
             'payment_processor' => $payment_processor,
         ];
 
-        $view = new \Altum\View('payment-processor-update/index', (array) $this);
+        $view = new \SeeGap\View('payment-processor-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

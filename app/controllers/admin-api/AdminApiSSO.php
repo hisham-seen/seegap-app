@@ -7,14 +7,14 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Logger;
-use Altum\Models\User;
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Logger;
+use SeeGap\Models\User;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminApiSSO extends Controller {
     use Apiable;

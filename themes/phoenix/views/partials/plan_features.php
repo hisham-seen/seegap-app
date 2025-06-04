@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->links->additional_domains_is_enabled): ?>
-    <?php $additional_domains = (new \Altum\Models\Domain())->get_available_additional_domains(); ?>
+    <?php $additional_domains = (new \SeeGap\Models\Domain())->get_available_additional_domains(); ?>
 <?php endif ?>
 
 <ul class="list-style-none m-0">
@@ -100,7 +100,7 @@
         </li>
     <?php endif ?>
 
-    <?php if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
+    <?php if(\SeeGap\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
         <li class="d-flex align-items-baseline mb-2">
             <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->signatures_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
             <div class="<?= $data->plan_settings->signatures_limit ? null : 'text-muted' ?>">
@@ -136,7 +136,7 @@
     </li>
     <?php endif ?>
 
-    <?php if(\Altum\Plugin::is_active('teams')): ?>
+    <?php if(\SeeGap\Plugin::is_active('teams')): ?>
         <li class="d-flex align-items-baseline mb-2">
             <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->teams_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
             <div class="<?= $data->plan_settings->teams_limit ? null : 'text-muted' ?>">
@@ -147,7 +147,7 @@
         </li>
     <?php endif ?>
 
-    <?php if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
+    <?php if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
         <li class="d-flex align-items-baseline mb-2">
             <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->affiliate_commission_percentage ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
             <div class="<?= $data->plan_settings->affiliate_commission_percentage ? null : 'text-muted' ?>">
@@ -168,7 +168,7 @@
     <li class="d-flex align-items-baseline mb-2">
         <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->track_links_retention ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
         <div class="<?= $data->plan_settings->track_links_retention ? null : 'text-muted' ?>" data-toggle="tooltip" title="<?= ($data->plan_settings->track_links_retention == -1 ? '' : $data->plan_settings->track_links_retention . ' ' . l('global.date.days')) ?>">
-            <?= sprintf(l('global.plan_settings.track_links_retention'), ($data->plan_settings->track_links_retention == -1 ? l('global.unlimited') : \Altum\Date::days_format($data->plan_settings->track_links_retention))) ?>
+            <?= sprintf(l('global.plan_settings.track_links_retention'), ($data->plan_settings->track_links_retention == -1 ? l('global.unlimited') : \SeeGap\Date::days_format($data->plan_settings->track_links_retention))) ?>
         </div>
     </li>
 
@@ -191,12 +191,12 @@
     <?php endif ?>
 
     <?php if(
-        \Altum\Plugin::is_active('aix')
+        \SeeGap\Plugin::is_active('aix')
         && (
             settings()->aix->documents_is_enabled || settings()->aix->images_is_enabled || settings()->aix->transcriptions_is_enabled || settings()->aix->chats_is_enabled
         )
     ): ?>
-        <?php $ai_text_models = require \Altum\Plugin::get('aix')->path . 'includes/ai_text_models.php'; ?>
+        <?php $ai_text_models = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_text_models.php'; ?>
 
         <div class="d-flex justify-content-between align-items-center my-3">
             <button type="button" class="btn btn-sm btn-outline-light text-reset text-decoration-none font-weight-bold px-5" data-toggle="collapse" data-target=".ai_container">
@@ -205,7 +205,7 @@
         </div>
 
         <div class="collapse ai_container">
-            <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
+            <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
                 <li class="d-flex align-items-baseline mb-2">
                     <i class="fas fa-fw fa-sm mr-3 fa-check-circle text-success"></i>
                     <div>
@@ -228,7 +228,7 @@
                 </li>
             <?php endif ?>
 
-            <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->images_is_enabled): ?>
+            <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->images_is_enabled): ?>
                 <li class="d-flex align-items-baseline mb-2">
                     <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->images_per_month_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
                     <div class="<?= $data->plan_settings->images_per_month_limit ? null : 'text-muted' ?>">
@@ -237,7 +237,7 @@
                 </li>
             <?php endif ?>
 
-            <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled): ?>
+            <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled): ?>
                 <li class="d-flex align-items-baseline mb-2">
                     <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->transcriptions_per_month_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
                     <div class="<?= $data->plan_settings->transcriptions_per_month_limit ? null : 'text-muted' ?>">
@@ -253,7 +253,7 @@
                 </li>
             <?php endif ?>
 
-            <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->chats_is_enabled): ?>
+            <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->chats_is_enabled): ?>
                 <li class="d-flex align-items-baseline mb-2">
                     <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->chats_per_month_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
                     <div class="<?= $data->plan_settings->chats_per_month_limit ? null : 'text-muted' ?>">
@@ -296,7 +296,7 @@
             </li>
         <?php endif ?>
 
-        <?php if(settings()->links->microsites_is_enabled && \Altum\Plugin::is_active('payment-blocks')): ?>
+        <?php if(settings()->links->microsites_is_enabled && \SeeGap\Plugin::is_active('payment-blocks')): ?>
             <li class="d-flex align-items-baseline mb-2">
                 <i class="fas fa-fw fa-sm mr-3 <?= $data->plan_settings->payment_processors_limit ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' ?>"></i>
                 <div class="<?= $data->plan_settings->payment_processors_limit ? null : 'text-muted' ?>">

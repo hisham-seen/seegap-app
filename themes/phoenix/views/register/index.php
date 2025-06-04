@@ -1,6 +1,6 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <h1 class="h5"><?= l('register.header') ?></h1>
 
@@ -8,20 +8,20 @@
     <?php if(!settings()->users->register_only_social_logins): ?>
         <div class="form-group">
             <label for="name"><?= l('global.name') ?></label>
-            <input id="name" type="text" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?>" maxlength="32" required="required" autofocus="autofocus" />
-            <?= \Altum\Alerts::output_field_error('name') ?>
+            <input id="name" type="text" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?>" maxlength="32" required="required" autofocus="autofocus" />
+            <?= \SeeGap\Alerts::output_field_error('name') ?>
         </div>
 
         <div class="form-group">
             <label for="email"><?= l('global.email') ?></label>
-            <input id="email" type="email" name="email" class="form-control <?= \Altum\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" maxlength="128" required="required" />
-            <?= \Altum\Alerts::output_field_error('email') ?>
+            <input id="email" type="email" name="email" class="form-control <?= \SeeGap\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" maxlength="128" required="required" />
+            <?= \SeeGap\Alerts::output_field_error('email') ?>
         </div>
 
         <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
             <label for="password"><?= l('global.password') ?></label>
-            <input id="password" type="password" name="password" class="form-control <?= \Altum\Alerts::has_field_errors('password') ? 'is-invalid' : null ?>" value="<?= $data->values['password'] ?>" required="required" />
-            <?= \Altum\Alerts::output_field_error('password') ?>
+            <input id="password" type="password" name="password" class="form-control <?= \SeeGap\Alerts::has_field_errors('password') ? 'is-invalid' : null ?>" value="<?= $data->values['password'] ?>" required="required" />
+            <?= \SeeGap\Alerts::output_field_error('password') ?>
         </div>
 
         <?php if(settings()->captcha->register_is_enabled): ?>
@@ -141,4 +141,4 @@
             ]
         }
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

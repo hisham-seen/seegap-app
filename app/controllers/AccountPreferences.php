@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AccountPreferences extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(is_null($this->user->preferences)) {
             $this->user->preferences = new \StdClass();
@@ -30,7 +30,7 @@ class AccountPreferences extends Controller {
 
             /* Uploads processing */
             foreach(['logo_light', 'logo_dark', 'favicon'] as $image_key) {
-                $this->user->preferences->{'white_label_' . $image_key} = \Altum\Uploads::process_upload($this->user->preferences->{'white_label_' . $image_key}, 'users', 'white_label_' . $image_key, 'white_label_' . $image_key . '_remove', null);
+                $this->user->preferences->{'white_label_' . $image_key} = \SeeGap\Uploads::process_upload($this->user->preferences->{'white_label_' . $image_key}, 'users', 'white_label_' . $image_key, 'white_label_' . $image_key . '_remove', null);
             }
 
             /* Clean some posted variables */
@@ -62,10 +62,10 @@ class AccountPreferences extends Controller {
             $_POST['excluded_ips'] = array_filter(array_map('trim', explode(',', input_clean($_POST['excluded_ips'], 500))));
 
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -128,13 +128,13 @@ class AccountPreferences extends Controller {
         }
 
         /* Get the account header menu */
-        $menu = new \Altum\View('partials/account_header_menu', (array) $this);
+        $menu = new \SeeGap\View('partials/account_header_menu', (array) $this);
         $this->add_view_content('account_header_menu', $menu->run());
 
         /* Prepare the view */
         $data = [];
 
-        $view = new \Altum\View('account-preferences/index', (array) $this);
+        $view = new \SeeGap\View('account-preferences/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

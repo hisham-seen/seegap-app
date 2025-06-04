@@ -7,20 +7,20 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Reports extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], ['name'], ['report_id', 'last_datetime', 'name', 'datetime']));
+        $filters = (new \SeeGap\Filters([], ['name'], ['report_id', 'last_datetime', 'name', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->reports_default_order_by ?? 'report_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
@@ -39,7 +39,7 @@ class Reports extends Controller {
             $total_rows = $total_rows_result ? ($total_rows_result->fetch_object()->total ?? 0) : 0;
         }
         
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('reports?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('reports?' . $filters->get_get() . '&page=%d')));
 
         /* Get the reports list for the user */
         $reports = [];
@@ -66,7 +66,7 @@ class Reports extends Controller {
         process_export_json($reports, 'include', ['report_id', 'user_id', 'name', 'description', 'datetime'], sprintf(l('reports.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Prepare the view */
         $data = [
@@ -76,7 +76,7 @@ class Reports extends Controller {
             'filters' => $filters,
         ];
 
-        $view = new \Altum\View('reports/index', (array) $this);
+        $view = new \SeeGap\View('reports/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

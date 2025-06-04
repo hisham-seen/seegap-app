@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -17,12 +17,12 @@
     <?= include_view(THEME_PATH . 'views/admin/templates/admin_template_dropdown_button.php', ['id' => $data->template->template_id, 'resource_name' => $data->template->name]) ?>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
         <form action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
@@ -36,7 +36,7 @@
 
             <div class="collapse show" id="name_translate_container">
                 <div class="p-3 bg-gray-50 rounded mb-4">
-                    <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                    <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                         <div class="form-group">
                             <label for="<?= 'translation_' . $language_name . '_name' ?>"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
                             <div class="input-group">
@@ -100,7 +100,7 @@
                                 </div>
                             </div>
 
-                            <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                            <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                                 <div class="form-group">
                                     <label for="<?= 'input_translation_' . $language_name . '_name_' . $input_key ?>"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
                                     <div class="input-group">
@@ -112,7 +112,7 @@
                                 </div>
                             <?php endforeach ?>
 
-                            <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                            <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                                 <div class="form-group">
                                     <label for="<?= 'input_translation_' . $language_name . '_placeholder_' . $input_key ?>"><i class="fas fa-fw fa-sm fa-highlighter text-muted mr-1"></i> <?= l('admin_templates.main.input.placeholder') ?></label>
                                     <div class="input-group">
@@ -124,7 +124,7 @@
                                 </div>
                             <?php endforeach ?>
 
-                            <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                            <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                                 <div class="form-group">
                                     <label for="<?= 'input_translation_' . $language_name . '_help_' . $input_key ?>"><i class="fas fa-fw fa-sm fa-info-circle text-muted mr-1"></i> <?= l('admin_templates.main.input.help') ?></label>
                                     <div class="input-group">
@@ -189,7 +189,7 @@
             </div>
         </div>
 
-        <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+        <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
             <div class="form-group">
                 <label for="<?= 'input_translation_' . $language_name . '_name_INCREMENT' ?>"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('global.name') ?></label>
                 <div class="input-group">
@@ -201,7 +201,7 @@
             </div>
         <?php endforeach ?>
 
-        <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+        <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
             <div class="form-group">
                 <label for="<?= 'input_translation_' . $language_name . '_placeholder_INCREMENT' ?>"><i class="fas fa-fw fa-sm fa-highlighter text-muted mr-1"></i> <?= l('admin_templates.main.input.placeholder') ?></label>
                 <div class="input-group">
@@ -213,7 +213,7 @@
             </div>
         <?php endforeach ?>
 
-        <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+        <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
             <div class="form-group">
                 <label for="<?= 'input_translation_' . $language_name . '_help_INCREMENT' ?>"><i class="fas fa-fw fa-sm fa-info-circle text-muted mr-1"></i> <?= l('admin_templates.main.input.help') ?></label>
                 <div class="input-group">
@@ -278,6 +278,6 @@
 
     input_remove_initiator();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php include_view(THEME_PATH . 'views/partials/color_picker_js.php') ?>

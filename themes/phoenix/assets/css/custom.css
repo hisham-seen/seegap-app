@@ -1626,17 +1626,17 @@ input[type="radio"]:checked ~ .link-microsite-theme {
 }
 
 /* Base animation */
-.altum-animate {
+.seegap-animate {
 	-webkit-animation-duration:500ms;
 	animation-duration:500ms;
 }
 
-.altum-animate-fill-both {
+.seegap-animate-fill-both {
 	-webkit-animation-fill-mode:both;
 	animation-fill-mode:both;
 }
 
-.altum-animate-fill-none {
+.seegap-animate-fill-none {
 	-webkit-animation-fill-mode:none;
 	animation-fill-mode:none;
 }
@@ -1649,7 +1649,7 @@ input[type="radio"]:checked ~ .link-microsite-theme {
 		opacity:1
 	}
 }
-.altum-animate-fade-in {
+.seegap-animate-fade-in {
 	-webkit-animation-name:fadeIn;
 	animation-name:fadeIn
 }
@@ -1697,7 +1697,7 @@ input[type="radio"]:checked ~ .link-microsite-theme {
 }
 
 /* File input */
-.altum-file-input {
+.seegap-file-input {
 	padding: 1rem;
 	background: var(--gray-100);
 	border: 1px solid var(--gray-100);
@@ -1706,11 +1706,11 @@ input[type="radio"]:checked ~ .link-microsite-theme {
 	font-size: .9rem;
 }
 
-.altum-file-input:hover {
+.seegap-file-input:hover {
 	border-color: var(--gray-300);
 }
 
-.altum-file-input::file-selector-button {
+.seegap-file-input::file-selector-button {
 	border: 0;
 	padding: .4rem .75rem;
 	border-radius: var(--border-radius);
@@ -1721,7 +1721,7 @@ input[type="radio"]:checked ~ .link-microsite-theme {
 }
 
 /* File input preview */
-.altum-file-input-preview {
+.seegap-file-input-preview {
 	max-width: 100%;
 	max-height: 68px;
 	min-height: 68px;
@@ -1729,7 +1729,7 @@ input[type="radio"]:checked ~ .link-microsite-theme {
 }
 
 /* File input preview */
-.altum-file-input-preview {
+.seegap-file-input-preview {
 	max-width: 100%;
 	max-height: 68px;
 	min-height: 68px;

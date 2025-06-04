@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 define('ROOT_PATH', realpath(__DIR__ . '/..') . '/');
 const APP_PATH = ROOT_PATH . 'app/';
 const PLUGINS_PATH = ROOT_PATH . 'plugins/';
@@ -39,13 +39,12 @@ session_set_cookie_params([
 ]);
 
 /* Only start a session handler if we need to */
-$should_start_session = !isset($_GET['altum'])
-    || (
-        !str_starts_with($_GET['altum'], 'cron')
-        && !str_starts_with($_GET['altum'], 'sitemap')
-        && !str_starts_with($_GET['altum'], 'webhook-')
-        && !str_starts_with($_GET['altum'], 'api/')
-    );
+$should_start_session = !isset($_GET['seegap']) || (
+    !str_starts_with($_GET['seegap'], 'cron')
+    && !str_starts_with($_GET['seegap'], 'sitemap')
+    && !str_starts_with($_GET['seegap'], 'webhook-')
+    && !str_starts_with($_GET['seegap'], 'api/')
+);
 
 if($should_start_session) {
     session_start();
@@ -53,14 +52,14 @@ if($should_start_session) {
 
 /* Autoloader */
 spl_autoload_register (function ($class) {
-    $namespace_prefix = 'Altum';
+    $namespace_prefix = 'SeeGap';
     $split = explode('\\', $class);
 
     if($split[0] !== $namespace_prefix) {
         return;
     }
 
-    /* Altum core */
+    /* SeeGap core */
     if(isset($split[1]) && !isset($split[2])) {
         require_once APP_PATH . 'core/' . $split[1] . '.php';
     }

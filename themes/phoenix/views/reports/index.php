@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg d-flex align-items-center mb-3 mb-lg-0 text-truncate">
@@ -53,7 +53,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
@@ -151,8 +151,8 @@
                         </td>
 
                         <td class="text-nowrap text-muted">
-                            <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
-                                <?= \Altum\Date::get($row->datetime, 2) ?>
+                            <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>">
+                                <?= \SeeGap\Date::get($row->datetime, 2) ?>
                             </span>
                         </td>
 
@@ -190,7 +190,7 @@
 
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'report',
     'resource_id' => 'report_id',
     'has_dynamic_resource_name' => true,

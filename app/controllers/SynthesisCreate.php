@@ -7,25 +7,25 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
-use Altum\Uploads;
+use SeeGap\Alerts;
+use SeeGap\Response;
+use SeeGap\Uploads;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SynthesisCreate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.syntheses')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.syntheses')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('syntheses');
         }
@@ -43,26 +43,26 @@ class SynthesisCreate extends Controller {
         }
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* AI Syntheses */
-        $ai_syntheses_apis = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php';
+        $ai_syntheses_apis = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php';
 
         /* Selected AI model */
         $this->user->plan_settings->syntheses_api = $this->user->plan_settings->syntheses_api ?? 'aws_polly';
         $ai_api = $ai_syntheses_apis[$this->user->plan_settings->syntheses_api];
 
         /* Languages */
-        $ai_languages = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_languages.php';
+        $ai_languages = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_languages.php';
 
         /* Voices */
-        $ai_voices = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_voices.php';
+        $ai_voices = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_voices.php';
 
         /* Engines/Models */
-        $ai_engines = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_engines.php';
+        $ai_engines = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_engines.php';
 
         /* Formats */
-        $ai_formats = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_formats.php';
+        $ai_formats = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_formats.php';
 
         /* Clear $_GET */
         foreach($_GET as $key => $value) {
@@ -70,7 +70,7 @@ class SynthesisCreate extends Controller {
         }
 
         $values = [
-            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('synthesis_create.name_x'), \Altum\Date::get()),
+            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('synthesis_create.name_x'), \SeeGap\Date::get()),
             'input' => $_GET['input'] ?? $_POST['input'] ?? '',
             'language' => $_GET['language'] ?? $_POST['language'] ?? 'en-US',
             'voice_id' => $_GET['voice_id'] ?? $_POST['voice_id'] ?? 'Joanna',
@@ -90,14 +90,14 @@ class SynthesisCreate extends Controller {
             'ai_api' => $ai_api,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/synthesis-create/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/synthesis-create/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
 
     }
 
     public function create_ajax() {
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
 
         if(empty($_POST)) {
             redirect();
@@ -105,14 +105,14 @@ class SynthesisCreate extends Controller {
 
         set_time_limit(0);
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->syntheses_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.syntheses')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.syntheses')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -133,26 +133,26 @@ class SynthesisCreate extends Controller {
         }
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* AI Syntheses */
-        $ai_syntheses_apis = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php';
+        $ai_syntheses_apis = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_apis.php';
 
         /* Selected AI model */
         $this->user->plan_settings->syntheses_api = $this->user->plan_settings->syntheses_api ?? 'aws_polly';
         $ai_api = $ai_syntheses_apis[$this->user->plan_settings->syntheses_api];
 
         /* Languages */
-        $ai_languages = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_languages.php';
+        $ai_languages = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_languages.php';
 
         /* Voices */
-        $ai_voices = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_voices.php';
+        $ai_voices = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_voices.php';
 
         /* Engines/Models */
-        $ai_engines = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_engines.php';
+        $ai_engines = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_engines.php';
 
         /* Formats */
-        $ai_formats = require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_formats.php';
+        $ai_formats = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_' . $this->user->plan_settings->syntheses_api . '_formats.php';
 
         /* Filter some the variables */
         $_POST['language'] = !empty($_POST['language']) && array_key_exists($_POST['language'], $ai_languages) ? $_POST['language'] : 'en-US';
@@ -169,7 +169,7 @@ class SynthesisCreate extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Response::json(l('global.error_message.invalid_csrf_token'), 'error');
         }
 
@@ -269,7 +269,7 @@ class SynthesisCreate extends Controller {
             'size' => 0,
         ];
 
-        $file = \Altum\Uploads::process_upload_fake('syntheses', 'synthesis', 'json_error', null);
+        $file = \SeeGap\Uploads::process_upload_fake('syntheses', 'synthesis', 'json_error', null);
         sleep(1);
 
         $settings = json_encode([]);

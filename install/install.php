@@ -1,5 +1,5 @@
 <?php
-const ALTUMCODE = 66;
+const SEEGAP = 66;
 define('ROOT', realpath(__DIR__ . '/..') . '/');
 require_once ROOT . 'vendor/autoload.php';
 require_once ROOT . 'app/includes/product.php';
@@ -24,7 +24,7 @@ function get_ip() {
     return '';
 }
 
-$altumcode_api = 'https://api.altumcode.com/validate';
+$altumcode_api = 'https://api.Seegap.com/validate';
 
 /* Make sure the product wasn't already installed */
 if(file_exists(ROOT . 'install/installed')) {

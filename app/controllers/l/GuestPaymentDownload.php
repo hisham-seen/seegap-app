@@ -7,15 +7,15 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class GuestPaymentDownload extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             redirect();
         }
 
@@ -43,7 +43,7 @@ class GuestPaymentDownload extends Controller {
         }
 
         /* Download the file */
-        $file_url = \Altum\Uploads::get_full_url('products_files') . $microsite_block->settings->file;
+        $file_url = \SeeGap\Uploads::get_full_url('products_files') . $microsite_block->settings->file;
         header('Content-Type: application/octet-stream');
         header('Content-Transfer-Encoding: Binary');
         header('Content-disposition: attachment; filename="' . basename($file_url) . '"');

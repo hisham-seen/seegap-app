@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks;
+namespace SeeGap\Controllers\MicrositeBlocks;
 
-use Altum\Response;
-use Altum\Date;
-use Altum\Models\MicrositesThemes;
+use SeeGap\Response;
+use SeeGap\Date;
+use SeeGap\Models\MicrositesThemes;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Base Block Handler
@@ -31,8 +31,8 @@ abstract class BaseBlockHandler implements Interfaces\BlockHandlerInterface {
     protected function process_display_settings() {
         $_POST['schedule'] = (int) isset($_POST['schedule']);
         if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
-            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
+            $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
         } else {
             $_POST['start_date'] = $_POST['end_date'] = null;
         }
@@ -184,8 +184,8 @@ abstract class BaseBlockHandler implements Interfaces\BlockHandlerInterface {
             $file_new_name = md5(time() . rand()) . '.' . $file_extension;
 
             /* Try to compress the image */
-            if(\Altum\Plugin::is_active('image-optimizer')) {
-                \Altum\Plugin\ImageOptimizer::optimize($file_temp, $file_new_name);
+            if(\SeeGap\Plugin::is_active('image-optimizer')) {
+                \SeeGap\Plugin\ImageOptimizer::optimize($file_temp, $file_new_name);
             }
 
             /* Sanitize SVG uploads */
@@ -197,7 +197,7 @@ abstract class BaseBlockHandler implements Interfaces\BlockHandlerInterface {
             }
 
             /* Offload uploading */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 try {
                     $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -239,7 +239,7 @@ abstract class BaseBlockHandler implements Interfaces\BlockHandlerInterface {
         /* Check for the removal of the already uploaded file */
         if(isset($_POST[$file_name_remove])) {
             /* Offload deleting */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
                 $s3->deleteObject([
                     'Bucket' => settings()->offload->storage_name,

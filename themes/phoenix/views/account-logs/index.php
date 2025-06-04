@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?= $this->views['account_header_menu'] ?>
 
@@ -48,7 +48,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
@@ -150,7 +150,7 @@
                 </thead>
                 <tbody>
                 <?php foreach($data->logs as $row): ?>
-                    <?php //ALTUMCODE:DEMO if(DEMO) {$row->ip = 'hidden on demo';} ?>
+                    <?php //SEEGAP:DEMO if(DEMO) {$row->ip = 'hidden on demo';} ?>
                     <tr>
                         <td class="text-nowrap"><span class="badge badge-light"><?= $row->type ?></span></td>
                         <td class="text-nowrap"><span class="badge badge-info"><?= $row->ip ?></span></td>
@@ -181,7 +181,7 @@
 
                             <img src="<?= ASSETS_FULL_URL . 'images/browsers/' . browser_name_to_browser_key($row->browser_name) . '.svg' ?>" class="img-fluid icon-favicon mr-2" data-toggle="tooltip" title="<?= $row->browser_name ?: l('global.unknown') ?>" />
                         </td>
-                        <td class="text-nowrap"><span class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>"><?= \Altum\Date::get_timeago($row->datetime) ?></span></td>
+                        <td class="text-nowrap"><span class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>"><?= \SeeGap\Date::get_timeago($row->datetime) ?></span></td>
                     </tr>
                 <?php endforeach ?>
                 </tbody>

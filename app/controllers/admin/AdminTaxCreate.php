@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminTaxCreate extends Controller {
 
@@ -27,9 +27,9 @@ class AdminTaxCreate extends Controller {
             $_POST['billing_type'] = in_array($_POST['billing_type'], ['personal', 'business', 'both']) ? input_clean($_POST['billing_type']) : 'both';
             $_POST['countries'] = isset($_POST['countries']) ? array_query_clean($_POST['countries']) : null;
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -57,7 +57,7 @@ class AdminTaxCreate extends Controller {
         /* Main View */
         $data = [];
 
-        $view = new \Altum\View('admin/tax-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/tax-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

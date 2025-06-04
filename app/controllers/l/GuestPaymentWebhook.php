@@ -7,15 +7,15 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class GuestPaymentWebhook extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             http_response_code(400); die('payment-blocks plugin is disabled.');
         }
 
@@ -31,7 +31,7 @@ class GuestPaymentWebhook extends Controller {
         }
 
         /* Get the payment processor */
-        $payment_processor = (new \Altum\Models\PaymentProcessor())->get_payment_processor_by_payment_processor_id($_GET['payment_processor_id']);
+        $payment_processor = (new \SeeGap\Models\PaymentProcessor())->get_payment_processor_by_payment_processor_id($_GET['payment_processor_id']);
 
         switch($_GET['processor']) {
             case 'paypal':

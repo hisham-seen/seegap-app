@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Domain;
+use SeeGap\Models\Domain;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class LinkRedirect extends Controller {
 

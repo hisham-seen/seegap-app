@@ -7,16 +7,16 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Captcha;
-use Altum\Logger;
-use Altum\Models\User;
+use SeeGap\Alerts;
+use SeeGap\Captcha;
+use SeeGap\Logger;
+use SeeGap\Models\User;
 use Google\Client;
 use Google\Service\Oauth2;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Login extends Controller {
 
@@ -27,7 +27,7 @@ class Login extends Controller {
         $redirect_append = $redirect ? '?redirect=' . $redirect : null;
 
         if($method !== 'one-time-login-code') {
-            \Altum\Authentication::guard('guest');
+            \SeeGap\Authentication::guard('guest');
         }
 
         /* Default values */
@@ -37,7 +37,7 @@ class Login extends Controller {
             'rememberme' => isset($_POST['rememberme']) || settings()->users->login_rememberme_checkbox_is_checked,
         ];
 
-        //ALTUMCODE:DEMO if(DEMO) {$values['email'] = 'admin'; $values['password'] = 'admin';$user=(object)['twofa_secret' => null];}
+        //SEEGAP:DEMO if(DEMO) {$values['email'] = 'admin'; $values['password'] = 'admin';$user=(object)['twofa_secret' => null];}
 
         /* Initiate captcha */
         $captcha = new Captcha();
@@ -75,10 +75,10 @@ class Login extends Controller {
             Alerts::add_info(sprintf(l('login.info_message.logged_in'), $user->name));
 
             /* Check to see if the user has a custom language set */
-            if(\Altum\Language::$name == $user->language) {
+            if(\SeeGap\Language::$name == $user->language) {
                 redirect($redirect);
             } else {
-                redirect((\Altum\Language::$active_languages[$user->language] ? \Altum\Language::$active_languages[$user->language] . '/' : null) . $redirect, true);
+                redirect((\SeeGap\Language::$active_languages[$user->language] ? \SeeGap\Language::$active_languages[$user->language] . '/' : null) . $redirect, true);
             }
         }
 
@@ -94,7 +94,7 @@ class Login extends Controller {
             ];
 
             if($method == 'facebook-initiate') {
-                $_SESSION['register_language'] = \Altum\Language::$name;
+                $_SESSION['register_language'] = \SeeGap\Language::$name;
 
                 try {
                     $facebook = new \Hybridauth\Provider\Facebook($facebook_config);
@@ -139,7 +139,7 @@ class Login extends Controller {
             ];
 
             if($method == 'google-initiate') {
-                $_SESSION['register_language'] = \Altum\Language::$name;
+                $_SESSION['register_language'] = \SeeGap\Language::$name;
 
                 try {
                     $google = new \Hybridauth\Provider\Google($google_config);
@@ -184,7 +184,7 @@ class Login extends Controller {
             ];
 
             if($method == 'twitter-initiate') {
-                $_SESSION['register_language'] = \Altum\Language::$name;
+                $_SESSION['register_language'] = \SeeGap\Language::$name;
 
                 try {
                     $twitter = new \Hybridauth\Provider\Twitter($twitter_config);
@@ -229,7 +229,7 @@ class Login extends Controller {
             ];
 
             if($method == 'discord-initiate') {
-                $_SESSION['register_language'] = \Altum\Language::$name;
+                $_SESSION['register_language'] = \SeeGap\Language::$name;
 
                 try {
                     $discord = new \Hybridauth\Provider\Discord($discord_config);
@@ -274,7 +274,7 @@ class Login extends Controller {
             ];
 
             if($method == 'linkedin-initiate') {
-                $_SESSION['register_language'] = \Altum\Language::$name;
+                $_SESSION['register_language'] = \SeeGap\Language::$name;
 
                 try {
                     $linkedin = new \Hybridauth\Provider\LinkedInOpenID($linkedin_config);
@@ -320,7 +320,7 @@ class Login extends Controller {
             ];
 
             if($method == 'microsoft-initiate') {
-                $_SESSION['register_language'] = \Altum\Language::$name;
+                $_SESSION['register_language'] = \SeeGap\Language::$name;
 
                 try {
                     $microsoft = new \Hybridauth\Provider\MicrosoftGraph($microsoft_config);
@@ -454,10 +454,10 @@ setcookie('user_password_hash', md5($user->password), time()+60*60*24* (settings
                 Alerts::add_info(sprintf(l('login.info_message.logged_in'), $user->name));
 
                 /* Check to see if the user has a custom language set */
-                if(\Altum\Language::$name == $user->language) {
+                if(\SeeGap\Language::$name == $user->language) {
                     redirect($redirect);
                 } else {
-                    redirect((\Altum\Language::$active_languages[$user->language] ? \Altum\Language::$active_languages[$user->language] . '/' : null) . $redirect, true);
+                    redirect((\SeeGap\Language::$active_languages[$user->language] ? \SeeGap\Language::$active_languages[$user->language] . '/' : null) . $redirect, true);
                 }
             }
         }
@@ -474,7 +474,7 @@ setcookie('user_password_hash', md5($user->password), time()+60*60*24* (settings
             'user' => $user ?? null
         ];
 
-        $view = new \Altum\View('login/index', (array) $this);
+        $view = new \SeeGap\View('login/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -485,7 +485,7 @@ setcookie('user_password_hash', md5($user->password), time()+60*60*24* (settings
 
         /* Clear session variable */
         if(isset($_SESSION['register_language'])) {
-            \Altum\Language::set_by_name($_SESSION['register_language']);
+            \SeeGap\Language::set_by_name($_SESSION['register_language']);
             unset($_SESSION['register_language']);
         }
 
@@ -511,10 +511,10 @@ setcookie('user_password_hash', md5($user->password), time()+60*60*24* (settings
             Alerts::add_info(sprintf(l('login.info_message.logged_in'), $user->name));
 
             /* Check to see if the user has a custom language set */
-            if(\Altum\Language::$name == $user->language) {
+            if(\SeeGap\Language::$name == $user->language) {
                 redirect($redirect);
             } else {
-                redirect((\Altum\Language::$active_languages[$user->language] ? \Altum\Language::$active_languages[$user->language] . '/' : null) . $redirect, true);
+                redirect((\SeeGap\Language::$active_languages[$user->language] ? \SeeGap\Language::$active_languages[$user->language] . '/' : null) . $redirect, true);
             }
         }
 

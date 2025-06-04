@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminBroadcastView extends Controller {
 
@@ -31,7 +31,7 @@ class AdminBroadcastView extends Controller {
         $broadcast->users_ids = implode(',', json_decode($broadcast->users_ids));
 
         $start_date = (new \DateTime($_GET['start_date'] ?? $broadcast->datetime))->format('Y-m-d');
-        $datetime = \Altum\Date::get_start_end_dates_new($start_date);
+        $datetime = \SeeGap\Date::get_start_end_dates_new($start_date);
 
         /* Get statistics */
         $statistics_chart = [];
@@ -117,7 +117,7 @@ class AdminBroadcastView extends Controller {
             'users' => $users,
         ];
 
-        $view = new \Altum\View('admin/broadcast-view/index', (array) $this);
+        $view = new \SeeGap\View('admin/broadcast-view/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

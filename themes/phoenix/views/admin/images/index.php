@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
     <h1 class="h3 mb-3 mb-md-0"><i class="fas fa-fw fa-xs fa-icons text-primary-900 mr-2"></i> <?= l('admin_images.header') ?></h1>
@@ -35,7 +35,7 @@
                         <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                         <?php if($data->filters->has_applied_filters): ?>
-                            <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                            <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                         <?php endif ?>
                     </div>
 
@@ -108,7 +108,7 @@
                             <label for="filters_api" class="small"><?= l('images.api') ?></label>
                             <select name="api" id="filters_api" class="custom-select custom-select-sm">
                                 <option value=""><?= l('global.all') ?></option>
-                                <?php foreach(require \Altum\Plugin::get('aix')->path . 'includes/ai_image_models.php' as $key => $value): ?>
+                                <?php foreach(require \SeeGap\Plugin::get('aix')->path . 'includes/ai_image_models.php' as $key => $value): ?>
                                     <option value="<?= $key ?>" <?= isset($data->filters->filters['api']) && $data->filters->filters['api'] == str_replace('-', '_', $key) ? 'selected="selected"' : null ?>><?= $value['name'] ?></option>
                                 <?php endforeach ?>
                             </select>
@@ -170,13 +170,13 @@
     </div>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <form id="table" action="<?= SITE_URL . 'admin/images/bulk' ?>" method="post" role="form">
-    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
     <input type="hidden" name="type" value="" data-bulk-type />
-    <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
-    <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
+    <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
+    <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
     <div class="table-responsive table-custom-container">
         <table class="table table-custom">
@@ -198,7 +198,7 @@
             </thead>
             <tbody>
             <?php foreach($data->images as $row): ?>
-                <?php //ALTUMCODE:DEMO if(DEMO) {$row->user_email = 'hidden@demo.com'; $row->user_name = $row->name = 'hidden on demo';} ?>
+                <?php //SEEGAP:DEMO if(DEMO) {$row->user_email = 'hidden@demo.com'; $row->user_name = $row->name = 'hidden on demo';} ?>
 
                 <tr>
                     <td data-bulk-table class="d-none">
@@ -225,8 +225,8 @@
 
                     <td class="text-nowrap">
                         <div class="d-flex align-items-center">
-                            <a href="<?= \Altum\Uploads::get_full_url('images') . $row->image ?>" target="_blank">
-                                <img src="<?= \Altum\Uploads::get_full_url('images') . $row->image ?>" class="img-fluid rounded mr-3" style="width: 50px; height: 50px;min-width: 50px; min-height: 50px;" data-toggle="tooltip" title="<?= l('global.view') ?>" alt="<?= $row->input ?>" />
+                            <a href="<?= \SeeGap\Uploads::get_full_url('images') . $row->image ?>" target="_blank">
+                                <img src="<?= \SeeGap\Uploads::get_full_url('images') . $row->image ?>" class="img-fluid rounded mr-3" style="width: 50px; height: 50px;min-width: 50px; min-height: 50px;" data-toggle="tooltip" title="<?= l('global.view') ?>" alt="<?= $row->input ?>" />
                             </a>
 
                             <div class="d-flex flex-column">
@@ -254,18 +254,18 @@
 
                     <td class="text-nowrap">
                         <div class="d-flex align-items-center">
-                        <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                        <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                             <i class="fas fa-fw fa-clock text-muted"></i>
                         </span>
 
-                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.last_datetime_tooltip'), ($row->last_datetime ? '<br />' . \Altum\Date::get($row->last_datetime, 2) . '<br /><small>' . \Altum\Date::get($row->last_datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->last_datetime) . ')</small>' : '<br />-')) ?>">
+                            <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.last_datetime_tooltip'), ($row->last_datetime ? '<br />' . \SeeGap\Date::get($row->last_datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->last_datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->last_datetime) . ')</small>' : '<br />-')) ?>">
                             <i class="fas fa-fw fa-history text-muted"></i>
                         </span>
                         </div>
                     </td>
                     <td>
                         <div class="d-flex justify-content-end">
-                            <?= include_view(THEME_PATH . 'views/admin/images/admin_image_dropdown_button.php', ['id' => $row->image_id, 'resource_name' => $row->name, 'image' => $row->image, 'image_url' => \Altum\Uploads::get_full_url('images') . $row->image]) ?>
+                            <?= include_view(THEME_PATH . 'views/admin/images/admin_image_dropdown_button.php', ['id' => $row->image_id, 'resource_name' => $row->name, 'image' => $row->image, 'image_url' => \SeeGap\Uploads::get_full_url('images') . $row->image]) ?>
                         </div>
                     </td>
                 </tr>
@@ -279,5 +279,5 @@
 <div class="mt-3"><?= $data->pagination ?></div>
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_download_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_download_modal.php'), 'modals'); ?>

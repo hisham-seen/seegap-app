@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="card mb-5">
     <div class="card-body">
@@ -391,7 +391,7 @@
                     </td>
 
                     <td class="text-nowrap">
-                        <span class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>"><?= \Altum\Date::get_timeago($row->datetime) ?></span>
+                        <span class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>"><?= \SeeGap\Date::get_timeago($row->datetime) ?></span>
                     </td>
                 </tr>
             <?php endforeach ?>
@@ -462,4 +462,4 @@
 
     <?php endif ?>
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

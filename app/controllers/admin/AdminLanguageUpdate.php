@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Language;
+use SeeGap\Alerts;
+use SeeGap\Language;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminLanguageUpdate extends Controller {
 
@@ -50,7 +50,7 @@ class AdminLanguageUpdate extends Controller {
             $admin_language_strings = '';
 
             /* Go through each keys of the original translation file */
-            foreach(\Altum\Language::$languages[\Altum\Language::$main_name]['content'] as $key => $value) {
+            foreach(\SeeGap\Language::$languages[\SeeGap\Language::$main_name]['content'] as $key => $value) {
                 $form_key = str_replace('.', 'ALTUM', $key);
 
                 /* Check for already existing original translation value */
@@ -62,7 +62,7 @@ class AdminLanguageUpdate extends Controller {
 
                     /* Make sure the new translated string contains the required variables if existing */
                     $translated_string = $_POST[$form_key];
-                    $original_translation_string = addcslashes(\Altum\Language::$languages[\Altum\Language::$main_name]['content'][$key], "'");
+                    $original_translation_string = addcslashes(\SeeGap\Language::$languages[\SeeGap\Language::$main_name]['content'][$key], "'");
 
                     /* Revert to default if the required variables are not introduced */
                     if(count_matched_translation_variables($translated_string) != count_matched_translation_variables($original_translation_string)) {
@@ -98,7 +98,7 @@ class AdminLanguageUpdate extends Controller {
                 foreach($_POST['translation_key'] as $key => $value) {
                     if(empty($value)) continue;
                     if(empty($_POST['translation_value'][$key])) continue;
-                    if(array_key_exists($value, \Altum\Language::$languages[\Altum\Language::$main_name]['content'])) continue;
+                    if(array_key_exists($value, \SeeGap\Language::$languages[\SeeGap\Language::$main_name]['content'])) continue;
 
                     $translation_value = addcslashes($_POST['translation_value'][$key], "'");
                     $language_strings .= "\t'{$value}' => '{$translation_value}',\n";
@@ -115,7 +115,7 @@ return [
 ALTUM;
             };
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             $required_fields = ['language_name', 'language_code'];
@@ -240,7 +240,7 @@ ALTUM;
                 }
 
                 /* Clear the language cache */
-                \Altum\Language::clear_cache();
+                \SeeGap\Language::clear_cache();
 
                 /* Set a nice success message */
                 Alerts::add_success(sprintf(l('global.success_message.update1'), '<strong>' . $_POST['language_name'] . '</strong>'));
@@ -257,7 +257,7 @@ ALTUM;
             'type' => $type,
         ];
 
-        $view = new \Altum\View('admin/language-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/language-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

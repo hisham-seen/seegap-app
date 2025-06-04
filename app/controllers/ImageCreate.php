@@ -7,25 +7,25 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
-use Altum\Uploads;
+use SeeGap\Alerts;
+use SeeGap\Response;
+use SeeGap\Uploads;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ImageCreate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.images')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.images')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('images');
         }
@@ -44,19 +44,19 @@ class ImageCreate extends Controller {
         }
 
         /* Ai image models */
-        $ai_image_models = require \Altum\Plugin::get('aix')->path . 'includes/ai_image_models.php';
+        $ai_image_models = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_image_models.php';
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Lighting */
-        $ai_images_lighting = require \Altum\Plugin::get('aix')->path . 'includes/ai_images_lighting.php';
+        $ai_images_lighting = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_images_lighting.php';
 
         /* Style */
-        $ai_images_styles = require \Altum\Plugin::get('aix')->path . 'includes/ai_images_styles.php';
+        $ai_images_styles = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_images_styles.php';
 
         /* Mood */
-        $ai_images_moods = require \Altum\Plugin::get('aix')->path . 'includes/ai_images_moods.php';
+        $ai_images_moods = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_images_moods.php';
 
         /* Selected AI model */
         $this->user->plan_settings->images_api = $this->user->plan_settings->images_api ?? 'dall_e_2';
@@ -68,7 +68,7 @@ class ImageCreate extends Controller {
         }
 
         $values = [
-            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('image_create.name_x'), \Altum\Date::get()),
+            'name' => $_POST['name'] ?? $_GET['name'] ?? sprintf(l('image_create.name_x'), \SeeGap\Date::get()),
             'input' => $_GET['input'] ?? $_POST['input'] ?? '',
             'style' => $_GET['style'] ?? $_POST['style'] ?? null,
             'artist' => $_GET['artist'] ?? $_POST['artist'] ?? null,
@@ -89,14 +89,14 @@ class ImageCreate extends Controller {
             'projects' => $projects ?? [],
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/image-create/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/image-create/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
 
     }
 
     public function create_ajax() {
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Response::json('Please create an account on the demo to test out this function.', 'error');
 
         if(empty($_POST)) {
             redirect();
@@ -104,14 +104,14 @@ class ImageCreate extends Controller {
 
         set_time_limit(0);
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->images_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.images')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.images')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -122,19 +122,19 @@ class ImageCreate extends Controller {
         }
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Ai image models */
-        $ai_image_models = require \Altum\Plugin::get('aix')->path . 'includes/ai_image_models.php';
+        $ai_image_models = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_image_models.php';
 
         /* Lighting */
-        $ai_images_lighting = require \Altum\Plugin::get('aix')->path . 'includes/ai_images_lighting.php';
+        $ai_images_lighting = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_images_lighting.php';
 
         /* Style */
-        $ai_images_styles = require \Altum\Plugin::get('aix')->path . 'includes/ai_images_styles.php';
+        $ai_images_styles = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_images_styles.php';
 
         /* Mood */
-        $ai_images_moods = require \Altum\Plugin::get('aix')->path . 'includes/ai_images_moods.php';
+        $ai_images_moods = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_images_moods.php';
 
         /* Selected AI model */
         $this->user->plan_settings->images_api = $this->user->plan_settings->images_api ?? 'dall_e_2';
@@ -158,7 +158,7 @@ class ImageCreate extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Response::json(l('global.error_message.invalid_csrf_token'), 'error');
         }
 
@@ -290,7 +290,7 @@ class ImageCreate extends Controller {
                         'size' => 0,
                     ];
 
-                    $image = \Altum\Uploads::process_upload_fake('images', 'image', 'json_error', null);
+                    $image = \SeeGap\Uploads::process_upload_fake('images', 'image', 'json_error', null);
 
                     $settings = json_encode([
                         'variants' => $_POST['variants'],

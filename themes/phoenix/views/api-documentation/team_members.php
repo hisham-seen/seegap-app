@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php $teams_access = require APP_PATH . 'includes/teams_access.php'; ?>
 

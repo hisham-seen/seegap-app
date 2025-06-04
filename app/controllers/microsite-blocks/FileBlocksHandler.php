@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers\MicrositeBlocks;
+namespace SeeGap\Controllers\MicrositeBlocks;
 
-use Altum\Response;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Handler for file-based microsite blocks

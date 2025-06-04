@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
+use SeeGap\Alerts;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Gs1LinkAjax extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check if GS1 links feature is enabled */
         if(!settings()->gs1_links->gs1_links_is_enabled) {
             die();
         }
 
-        if(!empty($_POST) && (\Altum\Csrf::check('token') || \Altum\Csrf::check('global_token')) && isset($_POST['request_type'])) {
+        if(!empty($_POST) && (\SeeGap\Csrf::check('token') || \SeeGap\Csrf::check('global_token')) && isset($_POST['request_type'])) {
 
             switch($_POST['request_type']) {
 
@@ -46,7 +46,7 @@ class Gs1LinkAjax extends Controller {
 
     private function is_enabled_toggle() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.gs1_links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -70,7 +70,7 @@ class Gs1LinkAjax extends Controller {
 
     private function delete() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.gs1_links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -81,23 +81,23 @@ class Gs1LinkAjax extends Controller {
             die();
         }
 
-        (new \Altum\Models\Gs1Link())->delete($gs1_link->gs1_link_id);
+        (new \SeeGap\Models\Gs1Link())->delete($gs1_link->gs1_link_id);
 
         Response::json(l('global.success_message.delete2'), 'success', ['url' => url('gs1-links')]);
     }
 
     public function duplicate() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.gs1_links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('gs1-links');
         }
 
         $_POST['gs1_link_id'] = (int) $_POST['gs1_link_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('gs1-links');
         }
@@ -130,12 +130,12 @@ class Gs1LinkAjax extends Controller {
             do {
                 $sequence = ($sequence + 1) % 10;
                 $new_base = substr($base_gtin, 0, 11) . $sequence;
-                $new_gtin = \Altum\Helpers\Gs1::calculate_gtin_check_digit($new_base);
+                $new_gtin = \SeeGap\Helpers\Gs1::calculate_gtin_check_digit($new_base);
                 $attempts++;
                 
                 // If we've tried all possibilities, generate a random GTIN
                 if($attempts >= 10) {
-                    $new_gtin = \Altum\Helpers\Gs1::generate_random_gtin();
+                    $new_gtin = \SeeGap\Helpers\Gs1::generate_random_gtin();
                     break;
                 }
             } while (db()->where('gtin', $new_gtin)->where('domain_id', $gs1_link->domain_id)->getValue('gs1_links', 'gs1_link_id'));

@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminSyntheses extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'project_id', 'language', 'format', 'voice_id', 'voice_engine', 'voice_gender'], ['name'], ['synthesis_id', 'last_datetime', 'datetime', 'name', 'characters']));
+        $filters = (new \SeeGap\Filters(['user_id', 'project_id', 'language', 'format', 'voice_id', 'voice_engine', 'voice_gender'], ['name'], ['synthesis_id', 'last_datetime', 'datetime', 'name', 'characters']));
         $filters->set_default_order_by($this->user->preferences->syntheses_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `syntheses` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/syntheses?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/syntheses?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $syntheses = [];
@@ -52,19 +52,19 @@ class AdminSyntheses extends Controller {
         process_export_json($syntheses, 'include', ['synthesis_id', 'project_id', 'user_id', 'name', 'input', 'file', 'language', 'format', 'voice_id', 'voice_engine', 'voice_gender', 'settings', 'characters', 'api_response_time', 'datetime', 'last_datetime'], sprintf(l('syntheses.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Languages */
-        $ai_languages = array_merge([], require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_languages.php');
+        $ai_languages = array_merge([], require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_languages.php');
 
         /* Voices */
-        $ai_voices = array_merge([], require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_voices.php');
+        $ai_voices = array_merge([], require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_voices.php');
 
         /* Engines/Models */
-        $ai_engines = array_merge([], require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_engines.php');
+        $ai_engines = array_merge([], require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_engines.php');
 
         /* Formats */
-        $ai_formats = array_merge([], require \Altum\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_formats.php');
+        $ai_formats = array_merge([], require \SeeGap\Plugin::get('aix')->path . 'includes/ai_syntheses_openai_audio_formats.php');
 
         /* Main View */
         $data = [
@@ -77,7 +77,7 @@ class AdminSyntheses extends Controller {
             'ai_formats' => $ai_formats,
         ];
 
-        $view = new \Altum\View('admin/syntheses/index', (array) $this);
+        $view = new \SeeGap\View('admin/syntheses/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -98,9 +98,9 @@ class AdminSyntheses extends Controller {
             redirect('admin/syntheses');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -116,7 +116,7 @@ class AdminSyntheses extends Controller {
                         $synthesis = db()->where('synthesis_id', $synthesis_id)->getOne('syntheses', ['user_id', 'file']);
 
                         /* Delete file */
-                        \Altum\Uploads::delete_uploaded_file($synthesis->file, 'syntheses');
+                        \SeeGap\Uploads::delete_uploaded_file($synthesis->file, 'syntheses');
 
                         /* Delete the resource */
                         db()->where('synthesis_id', $synthesis_id)->delete('syntheses');
@@ -138,9 +138,9 @@ class AdminSyntheses extends Controller {
 
         $synthesis_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -151,7 +151,7 @@ class AdminSyntheses extends Controller {
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Delete file */
-            \Altum\Uploads::delete_uploaded_file($synthesis->file, 'syntheses');
+            \SeeGap\Uploads::delete_uploaded_file($synthesis->file, 'syntheses');
 
             /* Delete the resource */
             db()->where('synthesis_id', $synthesis_id)->delete('syntheses');

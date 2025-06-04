@@ -7,28 +7,28 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminTranscriptions extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('aix')) {
+        if(!\SeeGap\Plugin::is_active('aix')) {
             redirect('not-found');
         }
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'project_id', 'language'], ['name'], ['transcription_id', 'last_datetime', 'datetime', 'name', 'words']));
+        $filters = (new \SeeGap\Filters(['user_id', 'project_id', 'language'], ['name'], ['transcription_id', 'last_datetime', 'datetime', 'name', 'words']));
         $filters->set_default_order_by($this->user->preferences->transcriptions_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `transcriptions` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/transcriptions?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/transcriptions?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $transcriptions = [];
@@ -56,10 +56,10 @@ class AdminTranscriptions extends Controller {
         process_export_json($transcriptions, 'include', ['transcription_id', 'project_id', 'user_id', 'name', 'input', 'content', 'words', 'language', 'settings', 'api_response_time', 'datetime', 'last_datetime'], sprintf(l('transcriptions.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* AI Languages */
-        $ai_transcriptions_languages = require \Altum\Plugin::get('aix')->path . 'includes/ai_transcriptions_languages.php';
+        $ai_transcriptions_languages = require \SeeGap\Plugin::get('aix')->path . 'includes/ai_transcriptions_languages.php';
 
         /* Main View */
         $data = [
@@ -69,7 +69,7 @@ class AdminTranscriptions extends Controller {
             'ai_transcriptions_languages' => $ai_transcriptions_languages,
         ];
 
-        $view = new \Altum\View('admin/transcriptions/index', (array) $this);
+        $view = new \SeeGap\View('admin/transcriptions/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -90,9 +90,9 @@ class AdminTranscriptions extends Controller {
             redirect('admin/transcriptions');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -127,9 +127,9 @@ class AdminTranscriptions extends Controller {
 
         $transcription_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

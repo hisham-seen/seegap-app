@@ -7,18 +7,18 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminPlugins extends Controller {
 
     public function index() {
 
         /* Main View */
-        $view = new \Altum\View('admin/plugins/index', (array) $this);
+        $view = new \SeeGap\View('admin/plugins/index', (array) $this);
 
         $this->add_view_content('content', $view->run());
 
@@ -29,44 +29,44 @@ class AdminPlugins extends Controller {
 
         $plugin_id = isset($this->params[0]) ? input_clean($this->params[0]) : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
-        if(!\Altum\Plugin::is_uninstalled($plugin_id)) {
+        if(!\SeeGap\Plugin::is_uninstalled($plugin_id)) {
             redirect('admin/plugins');
         }
 
-        if(!is_writable(\Altum\Plugin::get($plugin_id)->path)) {
-            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \Altum\Plugin::get($plugin_id)->path));
+        if(!is_writable(\SeeGap\Plugin::get($plugin_id)->path)) {
+            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \SeeGap\Plugin::get($plugin_id)->path));
         }
 
-        if(file_exists(\Altum\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\Altum\Plugin::get($plugin_id)->path . 'settings.json')) {
-            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \Altum\Plugin::get($plugin_id)->path . 'settings.json'));
+        if(file_exists(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json')) {
+            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \SeeGap\Plugin::get($plugin_id)->path . 'settings.json'));
         }
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Load all the related plugin files */
-            require \Altum\Plugin::get($plugin_id)->path . 'init.php';
+            require \SeeGap\Plugin::get($plugin_id)->path . 'init.php';
 
             $class_name = preg_replace('/[^A-Za-z0-9]/', '', $plugin_id);
-            $class = '\Altum\Plugin\\' . $class_name;
+            $class = '\SeeGap\Plugin\\' . $class_name;
             $class::install();
 
             /* Clear the language cache */
-            \Altum\Language::clear_cache();
+            \SeeGap\Language::clear_cache();
 
             /* Clear the cache */
             cache()->clear();
 
             /* Set a nice success message */
-            Alerts::add_success(sprintf(l('admin_plugins.install_message'), '<strong>' . \Altum\Plugin::get($plugin_id)->name . '</strong>'));
+            Alerts::add_success(sprintf(l('admin_plugins.install_message'), '<strong>' . \SeeGap\Plugin::get($plugin_id)->name . '</strong>'));
 
-            if(!empty(\Altum\Plugin::get($plugin_id)->settings_url)) {
-                header('Location: ' . \Altum\Plugin::get($plugin_id)->settings_url);
+            if(!empty(\SeeGap\Plugin::get($plugin_id)->settings_url)) {
+                header('Location: ' . \SeeGap\Plugin::get($plugin_id)->settings_url);
                 die();
             }
 
@@ -79,37 +79,37 @@ class AdminPlugins extends Controller {
 
         $plugin_id = isset($this->params[0]) ? input_clean($this->params[0]) : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
-        if(!is_writable(\Altum\Plugin::get($plugin_id)->path)) {
-            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \Altum\Plugin::get($plugin_id)->path));
+        if(!is_writable(\SeeGap\Plugin::get($plugin_id)->path)) {
+            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \SeeGap\Plugin::get($plugin_id)->path));
         }
 
-        if(file_exists(\Altum\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\Altum\Plugin::get($plugin_id)->path . 'settings.json')) {
-            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \Altum\Plugin::get($plugin_id)->path . 'settings.json'));
+        if(file_exists(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json')) {
+            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \SeeGap\Plugin::get($plugin_id)->path . 'settings.json'));
         }
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Load all the related plugin files */
-            require \Altum\Plugin::get($plugin_id)->path . 'init.php';
+            require \SeeGap\Plugin::get($plugin_id)->path . 'init.php';
 
             $class_name = preg_replace('/[^A-Za-z0-9]/', '', $plugin_id);
-            $class = '\Altum\Plugin\\' . $class_name;
+            $class = '\SeeGap\Plugin\\' . $class_name;
             $class::uninstall();
 
             /* Clear the language cache */
-            \Altum\Language::clear_cache();
+            \SeeGap\Language::clear_cache();
 
             /* Clear the cache */
             cache()->clear();
 
             /* Set a nice success message */
-            Alerts::add_success(sprintf(l('admin_plugins.uninstall_message'), '<strong>' . \Altum\Plugin::get($plugin_id)->name . '</strong>'));
+            Alerts::add_success(sprintf(l('admin_plugins.uninstall_message'), '<strong>' . \SeeGap\Plugin::get($plugin_id)->name . '</strong>'));
 
         }
 
@@ -120,41 +120,41 @@ class AdminPlugins extends Controller {
 
         $plugin_id = isset($this->params[0]) ? input_clean($this->params[0]) : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
-        if(!\Altum\Plugin::is_installed($plugin_id)) {
+        if(!\SeeGap\Plugin::is_installed($plugin_id)) {
             redirect('admin/plugins');
         }
 
-        if(!is_writable(\Altum\Plugin::get($plugin_id)->path)) {
-            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \Altum\Plugin::get($plugin_id)->path));
+        if(!is_writable(\SeeGap\Plugin::get($plugin_id)->path)) {
+            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \SeeGap\Plugin::get($plugin_id)->path));
         }
 
-        if(file_exists(\Altum\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\Altum\Plugin::get($plugin_id)->path . 'settings.json')) {
-            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \Altum\Plugin::get($plugin_id)->path . 'settings.json'));
+        if(file_exists(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json')) {
+            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \SeeGap\Plugin::get($plugin_id)->path . 'settings.json'));
         }
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Load all the related plugin files */
-            require \Altum\Plugin::get($plugin_id)->path . 'init.php';
+            require \SeeGap\Plugin::get($plugin_id)->path . 'init.php';
 
             $class_name = preg_replace('/[^A-Za-z0-9]/', '', $plugin_id);
-            $class = '\Altum\Plugin\\' . $class_name;
+            $class = '\SeeGap\Plugin\\' . $class_name;
             $class::activate();
 
             /* Clear the language cache */
-            \Altum\Language::clear_cache();
+            \SeeGap\Language::clear_cache();
 
             /* Clear the cache */
             cache()->clear();
 
             /* Set a nice success message */
-            Alerts::add_success(sprintf(l('admin_plugins.activate_message'), '<strong>' . \Altum\Plugin::get($plugin_id)->name . '</strong>'));
+            Alerts::add_success(sprintf(l('admin_plugins.activate_message'), '<strong>' . \SeeGap\Plugin::get($plugin_id)->name . '</strong>'));
 
         }
 
@@ -165,41 +165,41 @@ class AdminPlugins extends Controller {
 
         $plugin_id = isset($this->params[0]) ? input_clean($this->params[0]) : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
-        if(!\Altum\Plugin::is_active($plugin_id)) {
+        if(!\SeeGap\Plugin::is_active($plugin_id)) {
             redirect('admin/plugins');
         }
 
-        if(!is_writable(\Altum\Plugin::get($plugin_id)->path)) {
-            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \Altum\Plugin::get($plugin_id)->path));
+        if(!is_writable(\SeeGap\Plugin::get($plugin_id)->path)) {
+            Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), \SeeGap\Plugin::get($plugin_id)->path));
         }
 
-        if(file_exists(\Altum\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\Altum\Plugin::get($plugin_id)->path . 'settings.json')) {
-            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \Altum\Plugin::get($plugin_id)->path . 'settings.json'));
+        if(file_exists(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json') && !is_writable(\SeeGap\Plugin::get($plugin_id)->path . 'settings.json')) {
+            Alerts::add_error(sprintf(l('global.error_message.file_not_writable'), \SeeGap\Plugin::get($plugin_id)->path . 'settings.json'));
         }
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Load all the related plugin files */
-            require \Altum\Plugin::get($plugin_id)->path . 'init.php';
+            require \SeeGap\Plugin::get($plugin_id)->path . 'init.php';
 
             $class_name = preg_replace('/[^A-Za-z0-9]/', '', $plugin_id);
-            $class = '\Altum\Plugin\\' . $class_name;
+            $class = '\SeeGap\Plugin\\' . $class_name;
             $class::disable();
 
             /* Clear the language cache */
-            \Altum\Language::clear_cache();
+            \SeeGap\Language::clear_cache();
 
             /* Clear the cache */
             cache()->clear();
 
             /* Set a nice success message */
-            Alerts::add_success(sprintf(l('admin_plugins.disable_message'), '<strong>' . \Altum\Plugin::get($plugin_id)->name . '</strong>'));
+            Alerts::add_success(sprintf(l('admin_plugins.disable_message'), '<strong>' . \SeeGap\Plugin::get($plugin_id)->name . '</strong>'));
 
         }
 

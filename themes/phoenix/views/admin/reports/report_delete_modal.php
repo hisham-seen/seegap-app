@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -29,7 +29,7 @@
 
                 <div class="mt-4">
                     <form name="delete_report" method="post" role="form">
-                        <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                        <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                         <input type="hidden" name="request_type" value="delete" />
                         <input type="hidden" name="report_id" value="" />
 

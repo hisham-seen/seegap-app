@@ -7,26 +7,26 @@
  *
  */
 
-namespace Altum\controllers;
+namespace SeeGap\controllers;
 
-use Altum\Alerts;
-use Altum\Date;
+use SeeGap\Alerts;
+use SeeGap\Date;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class LinkCreate extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(!settings()->links->shortener_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('links');
         }
@@ -40,16 +40,16 @@ class LinkCreate extends Controller {
         }
 
         /* Get available custom domains */
-        $domains = (new \Altum\Models\Domain())->get_available_domains_by_user($this->user);
+        $domains = (new \SeeGap\Models\Domain())->get_available_domains_by_user($this->user);
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Get available pixels */
-        $pixels = (new \Altum\Models\Pixel())->get_pixels($this->user->user_id);
+        $pixels = (new \SeeGap\Models\Pixel())->get_pixels($this->user->user_id);
 
         /* Existing splash pages */
-        $splash_pages = (new \Altum\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
+        $splash_pages = (new \SeeGap\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
 
         /* Targeting types */
         $targeting_types = ['continent_code', 'country_code', 'city_name', 'device_type', 'browser_language', 'rotation', 'os_name', 'browser_name'];
@@ -84,8 +84,8 @@ class LinkCreate extends Controller {
             /* Temporary URL */
             $_POST['schedule'] = (int) isset($_POST['schedule']);
             if($_POST['schedule'] && !empty($_POST['start_date']) && !empty($_POST['end_date']) && Date::validate($_POST['start_date'], 'Y-m-d H:i:s') && Date::validate($_POST['end_date'], 'Y-m-d H:i:s')) {
-                $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
-                $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\Altum\Date::$default_timezone))->format('Y-m-d H:i:s');
+                $_POST['start_date'] = (new \DateTime($_POST['start_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
+                $_POST['end_date'] = (new \DateTime($_POST['end_date'], new \DateTimeZone($this->user->timezone)))->setTimezone(new \DateTimeZone(\SeeGap\Date::$default_timezone))->format('Y-m-d H:i:s');
             } else {
                 $_POST['start_date'] = $_POST['end_date'] = null;
             }
@@ -141,8 +141,8 @@ class LinkCreate extends Controller {
             $_POST['cloaking_title'] = input_clean($_POST['cloaking_title'], 70);
             $_POST['cloaking_meta_description'] = input_clean($_POST['cloaking_meta_description'], 160);
             $_POST['cloaking_custom_js'] = mb_substr(trim($_POST['cloaking_custom_js']), 0, 10000);
-            $cloaking_favicon = \Altum\Uploads::process_upload(null, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
-            $cloaking_opengraph = \Altum\Uploads::process_upload(null, 'microsite_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
+            $cloaking_favicon = \SeeGap\Uploads::process_upload(null, 'favicons', 'cloaking_favicon', 'cloaking_favicon_remove', settings()->links->favicon_size_limit, 'json_error');
+            $cloaking_opengraph = \SeeGap\Uploads::process_upload(null, 'microsite_seo_image', 'cloaking_opengraph', 'cloaking_opengraph_remove', settings()->links->seo_image_size_limit, 'json_error');
 
             /* HTTP */
             $_POST['http_status_code'] = in_array($_POST['http_status_code'], [301, 302, 307, 308]) ? (int) $_POST['http_status_code'] : 301;
@@ -155,7 +155,7 @@ class LinkCreate extends Controller {
             $_POST['utm_source'] = input_clean($_POST['utm_source'], 128);
             $_POST['utm_campaign'] = input_clean($_POST['utm_campaign'], 128);
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = $_POST['is_bulk'] ? ['location_urls'] : ['location_url'];
@@ -165,7 +165,7 @@ class LinkCreate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -178,7 +178,7 @@ class LinkCreate extends Controller {
                     Alerts::add_field_error('url', l('link.error_message.url_exists'));
                 }
 
-                if(array_key_exists($_POST['url'], \Altum\Router::$routes['']) || in_array($_POST['url'], \Altum\Language::$active_languages) || file_exists(ROOT_PATH . $_POST['url'])) {
+                if(array_key_exists($_POST['url'], \SeeGap\Router::$routes['']) || in_array($_POST['url'], \SeeGap\Language::$active_languages) || file_exists(ROOT_PATH . $_POST['url'])) {
                     Alerts::add_field_error('url', l('link.error_message.blacklisted_url'));
                 }
 
@@ -421,7 +421,7 @@ class LinkCreate extends Controller {
             'values' => $values
         ];
 
-        $view = new \Altum\View('link-create/index', (array) $this);
+        $view = new \SeeGap\View('link-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

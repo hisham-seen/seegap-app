@@ -7,13 +7,13 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Title;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminSettings extends Controller {
 
@@ -25,22 +25,22 @@ class AdminSettings extends Controller {
         /* Block access to disabled settings sections */
         $disabled_methods = ['affiliate', 'push_notifications', 'offload', 'pwa', 'image_optimizer', 'dynamic_og_images', 'license', 'support'];
         
-        if(isset(\Altum\Router::$method) && in_array(\Altum\Router::$method, $disabled_methods)) {
+        if(isset(\SeeGap\Router::$method) && in_array(\SeeGap\Router::$method, $disabled_methods)) {
             redirect('admin/settings/main');
         }
         
-        $method	= (isset(\Altum\Router::$method) && file_exists(THEME_PATH . 'views/admin/settings/partials/' . \Altum\Router::$method . '.php')) ? \Altum\Router::$method : 'main';
+        $method	= (isset(\SeeGap\Router::$method) && file_exists(THEME_PATH . 'views/admin/settings/partials/' . \SeeGap\Router::$method . '.php')) ? \SeeGap\Router::$method : 'main';
         $payment_processors = require APP_PATH . 'includes/payment_processors.php';
 
         /* Set a custom title */
         Title::set(sprintf(l('admin_settings.title'), l('admin_settings.' . $method . '.tab')));
 
         /* Method View */
-        $view = new \Altum\View('admin/settings/partials/' . $method, (array) $this);
+        $view = new \SeeGap\View('admin/settings/partials/' . $method, (array) $this);
         $this->add_view_content('method', $view->run());
 
         /* Main View */
-        $view = new \Altum\View('admin/settings/index', (array) $this);
+        $view = new \SeeGap\View('admin/settings/index', (array) $this);
         $this->add_view_content('content', $view->run([
             'method' => $method,
             'payment_processors' => $payment_processors,
@@ -48,7 +48,7 @@ class AdminSettings extends Controller {
     }
 
     private function update_settings($key, $value) {
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -66,7 +66,7 @@ class AdminSettings extends Controller {
     private function after_update_settings($key) {
 
         /* Clear the language cache */
-        \Altum\Language::clear_cache();
+        \SeeGap\Language::clear_cache();
 
         /* Clear the cache */
         cache()->deleteItem('settings');
@@ -83,7 +83,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Make sure there is way to auto redirect yourself to the homepage infinitely */
             if($_POST['index_url']) {
@@ -107,7 +107,7 @@ class AdminSettings extends Controller {
 
             /* Uploads processing */
             foreach(['logo_light', 'logo_dark', 'logo_email', 'favicon', 'opengraph'] as $image_key) {
-                settings()->main->{$image_key} = \Altum\Uploads::process_upload(settings()->main->{$image_key}, $image_key, $image_key, $image_key . '_remove', null);
+                settings()->main->{$image_key} = \SeeGap\Uploads::process_upload(settings()->main->{$image_key}, $image_key, $image_key, $image_key . '_remove', null);
             }
 
             $_POST['force_https_is_enabled'] = (int) isset($_POST['force_https_is_enabled']);
@@ -204,7 +204,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['blacklisted_domains'] = array_filter(array_map('trim', explode(',', $_POST['blacklisted_domains'])));
@@ -247,7 +247,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $value = json_encode([
@@ -273,7 +273,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -324,7 +324,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -346,7 +346,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -367,7 +367,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -388,7 +388,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -408,7 +408,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -432,7 +432,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -454,7 +454,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -474,7 +474,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -495,7 +495,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -514,7 +514,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -534,7 +534,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -555,7 +555,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -578,7 +578,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -597,7 +597,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -617,7 +617,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -636,7 +636,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -664,7 +664,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -688,7 +688,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['brand_name'] = input_clean($_POST['brand_name']);
@@ -720,7 +720,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['type'] = in_array($_POST['type'], ['basic', 'recaptcha', 'hcaptcha', 'turnstile']) ? $_POST['type'] : 'basic';
@@ -759,7 +759,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -778,7 +778,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -797,7 +797,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -816,7 +816,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -835,7 +835,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -854,7 +854,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -873,7 +873,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $value = json_encode([
@@ -897,7 +897,7 @@ class AdminSettings extends Controller {
 
         /* CSV Export */
         if(isset($_GET['export']) && $_GET['export'] == 'csv') {
-            //ALTUMCODE:DEMO if(DEMO) exit('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) exit('This command is blocked on the demo.');
 
             header('Content-Disposition: attachment; filename="data.csv";');
             header('Content-Type: application/csv; charset=UTF-8');
@@ -906,7 +906,7 @@ class AdminSettings extends Controller {
         }
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -943,7 +943,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $value = [];
@@ -960,7 +960,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['auth'] = (int) isset($_POST['auth']);
@@ -1006,11 +1006,11 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             if(!is_writable(ASSETS_PATH . 'css/custom-bootstrap/')) {
                 Alerts::add_error(sprintf(l('global.error_message.directory_not_writable'), ASSETS_PATH . 'css/custom-bootstrap/'));
-                redirect('admin/settings/' . \Altum\Router::$method);
+                redirect('admin/settings/' . \SeeGap\Router::$method);
             }
 
             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
@@ -1113,7 +1113,7 @@ class AdminSettings extends Controller {
                     file_put_contents(ASSETS_PATH . 'css/custom-bootstrap/' . $key . '.min.css', $compiled_css);
 
                     /* Offload uploading */
-                    if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                    if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                         try {
                             $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
@@ -1143,7 +1143,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $value = json_encode([
@@ -1168,7 +1168,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['guests_is_enabled'] = (int) isset($_POST['guests_is_enabled']);
@@ -1182,13 +1182,13 @@ class AdminSettings extends Controller {
 
             /* Translations */
             foreach($_POST['translations'] as $language_name => $array) {
-                if(!array_key_exists($language_name, \Altum\Language::$active_languages)) {
+                if(!array_key_exists($language_name, \SeeGap\Language::$active_languages)) {
                     unset($_POST['translations'][$language_name]);
                 }
             }
 
-            //$_POST['translations'][\Altum\Language::$default_name]['guests_content'] = $_POST['guests_content'];
-            //$_POST['translations'][\Altum\Language::$default_name]['users_content'] = $_POST['users_content'];
+            //$_POST['translations'][\SeeGap\Language::$default_name]['guests_content'] = $_POST['guests_content'];
+            //$_POST['translations'][\SeeGap\Language::$default_name]['users_content'] = $_POST['users_content'];
 
             $value = json_encode([
                 'guests_is_enabled' => $_POST['guests_is_enabled'],
@@ -1213,7 +1213,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['users_is_enabled'] = (int) isset($_POST['users_is_enabled']);
@@ -1242,7 +1242,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['emails'] = str_replace(' ', '', $_POST['emails']);
@@ -1273,7 +1273,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['user_new'] = input_clean($_POST['user_new']);
@@ -1315,9 +1315,9 @@ class AdminSettings extends Controller {
 
         if(!empty($_POST)) {
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Plugin::is_active('dynamic-og-images')) {
+            if(!\SeeGap\Plugin::is_active('dynamic-og-images')) {
                 redirect('admin/settings/dynamic_og_images');
             }
 
@@ -1326,8 +1326,8 @@ class AdminSettings extends Controller {
             $_POST['api_key'] = input_clean($_POST['api_key']);
             $_POST['quality'] = isset($_POST['quality']) & $_POST['quality'] >= 50 && $_POST['quality'] <= 100 ? (int) $_POST['quality'] : 75;
             $_POST['title'] = input_clean($_POST['title'], 64);
-            settings()->dynamic_og_images->logo = \Altum\Uploads::process_upload(settings()->dynamic_og_images->logo, 'logo_light', 'logo', 'logo_remove', null);
-            settings()->dynamic_og_images->background = \Altum\Uploads::process_upload(settings()->dynamic_og_images->background, 'logo_light', 'background', 'background_remove', null);
+            settings()->dynamic_og_images->logo = \SeeGap\Uploads::process_upload(settings()->dynamic_og_images->logo, 'logo_light', 'logo', 'logo_remove', null);
+            settings()->dynamic_og_images->background = \SeeGap\Uploads::process_upload(settings()->dynamic_og_images->background, 'logo_light', 'background', 'background_remove', null);
             $_POST['screenshot_image_border_radius'] = isset($_POST['screenshot_image_border_radius']) & $_POST['screenshot_image_border_radius'] >= 0 && $_POST['screenshot_image_border_radius'] <= 40 ? (int) $_POST['screenshot_image_border_radius'] : 25;
             $_POST['title_color'] = !verify_hex_color($_POST['title_color']) ? '#ffffff' : $_POST['title_color'];
             $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#000000' : $_POST['background_color'];
@@ -1353,7 +1353,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $websites = [];
@@ -1393,12 +1393,12 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             cache()->clear();
 
             /* Clear the language cache */
-            \Altum\Language::clear_cache();
+            \SeeGap\Language::clear_cache();
 
             /* Set a nice success message */
             Alerts::add_success(l('global.success_message.update2'));
@@ -1412,9 +1412,9 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST) && !empty($_POST['new_license'])) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            $altumcode_api = 'https://api.altumcode.com/validate';
+            $altumcode_api = 'https://api.Seegap.com/validate';
 
             /* Make sure the license is correct */
             $response = \Unirest\Request::post($altumcode_api, [], [
@@ -1456,9 +1456,9 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST) && !empty($_POST['new_key'])) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            $altumcode_api = 'https://api.altumcode.com/validate-support-extension';
+            $altumcode_api = 'https://api.Seegap.com/validate-support-extension';
             //$altumcode_api = 'http://127.0.0.1/altumcode-api/validate-support-extension';
 
             /* Make sure the license is correct */
@@ -1499,7 +1499,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['qr_codes_is_enabled'] = (int) isset($_POST['qr_codes_is_enabled']);
@@ -1511,8 +1511,8 @@ class AdminSettings extends Controller {
                 $available_qr_codes[$key] = in_array($key, $_POST['available_qr_codes'] ?? []);
             }
 
-            $qr_codes_branding_logo = \Altum\Uploads::process_upload(settings()->codes->qr_codes_branding_logo, 'qr_code_logo', 'qr_codes_branding_logo', 'qr_codes_branding_logo_remove', null);
-            $qr_codes_default_image = \Altum\Uploads::process_upload(settings()->codes->qr_codes_default_image, 'qr_code_default_image', 'qr_codes_default_image', 'qr_codes_default_image_remove', null);
+            $qr_codes_branding_logo = \SeeGap\Uploads::process_upload(settings()->codes->qr_codes_branding_logo, 'qr_code_logo', 'qr_codes_branding_logo', 'qr_codes_branding_logo_remove', null);
+            $qr_codes_default_image = \SeeGap\Uploads::process_upload(settings()->codes->qr_codes_default_image, 'qr_code_default_image', 'qr_codes_default_image', 'qr_codes_default_image_remove', null);
 
             $value = json_encode([
                 'qr_codes_is_enabled' => $_POST['qr_codes_is_enabled'],
@@ -1531,7 +1531,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['random_url_length'] = isset($_POST['random_url_length']) && $_POST['random_url_length'] < 4 ? 4 : (int) $_POST['random_url_length'];
@@ -1636,7 +1636,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -1657,7 +1657,7 @@ class AdminSettings extends Controller {
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['gs1_links_is_enabled'] = (int) isset($_POST['gs1_links_is_enabled']);
@@ -1697,11 +1697,11 @@ class AdminSettings extends Controller {
     }
 
     public function aix() {
-        //ALTUMCODE:DEMO if(DEMO) settings()->aix->openai_api_key = 'not shown on the demo';
+        //SEEGAP:DEMO if(DEMO) settings()->aix->openai_api_key = 'not shown on the demo';
         $this->process();
 
         if(!empty($_POST)) {
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
             $_POST['openai_api_key'] = trim($_POST['openai_api_key']);
@@ -1715,7 +1715,7 @@ class AdminSettings extends Controller {
             $_POST['syntheses_is_enabled'] = (int) isset($_POST['syntheses_is_enabled']);
 
             /* Uploads processing */
-            settings()->aix->chats_avatar = \Altum\Uploads::process_upload(settings()->aix->chats_avatar, 'chats_assistants', 'chats_avatar', 'chats_avatar_remove', null);
+            settings()->aix->chats_avatar = \SeeGap\Uploads::process_upload(settings()->aix->chats_avatar, 'chats_assistants', 'chats_avatar', 'chats_avatar_remove', null);
 
             $value = json_encode([
                 /* OpenAI */
@@ -1751,7 +1751,7 @@ class AdminSettings extends Controller {
             }
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

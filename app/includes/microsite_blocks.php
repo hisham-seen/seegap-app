@@ -7,11 +7,11 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
-$pro_blocks = \Altum\Plugin::is_active('pro-blocks') && file_exists(\Altum\Plugin::get('pro-blocks')->path . 'pro_blocks.php') ? include \Altum\Plugin::get('pro-blocks')->path . 'pro_blocks.php' : [];
-$ultimate_blocks = \Altum\Plugin::is_active('ultimate-blocks') && file_exists(\Altum\Plugin::get('ultimate-blocks')->path . 'ultimate_blocks.php') ? include \Altum\Plugin::get('ultimate-blocks')->path . 'ultimate_blocks.php' : [];
-$payment_blocks = \Altum\Plugin::is_active('payment-blocks') && file_exists(\Altum\Plugin::get('payment-blocks')->path . 'payment_blocks.php') ? include \Altum\Plugin::get('payment-blocks')->path . 'payment_blocks.php' : [];
+$pro_blocks = \SeeGap\Plugin::is_active('pro-blocks') && file_exists(\SeeGap\Plugin::get('pro-blocks')->path . 'pro_blocks.php') ? include \SeeGap\Plugin::get('pro-blocks')->path . 'pro_blocks.php' : [];
+$ultimate_blocks = \SeeGap\Plugin::is_active('ultimate-blocks') && file_exists(\SeeGap\Plugin::get('ultimate-blocks')->path . 'ultimate_blocks.php') ? include \SeeGap\Plugin::get('ultimate-blocks')->path . 'ultimate_blocks.php' : [];
+$payment_blocks = \SeeGap\Plugin::is_active('payment-blocks') && file_exists(\SeeGap\Plugin::get('payment-blocks')->path . 'payment_blocks.php') ? include \SeeGap\Plugin::get('payment-blocks')->path . 'payment_blocks.php' : [];
 
 $default_blocks = [
     'link' => [

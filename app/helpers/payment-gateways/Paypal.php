@@ -7,10 +7,10 @@
  *
  */
 
-namespace Altum\PaymentGateways;
+namespace SeeGap\PaymentGateways;
 
 /* Helper class for PayPal v2 */
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Paypal {
     static public $sandbox_api_url = 'https://api-m.sandbox.paypal.com/';

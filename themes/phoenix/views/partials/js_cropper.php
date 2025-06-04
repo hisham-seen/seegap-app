@@ -1,8 +1,8 @@
-<?php defined('ALTUMCODE') || die(); ?>
+<?php defined('SEEGAP') || die(); ?>
 
 <?php ob_start() ?>
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/cropper.min.css' . '?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/cropper.min.js' . '?v=' . PRODUCT_CODE ?>"></script>
@@ -120,4 +120,4 @@
     /* auto-run once on load */
     initialize_image_cropper();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'cropper') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'cropper') ?>

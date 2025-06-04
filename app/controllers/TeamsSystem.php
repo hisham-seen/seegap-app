@@ -7,20 +7,20 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class TeamsSystem extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Get data about the teams */
         $total_teams = db()->where('user_id', $this->user->user_id)->getValue('teams', 'count(*)');
@@ -32,7 +32,7 @@ class TeamsSystem extends Controller {
             'total_teams_member' => $total_teams_member,
         ];
 
-        $view = new \Altum\View('teams-system/index', (array) $this);
+        $view = new \SeeGap\View('teams-system/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

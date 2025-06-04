@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class DocumentUpdate extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
             redirect('not-found');
         }
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.documents')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.documents')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('dashboard');
         }
@@ -42,13 +42,13 @@ class DocumentUpdate extends Controller {
         $available_words = $this->user->plan_settings->words_per_month_limit - db()->where('user_id', $this->user->user_id)->getValue('users', '`aix_words_current_month`');
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Get available templates categories */
-        $templates_categories = (new \Altum\Models\TemplatesCategories())->get_templates_categories();
+        $templates_categories = (new \SeeGap\Models\TemplatesCategories())->get_templates_categories();
 
         /* Templates */
-        $templates = (new \Altum\Models\Templates())->get_templates();
+        $templates = (new \SeeGap\Models\Templates())->get_templates();
 
         if(!empty($_POST)) {
             //$purifier = new \HTMLPurifier(\HTMLPurifier_Config::createDefault());
@@ -56,7 +56,7 @@ class DocumentUpdate extends Controller {
             $_POST['name'] = input_clean($_POST['name'], 64);
             $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name', 'content'];
@@ -66,7 +66,7 @@ class DocumentUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -102,7 +102,7 @@ class DocumentUpdate extends Controller {
             'templates_categories' => $templates_categories,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/document-update/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/document-update/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }

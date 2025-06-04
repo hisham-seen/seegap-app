@@ -7,25 +7,25 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Response;
+use SeeGap\Alerts;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminInternalNotifications extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id', 'from_who', 'for_who', 'is_read'], ['title', 'description'], ['internal_notification_id', 'datetime', 'read_datetime']));
+        $filters = (new \SeeGap\Filters(['user_id', 'from_who', 'for_who', 'is_read'], ['title', 'description'], ['internal_notification_id', 'datetime', 'read_datetime']));
         $filters->set_default_order_by('internal_notification_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `internal_notifications` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/internal-notifications?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/internal-notifications?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $internal_notifications = [];
@@ -52,7 +52,7 @@ class AdminInternalNotifications extends Controller {
         process_export_csv($internal_notifications, 'include', ['internal_notification_id', 'user_id', 'for_who', 'from_who', 'icon', 'title', 'description', 'url', 'is_read', 'datetime', 'read_datetime',]);
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -62,7 +62,7 @@ class AdminInternalNotifications extends Controller {
             'filters' => $filters
         ];
 
-        $view = new \Altum\View('admin/internal-notifications/index', (array) $this);
+        $view = new \SeeGap\View('admin/internal-notifications/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -74,7 +74,7 @@ class AdminInternalNotifications extends Controller {
             redirect();
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $segment = isset($_GET['segment']) ? input_clean($_GET['segment']) : 'all';
 
@@ -219,9 +219,9 @@ class AdminInternalNotifications extends Controller {
             redirect('admin/internal-notifications');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -250,9 +250,9 @@ class AdminInternalNotifications extends Controller {
 
         $internal_notification_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

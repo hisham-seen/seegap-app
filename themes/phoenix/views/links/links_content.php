@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="row mb-4">
     <div class="col-12 col-lg d-flex align-items-center mb-3 mb-lg-0 text-truncate">
@@ -121,7 +121,7 @@
                         <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                         <?php if($data->filters->has_applied_filters): ?>
-                            <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                            <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                         <?php endif ?>
                     </div>
 
@@ -266,10 +266,10 @@
 
 
     <form id="table" action="<?= SITE_URL . 'links/bulk' ?>" method="post" role="form">
-        <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+        <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
         <input type="hidden" name="type" value="" data-bulk-type />
-        <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
-        <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
+        <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
+        <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
         <div class="table-responsive table-custom-container">
             <table class="table table-custom">
@@ -322,7 +322,7 @@
                                             <img referrerpolicy="no-referrer" src="<?= get_favicon_url_from_domain(parse_url($row->location_url)['host']) ?>" class="img-fluid icon-favicon-small mr-1" loading="lazy" />
                                             <a href="<?= $row->location_url ?>" class="text-muted" title="<?= remove_url_protocol_from_url($row->location_url) ?>" target="_blank" rel="noreferrer"><?= string_truncate(remove_url_protocol_from_url($row->location_url), 32) ?></a>
                                         <?php else: ?>
-                                            <img src="<?= isset($row->settings->favicon) && $row->settings->favicon ? \Altum\Uploads::get_full_url('favicons') . $row->settings->favicon : get_favicon_url_from_domain(parse_url($row->full_url)['host']) ?>" class="img-fluid icon-favicon-small mr-1" loading="lazy" />
+                                            <img src="<?= isset($row->settings->favicon) && $row->settings->favicon ? \SeeGap\Uploads::get_full_url('favicons') . $row->settings->favicon : get_favicon_url_from_domain(parse_url($row->full_url)['host']) ?>" class="img-fluid icon-favicon-small mr-1" loading="lazy" />
                                             <a href="<?= $row->full_url ?>" class="text-muted" title="<?= remove_url_protocol_from_url($row->full_url) ?>" target="_blank" rel="noreferrer"><?= string_truncate(remove_url_protocol_from_url($row->full_url), 32) ?></a>
                                         <?php endif ?>
 
@@ -354,15 +354,15 @@
                         </td>
 
                         <td class="text-nowrap text-muted">
-                            <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
-                                <?= \Altum\Date::get($row->datetime, 2) ?>
+                            <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>">
+                                <?= \SeeGap\Date::get($row->datetime, 2) ?>
                             </span>
                         </td>
 
                         <td class="text-nowrap text-muted">
                             <?php if($row->last_datetime): ?>
-                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
-                                    <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->last_datetime, 1) ?>">
+                                    <?= \SeeGap\Date::get($row->last_datetime, 2) ?>
                                 </span>
                             <?php else: ?>
                                 <span class="text-muted">-</span>
@@ -424,18 +424,18 @@
 
 <?php endif ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'link',
     'resource_id' => 'link_id',
     'has_dynamic_resource_name' => false,
     'path' => 'links/delete'
 ]), 'modals') ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'link_duplicate_modal', 'resource_id' => 'link_id', 'path' => 'link-ajax/duplicate']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'link_duplicate_modal', 'resource_id' => 'link_id', 'path' => 'link-ajax/duplicate']), 'modals'); ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'link_reset_modal', 'resource_id' => 'link_id', 'path' => 'links/reset']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/x_reset_modal.php', ['modal_id' => 'link_reset_modal', 'resource_id' => 'link_id', 'path' => 'links/reset']), 'modals'); ?>
 
 <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>

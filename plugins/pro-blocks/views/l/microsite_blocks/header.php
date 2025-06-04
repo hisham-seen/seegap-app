@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>" style="padding-bottom: <?= $data->link->settings->avatar_size / 2 ?>px">
     <?php if($data->link->location_url): ?>
@@ -12,7 +12,7 @@
                 </div>
             <?php else: ?>
             <img
-                    src="<?= $data->link->settings->background ? \Altum\Uploads::get_full_url('backgrounds') . $data->link->settings->background : null ?>"
+                    src="<?= $data->link->settings->background ? \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background : null ?>"
                     class="img-fluid rounded"
                     style="<?= $data->link->settings->background ? null : 'display: none;' ?>border-width: <?= $data->link->settings->border_width ?>px; border-color: <?= $data->link->settings->border_color ?>; border-style: <?= $data->link->settings->border_style ?>; object-fit: <?= $data->link->settings->object_fit ?>; <?= 'box-shadow: ' . ($data->link->settings->border_shadow_offset_x ?? '0') . 'px ' . ($data->link->settings->border_shadow_offset_y ?? '0') . 'px ' . ($data->link->settings->border_shadow_blur ?? '0') . 'px ' . ($data->link->settings->border_shadow_spread ?? '0') . 'px ' . ($data->link->settings->border_shadow_color ?? '#00000010') ?>" alt="<?= $data->link->settings->background_alt ?>"
                     loading="lazy"
@@ -20,7 +20,7 @@
             <?php endif ?>
 
             <img
-                    src="<?= $data->link->settings->avatar ? \Altum\Uploads::get_full_url('avatars') . $data->link->settings->avatar : null ?>"
+                    src="<?= $data->link->settings->avatar ? \SeeGap\Uploads::get_full_url('avatars') . $data->link->settings->avatar : null ?>"
                     class="position-absolute link-image <?= 'link-avatar-' . $data->link->settings->border_radius ?> <?= $data->link->location_url ? ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null : null ?>"
                     style="<?= $data->link->settings->avatar ? null : 'display: none;' ?>bottom: <?= -($data->link->settings->avatar_size / 2) ?>px;width: <?= $data->link->settings->avatar_size ?>px; height: <?= $data->link->settings->avatar_size ?>px; border-width: <?= $data->link->settings->border_width ?>px; border-color: <?= $data->link->settings->border_color ?>; border-style: <?= $data->link->settings->border_style ?>; object-fit: <?= $data->link->settings->object_fit ?>; <?= 'box-shadow: ' . ($data->link->settings->border_shadow_offset_x ?? '0') . 'px ' . ($data->link->settings->border_shadow_offset_y ?? '0') . 'px ' . ($data->link->settings->border_shadow_blur ?? '0') . 'px ' . ($data->link->settings->border_shadow_spread ?? '0') . 'px ' . ($data->link->settings->border_shadow_color ?? '#00000010') ?>" alt="<?= $data->link->settings->avatar_alt ?>"
                     loading="lazy"

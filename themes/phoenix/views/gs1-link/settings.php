@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php
 
@@ -95,4 +95,4 @@ $settings = require THEME_PATH . 'views/link/settings/' . mb_strtolower($data->g
 
 <?= $settings->javascript ?>
 
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

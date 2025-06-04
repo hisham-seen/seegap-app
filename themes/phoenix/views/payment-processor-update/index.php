@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="d-print-none">
         <?php if(settings()->main->breadcrumbs_is_enabled): ?>
@@ -25,22 +25,22 @@
     <div class="card">
         <div class="card-body">
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('global.name') ?></label>
-                    <input type="text" id="name" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->payment_processor->name ?>" required="required" />
-                    <?= \Altum\Alerts::output_field_error('name') ?>
+                    <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->payment_processor->name ?>" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('name') ?>
                 </div>
 
                 <div class="form-group">
                     <label for="processor"><i class="fas fa-fw fa-credit-card fa-sm text-muted mr-1"></i> <?= l('payment_processors.processor') ?></label>
-                    <select id="processor" name="processor" class="custom-select <?= \Altum\Alerts::has_field_errors('processor') ? 'is-invalid' : null ?>">
+                    <select id="processor" name="processor" class="custom-select <?= \SeeGap\Alerts::has_field_errors('processor') ? 'is-invalid' : null ?>">
                         <?php foreach(['paypal', 'stripe', 'crypto_com', 'razorpay', 'paystack', 'mollie'] as $processor): ?>
                             <option value="<?= $processor ?>" <?= $data->payment_processor->processor == $processor ? 'selected="selected"' : null ?>><?= l('pay.custom_plan.' . $processor) ?></option>
                         <?php endforeach ?>
                     </select>
-                    <?= \Altum\Alerts::output_field_error('processor') ?>
+                    <?= \SeeGap\Alerts::output_field_error('processor') ?>
                 </div>
 
                 <div>
@@ -249,10 +249,10 @@
     type_handler('select[name="processor"]', 'data-processor');
     document.querySelector('select[name="processor"]') && document.querySelector('select[name="processor"]').addEventListener('change', () => { type_handler('select[name="processor"]', 'data-processor'); });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'payment_processor',
     'resource_id' => 'payment_processor_id',
     'has_dynamic_resource_name' => true,

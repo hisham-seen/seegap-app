@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
         <nav aria-label="breadcrumb">
@@ -124,9 +124,9 @@
         <h1 class="h4"><?= l('plan.faq.header') ?></h1>
 
         <?php
-        $language_array = \Altum\Language::get(\Altum\Language::$name);
-        if(\Altum\Language::$main_name != \Altum\Language::$name) {
-            $language_array = array_merge(\Altum\Language::get(\Altum\Language::$main_name), $language_array);
+        $language_array = \SeeGap\Language::get(\SeeGap\Language::$name);
+        if(\SeeGap\Language::$main_name != \SeeGap\Language::$name) {
+            $language_array = array_merge(\SeeGap\Language::get(\SeeGap\Language::$main_name), $language_array);
         }
 
         $plan_language_keys = [];
@@ -180,7 +180,7 @@
             svg.style.removeProperty('transform');
         })
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 </div>
 
 
@@ -199,7 +199,7 @@
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "<?= \Altum\Title::$page_title ?>",
+                    "name": "<?= \SeeGap\Title::$page_title ?>",
                     "item": "<?= url('plan/' . $data->type) ?>"
                 }
             ]
@@ -226,5 +226,5 @@ foreach($plan_language_keys as $key) {
         "mainEntity": <?= json_encode($faqs) ?>
     }
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 

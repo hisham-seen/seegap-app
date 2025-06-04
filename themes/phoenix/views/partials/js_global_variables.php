@@ -1,8 +1,8 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <input type="hidden" name="global_site_url" value="<?= SITE_URL ?>" />
 <input type="hidden" name="global_url" value="<?= url() ?>" />
-<input type="hidden" name="global_token" value="<?= \Altum\Csrf::get('global_token') ?>" />
+<input type="hidden" name="global_token" value="<?= \SeeGap\Csrf::get('global_token') ?>" />
 <input type="hidden" name="global_number_decimal_point" value="<?= l('global.number.decimal_point') ?>" />
 <input type="hidden" name="global_number_thousands_separator" value="<?= l('global.number.thousands_separator') ?>" />
 

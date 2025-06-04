@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class DomainUpdate extends Controller {
 
@@ -21,10 +21,10 @@ class DomainUpdate extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.domains')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.domains')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('domains');
         }
@@ -48,7 +48,7 @@ class DomainUpdate extends Controller {
                 $is_enabled = 0;
             }
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['host'];
@@ -58,7 +58,7 @@ class DomainUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -138,7 +138,7 @@ class DomainUpdate extends Controller {
             'domain' => $domain
         ];
 
-        $view = new \Altum\View('domain-update/index', (array) $this);
+        $view = new \SeeGap\View('domain-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

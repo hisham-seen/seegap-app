@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-use Altum\Traits\Paramsable;
+use SeeGap\Traits\Paramsable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class View {
     use Paramsable;

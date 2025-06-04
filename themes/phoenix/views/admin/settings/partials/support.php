@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <div class="form-group">
@@ -18,10 +18,10 @@
         </div>
 
         <?php if(!$is_active): ?>
-        <a href="https://altumco.de/club" target="_blank" class="btn btn-block btn-success mb-3"><?= l('admin_settings.support.extend') ?></a>
+        <a href="https://Seegap.com/club" target="_blank" class="btn btn-block btn-success mb-3"><?= l('admin_settings.support.extend') ?></a>
     <?php endif ?>
     <?php else: ?>
-        <a href="https://altumco.de/club" target="_blank" class="btn btn-block btn-success mb-3"><?= l('admin_settings.support.extend') ?></a>
+        <a href="https://Seegap.com/club" target="_blank" class="btn btn-block btn-success mb-3"><?= l('admin_settings.support.extend') ?></a>
     <?php endif ?>
 
     <div class="form-group">

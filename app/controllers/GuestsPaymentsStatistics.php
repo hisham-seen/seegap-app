@@ -7,20 +7,20 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class GuestsPaymentsStatistics extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('payment-blocks')) {
+        if(!\SeeGap\Plugin::is_active('payment-blocks')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $_GET['microsite_block_id'] = (int) $_GET['microsite_block_id'];
 
@@ -30,10 +30,10 @@ class GuestsPaymentsStatistics extends Controller {
         $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
         /* Statistics related variables */
-        $datetime = \Altum\Date::get_start_end_dates_new();
+        $datetime = \SeeGap\Date::get_start_end_dates_new();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['microsite_block_id', 'link_id', 'payment_processor_id', 'project_id', 'processor'], [], []));
+        $filters = (new \SeeGap\Filters(['microsite_block_id', 'link_id', 'payment_processor_id', 'project_id', 'processor'], [], []));
 
         /* Get the data list for the user */
         $guests_payments = [];
@@ -80,7 +80,7 @@ class GuestsPaymentsStatistics extends Controller {
             'filters' => $filters,
         ];
 
-        $view = new \Altum\View('guests-payments-statistics/index', (array) $this);
+        $view = new \SeeGap\View('guests-payments-statistics/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Payments;
+use SeeGap\Models\Payments;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class WebhookPaypal extends Controller {
 
@@ -23,8 +23,8 @@ class WebhookPaypal extends Controller {
         if($payload && $data) {
 
             try {
-                $paypal_api_url = \Altum\PaymentGateways\Paypal::get_api_url();
-                $headers = \Altum\PaymentGateways\Paypal::get_headers();
+                $paypal_api_url = \SeeGap\PaymentGateways\Paypal::get_api_url();
+                $headers = \SeeGap\PaymentGateways\Paypal::get_headers();
             } catch (\Exception $exception) {
                 if(DEBUG) {
                     error_log($exception->getMessage());

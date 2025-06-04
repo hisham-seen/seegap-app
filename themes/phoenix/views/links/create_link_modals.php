@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->links->shortener_is_enabled): ?>
 <div class="modal fade" id="create_link" role="dialog" aria-hidden="true">
@@ -17,7 +17,7 @@
                 </div>
 
                 <form name="create_link" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="type" value="link" />
 
@@ -34,7 +34,7 @@
                             <div class="input-group-prepend">
                                 <?php if(count($data->domains)): ?>
                                     <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                        <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                        <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                             <option value=""><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                         <?php endif ?>
 
@@ -90,7 +90,7 @@
                 </div>
 
                 <form name="create_microsite" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="type" value="microsite" />
                     <input type="hidden" name="microsite_template_id" value="" />
@@ -103,7 +103,7 @@
                             <div class="input-group-prepend">
                                 <?php if(count($data->domains)): ?>
                                     <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                        <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                        <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                             <option value=""><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                         <?php endif ?>
 
@@ -159,7 +159,7 @@
                 </div>
 
                 <form name="create_file" method="post" role="form" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="type" value="file" />
 
@@ -167,8 +167,8 @@
 
                     <div class="form-group">
                         <label for="file_file"><i class="fas fa-fw fa-sm fa-file text-muted mr-1"></i> <?= l('create_file_modal.input.file') ?></label>
-                        <input id="file_file" type="file" name="file" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('files') ?>" class="form-control-file altum-file-input" required="required" />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('files')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->file_size_limit) ?></small>
+                        <input id="file_file" type="file" name="file" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('files') ?>" class="form-control-file seegap-file-input" required="required" />
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('files')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->file_size_limit) ?></small>
                     </div>
 
                     <div class="form-group">
@@ -177,7 +177,7 @@
                             <div class="input-group-prepend">
                                 <?php if(count($data->domains)): ?>
                                     <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                        <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                        <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                             <option value=""><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                         <?php endif ?>
 
@@ -233,7 +233,7 @@
                 </div>
 
                 <form name="create_event" method="post" role="form" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="type" value="event" />
 
@@ -245,7 +245,7 @@
                             <div class="input-group-prepend">
                                 <?php if(count($data->domains)): ?>
                                     <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                        <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                        <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                             <option value=""><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                         <?php endif ?>
 
@@ -301,7 +301,7 @@
                     </div>
 
                     <form name="create_static" method="post" role="form" enctype="multipart/form-data">
-                        <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                        <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                         <input type="hidden" name="request_type" value="create" />
                         <input type="hidden" name="type" value="static" />
 
@@ -309,9 +309,9 @@
 
                         <div class="form-group" data-file-input-wrapper-size-limit="<?= settings()->links->static_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->static_size_limit) ?>">
                             <label for="static_file"><i class="fas fa-fw fa-sm fa-file-zipper text-muted mr-1"></i> <?= l('create_static_modal.file') ?></label>
-                            <input id="static_file" type="file" name="file" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('static') ?>" class="form-control-file altum-file-input" required="required" />
-                            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('static')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->static_size_limit) ?></small>
-                            <small class="form-text text-muted"><?= sprintf(l('create_static_modal.file.inside_zip_whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format(\Altum\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) ?></small>
+                            <input id="static_file" type="file" name="file" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('static') ?>" class="form-control-file seegap-file-input" required="required" />
+                            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('static')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->static_size_limit) ?></small>
+                            <small class="form-text text-muted"><?= sprintf(l('create_static_modal.file.inside_zip_whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format(\SeeGap\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) ?></small>
                             <small class="form-text text-muted"><?= l('create_static_modal.file.help1') ?></small>
                             <small class="form-text text-muted"><?= l('create_static_modal.file.help2') ?></small>
                         </div>
@@ -322,7 +322,7 @@
                                 <div class="input-group-prepend">
                                     <?php if(count($data->domains)): ?>
                                         <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                            <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                            <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                                 <option value=""><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                             <?php endif ?>
 
@@ -426,4 +426,4 @@
     $('#create_<?= settings()->links->claim_url_type ?>').modal('show');
     <?php endif; ?>
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

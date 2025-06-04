@@ -1,9 +1,9 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php $payment_processors = require APP_PATH . 'includes/payment_processors.php'; ?>
 
 <section class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -22,15 +22,15 @@
                     id="daterangepicker"
                     type="button"
                     class="btn btn-sm btn-light"
-                    data-min-date="<?= \Altum\Date::get($data->microsite_block->datetime, 4) ?>"
-                    data-max-date="<?= \Altum\Date::get('', 4) ?>"
+                    data-min-date="<?= \SeeGap\Date::get($data->microsite_block->datetime, 4) ?>"
+                    data-max-date="<?= \SeeGap\Date::get('', 4) ?>"
             >
                 <i class="fas fa-fw fa-calendar mr-lg-1"></i>
                 <span class="d-none d-lg-inline-block">
                         <?php if($data->datetime['start_date'] == $data->datetime['end_date']): ?>
-                            <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) ?>
+                            <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) ?>
                         <?php else: ?>
-                            <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) . ' - ' . \Altum\Date::get($data->datetime['end_date'], 6, \Altum\Date::$default_timezone) ?>
+                            <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) . ' - ' . \SeeGap\Date::get($data->datetime['end_date'], 6, \SeeGap\Date::$default_timezone) ?>
                         <?php endif ?>
                     </span>
                 <i class="fas fa-fw fa-caret-down d-none d-lg-inline-block ml-lg-1"></i>
@@ -59,7 +59,7 @@
 
 <?php ob_start() ?>
 <link href="<?= ASSETS_FULL_URL . 'css/libraries/daterangepicker.min.css?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
-<?php \Altum\Event::add_content(ob_get_clean(), 'head') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
 
 <?php require THEME_PATH . 'views/partials/js_chart_defaults.php' ?>
 
@@ -95,12 +95,12 @@
     }, (start, end, label) => {
 
         <?php
-        parse_str(\Altum\Router::$original_request_query, $original_request_query_array);
+        parse_str(\SeeGap\Router::$original_request_query, $original_request_query_array);
         $modified_request_query_array = array_diff_key($original_request_query_array, ['start_date' => '', 'end_date' => '']);
         ?>
 
         /* Redirect */
-        redirect(`<?= url(\Altum\Router::$original_request . '?' . http_build_query($modified_request_query_array)) ?>&start_date=${start.format('YYYY-MM-DD')}&end_date=${end.format('YYYY-MM-DD')}`, true);
+        redirect(`<?= url(\SeeGap\Router::$original_request . '?' . http_build_query($modified_request_query_array)) ?>&start_date=${start.format('YYYY-MM-DD')}&end_date=${end.format('YYYY-MM-DD')}`, true);
 
     });
 
@@ -152,4 +152,4 @@
     });
     <?php endif ?>
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

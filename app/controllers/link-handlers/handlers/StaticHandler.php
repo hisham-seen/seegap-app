@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers\LinkHandlers\Handlers;
+namespace SeeGap\Controllers\LinkHandlers\Handlers;
 
-use Altum\Controllers\LinkHandlers\BaseLinkHandler;
-use Altum\Response;
+use SeeGap\Controllers\LinkHandlers\BaseLinkHandler;
+use SeeGap\Response;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Static Handler
@@ -60,13 +60,13 @@ class StaticHandler extends BaseLinkHandler {
                 Response::json(l('global.error_message.file_upload'), 'error');
             }
 
-            if(!in_array($file_extension, \Altum\Uploads::get_whitelisted_file_extensions('static'))) {
+            if(!in_array($file_extension, \SeeGap\Uploads::get_whitelisted_file_extensions('static'))) {
                 Response::json(l('global.error_message.invalid_file_type'), 'error');
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
-                if(!is_writable(UPLOADS_PATH . \Altum\Uploads::get_path('static'))) {
-                    Response::json(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . \Altum\Uploads::get_path('static')), 'error');
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!is_writable(UPLOADS_PATH . \SeeGap\Uploads::get_path('static'))) {
+                    Response::json(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . \SeeGap\Uploads::get_path('static')), 'error');
                 }
             }
 
@@ -77,7 +77,7 @@ class StaticHandler extends BaseLinkHandler {
 
         /* Create the new folder */
         $static_folder_name = md5($file_temp . time() . rand() . rand());
-        mkdir(\Altum\Uploads::get_full_path('static') . $static_folder_name, 0777);
+        mkdir(\SeeGap\Uploads::get_full_path('static') . $static_folder_name, 0777);
 
         /* Files array */
         $files = [];
@@ -86,7 +86,7 @@ class StaticHandler extends BaseLinkHandler {
         /* If it's a single HTML file */
         if($file_extension == 'html') {
             /* Upload the original */
-            move_uploaded_file($file_temp, \Altum\Uploads::get_full_path('static') . $static_folder_name . '/index.html');
+            move_uploaded_file($file_temp, \SeeGap\Uploads::get_full_path('static') . $static_folder_name . '/index.html');
 
             $files[] = 'index.html';
         }
@@ -102,7 +102,7 @@ class StaticHandler extends BaseLinkHandler {
                     $FullFileName = $zip->statIndex($i);
 
                     if($FullFileName['name'][strlen($FullFileName['name'])-1] == "/" && !str_contains($FullFileName['name'], '__MACOSX')) {
-                        @mkdir(\Altum\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name'],0777,true);
+                        @mkdir(\SeeGap\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name'],0777,true);
                         $folders[] = $FullFileName['name'];
                     }
                 }
@@ -115,8 +115,8 @@ class StaticHandler extends BaseLinkHandler {
                     $OnlyFileNameExtension = mb_strtolower(end($OnlyFileNameExtension));
 
                     if(!($FullFileName['name'][strlen($FullFileName['name'])-1] == "/") && !str_contains($FullFileName['name'], '__MACOSX')) {
-                        if(in_array($OnlyFileNameExtension, \Altum\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) {
-                            copy('zip://'. $file_temp . '#' . $OnlyFileName , \Altum\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name']);
+                        if(in_array($OnlyFileNameExtension, \SeeGap\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) {
+                            copy('zip://'. $file_temp . '#' . $OnlyFileName , \SeeGap\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name']);
                             $files[] = $FullFileName['name'];
                         }
                     }
@@ -220,13 +220,13 @@ class StaticHandler extends BaseLinkHandler {
                 Response::json(l('global.error_message.file_upload'), 'error');
             }
 
-            if(!in_array($file_extension, \Altum\Uploads::get_whitelisted_file_extensions('static'))) {
+            if(!in_array($file_extension, \SeeGap\Uploads::get_whitelisted_file_extensions('static'))) {
                 Response::json(l('global.error_message.invalid_file_type'), 'error');
             }
 
-            if(!\Altum\Plugin::is_active('offload') || (\Altum\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
-                if(!is_writable(UPLOADS_PATH . \Altum\Uploads::get_path('static'))) {
-                    Response::json(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . \Altum\Uploads::get_path('static')), 'error');
+            if(!\SeeGap\Plugin::is_active('offload') || (\SeeGap\Plugin::is_active('offload') && !settings()->offload->uploads_url)) {
+                if(!is_writable(UPLOADS_PATH . \SeeGap\Uploads::get_path('static'))) {
+                    Response::json(sprintf(l('global.error_message.directory_not_writable'), UPLOADS_PATH . \SeeGap\Uploads::get_path('static')), 'error');
                 }
             }
 
@@ -238,10 +238,10 @@ class StaticHandler extends BaseLinkHandler {
             $static_folder_name = $link->settings->static_folder;
 
             /* Clear the already existing folder and contents */
-            remove_directory_and_contents(\Altum\Uploads::get_full_path('static') . $static_folder_name);
+            remove_directory_and_contents(\SeeGap\Uploads::get_full_path('static') . $static_folder_name);
 
             /* Create the new folder */
-            mkdir(\Altum\Uploads::get_full_path('static') . $static_folder_name, 0777);
+            mkdir(\SeeGap\Uploads::get_full_path('static') . $static_folder_name, 0777);
 
             /* Files array */
             $files = [];
@@ -250,7 +250,7 @@ class StaticHandler extends BaseLinkHandler {
             /* If it's a single HTML file */
             if($file_extension == 'html') {
                 /* Upload the original */
-                move_uploaded_file($file_temp, \Altum\Uploads::get_full_path('static') . $static_folder_name . '/index.html');
+                move_uploaded_file($file_temp, \SeeGap\Uploads::get_full_path('static') . $static_folder_name . '/index.html');
 
                 $files[] = 'index.html';
             }
@@ -266,7 +266,7 @@ class StaticHandler extends BaseLinkHandler {
                         $FullFileName = $zip->statIndex($i);
 
                         if($FullFileName['name'][strlen($FullFileName['name'])-1] == "/" && !str_contains($FullFileName['name'], '__MACOSX')) {
-                            @mkdir(\Altum\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name'],0777,true);
+                            @mkdir(\SeeGap\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name'],0777,true);
                             $folders[] = $FullFileName['name'];
                         }
                     }
@@ -279,8 +279,8 @@ class StaticHandler extends BaseLinkHandler {
                         $OnlyFileNameExtension = mb_strtolower(end($OnlyFileNameExtension));
 
                         if(!($FullFileName['name'][strlen($FullFileName['name'])-1] == "/") && !str_contains($FullFileName['name'], '__MACOSX')) {
-                            if(in_array($OnlyFileNameExtension, \Altum\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) {
-                                copy('zip://'. $file_temp . '#' . $OnlyFileName , \Altum\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name']);
+                            if(in_array($OnlyFileNameExtension, \SeeGap\Uploads::$uploads['static']['inside_zip_whitelisted_file_extensions'])) {
+                                copy('zip://'. $file_temp . '#' . $OnlyFileName , \SeeGap\Uploads::get_full_path('static') . $static_folder_name . '/' . $FullFileName['name']);
                                 $files[] = $FullFileName['name'];
                             }
                         }

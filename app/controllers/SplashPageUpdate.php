@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SplashPageUpdate extends Controller {
 
@@ -21,10 +21,10 @@ class SplashPageUpdate extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.splash_pages')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.splash_pages')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('splash-pages');
         }
@@ -50,12 +50,12 @@ class SplashPageUpdate extends Controller {
             $_POST['link_unlock_seconds'] = (int) $_POST['link_unlock_seconds'];
             $_POST['auto_redirect'] = (int) isset($_POST['auto_redirect']);
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Image uploads */
-            $logo = \Altum\Uploads::process_upload($splash_page->settings->logo, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
-            $favicon = \Altum\Uploads::process_upload($splash_page->settings->favicon, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
-            $opengraph = \Altum\Uploads::process_upload($splash_page->settings->opengraph, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
+            $logo = \SeeGap\Uploads::process_upload($splash_page->settings->logo, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
+            $favicon = \SeeGap\Uploads::process_upload($splash_page->settings->favicon, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
+            $opengraph = \SeeGap\Uploads::process_upload($splash_page->settings->opengraph, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -65,7 +65,7 @@ class SplashPageUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -108,7 +108,7 @@ class SplashPageUpdate extends Controller {
             'splash_page' => $splash_page
         ];
 
-        $view = new \Altum\View('splash-page-update/index', (array) $this);
+        $view = new \SeeGap\View('splash-page-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -7,19 +7,19 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class ApiTeamMembers extends Controller {
     use Apiable;
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 

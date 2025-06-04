@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Date {
     public static $date;
@@ -186,7 +186,7 @@ class Date {
                 if($ignore_timezone) {
                     return ((new \DateTime($date[0]))->setTime($date[1], 0)->format('H A'));
                 } else {
-                    return ((new \DateTime($date[0]))->setTime($date[1], 0)->setTimezone(new \DateTimeZone(\Altum\Date::$timezone))->format('H A'));
+                    return ((new \DateTime($date[0]))->setTime($date[1], 0)->setTimezone(new \DateTimeZone(\SeeGap\Date::$timezone))->format('H A'));
                 }
             };
         }
@@ -198,9 +198,9 @@ class Date {
 
             $return['process'] = function($date, $ignore_timezone = false) {
                 if($ignore_timezone) {
-                    return \Altum\Date::get($date, 5, \Altum\Date::$default_timezone);
+                    return \SeeGap\Date::get($date, 5, \SeeGap\Date::$default_timezone);
                 } else {
-                    return \Altum\Date::get($date, 5);
+                    return \SeeGap\Date::get($date, 5);
                 }
             };
         }
@@ -212,9 +212,9 @@ class Date {
 
             $return['process'] = function($date, $ignore_timezone = false) {
                 if($ignore_timezone) {
-                    return \Altum\Date::get($date, 'Y-m', \Altum\Date::$default_timezone);
+                    return \SeeGap\Date::get($date, 'Y-m', \SeeGap\Date::$default_timezone);
                 } else {
-                    return \Altum\Date::get($date, 'Y-m');
+                    return \SeeGap\Date::get($date, 'Y-m');
                 }
             };
         }
@@ -228,7 +228,7 @@ class Date {
                 if($ignore_timezone) {
                     return ((new \DateTime())->setDate($date, 6, 1)->format('Y'));
                 } else {
-                    return ((new \DateTime())->setDate($date, 6, 1)->setTimezone(new \DateTimeZone(\Altum\Date::$timezone))->format('Y'));
+                    return ((new \DateTime())->setDate($date, 6, 1)->setTimezone(new \DateTimeZone(\SeeGap\Date::$timezone))->format('Y'));
                 }
             };
         }

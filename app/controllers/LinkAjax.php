@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Date;
-use Altum\Models\MicrositesThemes;
-use Altum\Models\Domain;
-use Altum\Response;
+use SeeGap\Alerts;
+use SeeGap\Date;
+use SeeGap\Models\MicrositesThemes;
+use SeeGap\Models\Domain;
+use SeeGap\Response;
 
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class LinkAjax extends Controller {
     public $links_types = null;
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!empty($_POST) && (\Altum\Csrf::check('token') || \Altum\Csrf::check('global_token')) && isset($_POST['request_type'])) {
+        if(!empty($_POST) && (\SeeGap\Csrf::check('token') || \SeeGap\Csrf::check('global_token')) && isset($_POST['request_type'])) {
 
             $this->links_types = require APP_PATH . 'includes/links_types.php';
 
@@ -54,7 +54,7 @@ class LinkAjax extends Controller {
 
     private function is_enabled_toggle() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -79,7 +79,7 @@ class LinkAjax extends Controller {
 
     private function create() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -95,7 +95,7 @@ class LinkAjax extends Controller {
 
     private function update() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -137,7 +137,7 @@ class LinkAjax extends Controller {
         require_once APP_PATH . 'controllers/link-handlers/handlers/' . $handler_class . '.php';
 
         // Create handler instance with proper namespace
-        $handler_class_full = '\\Altum\\Controllers\\LinkHandlers\\Handlers\\' . $handler_class;
+        $handler_class_full = '\\SeeGap\\Controllers\\LinkHandlers\\Handlers\\' . $handler_class;
         $handler = new $handler_class_full();
         
         // Set user context
@@ -149,7 +149,7 @@ class LinkAjax extends Controller {
 
     private function delete() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -160,23 +160,23 @@ class LinkAjax extends Controller {
             die();
         }
 
-        (new \Altum\Models\Link())->delete($link->link_id);
+        (new \SeeGap\Models\Link())->delete($link->link_id);
 
         Response::json(l('global.success_message.delete2'), 'success', ['url' => url('links?type=' . $link->type)]);
     }
 
     public function duplicate() {
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.links')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('links');
         }
 
         $_POST['link_id'] = (int) $_POST['link_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('links');
         }
@@ -228,14 +228,14 @@ class LinkAjax extends Controller {
             $link->settings = json_decode($link->settings ?? '');
 
             if($link->type == 'microsite') {
-                $link->settings->seo->image = \Altum\Uploads::copy_uploaded_file($link->settings->seo->image, 'block_images/', 'block_images/', 'json_error');
-                $link->settings->favicon = \Altum\Uploads::copy_uploaded_file($link->settings->favicon, 'favicons/', 'favicons/', 'json_error');
-                if($link->settings->background_type == 'image') $link->settings->background = \Altum\Uploads::copy_uploaded_file($link->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                $link->settings->seo->image = \SeeGap\Uploads::copy_uploaded_file($link->settings->seo->image, 'block_images/', 'block_images/', 'json_error');
+                $link->settings->favicon = \SeeGap\Uploads::copy_uploaded_file($link->settings->favicon, 'favicons/', 'favicons/', 'json_error');
+                if($link->settings->background_type == 'image') $link->settings->background = \SeeGap\Uploads::copy_uploaded_file($link->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                 $link->settings->pwa_is_enabled = false;
             }
 
             if($link->type == 'file') {
-                $link->settings->file = \Altum\Uploads::copy_uploaded_file($link->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
+                $link->settings->file = \SeeGap\Uploads::copy_uploaded_file($link->settings->file, \SeeGap\Uploads::get_path('files'), \SeeGap\Uploads::get_path('files'), 'json_error');
             }
 
             /* Generate random url if not specified */
@@ -283,25 +283,25 @@ class LinkAjax extends Controller {
                         case 'pdf_document':
                         case 'powerpoint_presentation':
                         case 'excel_spreadsheet':
-                            $microsite_block->settings->file = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->file, \Altum\Uploads::get_path('files'), \Altum\Uploads::get_path('files'), 'json_error');
+                            $microsite_block->settings->file = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->file, \SeeGap\Uploads::get_path('files'), \SeeGap\Uploads::get_path('files'), 'json_error');
                             break;
 
                         case 'review':
-                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, \Altum\Uploads::get_path('block_images'), \Altum\Uploads::get_path('block_images'), 'json_error');
+                            $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, \SeeGap\Uploads::get_path('block_images'), \SeeGap\Uploads::get_path('block_images'), 'json_error');
                             break;
 
                         case 'avatar':
-                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
+                            $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
                             break;
 
                         case 'header':
-                            $microsite_block->settings->avatar = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
-                            $microsite_block->settings->background = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
+                            $microsite_block->settings->avatar = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
+                            $microsite_block->settings->background = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                             break;
 
                         case 'image':
                         case 'image_grid':
-                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
+                            $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_images/', 'block_images/', 'json_error');
                             break;
 
                         case 'heading':
@@ -311,13 +311,13 @@ class LinkAjax extends Controller {
                         case 'image_slider':
                             $microsite_block->settings->items = (array) $microsite_block->settings->items;
                             foreach($microsite_block->settings->items as $key => $item) {
-                                $microsite_block->settings->items[$key]->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
+                                $microsite_block->settings->items[$key]->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->items[$key]->image, 'block_images/', 'block_images/', 'json_error');
                             }
 
                             break;
 
                         default:
-                            $microsite_block->settings->image = \Altum\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
+                            $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'block_thumbnail_images/', 'block_thumbnail_images/', 'json_error');
                             break;
                     }
 

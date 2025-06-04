@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="<?= $data->name . '_delete_modal' ?>" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -40,7 +40,7 @@
         let current_target = event.currentTarget;
 
         let <?= $data->resource_id ?> = related_target.getAttribute('data-<?= str_replace('_', '-', $data->resource_id) ?>');
-        current_target.querySelector('<?= '#' . $data->name . '_delete_modal_url' ?>').setAttribute('href', `${url}<?= $data->path ?>${<?= $data->resource_id ?>}&global_token=${global_token}&original_request=<?= base64_encode(\Altum\Router::$original_request) ?>&original_request_query=<?= base64_encode(\Altum\Router::$original_request_query) ?>`);
+        current_target.querySelector('<?= '#' . $data->name . '_delete_modal_url' ?>').setAttribute('href', `${url}<?= $data->path ?>${<?= $data->resource_id ?>}&global_token=${global_token}&original_request=<?= base64_encode(\SeeGap\Router::$original_request) ?>&original_request_query=<?= base64_encode(\SeeGap\Router::$original_request_query) ?>`);
 
         <?php if($data->has_dynamic_resource_name): ?>
         current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader' ?>').innerHTML = current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader_hidden' ?>').innerHTML.replace('%s', related_target.getAttribute('data-resource-name'));
@@ -49,4 +49,4 @@
         <?php endif ?>
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

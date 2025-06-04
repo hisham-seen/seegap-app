@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\models;
+namespace SeeGap\models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Chats extends Model {
 
@@ -21,7 +21,7 @@ class Chats extends Model {
 
         $result = database()->query("SELECT `image` FROM `chats_messages` WHERE `chat_id` = {$chat->chat_id}");
         while($row = $result->fetch_object()) {
-            \Altum\Uploads::delete_uploaded_file($row->image, 'chats_images');
+            \SeeGap\Uploads::delete_uploaded_file($row->image, 'chats_images');
         }
 
         /* Delete from database */

@@ -1,11 +1,11 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if((is_logged_in() && user()->type == 1 && settings()->main->admin_spotlight_is_enabled) || settings()->main->user_spotlight_is_enabled): ?>
     <div id="spotlight_wrapper" class="spotlight-wrapper d-none" aria-hidden="true">
         <div class="container spotlight-modal">
 
             <form id="spotlight_form" action="" method="get" role="form">
-                <input type="hidden" name="global_token" value="<?= \Altum\Csrf::get('global_token') ?>" />
+                <input type="hidden" name="global_token" value="<?= \SeeGap\Csrf::get('global_token') ?>" />
 
                 <input id="spotlight_search" type="search" name="search" class="form-control" required="required" autocomplete="off" placeholder="<?= l('global.spotlight.search_placeholder') ?>" aria-label="<?= l('global.search') ?>" />
 
@@ -293,7 +293,7 @@
             await spotlight_init();
         })();
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'spotlight'); ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'spotlight'); ?>
 
     <?php ob_start() ?>
     <style>
@@ -340,5 +340,5 @@
             outline: none;
         }
     </style>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'spotlight_css'); ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'spotlight_css'); ?>
 <?php endif ?>

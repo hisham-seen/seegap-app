@@ -9,7 +9,7 @@
 
 namespace joshtronic;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class LoremIpsum
 {

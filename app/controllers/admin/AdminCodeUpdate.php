@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminCodeUpdate extends Controller {
 
@@ -26,7 +26,7 @@ class AdminCodeUpdate extends Controller {
         $code->plans_ids = json_decode($code->plans_ids ?? '[]');
 
         /* Requested plan details */
-        $plans = (new \Altum\Models\Plan())->get_plans();
+        $plans = (new \SeeGap\Models\Plan())->get_plans();
 
         if(!empty($_POST)) {
             /* Filter some the variables */
@@ -38,9 +38,9 @@ class AdminCodeUpdate extends Controller {
             $_POST['quantity'] = (int) $_POST['quantity'];
             $_POST['code'] = input_clean(get_slug($_POST['code'], '-', false), 32);
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -74,7 +74,7 @@ class AdminCodeUpdate extends Controller {
             'plans' => $plans,
         ];
 
-        $view = new \Altum\View('admin/code-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/code-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

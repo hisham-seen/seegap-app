@@ -7,7 +7,7 @@
  *
  */
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 /**
  * Validate GTIN (Global Trade Item Number) with check digit verification

@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Language;
+use SeeGap\Alerts;
+use SeeGap\Language;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminLanguageCreate extends Controller {
 
@@ -42,7 +42,7 @@ return [
 ALTUM;
             };
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             $required_fields = ['language_name', 'language_code'];
@@ -52,7 +52,7 @@ ALTUM;
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -121,7 +121,7 @@ ALTUM;
             'values' => $values
         ];
 
-        $view = new \Altum\View('admin/language-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/language-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

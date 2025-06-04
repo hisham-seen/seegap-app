@@ -1,14 +1,14 @@
 <?php
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return (object) [
     'plugin_id' => 'aix',
     'name' => 'AIX - Your AI Assistant',
     'description' => 'This plugin implements the OpenAI API system for content writing, image generation, text to speech, speech to text & assistant chat functionality.',
     'version' => '10.0.0',
-    'url' => 'https://altumco.de/aix-plugin',
-    'author' => 'AltumCode',
-    'author_url' => 'https://altumcode.com/',
+    'url' => 'https://Seegap.com/aix-plugin',
+    'author' => 'SeeGap',
+    'author_url' => 'https://Seegap.com/',
     'status' => 'inexistent',
     'actions'=> true,
     'settings_url' => url('admin/settings/aix'),

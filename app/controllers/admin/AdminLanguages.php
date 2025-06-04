@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Language;
+use SeeGap\Alerts;
+use SeeGap\Language;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminLanguages extends Controller {
 
@@ -33,7 +33,7 @@ class AdminLanguages extends Controller {
             'total_users' => $total_users,
         ];
 
-        $view = new \Altum\View('admin/languages/index', (array) $this);
+        $view = new \SeeGap\View('admin/languages/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -43,7 +43,7 @@ class AdminLanguages extends Controller {
 
         $language_name = isset($this->params[0]) ? $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
         if(!array_key_exists($language_name, Language::$languages)) {
             redirect('admin/languages');
@@ -51,7 +51,7 @@ class AdminLanguages extends Controller {
 
         $language = Language::$languages[$language_name];
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

@@ -1,11 +1,11 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
     <div class="card position-relative p-3 <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?> <?= 'link-btn-' . $data->link->settings->border_radius ?> <?= $data->link->design->card_class ?>" style="<?= $data->link->design->card_style ?>" data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-animation data-background-color>
         <div class="row g-0">
             <?php if($data->link->settings->image): ?>
             <div class="col-md-4 d-flex justify-content-center align-items-center mb-3 mb-md-0">
-                <img src="<?= $data->link->settings->image ? \Altum\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image : null ?>" class="link-external-item-image <?= 'link-btn-' . $data->link->settings->border_radius ?>" loading="lazy" />
+                <img src="<?= $data->link->settings->image ? \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image : null ?>" class="link-external-item-image <?= 'link-btn-' . $data->link->settings->border_radius ?>" loading="lazy" />
             </div>
             <?php endif ?>
 

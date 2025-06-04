@@ -1,14 +1,14 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8 py-6">
-            <?= \Altum\Alerts::output_alerts() ?>
+            <?= \SeeGap\Alerts::output_alerts() ?>
 
             <div class="text-center">
                 <?php if($data->splash_page->settings->logo): ?>
                 <div class="d-flex flex-column align-items-center mb-4">
-                    <img src="<?= $data->splash_page->settings->logo ? \Altum\Uploads::get_full_url('splash_pages') . $data->splash_page->settings->logo : null ?>" class="link-image link-avatar-round" />
+                    <img src="<?= $data->splash_page->settings->logo ? \SeeGap\Uploads::get_full_url('splash_pages') . $data->splash_page->settings->logo : null ?>" class="link-image link-avatar-round" />
                 </div>
                 <?php endif ?>
 
@@ -74,5 +74,5 @@
         }
     }, 1000);
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 

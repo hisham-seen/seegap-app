@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="d-flex align-items-center">
@@ -18,10 +18,10 @@
             </button>
 
             <div class="dropdown-menu dropdown-menu-right d-print-none">
-                <a href="<?= url($data->url . '/statistics?' . \Altum\Router::$original_request_query . '&export=csv') ?>" target="_blank" class="dropdown-item">
+                <a href="<?= url($data->url . '/statistics?' . \SeeGap\Router::$original_request_query . '&export=csv') ?>" target="_blank" class="dropdown-item">
                     <i class="fas fa-fw fa-sm fa-file-csv mr-2"></i> <?= sprintf(l('global.export_to'), 'CSV') ?>
                 </a>
-                <a href="<?= url($data->url . '/statistics?' . \Altum\Router::$original_request_query . '&export=json') ?>" target="_blank" class="dropdown-item <?= $this->user->plan_settings->export->json ? null : 'disabled' ?>">
+                <a href="<?= url($data->url . '/statistics?' . \SeeGap\Router::$original_request_query . '&export=json') ?>" target="_blank" class="dropdown-item <?= $this->user->plan_settings->export->json ? null : 'disabled' ?>">
                     <i class="fas fa-fw fa-sm fa-file-code mr-2"></i> <?= sprintf(l('global.export_to'), 'JSON') ?>
                 </a>
                 <a href="#" onclick="window.print();return false;" class="dropdown-item <?= $this->user->plan_settings->export->pdf ? null : 'disabled' ?>">
@@ -109,7 +109,7 @@
                     </td>
 
                     <td class="text-nowrap">
-                        <span class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>"><?= \Altum\Date::get_timeago($row->datetime) ?></span>
+                        <span class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>"><?= \SeeGap\Date::get_timeago($row->datetime) ?></span>
                     </td>
                 </tr>
             <?php endforeach ?>

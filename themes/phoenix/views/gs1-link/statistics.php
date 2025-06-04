@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="h4 text-truncate"><?= l('link.statistics.header') ?></h2>
@@ -23,15 +23,15 @@
                 id="daterangepicker"
                 type="button"
                 class="btn btn-sm btn-light"
-                data-min-date="<?= \Altum\Date::get($data->gs1_link->datetime, 4) ?>"
-                data-max-date="<?= \Altum\Date::get('', 4) ?>"
+                data-min-date="<?= \SeeGap\Date::get($data->gs1_link->datetime, 4) ?>"
+                data-max-date="<?= \SeeGap\Date::get('', 4) ?>"
         >
             <i class="fas fa-fw fa-calendar mr-lg-1"></i>
             <span class="d-none d-lg-inline-block">
                 <?php if($data->datetime['start_date'] == $data->datetime['end_date']): ?>
-                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) ?>
+                    <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) ?>
                 <?php else: ?>
-                    <?= \Altum\Date::get($data->datetime['start_date'], 6, \Altum\Date::$default_timezone) . ' - ' . \Altum\Date::get($data->datetime['end_date'], 6, \Altum\Date::$default_timezone) ?>
+                    <?= \SeeGap\Date::get($data->datetime['start_date'], 6, \SeeGap\Date::$default_timezone) . ' - ' . \SeeGap\Date::get($data->datetime['end_date'], 6, \SeeGap\Date::$default_timezone) ?>
                 <?php endif ?>
             </span>
             <i class="fas fa-fw fa-caret-down d-none d-lg-inline-block ml-lg-1"></i>
@@ -166,15 +166,15 @@
     }, (start, end, label) => {
 
         <?php
-        parse_str(\Altum\Router::$original_request_query, $original_request_query_array);
+        parse_str(\SeeGap\Router::$original_request_query, $original_request_query_array);
         $modified_request_query_array = array_diff_key($original_request_query_array, ['start_date' => '', 'end_date' => '']);
         ?>
 
         /* Redirect */
-        redirect(`<?= url(\Altum\Router::$original_request . '?' . http_build_query($modified_request_query_array)) ?>&start_date=${start.format('YYYY-MM-DD')}&end_date=${end.format('YYYY-MM-DD')}`, true);
+        redirect(`<?= url(\SeeGap\Router::$original_request . '?' . http_build_query($modified_request_query_array)) ?>&start_date=${start.format('YYYY-MM-DD')}&end_date=${end.format('YYYY-MM-DD')}`, true);
 
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/statistics_reset_modal.php', ['modal_id' => 'gs1_link_statistics_reset_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics/reset']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/statistics_reset_modal.php', ['modal_id' => 'gs1_link_statistics_reset_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-link/' . $data->gs1_link->gs1_link_id . '/statistics/reset']), 'modals'); ?>

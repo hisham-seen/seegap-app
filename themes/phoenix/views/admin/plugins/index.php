@@ -1,12 +1,12 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?php if(count(\Altum\Plugin::$plugins)): ?>
+<?php if(count(\SeeGap\Plugin::$plugins)): ?>
 
     <?php
-    if(ALTUMCODE == 66) {
-        $plugins_info = \Altum\Cache::cache_function_result('admin_plugins_info', null, function () {
+    if(SEEGAP == 66) {
+        $plugins_info = \SeeGap\Cache::cache_function_result('admin_plugins_info', null, function () {
             try {
-                $response = \Unirest\Request::get('https://dev.altumcode.com/plugins-versions');
+                $response = \Unirest\Request::get('https://dev.Seegap.com/plugins-versions');
 
                 if($response->code == 200) {
                     return $response->body;
@@ -24,10 +24,10 @@
         <h1 class="h3 m-0"><i class="fas fa-fw fa-xs fa-puzzle-piece text-primary-900 mr-2"></i> <?= l('admin_plugins.header') ?></h1>
     </div>
 
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="row">
-        <?php foreach(\Altum\Plugin::$plugins as $plugin): ?>
+        <?php foreach(\SeeGap\Plugin::$plugins as $plugin): ?>
             <div class="col-md-6 col-xl-4 p-3">
                 <div class="card h-100">
                     <div class="card-body d-flex justify-content-between flex-column">
@@ -51,7 +51,7 @@
                         <div class="d-flex align-items-center justify-content-center mt-4">
                             <?php if($plugin->status !== -2 && $plugin->status != 'inexistent'): ?>
                                 <?php if(isset($plugins_info) && isset($plugins_info->{$plugin->plugin_id}) && $plugins_info->{$plugin->plugin_id}->version && $plugins_info->{$plugin->plugin_id}->version != $plugin->version): ?>
-                                    <a href="https://altumcode.com/downloads" class="badge badge-warning mr-3" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('admin_plugins.outdated'), 'v' . $plugins_info->{$plugin->plugin_id}->version) ?>">
+                                    <a href="https://Seegap.com/downloads" class="badge badge-warning mr-3" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('admin_plugins.outdated'), 'v' . $plugins_info->{$plugin->plugin_id}->version) ?>">
                                         <i class="fas fa-fw fa-sm fa-sync mr-1"></i> <?= 'v' . $plugin->version ?>
                                     </a>
                                 <?php else: ?>
@@ -109,5 +109,5 @@
 
 <?php endif ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/admin/plugins/plugin_delete_modal.php'), 'modals'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/admin/plugins/plugin_uninstall_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/admin/plugins/plugin_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/admin/plugins/plugin_uninstall_modal.php'), 'modals'); ?>

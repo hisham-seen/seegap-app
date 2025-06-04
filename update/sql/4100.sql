@@ -34,7 +34,7 @@ alter table qr_codes add embedded_data text null after settings;
 
 -- SEPARATOR --
 
-CREATE PROCEDURE `altum`()
+CREATE PROCEDURE `seegap`()
 BEGIN
 
 IF
@@ -78,8 +78,8 @@ END;
 
 -- SEPARATOR --
 
-call altum;
+call seegap;
 
 -- SEPARATOR --
 
-drop procedure altum;
+drop procedure seegap;

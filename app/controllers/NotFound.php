@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class NotFound extends Controller {
 
@@ -22,7 +22,7 @@ class NotFound extends Controller {
 
         header('HTTP/1.0 404 Not Found');
 
-        $view = new \Altum\View('notfound/index', (array) $this);
+        $view = new \SeeGap\View('notfound/index', (array) $this);
 
         $this->add_view_content('content', $view->run());
 

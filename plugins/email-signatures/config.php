@@ -1,14 +1,14 @@
 <?php
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return (object) [
     'plugin_id' => 'email-signatures',
     'name' => 'Email signatures generator',
     'description' => 'This plugin adds a fully fledged email signatures generator.',
     'version' => '1.2.0',
-    'url' => 'https://altumco.de/email-signatures-plugin',
-    'author' => 'AltumCode',
-    'author_url' => 'https://altumcode.com/',
+    'url' => 'https://Seegap.com/email-signatures-plugin',
+    'author' => 'SeeGap',
+    'author_url' => 'https://Seegap.com/',
     'status' => 'inexistent',
     'actions'=> true,
     'settings_url' => url('admin/settings/signatures'),

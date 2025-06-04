@@ -1,8 +1,8 @@
-<?php defined('ALTUMCODE') || die(); ?>
+<?php defined('SEEGAP') || die(); ?>
 
-<?php if(ALTUMCODE == 66): ?>
-<?php //ALTUMCODE:DEMO if(!DEMO) { ?>
-<?php if(isset(settings()->support->expiry_datetime) && ALTUMCODE == 66): ?>
+<?php if(SEEGAP == 66): ?>
+<?php //SEEGAP:DEMO if(!DEMO) { ?>
+<?php if(isset(settings()->support->expiry_datetime) && SEEGAP == 66): ?>
     <?php
     $expiry_datetime = (new \DateTime(settings()->support->expiry_datetime ?? null));
     $is_active = (new \DateTime()) <= $expiry_datetime;
@@ -25,7 +25,7 @@
                     <i class="fas fa-fw fa-sm fa-times mr-1"></i> Dismiss notification
                 </button>
 
-                <a href="https://altumco.de/club" target="_blank" class="btn btn-sm btn-primary font-weight-bold ml-3">
+                <a href="https://Seegap.com/club" target="_blank" class="btn btn-sm btn-primary font-weight-bold ml-3">
                     <i class="fas fa-fw fa-sm fa-check-circle mr-1"></i> Extend your support
                 </a>
             </div>
@@ -37,9 +37,9 @@
                     set_cookie('dismiss_inactive_support', 1, 5, <?= json_encode(COOKIE_PATH) ?>);
                 });
             </script>
-            <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+            <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
         </div>
     <?php endif ?>
 <?php endif ?>
-<?php //ALTUMCODE:DEMO } ?>
+<?php //SEEGAP:DEMO } ?>
 <?php endif ?>

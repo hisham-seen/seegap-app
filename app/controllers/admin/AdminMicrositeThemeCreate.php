@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminMicrositeThemeCreate extends Controller {
 
@@ -39,12 +39,12 @@ class AdminMicrositeThemeCreate extends Controller {
             /* Link hover animation */
             $_POST['hover_animation'] = isset($_POST['microsite_hover_animation']) && in_array($_POST['microsite_hover_animation'], ['false', 'smooth', 'instant',]) ? input_clean($_POST['microsite_hover_animation']) : 'smooth';
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for errors & process potential uploads */
-            $background_new_name = \Altum\Uploads::process_upload(null, 'microsite_background', 'microsite_background_image', 'background_remove', null);
+            $background_new_name = \SeeGap\Uploads::process_upload(null, 'microsite_background', 'microsite_background_image', 'background_remove', null);
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -166,7 +166,7 @@ class AdminMicrositeThemeCreate extends Controller {
             'links_types' => $links_types,
         ];
 
-        $view = new \Altum\View('admin/microsite-theme-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/microsite-theme-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

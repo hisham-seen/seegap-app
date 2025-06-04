@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminDomainCreate extends Controller {
 
@@ -38,7 +38,7 @@ class AdminDomainCreate extends Controller {
             $values['host'] = $_POST['host'];
             $values['custom_index_url'] = $_POST['custom_index_url'];
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             $required_fields = ['host'];
@@ -48,7 +48,7 @@ class AdminDomainCreate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -89,7 +89,7 @@ class AdminDomainCreate extends Controller {
         /* Main View */
         $data = ['values' => $values];
 
-        $view = new \Altum\View('admin/domain-create/index', (array) $this);
+        $view = new \SeeGap\View('admin/domain-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

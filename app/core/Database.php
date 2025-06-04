@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Database {
 
@@ -31,7 +31,7 @@ class Database {
             include THEME_PATH . 'views/partials/database_error.php';
 
             echo '<div>';
-            //echo '<a href="https://altumcode.com/" target="_blank"><img src="https://altumcode.com/themes/altum/assets/images/altumcode.svg" class="altumcode-logo" alt="altumcode logo" loading="lazy" /></a>';
+            //echo '<a href="https://Seegap.com/" target="_blank"><img src="https://Seegap.com/themes/phoenix/assets/images/altumcode.svg" class="altumcode-logo" alt="altumcode logo" loading="lazy" /></a>';
             echo '<h1 class="text-white">Database connection issues</h1>';
             /* Make sure script is actually installed */
             if(empty(DATABASE_SERVER) && empty(DATABASE_USERNAME) && empty(DATABASE_PASSWORD) && empty(DATABASE_NAME) && !file_exists(ROOT_PATH . 'install/installed')) {
@@ -41,7 +41,7 @@ class Database {
                 echo '<p>Our database is having some issues.</p>';
                 echo '<p>We are actively working on fixing the issue.</p>';
             }
-            //echo '<p class="buttons"><smalsl><a href="' . PRODUCT_DOCUMENTATION_URL .'" target="_blank">📜 Read documentation</a> &nbsp;&bullet;&nbsp; <a href="https://altumcode.com/contact" target="_blank">📧 Contact support</a></smalsl></p>';
+            //echo '<p class="buttons"><smalsl><a href="' . PRODUCT_DOCUMENTATION_URL .'" target="_blank">📜 Read documentation</a> &nbsp;&bullet;&nbsp; <a href="https://Seegap.com/contact" target="_blank">📧 Contact support</a></smalsl></p>';
             echo '</div>';
             die();
         }
@@ -60,7 +60,7 @@ class Database {
     }
 
     public static function initialize_helper() {
-        self::$db = new \Altum\Helpers\MysqliDb(self::$database);
+        self::$db = new \SeeGap\Helpers\MysqliDb(self::$database);
         self::$db->returnType = 'object';
     }
 

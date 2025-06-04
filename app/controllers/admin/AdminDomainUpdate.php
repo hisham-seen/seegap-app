@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminDomainUpdate extends Controller {
 
@@ -36,7 +36,7 @@ class AdminDomainUpdate extends Controller {
             $_POST['custom_not_found_url'] = get_url($_POST['custom_not_found_url'], 256);
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
 
-            //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* Check for any errors */
             $required_fields = ['host'];
@@ -46,7 +46,7 @@ class AdminDomainUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -83,7 +83,7 @@ class AdminDomainUpdate extends Controller {
             'domain' => $domain
         ];
 
-        $view = new \Altum\View('admin/domain-update/index', (array) $this);
+        $view = new \SeeGap\View('admin/domain-update/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Domain;
-use Altum\Models\Gs1Link;
+use SeeGap\Models\Domain;
+use SeeGap\Models\Gs1Link;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Gs1LinkRedirect extends Controller {
 
@@ -67,7 +67,7 @@ class Gs1LinkRedirect extends Controller {
                 $pixel = database()->query("SELECT * FROM `pixels` WHERE `pixel_id` = {$pixel_id}")->fetch_object();
                 if ($pixel) {
                     /* Add pixel to the page */
-                    \Altum\Event::add_content($this->create_pixel_html($pixel), 'head');
+                    \SeeGap\Event::add_content($this->create_pixel_html($pixel), 'head');
                 }
             }
         }

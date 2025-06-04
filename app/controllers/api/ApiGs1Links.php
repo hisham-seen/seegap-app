@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers\Api;
+namespace SeeGap\Controllers\Api;
 
-use Altum\Alerts;
-use Altum\Database\Database;
-use Altum\Middlewares\Authentication;
-use Altum\Middlewares\Csrf;
-use Altum\Models\User;
-use Altum\Response;
-use Altum\Traits\Apiable;
+use SeeGap\Alerts;
+use SeeGap\Database\Database;
+use SeeGap\Middlewares\Authentication;
+use SeeGap\Middlewares\Csrf;
+use SeeGap\Models\User;
+use SeeGap\Response;
+use SeeGap\Traits\Apiable;
 
-class ApiGs1Links extends \Altum\Controllers\Controller {
+class ApiGs1Links extends \SeeGap\Controllers\Controller {
     use Apiable;
 
     public function index() {
@@ -25,20 +25,20 @@ class ApiGs1Links extends \Altum\Controllers\Controller {
         Authentication::guard('api');
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('read.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('read.gs1_links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
         $user = $this->get_user();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled', 'project_id'], ['gtin', 'target_url', 'title'], ['last_datetime', 'datetime', 'gtin', 'clicks']));
+        $filters = (new \SeeGap\Filters(['is_enabled', 'project_id'], ['gtin', 'target_url', 'title'], ['last_datetime', 'datetime', 'gtin', 'clicks']));
         $filters->set_default_order_by('gs1_link_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = Database::$database->query("SELECT COUNT(*) AS `total` FROM `gs1_links` WHERE `user_id` = {$user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/gs1-links?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('api/gs1-links?' . $filters->get_get() . '&page=%d')));
 
         /* Get the gs1_links list for the user */
         $gs1_links = [];
@@ -57,7 +57,7 @@ class ApiGs1Links extends \Altum\Controllers\Controller {
         while($row = $gs1_links_result->fetch_object()) {
 
             /* Generate the gs1 digital link */
-            $row->gs1_digital_link = (new \Altum\Models\Domain())->get_domain_url($row->domain_id) . '01/' . $row->gtin;
+            $row->gs1_digital_link = (new \SeeGap\Models\Domain())->get_domain_url($row->domain_id) . '01/' . $row->gtin;
 
             /* Parse the settings */
             $row->settings = json_decode($row->settings ?? '');
@@ -87,7 +87,7 @@ class ApiGs1Links extends \Altum\Controllers\Controller {
         Authentication::guard('api');
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('create.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.gs1_links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -188,7 +188,7 @@ class ApiGs1Links extends \Altum\Controllers\Controller {
             'description' => $_POST['description'],
             'settings' => $settings,
             'is_enabled' => $_POST['is_enabled'],
-            'datetime' => \Altum\Date::$date,
+            'datetime' => \SeeGap\Date::$date,
         ]);
 
         /* Clear the cache */
@@ -219,7 +219,7 @@ class ApiGs1Links extends \Altum\Controllers\Controller {
         $user = (new User())->get_user_by_user_id($gs1_link->user_id);
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.gs1_links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 
@@ -330,7 +330,7 @@ class ApiGs1Links extends \Altum\Controllers\Controller {
         $user = (new User())->get_user_by_user_id($gs1_link->user_id);
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.gs1_links')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.gs1_links')) {
             Response::json(l('global.info_message.team_no_access'), 'error');
         }
 

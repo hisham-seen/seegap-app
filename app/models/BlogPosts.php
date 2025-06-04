@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class BlogPosts extends Model {
 
@@ -55,7 +55,7 @@ class BlogPosts extends Model {
 
         if(!$blog_post) return;
 
-        \Altum\Uploads::delete_uploaded_file($blog_post->image, 'blog');
+        \SeeGap\Uploads::delete_uploaded_file($blog_post->image, 'blog');
 
         /* Delete the resource */
         db()->where('blog_post_id', $blog_post_id)->delete('blog_posts');

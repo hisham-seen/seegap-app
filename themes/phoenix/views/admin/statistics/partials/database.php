@@ -1,12 +1,12 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <div class="card mb-5">
     <div class="card-body">
         <h2 class="h4 mb-4"><i class="fas fa-fw fa-database fa-xs text-primary-900 mr-2"></i> <?= l('admin_statistics.database.header') ?></h2>
 
-        <?php //ALTUMCODE:DEMO if(DEMO) echo 'hidden on demo'; ?>
-        <?php //ALTUMCODE:DEMO if(!DEMO): ?>
+        <?php //SEEGAP:DEMO if(DEMO) echo 'hidden on demo'; ?>
+        <?php //SEEGAP:DEMO if(!DEMO): ?>
         <div class="table-responsive table-custom-container">
             <table class="table table-custom">
                 <thead>
@@ -41,7 +41,7 @@
                 </tbody>
             </table>
         </div>
-        <?php //ALTUMCODE:DEMO endif ?>
+        <?php //SEEGAP:DEMO endif ?>
     </div>
 </div>
 

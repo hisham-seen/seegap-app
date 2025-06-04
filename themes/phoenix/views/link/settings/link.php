@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 
@@ -6,7 +6,7 @@
     <div class="card-body">
 
         <form name="update_link" action="" method="post" role="form" enctype="multipart/form-data">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
             <input type="hidden" name="request_type" value="update" />
             <input type="hidden" name="type" value="link" />
             <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
@@ -24,7 +24,7 @@
                     <div class="input-group-prepend">
                         <?php if(count($data->domains)): ?>
                             <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                <?php if(settings()->links->main_domain_is_enabled || \Altum\Authentication::is_admin()): ?>
+                                <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
                                     <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
                                 <?php endif ?>
 
@@ -203,7 +203,7 @@
                                                 type="text"
                                                 class="form-control"
                                                 name="start_date"
-                                                value="<?= \Altum\Date::get($data->link->start_date, 1) ?>"
+                                                value="<?= \SeeGap\Date::get($data->link->start_date, 1) ?>"
                                                 placeholder="<?= l('link.settings.start_date') ?>"
                                                 autocomplete="off"
                                                 data-daterangepicker
@@ -218,7 +218,7 @@
                                                 type="text"
                                                 class="form-control"
                                                 name="end_date"
-                                                value="<?= \Altum\Date::get($data->link->end_date, 1) ?>"
+                                                value="<?= \SeeGap\Date::get($data->link->end_date, 1) ?>"
                                                 placeholder="<?= l('link.settings.end_date') ?>"
                                                 autocomplete="off"
                                                 data-daterangepicker
@@ -351,8 +351,8 @@
                                             </div>
 
                                             <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_continent_code_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_continent_code_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                <?= \Altum\Alerts::output_field_error('targeting_continent_code_value[' . $key . ']') ?>
+                                                <input type="url" name="targeting_continent_code_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_continent_code_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                <?= \SeeGap\Alerts::output_field_error('targeting_continent_code_value[' . $key . ']') ?>
                                             </div>
 
                                             <div class="form-group col-lg-2 text-center">
@@ -412,8 +412,8 @@
                                             </div>
 
                                             <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_city_name_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_city_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                <?= \Altum\Alerts::output_field_error('targeting_city_name_value[' . $key . ']') ?>
+                                                <input type="url" name="targeting_city_name_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_city_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                <?= \SeeGap\Alerts::output_field_error('targeting_city_name_value[' . $key . ']') ?>
                                             </div>
 
                                             <div class="form-group col-lg-2 text-center">
@@ -509,8 +509,8 @@
                                             </div>
 
                                             <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_browser_name_value[<?= $key ?>]" class="form-control <?= \Altum\Alerts::has_field_errors('targeting_browser_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                <?= \Altum\Alerts::output_field_error('targeting_browser_name_value[' . $key . ']') ?>
+                                                <input type="url" name="targeting_browser_name_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_browser_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
+                                                <?= \SeeGap\Alerts::output_field_error('targeting_browser_name_value[' . $key . ']') ?>
                                             </div>
 
                                             <div class="form-group col-lg-2 text-center">
@@ -624,15 +624,15 @@
                 <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->favicon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->favicon_size_limit) ?>">
                     <label for="cloaking_favicon"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_favicon') ?></label>
                     <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'favicons', 'file_key' => 'cloaking_favicon', 'already_existing_image' => $data->link->settings->cloaking_favicon, 'input_data' => 'data-crop data-aspect-ratio="1"']) ?>
-                    <?= \Altum\Alerts::output_field_error('cloaking_favicon') ?>
-                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
+                    <?= \SeeGap\Alerts::output_field_error('cloaking_favicon') ?>
+                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
                 </div>
 
                 <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->seo_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->seo_image_size_limit) ?>">
                     <label for="cloaking_opengraph"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_opengraph') ?></label>
                     <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'microsite_seo_image', 'file_key' => 'cloaking_opengraph', 'already_existing_image' => $data->link->settings->cloaking_opengraph, 'input_data' => 'data-crop data-aspect-ratio="1.91"']) ?>
-                    <?= \Altum\Alerts::output_field_error('cloaking_opengraph') ?>
-                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
+                    <?= \SeeGap\Alerts::output_field_error('cloaking_opengraph') ?>
+                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
                 </div>
 
                 <div <?= $this->user->plan_settings->custom_js_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <body class="link-body">
     <div class="container animate__animated animate__fadeIn">
@@ -12,10 +12,10 @@
                     </span>
                 </div>
 
-                <?= \Altum\Alerts::output_alerts() ?>
+                <?= \SeeGap\Alerts::output_alerts() ?>
 
                 <form action="" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                     <input type="hidden" name="type" value="sensitive_content" />
 
                     <button type="submit" name="submit" class="btn btn-block btn-primary mt-4"><?= l('link.sensitive_content.button') ?></button>

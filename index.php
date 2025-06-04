@@ -13,10 +13,10 @@ const LOGGING = 1;
 const CACHE = 1;
 
 /* Only meant for Demo purposes, don't change :) */
-//ALTUMCODE:DEMO const DEMO = 1;
+//SEEGAP:DEMO const DEMO = 1;
 
-const ALTUMCODE = 66;
+const SEEGAP = 66;
 
 require_once realpath(__DIR__) . '/app/init.php';
 
-$App = new Altum\App();
+$App = new SeeGap\App();

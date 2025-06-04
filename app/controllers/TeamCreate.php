@@ -7,21 +7,21 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class TeamCreate extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check for the plan limit */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `teams` WHERE `user_id` = {$this->user->user_id}")->fetch_object()->total ?? 0;
@@ -34,7 +34,7 @@ class TeamCreate extends Controller {
         if(!empty($_POST)) {
             $_POST['name'] = trim(input_clean($_POST['name']));
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -44,7 +44,7 @@ class TeamCreate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -74,7 +74,7 @@ class TeamCreate extends Controller {
             'values' => $values
         ];
 
-        $view = new \Altum\View('team-create/index', (array) $this);
+        $view = new \SeeGap\View('team-create/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

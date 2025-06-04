@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="create_microsite_feedback_collector" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -14,7 +14,7 @@
 
             <div class="modal-body">
                 <form name="create_microsite_feedback_collector" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
                     <input type="hidden" name="block_type" value="feedback_collector" />
@@ -97,7 +97,7 @@
             $(event.currentTarget).find('button[data-add]').click();
         })
     </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php ob_start() ?>
 <script>
@@ -184,4 +184,4 @@
 
     feedback_question_remove_initiator();
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'feedback_collector_block') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'feedback_collector_block') ?>

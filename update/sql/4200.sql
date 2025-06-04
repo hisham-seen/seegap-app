@@ -30,7 +30,7 @@ alter table users add currency varchar(4) null after language;
 
 -- SEPARATOR --
 
-CREATE PROCEDURE `altum`()
+CREATE PROCEDURE `seegap`()
 BEGIN
 
 IF

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <h2 class="h5">OpenAI</h2>
@@ -84,7 +84,7 @@
             <label for="chats_avatar"><i class="fas fa-fw fa-sm fa-user-circle text-muted mr-1"></i> <?= l('admin_settings.aix.chats_avatar') ?></label>
             <?php if(!empty(settings()->aix->chats_avatar)): ?>
                 <div class="m-1">
-                    <img src="<?= \Altum\Uploads::get_full_url('chats_assistants') . settings()->aix->chats_avatar ?>" class="img-fluid" style="max-height: 2.5rem;height: 2.5rem;" />
+                    <img src="<?= \SeeGap\Uploads::get_full_url('chats_assistants') . settings()->aix->chats_avatar ?>" class="img-fluid" style="max-height: 2.5rem;height: 2.5rem;" />
                 </div>
                 <div class="custom-control custom-checkbox my-2">
                     <input id="chats_avatar_remove" name="chats_avatar_remove" type="checkbox" class="custom-control-input" onchange="this.checked ? document.querySelector('#chats_avatar').classList.add('d-none') : document.querySelector('#chats_avatar').classList.remove('d-none')">
@@ -93,8 +93,8 @@
                     </label>
                 </div>
             <?php endif ?>
-            <input id="chats_avatar" type="file" name="chats_avatar" accept="<?= \Altum\Uploads::get_whitelisted_file_extensions_accept('chats_assistants') ?>" class="form-control-file altum-file-input" />
-            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::get_whitelisted_file_extensions_accept('chats_assistants')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
+            <input id="chats_avatar" type="file" name="chats_avatar" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('chats_assistants') ?>" class="form-control-file seegap-file-input" />
+            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('chats_assistants')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), get_max_upload()) ?></small>
         </div>
     </div>
 

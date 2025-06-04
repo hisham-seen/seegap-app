@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Router {
     public static $params = [];
@@ -1560,8 +1560,8 @@ class Router {
 
         $params = self::$params;
 
-        if(isset($_GET['altum'])) {
-            $params = explode('/', input_clean(rtrim($_GET['altum'], '/')));
+        if(isset($_GET['seegap'])) {
+            $params = explode('/', input_clean(rtrim($_GET['seegap'], '/')));
         }
 
         if(php_sapi_name() == 'cli' && isset($_SERVER['argv'])) {
@@ -1601,7 +1601,7 @@ class Router {
     public static function parse_controller() {
 
         self::$original_request = input_clean(implode('/', self::$params));
-        self::$original_request_query = http_build_query(array_diff_key($_GET, array_flip(['altum'])));
+        self::$original_request_query = http_build_query(array_diff_key($_GET, array_flip(['seegap'])));
 
         /* Check if the current link accessed is actually the original url or not (multi domain use) */
         $original_url_host = parse_url(url(), PHP_URL_HOST);
@@ -1613,7 +1613,7 @@ class Router {
             }
 
             /* Make sure the custom domain is attached */
-            $domain = (new \Altum\Models\Domain())->get_domain_by_host($request_url_host);;
+            $domain = (new \SeeGap\Models\Domain())->get_domain_by_host($request_url_host);;
 
             if($domain && $domain->is_enabled) {
                 self::$controller_key = 'link';
@@ -1794,7 +1794,7 @@ class Router {
         require_once APP_PATH . 'controllers/' . ($path != '' ? $path . '/' : null) . $controller_name . '.php';
 
         /* Create a new instance of the controller */
-        $class = 'Altum\\Controllers\\' . $controller_name;
+        $class = 'SeeGap\\Controllers\\' . $controller_name;
 
         /* Instantiate the controller class */
         $controller = new $class;

@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Date;
-use Altum\Models\Payments;
+use SeeGap\Date;
+use SeeGap\Models\Payments;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class WebhookIyzico extends Controller {
 
@@ -77,7 +77,7 @@ class WebhookIyzico extends Controller {
         $user = db()->where('user_id', $payment->user_id)->getOne('users');
 
         /* plan that the user has paid for */
-        $plan = (new \Altum\Models\Plan())->get_plan_by_id($payment->plan_id);
+        $plan = (new \SeeGap\Models\Plan())->get_plan_by_id($payment->plan_id);
 
         /* Make sure the code that was potentially used exists */
         $codes_code = db()->where('code', $payment->code)->where('type', 'discount')->getOne('codes');

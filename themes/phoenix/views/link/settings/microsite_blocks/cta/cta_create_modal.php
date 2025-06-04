@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="create_microsite_cta" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -14,7 +14,7 @@
 
             <div class="modal-body">
                 <form name="create_microsite_cta" method="post" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
                     <input type="hidden" name="block_type" value="cta" />
@@ -61,4 +61,4 @@
     type_handler('#cta_type', 'data-cta-type');
     document.querySelector('#cta_type') && document.querySelectorAll('#cta_type').forEach(element => element.addEventListener('change', () => { type_handler('#cta_type', 'data-cta-type'); }));
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

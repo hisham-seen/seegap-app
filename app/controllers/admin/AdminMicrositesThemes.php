@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminMicrositesThemes extends Controller {
 
     public function index() {
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled'], ['name'], ['microsite_theme_id', 'datetime', 'last_datetime', 'name', 'order']));
+        $filters = (new \SeeGap\Filters(['is_enabled'], ['name'], ['microsite_theme_id', 'datetime', 'last_datetime', 'name', 'order']));
         $filters->set_default_order_by('microsite_theme_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `microsites_themes` WHERE 1 = 1 {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/microsites-themes?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('admin/microsites-themes?' . $filters->get_get() . '&page=%d')));
 
         /* Get the data */
         $microsites_themes = [];
@@ -51,7 +51,7 @@ class AdminMicrositesThemes extends Controller {
         process_export_json($microsites_themes, 'include', ['microsite_theme_id', 'name', 'settings', 'is_enabled', 'last_datetime', 'datetime'], sprintf(l('admin_microsites_themes.title')));
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/admin_pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Main View */
         $data = [
@@ -60,7 +60,7 @@ class AdminMicrositesThemes extends Controller {
             'pagination' => $pagination
         ];
 
-        $view = new \Altum\View('admin/microsites-themes/index', (array) $this);
+        $view = new \SeeGap\View('admin/microsites-themes/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -68,7 +68,7 @@ class AdminMicrositesThemes extends Controller {
 
     public function bulk() {
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -83,7 +83,7 @@ class AdminMicrositesThemes extends Controller {
             redirect('admin/microsites-themes');
         }
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -104,7 +104,7 @@ class AdminMicrositesThemes extends Controller {
                         $microsite_theme->settings = json_decode($microsite_theme->settings ?? '');
 
                         /* Offload deleting */
-                        if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+                        if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                             $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
                             if(!empty($microsite_theme->settings->microsite->background) && file_exists(UPLOADS_PATH . 'backgrounds' . '/' . $microsite_theme->settings->microsite->background)) {
@@ -148,9 +148,9 @@ class AdminMicrositesThemes extends Controller {
 
         $microsite_theme_id = (int) $_POST['microsite_theme_id'];
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -184,9 +184,9 @@ class AdminMicrositesThemes extends Controller {
 
         $microsite_theme_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -199,7 +199,7 @@ class AdminMicrositesThemes extends Controller {
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Offload deleting */
-            if(\Altum\Plugin::is_active('offload') && settings()->offload->uploads_url) {
+            if(\SeeGap\Plugin::is_active('offload') && settings()->offload->uploads_url) {
                 $s3 = new \Aws\S3\S3Client(get_aws_s3_config());
 
                 if(!empty($microsite_theme->settings->microsite->background) && file_exists(UPLOADS_PATH . 'backgrounds' . '/' . $microsite_theme->settings->microsite->background)) {

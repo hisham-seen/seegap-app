@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <form id="update_microsite_<?= $row->microsite_block_id ?>" name="update_microsite_" method="post" role="form">
-    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
     <input type="hidden" name="request_type" value="update" />
     <input type="hidden" name="block_type" value="feedback_collector" />
     <input type="hidden" name="microsite_block_id" value="<?= $row->microsite_block_id ?>" />
@@ -158,9 +158,9 @@
                 'file_key' => 'image',
                 'already_existing_image' => $row->settings->image,
                 'image_container' => 'image',
-                'accept' => \Altum\Uploads::array_to_list_format($data->microsite_blocks['feedback_collector']['whitelisted_thumbnail_image_extensions']),
+                'accept' => \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['feedback_collector']['whitelisted_thumbnail_image_extensions']),
             ]) ?>
-            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format($data->microsite_blocks['feedback_collector']['whitelisted_thumbnail_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->thumbnail_image_size_limit) ?></small>
+            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['feedback_collector']['whitelisted_thumbnail_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->thumbnail_image_size_limit) ?></small>
         </div>
 
         <div class="form-group">
@@ -377,7 +377,7 @@
                                         type="text"
                                         class="form-control"
                                         name="start_date"
-                                        value="<?= \Altum\Date::get($row->start_date, 1) ?>"
+                                        value="<?= \SeeGap\Date::get($row->start_date, 1) ?>"
                                         placeholder="<?= l('link.settings.start_date') ?>"
                                         autocomplete="off"
                                         data-daterangepicker
@@ -393,7 +393,7 @@
                                         type="text"
                                         class="form-control"
                                         name="end_date"
-                                        value="<?= \Altum\Date::get($row->end_date, 1) ?>"
+                                        value="<?= \SeeGap\Date::get($row->end_date, 1) ?>"
                                         placeholder="<?= l('link.settings.end_date') ?>"
                                         autocomplete="off"
                                         data-daterangepicker

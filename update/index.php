@@ -43,14 +43,14 @@ if($product_info) {
     <header class="card header mt-4">
         <div class="card-body d-flex">
             <div class="mr-3">
-                <img src="./assets/images/logo.png" class="img-fluid logo" alt="AltumCode logo" />
+                <img src="./assets/images/logo.png" class="img-fluid logo" alt="SeeGap logo" />
             </div>
 
             <div class="d-flex flex-column justify-content-center">
                 <h1>Update</h1>
                 <p class="subheader d-flex flex-row">
                     <span class="text-muted">
-                        <a href="<?= PRODUCT_URL ?>" target="_blank" class="text-gray-500"><?= PRODUCT_NAME ?></a> by <a href="https://altumco.de/site" target="_blank" class="text-gray-500">AltumCode</a>
+                        <a href="<?= PRODUCT_URL ?>" target="_blank" class="text-gray-500"><?= PRODUCT_NAME ?></a> by <a href="https://Seegap.com/site" target="_blank" class="text-gray-500">SeeGap</a>
                     </span>
                 </p>
             </div>
@@ -89,7 +89,7 @@ if($product_info) {
                     <div class="card-body">
                         <section id="welcome" style="display: none">
                             <h2 class="mb-4">Welcome 👋</h2>
-                            <p>Thank you for choosing the <a href="https://altumco.de/site" target="_blank">AltumCode</a> brand 🤗.</p>
+                            <p>Thank you for choosing the <a href="https://Seegap.com/site" target="_blank">SeeGap</a> brand 🤗.</p>
 
                             <p>Please note, by proceeding with the update, you consent to the privacy policy and terms of service of <?= PRODUCT_NAME ?>, which are mentioned in their respective pages on <a href="<?= PRODUCT_URL ?>" target="_blank"><?= PRODUCT_URL ?></a> 📜.</p>
 

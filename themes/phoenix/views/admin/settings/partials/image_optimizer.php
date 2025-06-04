@@ -1,10 +1,10 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
-    <div <?= !\Altum\Plugin::is_active('image-optimizer') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \Altum\Plugin::get('image-optimizer')->name ?? 'image-optimizer') . '"' : null ?>>
-        <div class="<?= !\Altum\Plugin::is_active('image-optimizer') ? 'container-disabled' : null ?>">
+    <div <?= !\SeeGap\Plugin::is_active('image-optimizer') ? 'data-toggle="tooltip" title="' . sprintf(l('admin_plugins.no_access'), \SeeGap\Plugin::get('image-optimizer')->name ?? 'image-optimizer') . '"' : null ?>>
+        <div class="<?= !\SeeGap\Plugin::is_active('image-optimizer') ? 'container-disabled' : null ?>">
             <div class="form-group custom-control custom-switch">
-                <input id="is_enabled" name="is_enabled" type="checkbox" class="custom-control-input" <?= \Altum\Plugin::is_active('image-optimizer') && settings()->image_optimizer->is_enabled ? 'checked="checked"' : null?>>
+                <input id="is_enabled" name="is_enabled" type="checkbox" class="custom-control-input" <?= \SeeGap\Plugin::is_active('image-optimizer') && settings()->image_optimizer->is_enabled ? 'checked="checked"' : null?>>
                 <label class="custom-control-label" for="is_enabled"><?= l('admin_settings.image_optimizer.is_enabled') ?></label>
             </div>
 
@@ -43,7 +43,7 @@
     </div>
 </div>
 
-<?php if(\Altum\Plugin::is_active('image-optimizer')): ?>
+<?php if(\SeeGap\Plugin::is_active('image-optimizer')): ?>
     <button type="submit" name="submit" class="btn btn-lg btn-block btn-primary mt-4"><?= l('global.update') ?></button>
 <?php endif ?>
 
@@ -52,4 +52,4 @@
     type_handler('#provider', 'data-provider');
     document.querySelector('#provider') && document.querySelectorAll('#provider').forEach(element => element.addEventListener('change', () => { type_handler('#provider', 'data-provider'); }));
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

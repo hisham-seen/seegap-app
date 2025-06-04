@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="d-print-none">
         <?php if(settings()->main->breadcrumbs_is_enabled): ?>
@@ -23,22 +23,22 @@
     <div class="card">
         <div class="card-body">
             <form action="" method="post" role="form">
-                <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+                <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
                 <div class="form-group">
                     <label for="name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('global.name') ?></label>
-                    <input type="text" id="name" name="name" class="form-control <?= \Altum\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?>" required="required" />
-                    <?= \Altum\Alerts::output_field_error('name') ?>
+                    <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?>" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('name') ?>
                 </div>
 
                 <div class="form-group">
                     <label for="processor"><i class="fas fa-fw fa-credit-card fa-sm text-muted mr-1"></i> <?= l('payment_processors.processor') ?></label>
-                    <select id="processor" name="processor" class="custom-select <?= \Altum\Alerts::has_field_errors('processor') ? 'is-invalid' : null ?>">
+                    <select id="processor" name="processor" class="custom-select <?= \SeeGap\Alerts::has_field_errors('processor') ? 'is-invalid' : null ?>">
                         <?php foreach(['paypal', 'stripe', 'crypto_com', 'razorpay', 'paystack', 'mollie'] as $processor): ?>
                             <option value="<?= $processor ?>" <?= $data->values['processor'] == $processor ? 'selected="selected"' : null ?>><?= l('pay.custom_plan.' . $processor) ?></option>
                         <?php endforeach ?>
                     </select>
-                    <?= \Altum\Alerts::output_field_error('processor') ?>
+                    <?= \SeeGap\Alerts::output_field_error('processor') ?>
                 </div>
 
                 <p><small class="form-text text-muted"><i class="fas fa-fw fa-sm fa-info-circle"></i> <?= l('payment_processors.info') ?></small></p>

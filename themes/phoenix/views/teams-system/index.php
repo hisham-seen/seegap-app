@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="mb-4">
         <h1 class="h4 m-0"><i class="fas fa-fw fa-xs fa-user-shield mr-1"></i> <?= l('teams_system.header') ?></h1>

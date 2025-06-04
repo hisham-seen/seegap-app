@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -15,25 +15,25 @@
     <h1 class="h3 m-0"><i class="fas fa-fw fa-xs fa-language text-primary-900 mr-2"></i> <?= l('admin_language_create.header') ?></h1>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
 
         <form action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="language_name"><i class="fas fa-fw fa-sm fa-signature text-muted mr-1"></i> <?= l('admin_languages.language_name') ?></label>
-                <input id="language_name" type="text" name="language_name" class="form-control <?= \Altum\Alerts::has_field_errors('language_name') ? 'is-invalid' : null ?>" value="<?= $data->values['language_name'] ?>" required="required" />
-                <?= \Altum\Alerts::output_field_error('language_name') ?>
+                <input id="language_name" type="text" name="language_name" class="form-control <?= \SeeGap\Alerts::has_field_errors('language_name') ? 'is-invalid' : null ?>" value="<?= $data->values['language_name'] ?>" required="required" />
+                <?= \SeeGap\Alerts::output_field_error('language_name') ?>
                 <small class="form-text text-muted"><?= l('admin_languages.language_name_help') ?></small>
             </div>
 
             <div class="form-group">
                 <label for="language_code"><i class="fas fa-fw fa-sm fa-language text-muted mr-1"></i> <?= l('admin_languages.language_code') ?></label>
-                <input id="language_code" type="text" name="language_code" class="form-control <?= \Altum\Alerts::has_field_errors('language_code') ? 'is-invalid' : null ?>" value="<?= $data->values['language_code'] ?>" required="required" />
-                <?= \Altum\Alerts::output_field_error('language_code') ?>
+                <input id="language_code" type="text" name="language_code" class="form-control <?= \SeeGap\Alerts::has_field_errors('language_code') ? 'is-invalid' : null ?>" value="<?= $data->values['language_code'] ?>" required="required" />
+                <?= \SeeGap\Alerts::output_field_error('language_code') ?>
                 <small class="form-text text-muted"><?= l('admin_languages.language_code_help') ?></small>
             </div>
 

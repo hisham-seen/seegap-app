@@ -1,9 +1,9 @@
-<?php defined('ALTUMCODE') || die(); ?>
+<?php defined('SEEGAP') || die(); ?>
 
-<?php if(ALTUMCODE == 66): ?>
-<?php //ALTUMCODE:DEMO if(!DEMO) { ?>
+<?php if(SEEGAP == 66): ?>
+<?php //SEEGAP:DEMO if(!DEMO) { ?>
 <?php
-$product_info = \Altum\Cache::cache_function_result('admin_product_info', null, function() {
+$product_info = \SeeGap\Cache::cache_function_result('admin_product_info', null, function() {
     try {
         \Unirest\Request::timeout(3);
         $response = \Unirest\Request::get('https://66microsites.com/info.php');
@@ -32,7 +32,7 @@ $product_info = \Altum\Cache::cache_function_result('admin_product_info', null, 
         </div>
 
         <div class="mb-3">
-            <span>You can now download it and update as per the <a href="<?= PRODUCT_DOCUMENTATION_URL ?>" target="_blank">documentation</a> of the product, or <a href="https://altumcode.com/contact" target="_blank">hire me (altumcode)</a> to update it for you.</span>
+            <span>You can now download it and update as per the <a href="<?= PRODUCT_DOCUMENTATION_URL ?>" target="_blank">documentation</a> of the product, or <a href="https://Seegap.com/contact" target="_blank">hire me (altumcode)</a> to update it for you.</span>
         </div>
 
         <div>
@@ -40,11 +40,11 @@ $product_info = \Altum\Cache::cache_function_result('admin_product_info', null, 
                 <i class="fas fa-fw fa-sm fa-times mr-1"></i> Dismiss notification
             </button>
 
-            <a href="https://altumco.de/<?= PRODUCT_KEY ?>-changelog" target="_blank" class="btn btn-sm btn-dark ml-3">
+            <a href="https://Seegap.com/<?= PRODUCT_KEY ?>-changelog" target="_blank" class="btn btn-sm btn-dark ml-3">
                 <i class="fas fa-fw fa-sm fa-scroll mr-1"></i> View changelog
             </a>
 
-            <a href="https://altumco.de/downloads" target="_blank" class="btn btn-sm btn-primary font-weight-bold ml-3">
+            <a href="https://Seegap.com/downloads" target="_blank" class="btn btn-sm btn-primary font-weight-bold ml-3">
                 <i class="fas fa-fw fa-sm fa-download mr-1"></i> Download updates
             </a>
         </div>
@@ -56,8 +56,8 @@ $product_info = \Altum\Cache::cache_function_result('admin_product_info', null, 
                 set_cookie('dismiss_version_updates', 1, 7, <?= json_encode(COOKIE_PATH) ?>);
             });
         </script>
-        <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+        <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
     </div>
 <?php endif ?>
-<?php //ALTUMCODE:DEMO } ?>
+<?php //SEEGAP:DEMO } ?>
 <?php endif ?>

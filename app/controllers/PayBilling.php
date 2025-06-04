@@ -7,17 +7,17 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class PayBilling extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $plan_id = isset($this->params[0]) ? $this->params[0] : null;
 
@@ -36,7 +36,7 @@ class PayBilling extends Controller {
         $plan_id = (int) $plan_id;
 
         /* Check if plan exists */
-        $plan = (new \Altum\Models\Plan())->get_plan_by_id($plan_id);
+        $plan = (new \SeeGap\Models\Plan())->get_plan_by_id($plan_id);
 
         /* Make sure the plan is enabled */
         if(!$plan->status) {
@@ -73,7 +73,7 @@ class PayBilling extends Controller {
             }
 
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -97,7 +97,7 @@ class PayBilling extends Controller {
             'plan' => $plan,
         ];
 
-        $view = new \Altum\View('pay-billing/index', (array) $this);
+        $view = new \SeeGap\View('pay-billing/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

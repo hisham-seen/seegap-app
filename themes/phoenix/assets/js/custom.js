@@ -275,7 +275,7 @@ const display_notifications = (messages, type, selector) => {
         if(message.trim() == '') continue;
 
         html += `
-            <div class="alert alert-${type} altum-animate altum-animate-fill-none altum-animate-fade-in">
+            <div class="alert alert-${type} seegap-animate seegap-animate-fill-none seegap-animate-fade-in">
                 <button type="button" class="close ml-2" data-dismiss="alert">&times;</button>
                 <i class="fas fa-fw ${icon} mr-2"></i> ${message}
             </div>`;

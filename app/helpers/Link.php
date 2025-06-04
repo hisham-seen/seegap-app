@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Link {
 
@@ -19,7 +19,7 @@ class Link {
         switch($settings->background_type) {
             case 'image':
 
-                $style = 'background: url(\'' . \Altum\Uploads::get_full_url('backgrounds') . $settings->background . '\');';
+                $style = 'background: url(\'' . \SeeGap\Uploads::get_full_url('backgrounds') . $settings->background . '\');';
 
                 break;
 
@@ -117,7 +117,7 @@ class Link {
             'microsite_blocks' => $microsite_blocks
         ];
 
-        $view = new \Altum\View('l/partials/microsite', (array) $tthis);
+        $view = new \SeeGap\View('l/partials/microsite', (array) $tthis);
 
         return $view->run($data);
 
@@ -235,13 +235,13 @@ class Link {
 
                 /* Get payment processors */
                 if(in_array($link->type, ['donation', 'product', 'service'])) {
-                    $data['payment_processors'] = (new \Altum\Models\PaymentProcessor())->get_payment_processors_by_user_id($user->user_id);
+                    $data['payment_processors'] = (new \SeeGap\Models\PaymentProcessor())->get_payment_processors_by_user_id($user->user_id);
                 }
 
                 if($microsite_blocks[$link->type]['type'] == 'default') {
                     $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 } else {
-                    $view_path = \Altum\Plugin::get($microsite_blocks[$link->type]['type'] . '-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get($microsite_blocks[$link->type]['type'] . '-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -272,9 +272,9 @@ class Link {
                 if($microsite_blocks[$link->type]['type'] == 'default') {
                     $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 } elseif($microsite_blocks[$link->type]['type'] == 'pro') {
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 } elseif($microsite_blocks[$link->type]['type'] == 'ultimate') {
-                    $view_path = \Altum\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -291,7 +291,7 @@ class Link {
 
                 $data['embed'] = $match[1] ?? null;
 
-                $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 
@@ -321,7 +321,7 @@ class Link {
                 if(preg_match('/(snapchat\.com)/', $link->location_url)) {
                     $data['embed'] = $link->location_url;
 
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -374,7 +374,7 @@ class Link {
                 if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:t\.me\/)(.+)$/', $link->location_url, $match)) {
                     $data['embed'] = $match[1];
 
-                    $view_path = \Altum\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -405,7 +405,7 @@ class Link {
                 if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:tiktok\.com\/@)([^\/\?]+)/', $link->location_url, $match)) {
                     $data['embed'] = $match[1];
 
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -416,7 +416,7 @@ class Link {
                     $data['embed_oid'] = $match[1];
                     $data['embed_id'] = $match[2];
 
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -430,7 +430,7 @@ class Link {
                     if($position !== false) {
                         $link->location_url = str_replace('music.apple.com', 'embed.music.apple.com', $link->location_url);
 
-                        $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                        $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                     }
 
                 }
@@ -449,7 +449,7 @@ class Link {
                         $link->location_url = str_replace('track/', 'tracks/', $link->location_url);
                         $link->location_url = str_replace('album/', 'albums/', $link->location_url);
 
-                        $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                        $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                     }
 
                 }
@@ -462,7 +462,7 @@ class Link {
 
                     $data['embed'] = str_replace('https://www.mixcloud.com', '', $link->location_url);
 
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 }
 
@@ -473,7 +473,7 @@ class Link {
                 if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:kick\.com\/)(.+)$/', $link->location_url, $match)) {
                     $data['embed'] = $match[1];
 
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -488,7 +488,7 @@ class Link {
 
                         $link->location_url = substr_replace($link->location_url, '/embed', $position, 0);
 
-                        $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                        $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                     }
 
                 }
@@ -500,7 +500,7 @@ class Link {
                 $link->location_url = str_replace('https://x.com/', 'https://twitter.com/', $link->location_url);
 
                 if(preg_match('/(https:\/\/twitter\.com)/', $link->location_url)) {
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -510,7 +510,7 @@ class Link {
                 $link->location_url = str_replace('https://x.com/', 'https://twitter.com/', $link->location_url);
 
                 if(preg_match('/(https:\/\/twitter\.com)/', $link->location_url)) {
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -520,7 +520,7 @@ class Link {
                 $link->location_url = str_replace('https://x.com/', 'https://twitter.com/', $link->location_url);
 
                 if(preg_match('/(https:\/\/twitter\.com)/', $link->location_url)) {
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -528,7 +528,7 @@ class Link {
             case 'pinterest_profile':
 
                 if(preg_match('/(pinterest\.com)/', $link->location_url)) {
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -536,7 +536,7 @@ class Link {
             case 'instagram_media':
 
                 if(preg_match('/(https:\/\/www.instagram\.com)/', $link->location_url)) {
-                    $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -546,7 +546,7 @@ class Link {
                 if(preg_match('/https:\/\/.+.typeform\.com\/to\/([a-zA-Z0-9]+)/', $link->location_url, $match)) {
                     $data['embed'] = $match[1];
 
-                    $view_path = \Altum\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -554,7 +554,7 @@ class Link {
             case 'calendly':
 
                 if(preg_match('/(https:\/\/calendly\.com)/', $link->location_url)) {
-                    $view_path = \Altum\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -562,7 +562,7 @@ class Link {
             case 'custom_html':
             case 'divider':
 
-                $view_path = \Altum\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 
@@ -577,7 +577,7 @@ class Link {
             case 'markdown':
             case 'iframe':
 
-                $view_path = \Altum\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 
@@ -599,7 +599,7 @@ class Link {
                     $link->utm_query = '?utm_medium=' . $link->utm->medium . '&utm_source=' . $link->utm->source . '&utm_campaign=' . $link->settings->name;
                 }
 
-                $view_path = \Altum\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 

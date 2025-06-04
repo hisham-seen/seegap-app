@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Data extends Controller {
 
@@ -21,13 +21,13 @@ class Data extends Controller {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check if we're viewing a specific form's submissions */
         $microsite_block_id = isset($_GET['microsite_block_id']) ? (int) $_GET['microsite_block_id'] : null;
         
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['microsite_block_id', 'link_id', 'project_id', 'user_id', 'type', 'is_enabled'], [], ['datum_id', 'datetime']));
+        $filters = (new \SeeGap\Filters(['microsite_block_id', 'link_id', 'project_id', 'user_id', 'type', 'is_enabled'], [], ['datum_id', 'datetime']));
         $filters->set_default_order_by($this->user->preferences->data_default_order_by ?? 'datetime', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
@@ -58,7 +58,7 @@ class Data extends Controller {
             
             /* Prepare the paginator */
             $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} AND `microsite_block_id` = {$microsite_block_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-            $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?microsite_block_id=' . $microsite_block_id . '&' . $filters->get_get() . '&page=%d')));
+            $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?microsite_block_id=' . $microsite_block_id . '&' . $filters->get_get() . '&page=%d')));
             
             /* Get the submissions for this form */
             $submissions = [];
@@ -103,10 +103,10 @@ class Data extends Controller {
             }
             
             /* Prepare the pagination view */
-            $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+            $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
             
             /* Existing projects */
-            $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+            $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
             
             /* Prepare the view */
             $data = [
@@ -117,7 +117,7 @@ class Data extends Controller {
                 'filters' => $filters,
             ];
             
-            $view = new \Altum\View('data/form_submissions', (array) $this);
+            $view = new \SeeGap\View('data/form_submissions', (array) $this);
             
             $this->add_view_content('content', $view->run($data));
         }
@@ -125,7 +125,7 @@ class Data extends Controller {
         else {
             /* Prepare the paginator for forms */
             $total_forms = database()->query("SELECT COUNT(DISTINCT `microsite_block_id`) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-            $paginator = (new \Altum\Paginator($total_forms, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?' . $filters->get_get() . '&page=%d')));
+            $paginator = (new \SeeGap\Paginator($total_forms, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?' . $filters->get_get() . '&page=%d')));
             
             /* Get distinct microsite_block_ids with their latest submission and count */
             $forms = [];
@@ -217,7 +217,7 @@ class Data extends Controller {
             $forms = array_slice($forms, ($current_page - 1) * $filters->get_results_per_page(), $filters->get_results_per_page());
             
             // Create the paginator after slicing the array
-            $paginator = (new \Altum\Paginator($total_forms, $filters->get_results_per_page(), $current_page, url('data?' . $filters->get_get() . '&page=%d')));
+            $paginator = (new \SeeGap\Paginator($total_forms, $filters->get_results_per_page(), $current_page, url('data?' . $filters->get_get() . '&page=%d')));
             
             /* Export handler */
             // Prepare forms for export by converting objects to arrays
@@ -244,10 +244,10 @@ class Data extends Controller {
             }
             
             /* Prepare the pagination view */
-            $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+            $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
             
             /* Existing projects */
-            $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+            $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
             
             /* Prepare the view */
             $data = [
@@ -259,7 +259,7 @@ class Data extends Controller {
                 'microsite_blocks' => require APP_PATH . 'includes/microsite_blocks.php',
             ];
             
-            $view = new \Altum\View('data/index', (array) $this);
+            $view = new \SeeGap\View('data/index', (array) $this);
             
             $this->add_view_content('content', $view->run($data));
         }
@@ -267,7 +267,7 @@ class Data extends Controller {
 
     public function bulk() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -282,9 +282,9 @@ class Data extends Controller {
             redirect('data');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -296,7 +296,7 @@ class Data extends Controller {
                 case 'delete':
 
                     /* Team checks */
-                    if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.data')) {
+                    if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.data')) {
                         Alerts::add_info(l('global.info_message.team_no_access'));
                         redirect('data');
                     }
@@ -318,10 +318,10 @@ class Data extends Controller {
 
     public function delete() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('delete.data')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.data')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('data');
         }
@@ -332,9 +332,9 @@ class Data extends Controller {
 
         $datum_id = (int) query_clean($_POST['datum_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

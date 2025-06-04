@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die(); ?>
+<?php defined('SEEGAP') || die(); ?>
 
 <?php if(is_logged_in() && isset($_GET['welcome']) && user()->total_logins == 1): ?>
     <?php ob_start() ?>
@@ -13,7 +13,7 @@
             origin: { y: 0.6 },
         });
     </script>
-    <?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+    <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
     <?php if(!empty(settings()->custom->welcome_js)): ?>
         <?= get_settings_custom_head_js('welcome_js') ?>

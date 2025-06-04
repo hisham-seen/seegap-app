@@ -7,11 +7,11 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AdminLogs extends Controller {
 
@@ -43,7 +43,7 @@ class AdminLogs extends Controller {
             'logs' => $logs,
         ];
 
-        $view = new \Altum\View('admin/logs/index', (array) $this);
+        $view = new \SeeGap\View('admin/logs/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
@@ -64,9 +64,9 @@ class AdminLogs extends Controller {
             redirect('admin/logs');
         }
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
@@ -102,9 +102,9 @@ class AdminLogs extends Controller {
 
         $log_id = preg_replace('/[^a-zA-Z0-9-]/', '', $log_id);
 
-        //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+        //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
-        if(!\Altum\Csrf::check('global_token')) {
+        if(!\SeeGap\Csrf::check('global_token')) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 

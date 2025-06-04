@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
     <div class="card <?= 'link-btn-' . $data->link->settings->border_radius ?>" style="<?= 'border-width: ' . $data->link->settings->border_width . ';' . 'border-color: ' . $data->link->settings->border_color . ';' . 'border-style: ' . $data->link->settings->border_style . ';' . 'background: ' . $data->link->settings->background_color . ';' . 'box-shadow: ' . ($data->link->settings->border_shadow_offset_x ?? '0') . 'px ' . ($data->link->settings->border_shadow_offset_y ?? '0') . 'px ' . ($data->link->settings->border_shadow_blur ?? '0') . 'px ' . ($data->link->settings->border_shadow_spread ?? '0') . 'px ' . ($data->link->settings->border_shadow_color ?? '#00000010') ?>" data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-animation data-background-color>
@@ -33,7 +33,7 @@
             <div class="d-flex align-items-center <?= $justify_content_class ?>">
                 <div class="mr-3">
                     <?php if($data->link->settings->image): ?>
-                    <img src="<?= \Altum\Uploads::get_full_url('block_images') . $data->link->settings->image ?>" class="link-review-image" alt="<?= $data->link->settings->author_name ?>" loading="lazy" />
+                    <img src="<?= \SeeGap\Uploads::get_full_url('block_images') . $data->link->settings->image ?>" class="link-review-image" alt="<?= $data->link->settings->author_name ?>" loading="lazy" />
                     <?php else: ?>
                         <div class="link-review-image"><?= mb_strtoupper(mb_substr($data->link->settings->author_name, 0, 1)) ?></div>
                     <?php endif ?>

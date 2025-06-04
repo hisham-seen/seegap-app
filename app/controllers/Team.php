@@ -7,21 +7,21 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Title;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Team extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         $team_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
@@ -30,13 +30,13 @@ class Team extends Controller {
         }
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['user_id'], ['user_email'], ['team_member_id', 'last_datetime', 'user_email', 'datetime']));
+        $filters = (new \SeeGap\Filters(['user_id'], ['user_email'], ['team_member_id', 'last_datetime', 'user_email', 'datetime']));
         $filters->set_default_order_by('team_member_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `teams_members` WHERE `team_id` = {$team->team_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('team/' . $team->team_id . '?' . $filters->get_get() . 'page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('team/' . $team->team_id . '?' . $filters->get_get() . 'page=%d')));
 
         /* Get the teams list for the user */
         $team_members = [];
@@ -58,7 +58,7 @@ class Team extends Controller {
         process_export_csv($team_members, 'include', ['team_member_id', 'team_id', 'user_id', 'name', 'email', 'datetime', 'last_datetime']);
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Set a custom title */
         Title::set(sprintf(l('team.title'), $team->name));
@@ -73,7 +73,7 @@ class Team extends Controller {
             'teams_access' => require APP_PATH . 'includes/teams_access.php',
         ];
 
-        $view = new \Altum\View('team/index', (array) $this);
+        $view = new \SeeGap\View('team/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

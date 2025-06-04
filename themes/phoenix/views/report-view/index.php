@@ -1,24 +1,24 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <!DOCTYPE html>
-<html lang="<?= \Altum\Language::$code ?>" dir="<?= l('direction') ?>">
+<html lang="<?= \SeeGap\Language::$code ?>" dir="<?= l('direction') ?>">
 <head>
-    <title><?= \Altum\Title::get() ?></title>
+    <title><?= \SeeGap\Title::get() ?></title>
     <base href="<?= SITE_URL ?>">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <?php if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
+    <?php if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
         <meta name="theme-color" content="<?= settings()->pwa->theme_color ?>"/>
         <link rel="manifest" href="<?= SITE_URL . UPLOADS_URL_PATH . 'pwa/' . 'manifest.json' ?>">
     <?php endif ?>
 
-    <link rel="alternate" href="<?= SITE_URL . \Altum\Router::$original_request ?>" hreflang="x-default" />
-    <?php if(count(\Altum\Language::$active_languages) > 1): ?>
-        <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+    <link rel="alternate" href="<?= SITE_URL . \SeeGap\Router::$original_request ?>" hreflang="x-default" />
+    <?php if(count(\SeeGap\Language::$active_languages) > 1): ?>
+        <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
             <?php if(settings()->main->default_language != $language_name): ?>
-                <link rel="alternate" href="<?= SITE_URL . $language_code . '/' . \Altum\Router::$original_request ?>" hreflang="<?= $language_code ?>" />
+                <link rel="alternate" href="<?= SITE_URL . $language_code . '/' . \SeeGap\Router::$original_request ?>" hreflang="<?= $language_code ?>" />
             <?php endif ?>
         <?php endforeach ?>
     <?php endif ?>

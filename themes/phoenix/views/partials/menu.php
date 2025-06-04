@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <nav id="navbar" class="navbar navbar-main navbar-expand-lg navbar-light mb-6 index-highly-rounded border border-gray-100">
     <div class="container">
@@ -13,8 +13,8 @@
                 data-dark-class="<?= settings()->main->logo_dark != '' ? 'img-fluid navbar-logo' : '' ?>"
                 data-dark-tag="<?= settings()->main->logo_dark != '' ? 'img' : 'span' ?>"
         >
-            <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()} != ''): ?>
-                <img src="<?= settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
+            <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()} != ''): ?>
+                <img src="<?= settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
             <?php else: ?>
                 <?= settings()->main->title ?>
             <?php endif ?>
@@ -88,8 +88,8 @@
                                             data-dark-class="<?= settings()->main->logo_dark != '' ? 'img-fluid navbar-logo-mini' : '' ?>"
                                             data-dark-tag="<?= settings()->main->logo_dark != '' ? 'img' : 'span' ?>"
                                     >
-                                        <?php if(settings()->main->{'logo_' . \Altum\ThemeStyle::get()} != ''): ?>
-                                            <img src="<?= settings()->main->{'logo_' . \Altum\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo-mini" alt="<?= l('global.accessibility.logo_alt') ?>" data-toggle="tooltip" title="<?= settings()->main->title ?>" />
+                                        <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()} != ''): ?>
+                                            <img src="<?= settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo-mini" alt="<?= l('global.accessibility.logo_alt') ?>" data-toggle="tooltip" title="<?= settings()->main->title ?>" />
                                         <?php else: ?>
                                             <?= settings()->main->title ?>
                                         <?php endif ?>
@@ -121,38 +121,38 @@
                                         <a href="<?= url('qr-codes') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('qr_codes.menu') ?></a>
                                     <?php endif ?>
 
-                                    <?php if(\Altum\Plugin::is_active('aix')): ?>
+                                    <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                                         <div class="dropdown-divider"></div>
                                     <?php endif ?>
 
-                                    <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
+                                    <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
                                         <a href="<?= url('documents') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-robot mr-2"></i> <?= l('documents.menu') ?></a>
                                     <?php endif ?>
 
-                                    <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->images_is_enabled): ?>
+                                    <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->images_is_enabled): ?>
                                         <a href="<?= url('images') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-icons mr-2"></i> <?= l('images.menu') ?></a>
                                     <?php endif ?>
 
-                                    <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled): ?>
+                                    <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled): ?>
                                         <a href="<?= url('transcriptions') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-microphone-alt mr-2"></i> <?= l('transcriptions.menu') ?></a>
                                     <?php endif ?>
 
-                                    <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->syntheses_is_enabled): ?>
+                                    <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->syntheses_is_enabled): ?>
                                         <a href="<?= url('syntheses') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-voicemail mr-2"></i> <?= l('syntheses.menu') ?></a>
                                     <?php endif ?>
 
-                                    <?php if(\Altum\Plugin::is_active('aix') && settings()->aix->chats_is_enabled): ?>
+                                    <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->chats_is_enabled): ?>
                                         <a href="<?= url('chats') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-comments mr-2"></i> <?= l('chats.menu') ?></a>
                                     <?php endif ?>
 
-                                    <?php if(\Altum\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
+                                    <?php if(\SeeGap\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
                                         <a href="<?= url('signatures') ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-file-signature mr-2"></i> <?= l('signatures.menu') ?></a>
                                     <?php endif ?>
                                 </div>
 
                                 <div>
-                                    <?php if(!\Altum\Teams::is_delegated()): ?>
-                                        <?php if(\Altum\Authentication::is_admin()): ?>
+                                    <?php if(!\SeeGap\Teams::is_delegated()): ?>
+                                        <?php if(\SeeGap\Authentication::is_admin()): ?>
                                             <a class="dropdown-item" href="<?= url('admin') ?>"><i class="fas fa-fw fa-sm fa-fingerprint text-primary mr-2"></i> <?= l('global.menu.admin') ?></a>
                                             <div class="dropdown-divider"></div>
                                         <?php else: ?>
@@ -173,7 +173,7 @@
                                         <?php if(settings()->payment->is_enabled): ?>
                                             <a class="dropdown-item" href="<?= url('account-payments') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('account_payments.menu') ?></a>
 
-                                            <?php if(\Altum\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
+                                            <?php if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
                                                 <a class="dropdown-item" href="<?= url('referrals') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('referrals.menu') ?></a>
                                             <?php endif ?>
                                         <?php endif ?>
@@ -182,7 +182,7 @@
                                             <a class="dropdown-item" href="<?= url('account-api') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('account_api.menu') ?></a>
                                         <?php endif ?>
 
-                                        <?php if(\Altum\Plugin::is_active('teams')): ?>
+                                        <?php if(\SeeGap\Plugin::is_active('teams')): ?>
                                             <a class="dropdown-item" href="<?= url('teams-system') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('teams_system.menu') ?></a>
                                         <?php endif ?>
 

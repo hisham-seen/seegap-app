@@ -1,5 +1,5 @@
 <?php
-const ALTUMCODE = 66;
+const SEEGAP = 66;
 define('ROOT', realpath(__DIR__ . '/..') . '/');
 define('DEBUG', 0);
 define('CACHE', 1);
@@ -127,7 +127,7 @@ foreach($updates_to_run as $value) {
 }
 
 /* Delete the cache store for the settings */
-\Altum\Cache::initialize();
+\SeeGap\Cache::initialize();
 cache()->clear();
 
 /* Determine all the languages available in the directory */

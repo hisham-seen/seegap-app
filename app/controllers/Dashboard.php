@@ -7,28 +7,28 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Domain;
+use SeeGap\Models\Domain;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Dashboard extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters(['is_enabled', 'type'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'clicks', 'url']));
+        $filters = (new \SeeGap\Filters(['is_enabled', 'type'], ['url', 'location_url'], ['link_id', 'last_datetime', 'datetime', 'clicks', 'url']));
         $filters->set_default_order_by($this->user->preferences->links_default_order_by, $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
-        $total_rows = \Altum\Cache::cache_function_result('links_total?user_id=' . $this->user->user_id, null, function() {
+        $total_rows = \SeeGap\Cache::cache_function_result('links_total?user_id=' . $this->user->user_id, null, function() {
             return db()->where('user_id', $this->user->user_id)->getValue('links', 'count(*)');
         });
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('links?' . $filters->get_get() . '&page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('links?' . $filters->get_get() . '&page=%d')));
 
         /* Get domains */
         $domains = (new Domain())->get_available_domains_by_user($this->user);
@@ -62,7 +62,7 @@ class Dashboard extends Controller {
         }
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Get statistics */
         if(count($links)) {
@@ -102,14 +102,14 @@ class Dashboard extends Controller {
                     `formatted_date`
             ";
 
-            $links_chart = \Altum\Cache::cache_function_result('track_links?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($track_links_result_query) {
+            $links_chart = \SeeGap\Cache::cache_function_result('track_links?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($track_links_result_query) {
                 $links_chart = [];
 
                 $track_links_result = database()->query($track_links_result_query);
 
                 /* Generate the raw chart data and save logs for later usage */
                 while($row = $track_links_result->fetch_object()) {
-                    $label = \Altum\Date::get($row->formatted_date, 5, \Altum\Date::$default_timezone);
+                    $label = \SeeGap\Date::get($row->formatted_date, 5, \SeeGap\Date::$default_timezone);
 
                     $links_chart[$label] = [
                         'pageviews' => $row->pageviews,
@@ -125,31 +125,31 @@ class Dashboard extends Controller {
 
         /* Some statistics for the widgets */
         if(settings()->links->shortener_is_enabled) {
-            $link_links_total = \Altum\Cache::cache_function_result('link_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+            $link_links_total = \SeeGap\Cache::cache_function_result('link_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
                 return db()->where('user_id', $this->user->user_id)->where('type', 'link')->getValue('links', 'count(*)');
             });
         }
 
         if(settings()->links->files_is_enabled) {
-            $file_links_total = \Altum\Cache::cache_function_result('file_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+            $file_links_total = \SeeGap\Cache::cache_function_result('file_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
                 return db()->where('user_id', $this->user->user_id)->where('type', 'file')->getValue('links', 'count(*)');
             });
         }
 
         if(settings()->links->microsites_is_enabled) {
-            $microsite_links_total = \Altum\Cache::cache_function_result('microsite_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+            $microsite_links_total = \SeeGap\Cache::cache_function_result('microsite_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
                 return db()->where('user_id', $this->user->user_id)->where('type', 'microsite')->getValue('links', 'count(*)');
             });
         }
 
         if(settings()->links->events_is_enabled) {
-            $event_links_total = \Altum\Cache::cache_function_result('event_links_total?user_id=' . $this->user->user_id, null, function() {
+            $event_links_total = \SeeGap\Cache::cache_function_result('event_links_total?user_id=' . $this->user->user_id, null, function() {
                 return db()->where('user_id', $this->user->user_id)->where('type', 'event')->getValue('links', 'count(*)');
             });
         }
 
         if(settings()->links->static_is_enabled) {
-            $static_links_total = \Altum\Cache::cache_function_result('static_links_total?user_id=' . $this->user->user_id, null, function() {
+            $static_links_total = \SeeGap\Cache::cache_function_result('static_links_total?user_id=' . $this->user->user_id, null, function() {
                 return db()->where('user_id', $this->user->user_id)->where('type', 'static')->getValue('links', 'count(*)');
             });
         }
@@ -157,7 +157,7 @@ class Dashboard extends Controller {
         /* GS1 Links statistics */
         $gs1_links_total = null;
         if(settings()->gs1_links->gs1_links_is_enabled ?? false) {
-            $gs1_links_total = \Altum\Cache::cache_function_result('gs1_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+            $gs1_links_total = \SeeGap\Cache::cache_function_result('gs1_links_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
                 return db()->where('user_id', $this->user->user_id)->getValue('gs1_links', 'count(*)');
             });
         }
@@ -165,7 +165,7 @@ class Dashboard extends Controller {
         /* QR Codes statistics */
         $qr_codes_total = null;
         if(settings()->codes->qr_codes_is_enabled ?? false) {
-            $qr_codes_total = \Altum\Cache::cache_function_result('qr_codes_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+            $qr_codes_total = \SeeGap\Cache::cache_function_result('qr_codes_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
                 return db()->where('user_id', $this->user->user_id)->getValue('qr_codes', 'count(*)');
             });
         }
@@ -173,7 +173,7 @@ class Dashboard extends Controller {
         /* Data submissions statistics */
         $data_submissions_total = null;
         if(settings()->links->microsites_is_enabled) {
-            $data_submissions_total = \Altum\Cache::cache_function_result('data_submissions_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
+            $data_submissions_total = \SeeGap\Cache::cache_function_result('data_submissions_total?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() {
                 return db()->where('user_id', $this->user->user_id)->getValue('data', 'count(*)');
             });
         }
@@ -227,7 +227,7 @@ class Dashboard extends Controller {
                 LIMIT 10
             ";
 
-            $analytics_data['countries'] = \Altum\Cache::cache_function_result('dashboard_countries?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($countries_query) {
+            $analytics_data['countries'] = \SeeGap\Cache::cache_function_result('dashboard_countries?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($countries_query) {
                 $countries = [];
                 $countries_result = database()->query($countries_query);
                 while($row = $countries_result->fetch_object()) {
@@ -280,7 +280,7 @@ class Dashboard extends Controller {
                 LIMIT 10
             ";
 
-            $analytics_data['cities'] = \Altum\Cache::cache_function_result('dashboard_cities?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($cities_query) {
+            $analytics_data['cities'] = \SeeGap\Cache::cache_function_result('dashboard_cities?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($cities_query) {
                 $cities = [];
                 $cities_result = database()->query($cities_query);
                 while($row = $cities_result->fetch_object()) {
@@ -330,7 +330,7 @@ class Dashboard extends Controller {
                 LIMIT 10
             ";
 
-            $analytics_data['referrers'] = \Altum\Cache::cache_function_result('dashboard_referrers?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($referrers_query) {
+            $analytics_data['referrers'] = \SeeGap\Cache::cache_function_result('dashboard_referrers?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($referrers_query) {
                 $referrers = [];
                 $referrers_result = database()->query($referrers_query);
                 while($row = $referrers_result->fetch_object()) {
@@ -380,7 +380,7 @@ class Dashboard extends Controller {
                 LIMIT 10
             ";
 
-            $analytics_data['utm_sources'] = \Altum\Cache::cache_function_result('dashboard_utm_sources?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($utm_sources_query) {
+            $analytics_data['utm_sources'] = \SeeGap\Cache::cache_function_result('dashboard_utm_sources?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($utm_sources_query) {
                 $utm_sources = [];
                 $utm_sources_result = database()->query($utm_sources_query);
                 while($row = $utm_sources_result->fetch_object()) {
@@ -430,7 +430,7 @@ class Dashboard extends Controller {
                 LIMIT 10
             ";
 
-            $analytics_data['utm_campaigns'] = \Altum\Cache::cache_function_result('dashboard_utm_campaigns?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($utm_campaigns_query) {
+            $analytics_data['utm_campaigns'] = \SeeGap\Cache::cache_function_result('dashboard_utm_campaigns?user_id=' . $this->user->user_id, 'user_id=' . $this->user->user_id, function() use ($utm_campaigns_query) {
                 $utm_campaigns = [];
                 $utm_campaigns_result = database()->query($utm_campaigns_query);
                 while($row = $utm_campaigns_result->fetch_object()) {
@@ -441,8 +441,8 @@ class Dashboard extends Controller {
         }
 
         /* Delete Modal */
-        $view = new \Altum\View('links/link_delete_modal', (array) $this);
-        \Altum\Event::add_content($view->run(), 'modals');
+        $view = new \SeeGap\View('links/link_delete_modal', (array) $this);
+        \SeeGap\Event::add_content($view->run(), 'modals');
 
         /* Create Link Modal */
         $domains = (new Domain())->get_available_domains_by_user($this->user);
@@ -450,11 +450,11 @@ class Dashboard extends Controller {
             'domains' => $domains
         ];
 
-        $view = new \Altum\View('links/create_link_modals', (array) $this);
-        \Altum\Event::add_content($view->run($data), 'modals');
+        $view = new \SeeGap\View('links/create_link_modals', (array) $this);
+        \SeeGap\Event::add_content($view->run($data), 'modals');
 
         /* Existing projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Prepare the Links View */
         $data = [
@@ -464,7 +464,7 @@ class Dashboard extends Controller {
             'projects'          => $projects,
             'links_types'       => require APP_PATH . 'includes/links_types.php',
         ];
-        $view = new \Altum\View('links/links_content', (array) $this);
+        $view = new \SeeGap\View('links/links_content', (array) $this);
         $this->add_view_content('links_content', $view->run($data));
 
         /* Prepare the view */
@@ -485,7 +485,7 @@ class Dashboard extends Controller {
             'analytics_data'            => $analytics_data ?? [],
         ];
 
-        $view = new \Altum\View('dashboard/index', (array) $this);
+        $view = new \SeeGap\View('dashboard/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 

@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Title;
+use SeeGap\Alerts;
+use SeeGap\Title;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class SignatureUpdate extends Controller {
 
     public function index() {
-        if(!\Altum\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
+        if(!\SeeGap\Plugin::is_active('email-signatures') || !settings()->signatures->is_enabled) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Team checks */
-        if(\Altum\Teams::is_delegated() && !\Altum\Teams::has_access('update.signatures')) {
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('update.signatures')) {
             Alerts::add_info(l('global.info_message.team_no_access'));
             redirect('dashboard');
         }
@@ -39,16 +39,16 @@ class SignatureUpdate extends Controller {
         $signature->settings = json_decode($signature->settings ?? '');
 
         /* Get available projects */
-        $projects = (new \Altum\Models\Projects())->get_projects_by_user_id($this->user->user_id);
+        $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);
 
         /* Signature templates */
-        $signature_templates = require \Altum\Plugin::get('email-signatures')->path . 'includes/signature_templates.php';
+        $signature_templates = require \SeeGap\Plugin::get('email-signatures')->path . 'includes/signature_templates.php';
 
         /* Signature fonts */
-        $signature_fonts = require \Altum\Plugin::get('email-signatures')->path . 'includes/signature_fonts.php';
+        $signature_fonts = require \SeeGap\Plugin::get('email-signatures')->path . 'includes/signature_fonts.php';
 
         /* Signature socials */
-        $signature_socials = require \Altum\Plugin::get('email-signatures')->path . 'includes/signature_socials.php';
+        $signature_socials = require \SeeGap\Plugin::get('email-signatures')->path . 'includes/signature_socials.php';
 
         if(!empty($_POST)) {
             $_POST['name'] = input_clean($_POST['name']);
@@ -56,7 +56,7 @@ class SignatureUpdate extends Controller {
             $_POST['project_id'] = !empty($_POST['project_id']) && array_key_exists($_POST['project_id'], $projects) ? (int) $_POST['project_id'] : null;
             $_POST['is_removed_branding'] = $this->user->plan_settings->removable_branding ? (bool) $_POST['is_removed_branding'] : 0;
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -66,7 +66,7 @@ class SignatureUpdate extends Controller {
                 }
             }
 
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -169,7 +169,7 @@ class SignatureUpdate extends Controller {
             'signature_fonts' => $signature_fonts,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('email-signatures')->path . 'views/signature-update/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('email-signatures')->path . 'views/signature-update/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }

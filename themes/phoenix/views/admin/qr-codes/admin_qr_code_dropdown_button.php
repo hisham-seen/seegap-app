@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="dropdown">
     <button type="button" class="btn btn-link text-secondary dropdown-toggle dropdown-toggle-simple" data-toggle="dropdown" data-boundary="viewport">
@@ -12,14 +12,14 @@
     </div>
 </div>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_url.php', [
     'name' => 'qr_code',
     'resource_id' => 'qr_code_id',
     'has_dynamic_resource_name' => true,
     'path' => 'admin/qr-codes/delete/'
 ]), 'modals', 'qr_code_delete_modal'); ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/transfer_modal.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/transfer_modal.php', [
     'name' => 'qr_code',
     'resource_id' => 'qr_code_id',
     'has_dynamic_resource_name' => true,

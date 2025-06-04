@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="domain_delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -16,7 +16,7 @@
                 </div>
 
                 <form name="domain_delete_modal" method="post" action="<?= url('domains/delete') ?>" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="domain_id" value="" />
 
                     <p class="text-muted"><?= l('domain_delete_modal.subheader') ?></p>
@@ -42,4 +42,4 @@
         $(event.currentTarget).find('input[name="domain_id"]').val(domain_id);
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

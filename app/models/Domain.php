@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Domain extends Model {
 
@@ -181,7 +181,7 @@ class Domain extends Model {
 
         while($link = $result->fetch_object()) {
 
-            (new \Altum\Models\Link())->delete($link->link_id);
+            (new \SeeGap\Models\Link())->delete($link->link_id);
 
         }
 

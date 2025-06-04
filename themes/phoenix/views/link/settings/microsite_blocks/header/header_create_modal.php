@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="create_microsite_header" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -14,7 +14,7 @@
 
             <div class="modal-body">
                 <form name="create_microsite_header" method="post" role="form" enctype="multipart/form-data">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="request_type" value="create" />
                     <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
                     <input type="hidden" name="block_type" value="header" />
@@ -42,8 +42,8 @@
 
                     <div data-header-create-background-type="image" class="form-group">
                         <label for="header_background"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('microsite_header.background') ?></label>
-                        <input id="header_background" type="file" name="background" accept="<?= \Altum\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions']) ?>" class="form-control-file altum-file-input" required="required" data-crop />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->background_size_limit) ?></small>
+                        <input id="header_background" type="file" name="background" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions']) ?>" class="form-control-file seegap-file-input" required="required" data-crop />
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->background_size_limit) ?></small>
                     </div>
 
                     <div data-header-create-background-type="video" class="form-group">
@@ -53,8 +53,8 @@
 
                     <div class="form-group">
                         <label for="header_avatar"><i class="fas fa-fw fa-portrait fa-sm text-muted mr-1"></i> <?= l('microsite_header.avatar') ?></label>
-                        <input id="header_avatar" type="file" name="avatar" accept="<?= \Altum\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions']) ?>" class="form-control-file altum-file-input" required="required" data-crop data-aspect-ratio="1" />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \Altum\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
+                        <input id="header_avatar" type="file" name="avatar" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions']) ?>" class="form-control-file seegap-file-input" required="required" data-crop data-aspect-ratio="1" />
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['header']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
                     </div>
 
                     <div class="text-center mt-4">
@@ -74,4 +74,4 @@
     type_handler('form[name="create_microsite_header"] input[name="background_type"]', 'data-header-create-background-type');
     document.querySelector('form[name="create_microsite_header"] input[name="background_type"]') && document.querySelectorAll('form[name="create_microsite_header"] input[name="background_type"]').forEach(element => element.addEventListener('change', () => { type_handler('form[name="create_microsite_header"] input[name="background_type"]', 'data-header-create-background-type');}));
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

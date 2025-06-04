@@ -7,30 +7,30 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
+use SeeGap\Alerts;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class TeamsMember extends Controller {
 
     public function index() {
 
-        if(!\Altum\Plugin::is_active('teams')) {
+        if(!\SeeGap\Plugin::is_active('teams')) {
             redirect('not-found');
         }
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         /* Prepare the filtering system */
-        $filters = (new \Altum\Filters([], ['name'], ['team_member_id', 'datetime', 'last_datetime']));
+        $filters = (new \SeeGap\Filters([], ['name'], ['team_member_id', 'datetime', 'last_datetime']));
         $filters->set_default_order_by('team_member_id', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
 
         /* Prepare the paginator */
         $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `teams_members` WHERE (`user_id` = {$this->user->user_id} OR `user_email` = '{$this->user->email}') {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-        $paginator = (new \Altum\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('teams-member?' . $filters->get_get() . 'page=%d')));
+        $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('teams-member?' . $filters->get_get() . 'page=%d')));
 
         /* Get the teams list for the user */
         $teams_member = [];
@@ -55,7 +55,7 @@ class TeamsMember extends Controller {
         process_export_csv($teams_member, 'include', ['team_member_id', 'team_id', 'user_id', 'name', 'status', 'datetime', 'last_datetime']);
 
         /* Prepare the pagination view */
-        $pagination = (new \Altum\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
+        $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
         /* Prepare the view */
         $data = [
@@ -66,14 +66,14 @@ class TeamsMember extends Controller {
             'teams_access' => require APP_PATH . 'includes/teams_access.php',
         ];
 
-        $view = new \Altum\View('teams-member/index', (array) $this);
+        $view = new \SeeGap\View('teams-member/index', (array) $this);
 
         $this->add_view_content('content', $view->run($data));
 
     }
 
     public function delete() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(empty($_POST)) {
             redirect('teams');
@@ -81,9 +81,9 @@ class TeamsMember extends Controller {
 
         $team_id = (int) query_clean($_POST['team_id']);
 
-        //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
-        if(!\Altum\Csrf::check()) {
+        if(!\SeeGap\Csrf::check()) {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             redirect('teams');
         }

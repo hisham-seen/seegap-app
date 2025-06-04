@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum;
+namespace SeeGap;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Captcha {
 
@@ -89,15 +89,15 @@ class Captcha {
             }
             </style>';
             echo '<div class="d-flex justify-content-center">';
-            echo '<div class="g-recaptcha" data-size="' . $data_size . '" data-sitekey="' . settings()->captcha->recaptcha_public_key . '" data-theme="' . \Altum\ThemeStyle::get() . '"></div>';
-            echo '<input type="hidden" name="captcha" class="form-control ' . (\Altum\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '">';
-            echo \Altum\Alerts::output_field_error('captcha');
+            echo '<div class="g-recaptcha" data-size="' . $data_size . '" data-sitekey="' . settings()->captcha->recaptcha_public_key . '" data-theme="' . \SeeGap\ThemeStyle::get() . '"></div>';
+            echo '<input type="hidden" name="captcha" class="form-control ' . (\SeeGap\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '">';
+            echo \SeeGap\Alerts::output_field_error('captcha');
             echo '</div>';
 
-            if(!\Altum\Event::exists_content_type_key('javascript', 'captcha')) {
+            if(!\SeeGap\Event::exists_content_type_key('javascript', 'captcha')) {
                 ob_start();
                 echo '<script src="https://www.google.com/recaptcha/api.js?hl=' . Language::$code . '" async defer></script>';
-                \Altum\Event::add_content(ob_get_clean(), 'javascript', 'captcha');
+                \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'captcha');
             }
         }
 
@@ -111,35 +111,35 @@ class Captcha {
             }
             </style>';
             echo '<div class="d-flex justify-content-center">';
-            echo '<div class="h-captcha" data-size="' . $data_size . '" data-sitekey="' . settings()->captcha->hcaptcha_site_key . '" data-theme="' . \Altum\ThemeStyle::get() . '"></div>';
-            echo '<input type="hidden" name="captcha" class="form-control ' . (\Altum\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '">';
-            echo \Altum\Alerts::output_field_error('captcha');
+            echo '<div class="h-captcha" data-size="' . $data_size . '" data-sitekey="' . settings()->captcha->hcaptcha_site_key . '" data-theme="' . \SeeGap\ThemeStyle::get() . '"></div>';
+            echo '<input type="hidden" name="captcha" class="form-control ' . (\SeeGap\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '">';
+            echo \SeeGap\Alerts::output_field_error('captcha');
             echo '</div>';
 
-            if(!\Altum\Event::exists_content_type_key('javascript', 'captcha')) {
+            if(!\SeeGap\Event::exists_content_type_key('javascript', 'captcha')) {
                 ob_start();
                 echo '<script src="https://hcaptcha.com/1/api.js?hl=' . Language::$code . '" async defer></script>';
-                \Altum\Event::add_content(ob_get_clean(), 'javascript', 'captcha');
+                \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'captcha');
             }
         }
 
         else if(settings()->captcha->type == 'turnstile' && settings()->captcha->turnstile_site_key && settings()->captcha->turnstile_secret_key) {
-            echo '<div class="cf-turnstile d-flex justify-content-center" data-size="' . $data_size . '" data-sitekey="' . settings()->captcha->turnstile_site_key . '" data-theme="' . \Altum\ThemeStyle::get() . '"></div>';
-            echo '<input type="hidden" name="captcha" class="form-control ' . (\Altum\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '">';
-            echo \Altum\Alerts::output_field_error('captcha');
+            echo '<div class="cf-turnstile d-flex justify-content-center" data-size="' . $data_size . '" data-sitekey="' . settings()->captcha->turnstile_site_key . '" data-theme="' . \SeeGap\ThemeStyle::get() . '"></div>';
+            echo '<input type="hidden" name="captcha" class="form-control ' . (\SeeGap\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '">';
+            echo \SeeGap\Alerts::output_field_error('captcha');
 
-            if(!\Altum\Event::exists_content_type_key('javascript', 'captcha')) {
+            if(!\SeeGap\Event::exists_content_type_key('javascript', 'captcha')) {
                 ob_start();
                 echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?hl=' . Language::$code . '" async defer></script>';
-                \Altum\Event::add_content(ob_get_clean(), 'javascript', 'captcha');
+                \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'captcha');
             }
         }
 
         else {
             echo '
             <img src="data:image/png;base64,' . base64_encode($this->create_simple_captcha()) . '" class="mb-2 rounded" id="captcha" alt="' . l('global.accessibility.captcha_alt') . '" />
-            <input type="text" name="captcha" class="form-control ' . (\Altum\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '" placeholder="' . l('global.captcha_placeholder') . '" aria-label="' . l('global.accessibility.captcha_input') . '" required="required" autocomplete="off" />
-            ' . \Altum\Alerts::output_field_error('captcha') . '
+            <input type="text" name="captcha" class="form-control ' . (\SeeGap\Alerts::has_field_errors('captcha') ? 'is-invalid' : null) . '" placeholder="' . l('global.captcha_placeholder') . '" aria-label="' . l('global.accessibility.captcha_input') . '" required="required" autocomplete="off" />
+            ' . \SeeGap\Alerts::output_field_error('captcha') . '
             ';
         }
 

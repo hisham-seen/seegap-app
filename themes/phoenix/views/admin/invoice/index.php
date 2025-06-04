@@ -1,6 +1,6 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="d-print-none d-flex justify-content-between mb-5">
     <a href="<?= url('admin/payments') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-sm fa-arrow-left mr-1"></i> <?= l('admin_payments.menu') ?></a>
@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-12 col-md-7 mb-4 mb-md-0">
                         <?php if(settings()->main->{'logo_light'}): ?>
-                            <img src="<?= \Altum\Uploads::get_full_url('logo_light') . settings()->main->{'logo_light'} ?>" class="img-fluid navbar-logo invoice-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
+                            <img src="<?= \SeeGap\Uploads::get_full_url('logo_light') . settings()->main->{'logo_light'} ?>" class="img-fluid navbar-logo invoice-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
                         <?php else: ?>
                             <h1 class="h3"><?= $data->payment->business->brand_name ?? settings()->business->brand_name ?></h1>
                         <?php endif ?>
@@ -30,7 +30,7 @@
                             </tr>
                             <tr>
                                 <td class="font-weight-bold text-muted pr-3"><?= l('invoice.invoice_date') ?>:</td>
-                                <td><?= \Altum\Date::get($data->payment->datetime, 1) ?></td>
+                                <td><?= \SeeGap\Date::get($data->payment->datetime, 1) ?></td>
                             </tr>
                             </tbody>
                         </table>

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <p class="text-muted"><?= l('admin_settings.health.help') ?></p>
 

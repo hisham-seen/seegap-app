@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
     <h1 class="h3 mb-3 mb-md-0"><i class="fas fa-fw fa-chart-bar text-primary-900 mr-2"></i> <?= l('admin_reports.header') ?></h1>
@@ -56,7 +56,7 @@
                         <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                         <?php if($data->filters->has_applied_filters): ?>
-                            <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                            <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                         <?php endif ?>
                     </div>
 
@@ -127,7 +127,7 @@
     </div>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="table-responsive table-custom-container">
     <table class="table table-custom">
@@ -199,8 +199,8 @@
                 </td>
 
                 <td class="text-nowrap text-muted">
-                    <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
-                        <?= \Altum\Date::get($row->datetime, 2) ?>
+                    <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>">
+                        <?= \SeeGap\Date::get($row->datetime, 2) ?>
                     </span>
                 </td>
 
@@ -245,7 +245,7 @@
 <?php require THEME_PATH . 'views/admin/reports/report_update_modal.php' ?>
 <?php require THEME_PATH . 'views/admin/reports/report_delete_modal.php' ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php', ['name' => 'reports', 'resource_id' => 'report_id', 'has_dynamic_resource_name' => true]), 'modals') ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php', ['name' => 'reports', 'resource_id' => 'report_id', 'has_dynamic_resource_name' => true]), 'modals') ?>
 
 <?php ob_start() ?>
 <script>
@@ -282,4 +282,4 @@
         $(event.currentTarget).find('#delete_modal_name').html(report_name);
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

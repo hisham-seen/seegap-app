@@ -7,25 +7,25 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Alerts;
-use Altum\Models\User;
+use SeeGap\Alerts;
+use SeeGap\Models\User;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class AccountDelete extends Controller {
 
     public function index() {
 
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
         if(!empty($_POST)) {
 
-            //ALTUMCODE:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+            //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Check for any errors */
-            if(!\Altum\Csrf::check()) {
+            if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
 
@@ -76,7 +76,7 @@ class AccountDelete extends Controller {
 //                }
 
                 /* Logout of the user */
-                \Altum\Authentication::logout(false);
+                \SeeGap\Authentication::logout(false);
 
                 /* Start a new session to set a deletion message */
                 session_start();
@@ -91,11 +91,11 @@ class AccountDelete extends Controller {
         }
 
         /* Get the account header menu */
-        $menu = new \Altum\View('partials/account_header_menu', (array) $this);
+        $menu = new \SeeGap\View('partials/account_header_menu', (array) $this);
         $this->add_view_content('account_header_menu', $menu->run());
 
         /* Prepare the view */
-        $view = new \Altum\View('account-delete/index', (array) $this);
+        $view = new \SeeGap\View('account-delete/index', (array) $this);
 
         $this->add_view_content('content', $view->run([]));
 

@@ -7,9 +7,9 @@
  *
  */
 
-namespace Altum\Models;
+namespace SeeGap\Models;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class QrCode extends Model {
 
@@ -20,7 +20,7 @@ class QrCode extends Model {
         }
 
         foreach(['qr_code', 'qr_code_logo', 'qr_code_background', 'qr_code_foreground'] as $image_key) {
-            \Altum\Uploads::delete_uploaded_file($qr_code->{$image_key} ?? '', $image_key);
+            \SeeGap\Uploads::delete_uploaded_file($qr_code->{$image_key} ?? '', $image_key);
         }
 
         /* Delete from database */

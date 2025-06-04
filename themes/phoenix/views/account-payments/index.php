@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <?= $this->views['account_header_menu'] ?>
 
@@ -48,7 +48,7 @@
                                 <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                                 <?php if($data->filters->has_applied_filters): ?>
-                                    <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                    <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                                 <?php endif ?>
                             </div>
 
@@ -140,7 +140,7 @@
                     <tr>
                         <td class="text-nowrap">
                             <div class="d-flex flex-column">
-                                <span><?= $row->translations->{\Altum\Language::$name}->name ?? $row->plan_name ?></span>
+                                <span><?= $row->translations->{\SeeGap\Language::$name}->name ?? $row->plan_name ?></span>
                                 <span class="text-muted"><?= l('pay.custom_plan.' . $row->type . '_type') ?></span>
                             </div>
                         </td>
@@ -157,7 +157,7 @@
                         </td>
 
                         <td class="text-nowrap">
-                            <span class="" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                            <span class="" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                                 <i class="fas fa-fw fa-calendar text-muted"></i>
                             </span>
                         </td>

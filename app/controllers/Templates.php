@@ -7,24 +7,24 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Templates extends Controller {
 
     public function index() {
-        \Altum\Authentication::guard();
+        \SeeGap\Authentication::guard();
 
-        if(!\Altum\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
+        if(!\SeeGap\Plugin::is_active('aix') || !settings()->aix->documents_is_enabled) {
             redirect('not-found');
         }
 
         /* Get available templates categories */
-        $templates_categories = (new \Altum\Models\TemplatesCategories())->get_templates_categories();
+        $templates_categories = (new \SeeGap\Models\TemplatesCategories())->get_templates_categories();
 
         /* Templates */
-        $templates = (new \Altum\Models\Templates())->get_templates();
+        $templates = (new \SeeGap\Models\Templates())->get_templates();
 
         /* Prepare the view */
         $data = [
@@ -32,7 +32,7 @@ class Templates extends Controller {
             'templates_categories' => $templates_categories,
         ];
 
-        $view = new \Altum\View(\Altum\Plugin::get('aix')->path . 'views/templates/index', (array) $this, true);
+        $view = new \SeeGap\View(\SeeGap\Plugin::get('aix')->path . 'views/templates/index', (array) $this, true);
 
         $this->add_view_content('content', $view->run($data));
     }

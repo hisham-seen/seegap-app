@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <section class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg d-flex align-items-center mb-3 mb-lg-0 text-truncate">
@@ -58,7 +58,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
@@ -161,10 +161,10 @@
 
     <?php if(count($data->qr_codes)): ?>
         <form id="table" action="<?= SITE_URL . 'qr-codes/bulk' ?>" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
             <input type="hidden" name="type" value="" data-bulk-type />
-            <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
-            <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
+            <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
+            <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
             <div class="table-responsive table-custom-container">
                 <table class="table table-custom">
@@ -200,12 +200,12 @@
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3" data-toggle="tooltip" title="<?= l('global.download') ?>">
                                         <?php if($row->qr_code): ?>
-                                            <a href="<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>" download="<?= $row->name . '.svg' ?>" target="_blank">
-                                                <img src="<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>" class="qr-code-avatar" loading="lazy" />
+                                            <a href="<?= \SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code ?>" download="<?= $row->name . '.svg' ?>" target="_blank">
+                                                <img src="<?= \SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code ?>" class="qr-code-avatar" loading="lazy" />
                                             </a>
                                         <?php else: ?>
                                             <div class="qr-code-avatar d-flex align-items-center justify-content-center bg-light border">
-                                                <img src="<?= settings()->codes->qr_codes_default_image ? \Altum\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg' ?>" class="qr-code-avatar" loading="lazy" />
+                                                <img src="<?= settings()->codes->qr_codes_default_image ? \SeeGap\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg' ?>" class="qr-code-avatar" loading="lazy" />
                                             </div>
                                         <?php endif ?>
                                     </div>
@@ -250,15 +250,15 @@
                             <?php endif ?>
 
                             <td class="text-nowrap text-muted">
-                                <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->datetime, 1) ?>">
-                                    <?= \Altum\Date::get($row->datetime, 2) ?>
+                                <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->datetime, 1) ?>">
+                                    <?= \SeeGap\Date::get($row->datetime, 2) ?>
                                 </span>
                             </td>
 
                             <td class="text-nowrap text-muted">
                                 <?php if($row->last_datetime): ?>
-                                    <span data-toggle="tooltip" title="<?= \Altum\Date::get($row->last_datetime, 1) ?>">
-                                        <?= \Altum\Date::get($row->last_datetime, 2) ?>
+                                    <span data-toggle="tooltip" title="<?= \SeeGap\Date::get($row->last_datetime, 1) ?>">
+                                        <?= \SeeGap\Date::get($row->last_datetime, 2) ?>
                                     </span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
@@ -278,10 +278,10 @@
                                         </a>
 
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a href="<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>" class="dropdown-item" download="<?= get_slug($row->name) . '.svg' ?>"><?= sprintf(l('global.download_as'), 'SVG') ?></a>
-                                            <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'png', '<?= get_slug($row->name) . '.png' ?>');"><?= sprintf(l('global.download_as'), 'PNG') ?></button>
-                                            <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'jpg', '<?= get_slug($row->name) . '.jpg' ?>');"><?= sprintf(l('global.download_as'), 'JPG') ?></button>
-                                            <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \Altum\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'webp', '<?= get_slug($row->name) . '.webp' ?>');"><?= sprintf(l('global.download_as'), 'WEBP') ?></button>
+                                            <a href="<?= \SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code ?>" class="dropdown-item" download="<?= get_slug($row->name) . '.svg' ?>"><?= sprintf(l('global.download_as'), 'SVG') ?></a>
+                                            <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'png', '<?= get_slug($row->name) . '.png' ?>');"><?= sprintf(l('global.download_as'), 'PNG') ?></button>
+                                            <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'jpg', '<?= get_slug($row->name) . '.jpg' ?>');"><?= sprintf(l('global.download_as'), 'JPG') ?></button>
+                                            <button type="button" class="dropdown-item" onclick="convert_svg_qr_code_to_others('<?= \SeeGap\Uploads::get_full_url('qr_code') . $row->qr_code ?>', 'webp', '<?= get_slug($row->name) . '.webp' ?>');"><?= sprintf(l('global.download_as'), 'WEBP') ?></button>
                                         </div>
                                     </div>
 
@@ -316,16 +316,16 @@
 
 </section>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
     'name' => 'qr_code',
     'resource_id' => 'qr_code_id',
     'has_dynamic_resource_name' => true,
     'path' => 'qr-codes/delete'
 ]), 'modals') ?>
 
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'qr_code_duplicate_modal', 'resource_id' => 'qr_code_id', 'path' => 'qr-codes/duplicate']), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'qr_code_duplicate_modal', 'resource_id' => 'qr_code_id', 'path' => 'qr-codes/duplicate']), 'modals'); ?>
 
 <?php require THEME_PATH . 'views/qr-codes/js_qr_codes.php' ?>
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_download_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_download_modal.php'), 'modals'); ?>

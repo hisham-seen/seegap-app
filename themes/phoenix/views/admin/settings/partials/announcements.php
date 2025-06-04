@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div>
     <ul class="nav nav-pills d-flex flex-fill flex-column flex-lg-row mb-3" role="tablist">
@@ -36,7 +36,7 @@
 
             <div class="collapse" id="guests_content_translate_container">
                 <div class="p-3 bg-gray-50 rounded mb-4">
-                    <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                    <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                         <div class="form-group">
                             <label for="<?= 'translation_' . $language_name . '_guests_content' ?>"><i class="fas fa-fw fa-sm fa-bullhorn text-muted mr-1"></i> <?= l('admin_settings.announcements.content') ?> - <?= $language_name ?></label>
                             <textarea id="<?= 'translation_' . $language_name . '_guests_content' ?>" name="<?= 'translations[' . $language_name . '][guests_content]' ?>" class="form-control"><?= settings()->announcements->translations->{$language_name}->guests_content ?? null ?></textarea>
@@ -75,7 +75,7 @@
 
             <div class="collapse" id="users_content_translate_container">
                 <div class="p-3 bg-gray-50 rounded mb-4">
-                    <?php foreach(\Altum\Language::$active_languages as $language_name => $language_code): ?>
+                    <?php foreach(\SeeGap\Language::$active_languages as $language_name => $language_code): ?>
                         <div class="form-group">
                             <label for="<?= 'translation_' . $language_name . '_users_content' ?>"><i class="fas fa-fw fa-sm fa-bullhorn text-muted mr-1"></i> <?= l('admin_settings.announcements.content') ?> - <?= $language_name ?></label>
                             <textarea id="<?= 'translation_' . $language_name . '_users_content' ?>" name="<?= 'translations[' . $language_name . '][users_content]' ?>" class="form-control"><?= settings()->announcements->translations->{$language_name}->users_content ?? null ?></textarea>

@@ -7,10 +7,10 @@
  *
  */
 
-namespace Altum\PaymentGateways;
+namespace SeeGap\PaymentGateways;
 
 /* Helper class for Paddle */
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class Paddle {
     static public $sandbox_api_url = 'https://sandbox-vendors.paddle.com/api/';

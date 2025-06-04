@@ -1,14 +1,14 @@
 <?php
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return (object) [
     'plugin_id' => 'dynamic-og-images',
     'name' => 'Dynamic OG images',
     'description' => 'This plugin is used to generate dynamic OG images for a personalized image presentation on social media when sharing your links.',
     'version' => '1.0.0',
-    'url' => 'https://altumco.de/dynamic-og-images-plugin',
-    'author' => 'AltumCode',
-    'author_url' => 'https://altumcode.com/',
+    'url' => 'https://Seegap.com/dynamic-og-images-plugin',
+    'author' => 'SeeGap',
+    'author_url' => 'https://Seegap.com/',
     'status' => 'inexistent',
     'actions'=> true,
     'settings_url' => url('admin/settings/dynamic_og_images'),

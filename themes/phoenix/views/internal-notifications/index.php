@@ -1,7 +1,7 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="container">
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="row mb-4">
         <div class="col-12 col-lg d-flex align-items-center mb-3 mb-lg-0 text-truncate">
@@ -40,7 +40,7 @@
                                     </div>
 
                                     <div>
-                                        <small class="text-muted" data-toggle="tooltip" title="<?= \Altum\Date::get($notification->datetime, 1) ?>"><?= \Altum\Date::get_timeago($notification->datetime) ?></small>
+                                        <small class="text-muted" data-toggle="tooltip" title="<?= \SeeGap\Date::get($notification->datetime, 1) ?>"><?= \SeeGap\Date::get_timeago($notification->datetime) ?></small>
                                     </div>
                                 </div>
                             </div>

@@ -1,51 +1,51 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 <!DOCTYPE html>
-<html lang="<?= \Altum\Language::$code ?>" class="link-html" dir="<?= l('direction') ?>">
+<html lang="<?= \SeeGap\Language::$code ?>" class="link-html" dir="<?= l('direction') ?>">
     <head>
-        <title><?= \Altum\Title::get() ?></title>
+        <title><?= \SeeGap\Title::get() ?></title>
         <base href="<?= SITE_URL; ?>">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-        <?php if(\Altum\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
+        <?php if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
             <?php if($this->user->plan_settings->custom_pwa_is_enabled && $this->link->settings->pwa_is_enabled && !empty($this->link->settings->pwa_file_name)): ?>
-                <link rel="manifest" href="<?= SITE_URL . UPLOADS_URL_PATH . \Altum\Uploads::get_path('pwa') . $this->link->settings->pwa_file_name . '.json' ?>" />
+                <link rel="manifest" href="<?= SITE_URL . UPLOADS_URL_PATH . \SeeGap\Uploads::get_path('pwa') . $this->link->settings->pwa_file_name . '.json' ?>" />
                 <meta name="theme-color" content="<?= $this->link->settings->pwa_theme_color ?>"/>
             <?php else: ?>
-                <link rel="manifest" href="<?= SITE_URL . UPLOADS_URL_PATH . \Altum\Uploads::get_path('pwa') . 'manifest.json' ?>" />
+                <link rel="manifest" href="<?= SITE_URL . UPLOADS_URL_PATH . \SeeGap\Uploads::get_path('pwa') . 'manifest.json' ?>" />
                 <meta name="theme-color" content="<?= settings()->pwa->theme_color ?>"/>
             <?php endif ?>
         <?php endif ?>
 
-        <?php if(\Altum\Meta::$description): ?>
-            <meta name="description" content="<?= \Altum\Meta::$description ?>" />
+        <?php if(\SeeGap\Meta::$description): ?>
+            <meta name="description" content="<?= \SeeGap\Meta::$description ?>" />
         <?php endif ?>
 
-        <?php if(\Altum\Meta::$keywords): ?>
-            <meta name="keywords" content="<?= \Altum\Meta::$keywords ?>" />
+        <?php if(\SeeGap\Meta::$keywords): ?>
+            <meta name="keywords" content="<?= \SeeGap\Meta::$keywords ?>" />
         <?php endif ?>
 
-        <?php \Altum\Meta::output() ?>
+        <?php \SeeGap\Meta::output() ?>
 
-        <?php if(\Altum\Meta::$canonical): ?>
-            <link rel="canonical" href="<?= \Altum\Meta::$canonical ?>" />
+        <?php if(\SeeGap\Meta::$canonical): ?>
+            <link rel="canonical" href="<?= \SeeGap\Meta::$canonical ?>" />
         <?php endif ?>
 
         <?php
         /* Block search engine indexing if the user wants, and if the system viewing links (for preview) are used */
-        if($this->link->settings->seo->block ?? null || \Altum\Router::$original_request == 'l/link'):
+        if($this->link->settings->seo->block ?? null || \SeeGap\Router::$original_request == 'l/link'):
         ?>
             <meta name="robots" content="noindex">
         <?php endif ?>
 
         <?php if(!empty($this->link->settings->favicon)): ?>
-            <link href="<?= \Altum\Uploads::get_full_url('favicons') . $this->link->settings->favicon ?>" rel="icon" />
+            <link href="<?= \SeeGap\Uploads::get_full_url('favicons') . $this->link->settings->favicon ?>" rel="icon" />
         <?php elseif(!empty(settings()->main->favicon)): ?>
             <link href="<?= settings()->main->favicon_full_url ?>" rel="icon" />
         <?php endif ?>
 
-        <?php \Altum\ThemeStyle::$theme = 'light' ?>
-        <link href="<?= ASSETS_FULL_URL . 'css/' . \Altum\ThemeStyle::get_file() . '?v=' . PRODUCT_CODE ?>" id="css_theme_style" rel="stylesheet" media="screen,print">
+        <?php \SeeGap\ThemeStyle::$theme = 'light' ?>
+        <link href="<?= ASSETS_FULL_URL . 'css/' . \SeeGap\ThemeStyle::get_file() . '?v=' . PRODUCT_CODE ?>" id="css_theme_style" rel="stylesheet" media="screen,print">
         <?php foreach(['custom.css', 'link-custom.css', 'animate.min.css'] as $file): ?>
             <link href="<?= ASSETS_FULL_URL . 'css/' . $file . '?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
         <?php endforeach ?>
@@ -67,7 +67,7 @@
             }
         </style>
 
-        <?= \Altum\Event::get_content('head') ?>
+        <?= \SeeGap\Event::get_content('head') ?>
 
         <?php if(is_logged_in() && !user()->plan_settings->export->pdf): ?>
             <style>@media print { body { display: none; } }</style>
@@ -104,11 +104,11 @@
         <?php endif ?>
 
         <?php if(
-                \Altum\Plugin::is_active('pwa')
+                \SeeGap\Plugin::is_active('pwa')
                 && settings()->pwa->is_enabled
                 && $this->link->settings->pwa_is_enabled
                 && $this->link->settings->pwa_display_install_bar
-        ) echo include_view(\Altum\Plugin::get('pwa')->path . 'views/partials/pwa_custom.php', [
+        ) echo include_view(\SeeGap\Plugin::get('pwa')->path . 'views/partials/pwa_custom.php', [
             'id' => md5($this->link->link_id),
             'display_delay' => $this->link->settings->pwa_display_install_bar_delay
         ]) ?>
@@ -126,7 +126,7 @@
         <script src="<?= ASSETS_FULL_URL ?>js/<?= $file ?>?v=<?= PRODUCT_CODE ?>" defer></script>
     <?php endforeach ?>
 
-    <?= \Altum\Event::get_content('javascript') ?>
+    <?= \SeeGap\Event::get_content('javascript') ?>
 
     <?php if((!$this->is_preview || !$this->microsite_theme) && !empty($this->link->additional->custom_js)): ?>
         <?= $this->link->additional->custom_js ?>

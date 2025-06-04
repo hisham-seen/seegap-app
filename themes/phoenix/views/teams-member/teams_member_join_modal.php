@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="teams_member_join_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -16,7 +16,7 @@
                 </div>
 
                 <form name="teams_member_join_modal" method="post" action="<?= url('teams-members/join') ?>" role="form">
-                    <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" required="required" />
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="team_member_id" value="" />
 
                     <p class="text-muted"><?= l('teams_member_join_modal.subheader') ?></p>
@@ -42,4 +42,4 @@
         $(event.currentTarget).find('input[name="team_member_id"]').val(team_member_id);
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

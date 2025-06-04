@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php ob_start() ?>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/clipboard.min.js?v=' . PRODUCT_CODE ?>"></script>
@@ -20,4 +20,4 @@
         }, 500);
     });
 </script>
-<?php \Altum\Event::add_content(ob_get_clean(), 'javascript', 'clipboard_js') ?>
+<?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'clipboard_js') ?>

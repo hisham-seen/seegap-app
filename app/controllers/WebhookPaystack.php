@@ -7,12 +7,12 @@
  *
  */
 
-namespace Altum\Controllers;
+namespace SeeGap\Controllers;
 
-use Altum\Models\Payments;
-use Altum\PaymentGateways\Paystack;
+use SeeGap\Models\Payments;
+use SeeGap\PaymentGateways\Paystack;
 
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 class WebhookPaystack extends Controller {
 

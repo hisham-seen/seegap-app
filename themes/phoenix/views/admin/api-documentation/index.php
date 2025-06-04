@@ -1,10 +1,10 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <div class="mb-4">
     <h1 class="h3 m-0"><i class="fas fa-fw fa-xs fa-code text-primary-900 mr-2"></i> <?= sprintf(l('admin_api_documentation.header')) ?></h1>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
 <div class="card mb-5">
     <div class="card-body">

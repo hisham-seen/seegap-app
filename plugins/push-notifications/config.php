@@ -1,14 +1,14 @@
 <?php
-defined('ALTUMCODE') || die();
+defined('SEEGAP') || die();
 
 return (object) [
     'plugin_id' => 'push-notifications',
     'name' => 'Push Notifications system',
     'description' => 'The plugin gives you the ability to send push subscribers notifications with ease.',
     'version' => '2.0.0',
-    'url' => 'https://altumco.de/push-notifications-plugin',
-    'author' => 'AltumCode',
-    'author_url' => 'https://altumcode.com/',
+    'url' => 'https://Seegap.com/push-notifications-plugin',
+    'author' => 'SeeGap',
+    'author_url' => 'https://Seegap.com/',
     'status' => 'inexistent',
     'actions'=> true,
     'settings_url' => url('admin/settings/push-notifications'),

@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(count($data->push_subscribers) || $data->filters->has_applied_filters): ?>
 
@@ -37,7 +37,7 @@
                             <span class="h6 m-0"><?= l('global.filters.header') ?></span>
 
                             <?php if($data->filters->has_applied_filters): ?>
-                                <a href="<?= url(\Altum\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
+                                <a href="<?= url(\SeeGap\Router::$original_request) ?>" class="text-muted"><?= l('global.filters.reset') ?></a>
                             <?php endif ?>
                         </div>
 
@@ -143,13 +143,13 @@
         </div>
     </div>
 
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <form id="table" action="<?= SITE_URL . 'admin/push-subscribers/bulk' ?>" method="post" role="form">
-        <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+        <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
         <input type="hidden" name="type" value="" data-bulk-type />
-    <input type="hidden" name="original_request" value="<?= base64_encode(\Altum\Router::$original_request) ?>" />
-    <input type="hidden" name="original_request_query" value="<?= base64_encode(\Altum\Router::$original_request_query) ?>" />
+    <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
+    <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
         <div class="table-responsive table-custom-container">
             <table class="table table-custom">
@@ -170,7 +170,7 @@
                 </thead>
                 <tbody>
                 <?php foreach($data->push_subscribers as $row): ?>
-                    <?php //ALTUMCODE:DEMO if(DEMO) {$row->user_email = 'hidden@demo.com'; $row->user_name = $row->ip = 'hidden on demo';} ?>
+                    <?php //SEEGAP:DEMO if(DEMO) {$row->user_email = 'hidden@demo.com'; $row->user_name = $row->ip = 'hidden on demo';} ?>
 
                     <tr>
                         <td data-bulk-table class="d-none">
@@ -223,7 +223,7 @@
 
                         <td class="text-nowrap">
                             <div class="d-flex align-items-center">
-                                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \Altum\Date::get($row->datetime, 2) . '<br /><small>' . \Altum\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \Altum\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                                <span class="mr-2" data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
                                     <i class="fas fa-fw fa-calendar text-muted"></i>
                                 </span>
 
@@ -264,7 +264,7 @@
 
 <?php else: ?>
 
-    <?= \Altum\Alerts::output_alerts() ?>
+    <?= \SeeGap\Alerts::output_alerts() ?>
 
     <div class="card">
         <div class="card-body">
@@ -284,4 +284,4 @@
 <?php endif ?>
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
-<?php \Altum\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>

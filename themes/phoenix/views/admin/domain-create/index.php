@@ -1,4 +1,4 @@
-<?php defined('ALTUMCODE') || die() ?>
+<?php defined('SEEGAP') || die() ?>
 
 <?php if(settings()->main->breadcrumbs_is_enabled): ?>
 <nav aria-label="breadcrumb">
@@ -22,13 +22,13 @@
     </div>
 </div>
 
-<?= \Altum\Alerts::output_alerts() ?>
+<?= \SeeGap\Alerts::output_alerts() ?>
 
-<div class="card <?= \Altum\Alerts::has_field_errors() ? 'border-danger' : null ?>">
+<div class="card <?= \SeeGap\Alerts::has_field_errors() ? 'border-danger' : null ?>">
     <div class="card-body">
 
         <form action="" method="post" role="form">
-            <input type="hidden" name="token" value="<?= \Altum\Csrf::get() ?>" />
+            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
             <div class="form-group">
                 <label for="host"><i class="fas fa-fw fa-globe fa-sm text-muted mr-1"></i> <?= l('admin_domains.host') ?></label>
@@ -39,8 +39,8 @@
                             <option value="http://">http://</option>
                         </select>
                     </div>
-                    <input id="host" type="text" name="host" class="form-control <?= \Altum\Alerts::has_field_errors('host') ? 'is-invalid' : null ?>" placeholder="<?= l('admin_domains.host_placeholder') ?>" required="required" />
-                    <?= \Altum\Alerts::output_field_error('host') ?>
+                    <input id="host" type="text" name="host" class="form-control <?= \SeeGap\Alerts::has_field_errors('host') ? 'is-invalid' : null ?>" placeholder="<?= l('admin_domains.host_placeholder') ?>" required="required" />
+                    <?= \SeeGap\Alerts::output_field_error('host') ?>
                 </div>
                 <small class="form-text text-muted"><?= l('admin_domains.host_help') ?></small>
             </div>
