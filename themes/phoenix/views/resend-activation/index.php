@@ -2,10 +2,10 @@
 
 <?= \SeeGap\Alerts::output_alerts() ?>
 
-<h1 class="h5"><?= l('resend_activation.header') ?></h1>
-<p class="text-muted"><?= l('resend_activation.subheader') ?></p>
+<h1 class="h5 mb-2"><?= l('resend_activation.header') ?></h1>
+<p class="text-muted mb-3"><?= l('resend_activation.subheader') ?></p>
 
-<form action="" method="post" class="mt-4" role="form">
+<form action="" method="post" class="mt-3" role="form">
     <div class="form-group">
         <label for="email"><?= l('global.email') ?></label>
         <input id="email" type="email" name="email" class="form-control <?= \SeeGap\Alerts::has_field_errors('email') ? 'is-invalid' : null ?>" value="<?= $data->values['email'] ?>" required="required" autofocus="autofocus" />

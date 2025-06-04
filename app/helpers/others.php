@@ -10,38 +10,21 @@
 defined('SEEGAP') || die();
 
 function output_alert($type, $message, $icon = true, $dismissable = true) {
-
-    switch($type) {
-        case 'error':
-            $alert_type = 'danger';
-            $icon = $icon ? '<i class="fas fa-fw fa-times-circle text-' . $alert_type . ' mr-2"></i>' : null;
-            break;
-
-        case 'success':
-            $alert_type = 'success';
-            $icon = $icon ? '<i class="fas fa-fw fa-check-circle text-' . $alert_type . ' mr-2"></i>' : null;
-            break;
-
-        case 'info':
-            $alert_type = 'info';
-            $icon = $icon ? '<i class="fas fa-fw fa-info-circle text-' . $alert_type . ' mr-2"></i>' : null;
-            break;
-
-        case 'warning':
-            $alert_type = 'warning';
-            $icon = $icon ? '<i class="fas fa-fw fa-triangle-exclamation text-' . $alert_type . ' mr-2"></i>' : null;
-            break;
-    }
-
-    $dismiss_button = $dismissable ? '<button type="button" class="close ml-2" data-dismiss="alert"><i class="fas fa-fw fa-sm fa-times text-' . $alert_type . '"></i></button>' : null;
-
-    return '
-        <div class="alert alert-' . $alert_type . ' seegap-animate seegap-animate-fill-both seegap-animate-fade-in">
-            ' . $icon . '
-            ' . $dismiss_button . '
-            ' . $message . '
-        </div>
-    ';
+    // Convert alert type to toast type
+    $toast_type = $type === 'error' ? 'error' : $type;
+    
+    // Escape the message for JavaScript
+    $escaped_message = addslashes(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
+    
+    // Generate JavaScript to show toast
+    $toast_script = "
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showToast('" . $toast_type . "', '" . $escaped_message . "');
+    });
+    </script>";
+    
+    return $toast_script;
 }
 
 /* Aws functions */

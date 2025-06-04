@@ -105,6 +105,9 @@
 
         <?= \SeeGap\Event::get_content('modals') ?>
 
+        <!-- Toast Container -->
+        <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
+
         <?php require THEME_PATH . 'views/partials/js_global_variables.php' ?>
 
         <?php foreach(['libraries/jquery.min.js', 'libraries/popper.min.js', 'libraries/bootstrap.min.js', 'custom.js'] as $file): ?>

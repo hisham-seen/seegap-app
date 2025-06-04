@@ -151,7 +151,7 @@
                     </li>
                 <?php endif ?>
 
-                <?php if(settings()->links->projects_is_enabled): ?>
+                <?php if(isset(settings()->links->projects_is_enabled) && settings()->links->projects_is_enabled): ?>
                 <li class="<?= in_array(\SeeGap\Router::$controller, ['Projects', 'ProjectUpdate', 'ProjectCreate']) ? 'active' : null ?>">
                     <a href="<?= url('projects') ?>"><i class="fas fa-fw fa-sm fa-project-diagram mr-2"></i> <?= l('projects.menu') ?></a>
                 </li>

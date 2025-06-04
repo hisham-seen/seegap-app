@@ -14,7 +14,7 @@ defined('SEEGAP') || die();
 class Projects extends Model {
 
     public function get_projects_by_user_id($user_id) {
-        if(!settings()->links->projects_is_enabled) return [];
+        if(!isset(settings()->links->projects_is_enabled) || !settings()->links->projects_is_enabled) return [];
 
         /* Get the user projects */
         $projects = [];

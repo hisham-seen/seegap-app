@@ -344,4 +344,19 @@ class Gs1Link extends Model {
         $checksum = (10 - ($sum % 10)) % 10;
         return $checksum === (int) $gtin[13];
     }
+
+    /**
+     * Delete method wrapper for backward compatibility
+     * This method provides the expected interface that controllers use
+     */
+    public function delete($gs1_link_id) {
+        // Get the user_id for the gs1_link to ensure proper authorization
+        $gs1_link = database()->query("SELECT user_id FROM gs1_links WHERE gs1_link_id = {$gs1_link_id}")->fetch_object();
+        
+        if (!$gs1_link) {
+            return false;
+        }
+        
+        return $this->delete_gs1_link($gs1_link_id, $gs1_link->user_id);
+    }
 }

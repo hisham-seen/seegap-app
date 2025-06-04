@@ -73,9 +73,6 @@ class Gs1Links extends Controller {
         /* Prepare the pagination view */
         $pagination = (new \SeeGap\View('partials/pagination', (array) $this))->run(['paginator' => $paginator]);
 
-        /* Delete Modal */
-        $view = new \SeeGap\View('gs1-links/gs1_link_delete_modal', (array) $this);
-        \SeeGap\Event::add_content($view->run(), 'modals');
 
         /* Existing projects */
         $projects = (new \SeeGap\Models\Projects())->get_projects_by_user_id($this->user->user_id);

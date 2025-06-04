@@ -73,7 +73,7 @@
     <?php endif ?>
 
     <?php //SEEGAP:DEMO if(DEMO) echo include_view(THEME_PATH . 'views/partials/ac_banner.php', ['demo_url' => 'https://66microsites.com/demo/', 'product_name' => PRODUCT_NAME, 'product_url' => PRODUCT_URL]) ?>
-    <?php if(settings()->main->admin_spotlight_is_enabled || settings()->main->user_spotlight_is_enabled) require THEME_PATH . 'views/partials/spotlight.php' ?>
+    <?php if((isset(settings()->main->admin_spotlight_is_enabled) && settings()->main->admin_spotlight_is_enabled) || (isset(settings()->main->user_spotlight_is_enabled) && settings()->main->user_spotlight_is_enabled)) require THEME_PATH . 'views/partials/spotlight.php' ?>
     <?php if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled && settings()->pwa->display_install_bar) require \SeeGap\Plugin::get('pwa')->path . 'views/partials/pwa.php' ?>
 
     <div id="app_overlay" class="app-overlay" style="display: none"></div>
@@ -113,6 +113,9 @@
     </div>
 
     <?= \SeeGap\Event::get_content('modals') ?>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
 
     <?php require THEME_PATH . 'views/partials/js_global_variables.php' ?>
 

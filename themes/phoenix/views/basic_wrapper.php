@@ -62,7 +62,7 @@
     <?php endif ?>
 </head>
 
-<body class="<?= l('direction') == 'rtl' ? 'rtl' : null ?> bg-gray-50 <?= in_array(\SeeGap\Router::$controller_key, ['login', 'register', 'lost-password', 'resend-activation', 'reset-password', 'not-found']) ? \SeeGap\Router::$controller_key . '-background' : null ?> <?= \SeeGap\ThemeStyle::get() == 'dark' ? 'cc--darkmode' : null ?>" data-theme-style="<?= \SeeGap\ThemeStyle::get() ?>">
+<body class="<?= l('direction') == 'rtl' ? 'rtl' : null ?> <?= in_array(\SeeGap\Router::$controller_key, ['login', 'register', 'lost-password', 'resend-activation', 'reset-password', 'not-found']) ? \SeeGap\Router::$controller_key . '-background' : 'bg-gray-50' ?> <?= \SeeGap\ThemeStyle::get() == 'dark' ? 'cc--darkmode' : null ?>" data-theme-style="<?= \SeeGap\ThemeStyle::get() ?>">
 <?php if(!empty(settings()->custom->body_content)): ?>
     <?= settings()->custom->body_content ?>
 <?php endif ?>
@@ -71,8 +71,25 @@
 
 <?php require THEME_PATH . 'views/partials/announcements.php' ?>
 <?php require THEME_PATH . 'views/partials/cookie_consent.php' ?>
-<?php if(settings()->main->admin_spotlight_is_enabled || settings()->main->user_spotlight_is_enabled) require THEME_PATH . 'views/partials/spotlight.php' ?>
+    <?php if((isset(settings()->main->admin_spotlight_is_enabled) && settings()->main->admin_spotlight_is_enabled) || (isset(settings()->main->user_spotlight_is_enabled) && settings()->main->user_spotlight_is_enabled)) require THEME_PATH . 'views/partials/spotlight.php' ?>
 
+<?php if(in_array(\SeeGap\Router::$controller_key, ['login', 'register', 'lost-password', 'resend-activation', 'reset-password'])): ?>
+<main class="seegap-animate seegap-animate-fill-none seegap-animate-fade-in">
+    <div class="container">
+        <div class="mb-5 text-center">
+            <a href="<?= url() ?>" class="text-decoration-none">
+                <?php if(settings()->main->{'logo_' . \SeeGap\ThemeStyle::get()} != ''): ?>
+                    <img src="<?= settings()->main->{'logo_' . \SeeGap\ThemeStyle::get() . '_full_url'} ?>" class="img-fluid navbar-logo" alt="<?= l('global.accessibility.logo_alt') ?>" />
+                <?php else: ?>
+                    <span class="h3"><?= settings()->main->title ?></span>
+                <?php endif ?>
+            </a>
+        </div>
+
+        <?= $this->views['content'] ?>
+    </div>
+</main>
+<?php else: ?>
 <main class="seegap-animate seegap-animate-fill-none seegap-animate-fade-in py-6">
     <div class="container">
         <div class="d-flex flex-column align-items-center">
@@ -98,8 +115,12 @@
         </div>
     </div>
 </main>
+<?php endif ?>
 
 <?= \SeeGap\Event::get_content('modals') ?>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
 
 <?php require THEME_PATH . 'views/partials/js_global_variables.php' ?>
 

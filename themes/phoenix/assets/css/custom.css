@@ -2,6 +2,299 @@ html {
 	scroll-behavior: smooth;
 }
 
+/* Toast Notification System - Colorful & Elegant */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 420px;
+    width: 100%;
+    pointer-events: none;
+}
+
+.toast-notification {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+    position: relative;
+    overflow: hidden;
+    min-height: 80px;
+    border: none;
+}
+
+.toast-notification::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-notification.hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+/* Success Toast - Vibrant Green */
+.toast-notification.success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-left: 5px solid #28a745;
+}
+
+.toast-notification.success::before {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+/* Error Toast - Vibrant Red */
+.toast-notification.error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-left: 5px solid #dc3545;
+}
+
+.toast-notification.error::before {
+    background: linear-gradient(90deg, #dc3545, #e74c3c);
+}
+
+/* Info Toast - Vibrant Blue */
+.toast-notification.info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    border-left: 5px solid #17a2b8;
+}
+
+.toast-notification.info::before {
+    background: linear-gradient(90deg, #17a2b8, #3498db);
+}
+
+/* Warning Toast - Vibrant Orange */
+.toast-notification.warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-left: 5px solid #ffc107;
+}
+
+.toast-notification.warning::before {
+    background: linear-gradient(90deg, #ffc107, #f39c12);
+}
+
+.toast-icon {
+    margin-right: 1rem;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.toast-icon.success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.toast-icon.error {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.toast-icon.info {
+    background: linear-gradient(135deg, #17a2b8, #3498db);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+}
+
+.toast-icon.warning {
+    background: linear-gradient(135deg, #ffc107, #f39c12);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.toast-content {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.toast-content.success {
+    color: #155724;
+}
+
+.toast-content.error {
+    color: #721c24;
+}
+
+.toast-content.info {
+    color: #0c5460;
+}
+
+.toast-content.warning {
+    color: #856404;
+}
+
+.toast-close {
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: 1rem;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.toast-close:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+}
+
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    border-radius: 0 0 1rem 1rem;
+    transition: width linear;
+}
+
+.toast-progress.success {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+.toast-progress.error {
+    background: linear-gradient(90deg, #dc3545, #e74c3c);
+}
+
+.toast-progress.info {
+    background: linear-gradient(90deg, #17a2b8, #3498db);
+}
+
+.toast-progress.warning {
+    background: linear-gradient(90deg, #ffc107, #f39c12);
+}
+
+/* Dark theme support */
+[data-theme-style="dark"] .toast-notification {
+    background: #2d3748;
+    color: #e2e8f0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme-style="dark"] .toast-notification.success {
+    background: linear-gradient(135deg, #2d5a3d 0%, #38a169 20%);
+}
+
+[data-theme-style="dark"] .toast-notification.error {
+    background: linear-gradient(135deg, #5a2d2d 0%, #e53e3e 20%);
+}
+
+[data-theme-style="dark"] .toast-notification.info {
+    background: linear-gradient(135deg, #2d4a5a 0%, #3182ce 20%);
+}
+
+[data-theme-style="dark"] .toast-notification.warning {
+    background: linear-gradient(135deg, #5a4d2d 0%, #d69e2e 20%);
+}
+
+[data-theme-style="dark"] .toast-content {
+    color: #e2e8f0;
+}
+
+[data-theme-style="dark"] .toast-close {
+    color: #a0aec0;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme-style="dark"] .toast-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .toast-notification {
+        margin-bottom: 0.75rem;
+        padding: 1rem 1.25rem;
+        min-height: 70px;
+    }
+    
+    .toast-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1.25rem;
+        margin-right: 0.75rem;
+    }
+    
+    .toast-content {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation keyframes */
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes toastSlideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%) scale(0.8);
+    }
+}
+
+/* Hover pause effect */
+.toast-notification:hover .toast-progress {
+    animation-play-state: paused !important;
+}
+
+.toast-notification:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
 /* Icon Loading Improvements */
 /* Prevent icon flash during loading */
 i[class*="fa-"] {
@@ -2378,174 +2671,60 @@ input[type="range"] {
   margin: 0.5rem 0;
 }
 
-/* Authentication Pages Styling */
+/* Authentication Pages Styling - Minimalistic & Theme Compatible */
+:root {
+  --auth-bg-light: #f8fafc;
+  --auth-bg-dark: #0f172a;
+  --auth-card-bg-light: rgba(255, 255, 255, 0.95);
+  --auth-card-bg-dark: rgba(15, 23, 42, 0.95);
+  --auth-border-light: rgba(226, 232, 240, 0.8);
+  --auth-border-dark: rgba(51, 65, 85, 0.8);
+  --auth-text-light: #334155;
+  --auth-text-dark: #e2e8f0;
+  --auth-input-bg-light: #ffffff;
+  --auth-input-bg-dark: #1e293b;
+  --auth-shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --auth-shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Base Authentication Background */
 .login-background,
 .register-background,
 .lost-password-background,
 .resend-activation-background,
 .reset-password-background {
-  position: relative;
-  background: url('../images/login/login-image.jpeg') no-repeat center center;
-  background-size: cover;
   min-height: 100vh;
+  background: var(--auth-bg-light);
+  transition: background-color 0.3s ease;
 }
 
-.login-background::before,
-.register-background::before,
-.lost-password-background::before,
-.resend-activation-background::before,
-.reset-password-background::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(94, 68, 255, 0.85) 0%, rgba(0, 210, 122, 0.85) 100%);
-  z-index: 0;
+/* Dark theme support */
+[data-theme-style="dark"] .login-background,
+[data-theme-style="dark"] .register-background,
+[data-theme-style="dark"] .lost-password-background,
+[data-theme-style="dark"] .resend-activation-background,
+[data-theme-style="dark"] .reset-password-background {
+  background: var(--auth-bg-dark);
 }
 
-/* Authentication Card */
-.login-background .card,
-.register-background .card,
-.lost-password-background .card,
-.resend-activation-background .card,
-.reset-password-background .card {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.8);
-  border: none;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
+/* System theme support */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background,
+  body[data-theme-style="system"] .register-background,
+  body[data-theme-style="system"] .lost-password-background,
+  body[data-theme-style="system"] .resend-activation-background,
+  body[data-theme-style="system"] .reset-password-background {
+    background: var(--auth-bg-dark);
+  }
 }
 
-.login-background .card:hover,
-.register-background .card:hover,
-.lost-password-background .card:hover,
-.resend-activation-background .card:hover,
-.reset-password-background .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.login-background .card-body,
-.register-background .card-body,
-.lost-password-background .card-body,
-.resend-activation-background .card-body,
-.reset-password-background .card-body {
-  padding: 2.5rem !important;
-}
-
-/* Authentication Form Elements */
-.login-background h1,
-.register-background h1,
-.lost-password-background h1,
-.resend-activation-background h1,
-.reset-password-background h1 {
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: var(--phoenix-dark);
-}
-
-.login-background .form-control,
-.register-background .form-control,
-.lost-password-background .form-control,
-.resend-activation-background .form-control,
-.reset-password-background .form-control {
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.login-background .form-control:focus,
-.register-background .form-control:focus,
-.lost-password-background .form-control:focus,
-.resend-activation-background .form-control:focus,
-.reset-password-background .form-control:focus {
-  background-color: #ffffff;
-  box-shadow: 0 5px 15px rgba(94, 68, 255, 0.15);
-  transform: translateY(-2px);
-}
-
-.login-background .btn-primary,
-.register-background .btn-primary,
-.lost-password-background .btn-primary,
-.resend-activation-background .btn-primary,
-.reset-password-background .btn-primary {
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, var(--phoenix-primary) 0%, #4e37d0 100%);
-  border: none;
-}
-
-.login-background .btn-primary:hover,
-.register-background .btn-primary:hover,
-.lost-password-background .btn-primary:hover,
-.resend-activation-background .btn-primary:hover,
-.reset-password-background .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(94, 68, 255, 0.3);
-}
-
-.login-background .btn-light,
-.register-background .btn-light,
-.lost-password-background .btn-light,
-.resend-activation-background .btn-light,
-.reset-password-background .btn-light {
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.login-background .btn-light:hover,
-.register-background .btn-light:hover,
-.lost-password-background .btn-light:hover,
-.resend-activation-background .btn-light:hover,
-.reset-password-background .btn-light:hover {
-  background-color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Social Login Buttons */
-.login-background .btn-light img,
-.register-background .btn-light img {
-  transition: all 0.3s ease;
-}
-
-.login-background .btn-light:hover img,
-.register-background .btn-light:hover img {
-  transform: scale(1.1);
-}
-
-/* Custom Checkbox */
-.login-background .custom-control-label,
-.register-background .custom-control-label,
-.lost-password-background .custom-control-label,
-.resend-activation-background .custom-control-label,
-.reset-password-background .custom-control-label {
-  font-size: 0.85rem;
-}
-
-/* Authentication Container */
+/* Authentication Container - Minimalistic */
 .login-background main,
 .register-background main,
 .lost-password-background main,
 .resend-activation-background main,
 .reset-password-background main {
-  position: relative;
-  z-index: 1;
+  padding: 1rem 0;
 }
 
 .login-background .container,
@@ -2553,8 +2732,407 @@ input[type="range"] {
 .lost-password-background .container,
 .resend-activation-background .container,
 .reset-password-background .container {
-  position: relative;
-  z-index: 1;
+  max-width: 480px;
+}
+
+@media (min-width: 768px) {
+  .login-background .container,
+  .register-background .container,
+  .lost-password-background .container,
+  .resend-activation-background .container,
+  .reset-password-background .container {
+    max-width: 520px;
+  }
+}
+
+/* Logo Section - Condensed */
+.login-background .mb-5,
+.register-background .mb-5,
+.lost-password-background .mb-5,
+.resend-activation-background .mb-5,
+.reset-password-background .mb-5 {
+  margin-bottom: 1.5rem !important;
+}
+
+.login-background .mb-5 img,
+.register-background .mb-5 img,
+.lost-password-background .mb-5 img,
+.resend-activation-background .mb-5 img,
+.reset-password-background .mb-5 img {
+  max-height: 2rem;
+}
+
+/* Authentication Card - Minimalistic */
+.login-background .card,
+.register-background .card,
+.lost-password-background .card,
+.resend-activation-background .card,
+.reset-password-background .card {
+  background: var(--auth-card-bg-light);
+  border: 1px solid var(--auth-border-light);
+  border-radius: 0.75rem;
+  box-shadow: var(--auth-shadow-light);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+/* Dark theme card */
+[data-theme-style="dark"] .login-background .card,
+[data-theme-style="dark"] .register-background .card,
+[data-theme-style="dark"] .lost-password-background .card,
+[data-theme-style="dark"] .resend-activation-background .card,
+[data-theme-style="dark"] .reset-password-background .card {
+  background: var(--auth-card-bg-dark);
+  border-color: var(--auth-border-dark);
+  box-shadow: var(--auth-shadow-dark);
+}
+
+/* System theme card */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .card,
+  body[data-theme-style="system"] .register-background .card,
+  body[data-theme-style="system"] .lost-password-background .card,
+  body[data-theme-style="system"] .resend-activation-background .card,
+  body[data-theme-style="system"] .reset-password-background .card {
+    background: var(--auth-card-bg-dark);
+    border-color: var(--auth-border-dark);
+    box-shadow: var(--auth-shadow-dark);
+  }
+}
+
+/* Card Body - Condensed */
+.login-background .card-body,
+.register-background .card-body,
+.lost-password-background .card-body,
+.resend-activation-background .card-body,
+.reset-password-background .card-body {
+  padding: 1.5rem !important;
+}
+
+/* Headers - Minimalistic */
+.login-background h1,
+.register-background h1,
+.lost-password-background h1,
+.resend-activation-background h1,
+.reset-password-background h1 {
+  font-size: 1.25rem !important;
+  font-weight: 600;
+  margin-bottom: 0.75rem !important;
+  color: var(--auth-text-light);
+  text-align: center;
+}
+
+/* Dark theme headers */
+[data-theme-style="dark"] .login-background h1,
+[data-theme-style="dark"] .register-background h1,
+[data-theme-style="dark"] .lost-password-background h1,
+[data-theme-style="dark"] .resend-activation-background h1,
+[data-theme-style="dark"] .reset-password-background h1 {
+  color: var(--auth-text-dark);
+}
+
+/* System theme headers */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background h1,
+  body[data-theme-style="system"] .register-background h1,
+  body[data-theme-style="system"] .lost-password-background h1,
+  body[data-theme-style="system"] .resend-activation-background h1,
+  body[data-theme-style="system"] .reset-password-background h1 {
+    color: var(--auth-text-dark);
+  }
+}
+
+/* Subheaders */
+.login-background p.text-muted,
+.register-background p.text-muted,
+.lost-password-background p.text-muted,
+.resend-activation-background p.text-muted,
+.reset-password-background p.text-muted {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Form Styling - Condensed */
+.login-background .mt-4,
+.register-background .mt-4,
+.lost-password-background .mt-4,
+.resend-activation-background .mt-4,
+.reset-password-background .mt-4 {
+  margin-top: 1rem !important;
+}
+
+.login-background .form-group,
+.register-background .form-group,
+.lost-password-background .form-group,
+.resend-activation-background .form-group,
+.reset-password-background .form-group {
+  margin-bottom: 0.75rem;
+}
+
+.login-background .form-control,
+.register-background .form-control,
+.lost-password-background .form-control,
+.resend-activation-background .form-control,
+.reset-password-background .form-control {
+  background: var(--auth-input-bg-light);
+  border: 1px solid var(--auth-border-light);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  color: var(--auth-text-light);
+}
+
+/* Dark theme form controls */
+[data-theme-style="dark"] .login-background .form-control,
+[data-theme-style="dark"] .register-background .form-control,
+[data-theme-style="dark"] .lost-password-background .form-control,
+[data-theme-style="dark"] .resend-activation-background .form-control,
+[data-theme-style="dark"] .reset-password-background .form-control {
+  background: var(--auth-input-bg-dark);
+  border-color: var(--auth-border-dark);
+  color: var(--auth-text-dark);
+}
+
+/* System theme form controls */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .form-control,
+  body[data-theme-style="system"] .register-background .form-control,
+  body[data-theme-style="system"] .lost-password-background .form-control,
+  body[data-theme-style="system"] .resend-activation-background .form-control,
+  body[data-theme-style="system"] .reset-password-background .form-control {
+    background: var(--auth-input-bg-dark);
+    border-color: var(--auth-border-dark);
+    color: var(--auth-text-dark);
+  }
+}
+
+.login-background .form-control:focus,
+.register-background .form-control:focus,
+.lost-password-background .form-control:focus,
+.resend-activation-background .form-control:focus,
+.reset-password-background .form-control:focus {
+  border-color: var(--phoenix-primary);
+  box-shadow: 0 0 0 0.125rem rgba(94, 68, 255, 0.25);
+  outline: none;
+}
+
+/* Labels - Condensed */
+.login-background label,
+.register-background label,
+.lost-password-background label,
+.resend-activation-background label,
+.reset-password-background label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--auth-text-light);
+}
+
+/* Dark theme labels */
+[data-theme-style="dark"] .login-background label,
+[data-theme-style="dark"] .register-background label,
+[data-theme-style="dark"] .lost-password-background label,
+[data-theme-style="dark"] .resend-activation-background label,
+[data-theme-style="dark"] .reset-password-background label {
+  color: var(--auth-text-dark);
+}
+
+/* System theme labels */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background label,
+  body[data-theme-style="system"] .register-background label,
+  body[data-theme-style="system"] .lost-password-background label,
+  body[data-theme-style="system"] .resend-activation-background label,
+  body[data-theme-style="system"] .reset-password-background label {
+    color: var(--auth-text-dark);
+  }
+}
+
+/* Primary Button - Minimalistic */
+.login-background .btn-primary,
+.register-background .btn-primary,
+.lost-password-background .btn-primary,
+.resend-activation-background .btn-primary,
+.reset-password-background .btn-primary {
+  background: var(--phoenix-primary);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.login-background .btn-primary:hover,
+.register-background .btn-primary:hover,
+.lost-password-background .btn-primary:hover,
+.resend-activation-background .btn-primary:hover,
+.reset-password-background .btn-primary:hover {
+  background: #4e37d0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(94, 68, 255, 0.3);
+}
+
+/* Social Login Buttons - Minimalistic */
+.login-background .btn-light,
+.register-background .btn-light {
+  background: var(--auth-input-bg-light);
+  border: 1px solid var(--auth-border-light);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  color: var(--auth-text-light);
+}
+
+/* Dark theme social buttons */
+[data-theme-style="dark"] .login-background .btn-light,
+[data-theme-style="dark"] .register-background .btn-light {
+  background: var(--auth-input-bg-dark);
+  border-color: var(--auth-border-dark);
+  color: var(--auth-text-dark);
+}
+
+/* System theme social buttons */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .btn-light,
+  body[data-theme-style="system"] .register-background .btn-light {
+    background: var(--auth-input-bg-dark);
+    border-color: var(--auth-border-dark);
+    color: var(--auth-text-dark);
+  }
+}
+
+.login-background .btn-light:hover,
+.register-background .btn-light:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-background .btn-light img,
+.register-background .btn-light img {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5rem;
+}
+
+/* Divider - Minimalistic */
+.login-background hr,
+.register-background hr {
+  margin: 1rem 0;
+  border-color: var(--auth-border-light);
+}
+
+/* Dark theme divider */
+[data-theme-style="dark"] .login-background hr,
+[data-theme-style="dark"] .register-background hr {
+  border-color: var(--auth-border-dark);
+}
+
+/* System theme divider */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background hr,
+  body[data-theme-style="system"] .register-background hr {
+    border-color: var(--auth-border-dark);
+  }
+}
+
+/* Custom Controls - Condensed */
+.login-background .custom-control,
+.register-background .custom-control {
+  margin-bottom: 0.5rem;
+}
+
+.login-background .custom-control-label,
+.register-background .custom-control-label {
+  font-size: 0.8rem;
+  color: var(--auth-text-light);
+}
+
+/* Dark theme custom controls */
+[data-theme-style="dark"] .login-background .custom-control-label,
+[data-theme-style="dark"] .register-background .custom-control-label {
+  color: var(--auth-text-dark);
+}
+
+/* System theme custom controls */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .custom-control-label,
+  body[data-theme-style="system"] .register-background .custom-control-label {
+    color: var(--auth-text-dark);
+  }
+}
+
+/* Links - Minimalistic */
+.login-background .text-muted a,
+.register-background .text-muted a,
+.lost-password-background .text-muted a,
+.resend-activation-background .text-muted a,
+.reset-password-background .text-muted a {
+  color: var(--phoenix-primary);
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.login-background .text-muted a:hover,
+.register-background .text-muted a:hover,
+.lost-password-background .text-muted a:hover,
+.resend-activation-background .text-muted a:hover,
+.reset-password-background .text-muted a:hover {
+  text-decoration: underline;
+}
+
+/* Bottom Links - Condensed */
+.login-background .mt-5,
+.register-background .mt-5 {
+  margin-top: 1.5rem !important;
+  font-size: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .login-background .container,
+  .register-background .container,
+  .lost-password-background .container,
+  .resend-activation-background .container,
+  .reset-password-background .container {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .login-background .card-body,
+  .register-background .card-body,
+  .lost-password-background .card-body,
+  .resend-activation-background .card-body,
+  .reset-password-background .card-body {
+    padding: 1rem !important;
+  }
+}
+
+/* Demo Banner Adjustments */
+.login-background .card.mb-4,
+.register-background .card.mb-4 {
+  margin-bottom: 1rem !important;
+  background: rgba(255, 243, 205, 0.9);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+[data-theme-style="dark"] .login-background .card.mb-4,
+[data-theme-style="dark"] .register-background .card.mb-4 {
+  background: rgba(45, 55, 72, 0.9);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .card.mb-4,
+  body[data-theme-style="system"] .register-background .card.mb-4 {
+    background: rgba(45, 55, 72, 0.9);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
 }
 
 /* GS1 Link Create Styles */
@@ -2800,4 +3378,505 @@ input[type="range"] {
 .gs1-link-manager .py-4 {
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
+}
+
+/* Authentication Pages - Minimalistic Design with Gradient Background */
+:root {
+  --auth-gradient-light: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --auth-gradient-dark: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  --auth-card-bg: rgba(255, 255, 255, 0.95);
+  --auth-card-bg-dark: rgba(30, 41, 59, 0.95);
+  --auth-text: #1e293b;
+  --auth-text-dark: #f1f5f9;
+  --auth-border: rgba(255, 255, 255, 0.2);
+  --auth-border-dark: rgba(51, 65, 85, 0.3);
+  --auth-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --auth-shadow-dark: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Base Authentication Background with Gradient */
+.login-background,
+.register-background,
+.lost-password-background,
+.resend-activation-background,
+.reset-password-background {
+  min-height: 100vh;
+  background: var(--auth-gradient-light);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark theme gradient */
+[data-theme-style="dark"] .login-background,
+[data-theme-style="dark"] .register-background,
+[data-theme-style="dark"] .lost-password-background,
+[data-theme-style="dark"] .resend-activation-background,
+[data-theme-style="dark"] .reset-password-background {
+  background: var(--auth-gradient-dark);
+}
+
+/* System theme gradient */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background,
+  body[data-theme-style="system"] .register-background,
+  body[data-theme-style="system"] .lost-password-background,
+  body[data-theme-style="system"] .resend-activation-background,
+  body[data-theme-style="system"] .reset-password-background {
+    background: var(--auth-gradient-dark);
+  }
+}
+
+/* Animated gradient overlay */
+.login-background::before,
+.register-background::before,
+.lost-password-background::before,
+.resend-activation-background::before,
+.reset-password-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  opacity: 0.8;
+  z-index: 0;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Container */
+.login-background main,
+.register-background main,
+.lost-password-background main,
+.resend-activation-background main,
+.reset-password-background main {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 2rem 1rem;
+}
+
+.login-background .container,
+.register-background .container,
+.lost-password-background .container,
+.resend-activation-background .container,
+.reset-password-background .container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Logo Section */
+.login-background .mb-5,
+.register-background .mb-5,
+.lost-password-background .mb-5,
+.resend-activation-background .mb-5,
+.reset-password-background .mb-5 {
+  text-align: center;
+  margin-bottom: 2rem !important;
+}
+
+.login-background .mb-5 img,
+.register-background .mb-5 img,
+.lost-password-background .mb-5 img,
+.resend-activation-background .mb-5 img,
+.reset-password-background .mb-5 img {
+  max-height: 3rem;
+  filter: brightness(0) invert(1);
+}
+
+.login-background .mb-5 span,
+.register-background .mb-5 span,
+.lost-password-background .mb-5 span,
+.resend-activation-background .mb-5 span,
+.reset-password-background .mb-5 span {
+  color: white;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Authentication Card */
+.login-background .card,
+.register-background .card,
+.lost-password-background .card,
+.resend-activation-background .card,
+.reset-password-background .card {
+  background: var(--auth-card-bg);
+  border: 1px solid var(--auth-border);
+  border-radius: 1rem;
+  box-shadow: var(--auth-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+/* Dark theme card */
+[data-theme-style="dark"] .login-background .card,
+[data-theme-style="dark"] .register-background .card,
+[data-theme-style="dark"] .lost-password-background .card,
+[data-theme-style="dark"] .resend-activation-background .card,
+[data-theme-style="dark"] .reset-password-background .card {
+  background: var(--auth-card-bg-dark);
+  border-color: var(--auth-border-dark);
+  box-shadow: var(--auth-shadow-dark);
+}
+
+/* System theme card */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .card,
+  body[data-theme-style="system"] .register-background .card,
+  body[data-theme-style="system"] .lost-password-background .card,
+  body[data-theme-style="system"] .resend-activation-background .card,
+  body[data-theme-style="system"] .reset-password-background .card {
+    background: var(--auth-card-bg-dark);
+    border-color: var(--auth-border-dark);
+    box-shadow: var(--auth-shadow-dark);
+  }
+}
+
+/* Card Body */
+.login-background .card-body,
+.register-background .card-body,
+.lost-password-background .card-body,
+.resend-activation-background .card-body,
+.reset-password-background .card-body {
+  padding: 2rem !important;
+}
+
+/* Headers */
+.login-background h1,
+.register-background h1,
+.lost-password-background h1,
+.resend-activation-background h1,
+.reset-password-background h1 {
+  font-size: 1.5rem !important;
+  font-weight: 700;
+  margin-bottom: 0.5rem !important;
+  color: var(--auth-text);
+  text-align: center;
+}
+
+/* Dark theme headers */
+[data-theme-style="dark"] .login-background h1,
+[data-theme-style="dark"] .register-background h1,
+[data-theme-style="dark"] .lost-password-background h1,
+[data-theme-style="dark"] .resend-activation-background h1,
+[data-theme-style="dark"] .reset-password-background h1 {
+  color: var(--auth-text-dark);
+}
+
+/* System theme headers */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background h1,
+  body[data-theme-style="system"] .register-background h1,
+  body[data-theme-style="system"] .lost-password-background h1,
+  body[data-theme-style="system"] .resend-activation-background h1,
+  body[data-theme-style="system"] .reset-password-background h1 {
+    color: var(--auth-text-dark);
+  }
+}
+
+/* Subheaders */
+.login-background p.text-muted,
+.register-background p.text-muted,
+.lost-password-background p.text-muted,
+.resend-activation-background p.text-muted,
+.reset-password-background p.text-muted {
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  opacity: 0.7;
+}
+
+/* Form Styling */
+.login-background .form-group,
+.register-background .form-group,
+.lost-password-background .form-group,
+.resend-activation-background .form-group,
+.reset-password-background .form-group {
+  margin-bottom: 1rem;
+}
+
+.login-background .form-control,
+.register-background .form-control,
+.lost-password-background .form-control,
+.resend-activation-background .form-control,
+.reset-password-background .form-control {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  color: var(--auth-text);
+}
+
+/* Dark theme form controls */
+[data-theme-style="dark"] .login-background .form-control,
+[data-theme-style="dark"] .register-background .form-control,
+[data-theme-style="dark"] .lost-password-background .form-control,
+[data-theme-style="dark"] .resend-activation-background .form-control,
+[data-theme-style="dark"] .reset-password-background .form-control {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--auth-text-dark);
+}
+
+/* System theme form controls */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .form-control,
+  body[data-theme-style="system"] .register-background .form-control,
+  body[data-theme-style="system"] .lost-password-background .form-control,
+  body[data-theme-style="system"] .resend-activation-background .form-control,
+  body[data-theme-style="system"] .reset-password-background .form-control {
+    background: rgba(51, 65, 85, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--auth-text-dark);
+  }
+}
+
+.login-background .form-control:focus,
+.register-background .form-control:focus,
+.lost-password-background .form-control:focus,
+.resend-activation-background .form-control:focus,
+.reset-password-background .form-control:focus {
+  border-color: var(--phoenix-primary);
+  box-shadow: 0 0 0 0.2rem rgba(94, 68, 255, 0.25);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+/* Labels */
+.login-background label,
+.register-background label,
+.lost-password-background label,
+.resend-activation-background label,
+.reset-password-background label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--auth-text);
+}
+
+/* Dark theme labels */
+[data-theme-style="dark"] .login-background label,
+[data-theme-style="dark"] .register-background label,
+[data-theme-style="dark"] .lost-password-background label,
+[data-theme-style="dark"] .resend-activation-background label,
+[data-theme-style="dark"] .reset-password-background label {
+  color: var(--auth-text-dark);
+}
+
+/* System theme labels */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background label,
+  body[data-theme-style="system"] .register-background label,
+  body[data-theme-style="system"] .lost-password-background label,
+  body[data-theme-style="system"] .resend-activation-background label,
+  body[data-theme-style="system"] .reset-password-background label {
+    color: var(--auth-text-dark);
+  }
+}
+
+/* Primary Button */
+.login-background .btn-primary,
+.register-background .btn-primary,
+.lost-password-background .btn-primary,
+.resend-activation-background .btn-primary,
+.reset-password-background .btn-primary {
+  background: linear-gradient(135deg, var(--phoenix-primary), #4e37d0);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.login-background .btn-primary:hover,
+.register-background .btn-primary:hover,
+.lost-password-background .btn-primary:hover,
+.resend-activation-background .btn-primary:hover,
+.reset-password-background .btn-primary:hover {
+  background: linear-gradient(135deg, #4e37d0, var(--phoenix-primary));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(94, 68, 255, 0.4);
+}
+
+/* Social Login Buttons */
+.login-background .btn-light,
+.register-background .btn-light {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  color: var(--auth-text);
+  margin-bottom: 0.5rem;
+}
+
+/* Dark theme social buttons */
+[data-theme-style="dark"] .login-background .btn-light,
+[data-theme-style="dark"] .register-background .btn-light {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--auth-text-dark);
+}
+
+/* System theme social buttons */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .btn-light,
+  body[data-theme-style="system"] .register-background .btn-light {
+    background: rgba(51, 65, 85, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--auth-text-dark);
+  }
+}
+
+.login-background .btn-light:hover,
+.register-background .btn-light:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-background .btn-light img,
+.register-background .btn-light img {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.75rem;
+}
+
+/* Divider */
+.login-background hr,
+.register-background hr {
+  margin: 1.5rem 0;
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+}
+
+/* Dark theme divider */
+[data-theme-style="dark"] .login-background hr,
+[data-theme-style="dark"] .register-background hr {
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+/* System theme divider */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background hr,
+  body[data-theme-style="system"] .register-background hr {
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+  }
+}
+
+/* Custom Controls */
+.login-background .custom-control,
+.register-background .custom-control {
+  margin-bottom: 1rem;
+}
+
+.login-background .custom-control-label,
+.register-background .custom-control-label {
+  font-size: 0.875rem;
+  color: var(--auth-text);
+}
+
+/* Dark theme custom controls */
+[data-theme-style="dark"] .login-background .custom-control-label,
+[data-theme-style="dark"] .register-background .custom-control-label {
+  color: var(--auth-text-dark);
+}
+
+/* System theme custom controls */
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .custom-control-label,
+  body[data-theme-style="system"] .register-background .custom-control-label {
+    color: var(--auth-text-dark);
+  }
+}
+
+/* Links */
+.login-background .text-muted a,
+.register-background .text-muted a,
+.lost-password-background .text-muted a,
+.resend-activation-background .text-muted a,
+.reset-password-background .text-muted a {
+  color: var(--phoenix-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.login-background .text-muted a:hover,
+.register-background .text-muted a:hover,
+.lost-password-background .text-muted a:hover,
+.resend-activation-background .text-muted a:hover,
+.reset-password-background .text-muted a:hover {
+  text-decoration: underline;
+  color: #4e37d0;
+}
+
+/* Bottom Links */
+.login-background .mt-5,
+.register-background .mt-5 {
+  margin-top: 2rem !important;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .login-background .container,
+  .register-background .container,
+  .lost-password-background .container,
+  .resend-activation-background .container,
+  .reset-password-background .container {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .login-background .card-body,
+  .register-background .card-body,
+  .lost-password-background .card-body,
+  .resend-activation-background .card-body,
+  .reset-password-background .card-body {
+    padding: 1.5rem !important;
+  }
+}
+
+/* Demo Banner Adjustments */
+.login-background .card.mb-4,
+.register-background .card.mb-4 {
+  margin-bottom: 1.5rem !important;
+  background: rgba(255, 243, 205, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme-style="dark"] .login-background .card.mb-4,
+[data-theme-style="dark"] .register-background .card.mb-4 {
+  background: rgba(45, 55, 72, 0.95);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  body[data-theme-style="system"] .login-background .card.mb-4,
+  body[data-theme-style="system"] .register-background .card.mb-4 {
+    background: rgba(45, 55, 72, 0.95);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
 }

@@ -231,6 +231,11 @@ class QrCodes extends Controller {
             redirect('qr-codes');
         }
 
+        /* Verify the main resource */
+        if(!$qr_code = db()->where('qr_code_id', $qr_code_id)->where('user_id', $this->user->user_id)->getOne('qr_codes')) {
+            redirect('qr-codes');
+        }
+
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             (new QrCode())->delete($qr_code->qr_code_id);

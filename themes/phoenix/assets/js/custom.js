@@ -256,32 +256,22 @@ const enable_submit_button = element => {
 }
 
 const display_notifications = (messages, type, selector) => {
-    let html = '';
-
-    if(typeof  messages === 'string') {
+    // Convert to array if string
+    if (typeof messages === 'string') {
         messages = [messages];
     }
 
-    let icon = null;
-    switch(type) {
-        case 'success': icon = 'fa-check-circle'; break;
-        case 'error': icon = 'fa-times-circle'; break;
-        case 'info': icon = 'fa-circle-info'; break;
+    // Show each message as a toast
+    messages.forEach(message => {
+        if (message.trim() !== '') {
+            showToast(type === 'danger' ? 'error' : type, message);
+        }
+    });
+
+    // Clear the selector content since we're using toasts now
+    if (selector) {
+        selector.innerHTML = '';
     }
-
-    type = type == 'error' ? 'danger' : type;
-
-    for(let message of messages) {
-        if(message.trim() == '') continue;
-
-        html += `
-            <div class="alert alert-${type} seegap-animate seegap-animate-fill-none seegap-animate-fade-in">
-                <button type="button" class="close ml-2" data-dismiss="alert">&times;</button>
-                <i class="fas fa-fw ${icon} mr-2"></i> ${message}
-            </div>`;
-    }
-
-    selector.innerHTML = html;
 };
 
 const redirect = (path, is_full_url = false) => {
@@ -518,6 +508,10 @@ const ajax_call_helper = (event, controller, request_type, success_callback = ()
             data.link_id = row_id;
             break;
 
+        case 'gs1-link-ajax':
+            data.gs1_link_id = row_id;
+            break;
+
         case 'microsite-block-ajax':
             data.microsite_block_id = row_id;
             break;
@@ -545,4 +539,135 @@ const ajax_call_helper = (event, controller, request_type, success_callback = ()
     });
 
     event.preventDefault();
+};
+
+/* Toast Notification System */
+const ToastManager = {
+    container: null,
+    toasts: [],
+    maxToasts: 5,
+    timeouts: {
+        success: 4000,
+        error: 6000,
+        info: 5000,
+        warning: 5000
+    },
+
+    init() {
+        if (!this.container) {
+            this.container = document.createElement('div');
+            this.container.className = 'toast-container';
+            document.body.appendChild(this.container);
+        }
+    },
+
+    show(type, message, options = {}) {
+        this.init();
+
+        // Clean up old toasts if we have too many
+        if (this.toasts.length >= this.maxToasts) {
+            this.remove(this.toasts[0]);
+        }
+
+        const toast = this.createToast(type, message, options);
+        this.toasts.push(toast);
+        this.container.appendChild(toast);
+
+        // Trigger animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+
+        // Auto dismiss
+        const timeout = options.timeout || this.timeouts[type] || 5000;
+        if (timeout > 0) {
+            const progressBar = toast.querySelector('.toast-progress');
+            if (progressBar) {
+                progressBar.style.width = '100%';
+                progressBar.style.transition = `width ${timeout}ms linear`;
+                setTimeout(() => {
+                    progressBar.style.width = '0%';
+                }, 10);
+            }
+
+            setTimeout(() => {
+                this.remove(toast);
+            }, timeout);
+        }
+
+        return toast;
+    },
+
+    createToast(type, message, options = {}) {
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+
+        const iconMap = {
+            success: 'fa-check-circle',
+            error: 'fa-times-circle',
+            info: 'fa-info-circle',
+            warning: 'fa-exclamation-triangle'
+        };
+
+        const icon = iconMap[type] || 'fa-info-circle';
+
+        toast.innerHTML = `
+            <div class="toast-icon ${type}">
+                <i class="fas ${icon}"></i>
+            </div>
+            <div class="toast-content">${message}</div>
+            <button class="toast-close" onclick="ToastManager.remove(this.parentElement)">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="toast-progress ${type}"></div>
+        `;
+
+        // Pause on hover
+        toast.addEventListener('mouseenter', () => {
+            const progressBar = toast.querySelector('.toast-progress');
+            if (progressBar) {
+                progressBar.style.animationPlayState = 'paused';
+            }
+        });
+
+        toast.addEventListener('mouseleave', () => {
+            const progressBar = toast.querySelector('.toast-progress');
+            if (progressBar) {
+                progressBar.style.animationPlayState = 'running';
+            }
+        });
+
+        return toast;
+    },
+
+    remove(toast) {
+        if (!toast || !toast.parentElement) return;
+
+        toast.classList.add('hide');
+        
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.parentElement.removeChild(toast);
+            }
+            
+            const index = this.toasts.indexOf(toast);
+            if (index > -1) {
+                this.toasts.splice(index, 1);
+            }
+        }, 300);
+    },
+
+    clear() {
+        this.toasts.forEach(toast => this.remove(toast));
+        this.toasts = [];
+    }
+};
+
+// Global toast functions for easy access
+window.showToast = (type, message, options = {}) => {
+    return ToastManager.show(type, message, options);
+};
+
+window.clearToasts = () => {
+    ToastManager.clear();
 };

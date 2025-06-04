@@ -264,7 +264,7 @@
                                     <i class="fas fa-fw fa-redo"></i>
                                 </a>
 
-                                <a href="#" class="text-danger" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" data-gtin="<?= $row->gtin ?>" data-name="<?= $row->title ?: $row->gtin ?>" data-target-url="<?= $row->target_url ?>" title="<?= l('global.delete') ?>">
+                                <a href="#" class="text-danger" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" data-resource-name="<?= $row->title ?: $row->gtin ?>" data-gtin="<?= $row->gtin ?>" data-name="<?= $row->title ?: $row->gtin ?>" data-target-url="<?= $row->target_url ?>" title="<?= l('global.delete') ?>">
                                     <i class="fas fa-fw fa-trash-alt"></i>
                                 </a>
 

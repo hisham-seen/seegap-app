@@ -77,7 +77,7 @@
                                 </select>
                             </div>
 
-                            <?php if(settings()->links->projects_is_enabled): ?>
+                            <?php if(isset(settings()->links->projects_is_enabled) && settings()->links->projects_is_enabled): ?>
                             <div class="form-group px-4">
                                 <div class="d-flex justify-content-between">
                                     <label for="filters_project_id" class="small"><?= l('projects.project_id') ?></label>

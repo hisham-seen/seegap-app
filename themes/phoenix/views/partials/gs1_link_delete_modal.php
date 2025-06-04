@@ -107,5 +107,6 @@
             targetUrlElement.textContent = target_url;
         }
     });
+
 </script>
 <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

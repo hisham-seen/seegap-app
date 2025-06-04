@@ -574,7 +574,7 @@
                         </button>
 
                         <div class="collapse" id="advanced_container">
-                            <?php if(settings()->links->projects_is_enabled && settings()->gs1_links->projects_is_enabled): ?>
+                            <?php if(isset(settings()->links->projects_is_enabled) && settings()->links->projects_is_enabled && settings()->gs1_links->projects_is_enabled): ?>
                                 <div class="form-group">
                                     <div class="d-flex flex-column flex-xl-row justify-content-between">
                                         <label for="project_id"><i class="fas fa-fw fa-sm fa-project-diagram text-muted mr-1"></i> <?= l('projects.project_id') ?></label>
