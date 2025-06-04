@@ -146,6 +146,48 @@ class Links extends Controller {
         redirect('links');
     }
 
+    public function delete() {
+        \SeeGap\Authentication::guard();
+
+        /* Team checks */
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.links')) {
+            Alerts::add_info(l('global.info_message.team_no_access'));
+            redirect('links');
+        }
+
+        if(empty($_POST)) {
+            redirect('links');
+        }
+
+        $link_id = (int) query_clean($_POST['link_id']);
+
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+
+        if(!\SeeGap\Csrf::check()) {
+            Alerts::add_error(l('global.error_message.invalid_csrf_token'));
+            redirect('links');
+        }
+
+        /* Make sure the link id is created by the logged in user */
+        if(!$link = db()->where('link_id', $link_id)->where('user_id', $this->user->user_id)->getOne('links', ['link_id'])) {
+            redirect('links');
+        }
+
+        if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
+
+            /* Delete the resource */
+            (new \SeeGap\Models\Link())->delete($link->link_id);
+
+            /* Set a nice success message */
+            Alerts::add_success(l('global.success_message.delete2'));
+
+            redirect('links');
+
+        }
+
+        redirect('links');
+    }
+
     public function reset() {
         \SeeGap\Authentication::guard();
 

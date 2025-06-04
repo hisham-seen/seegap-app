@@ -152,6 +152,48 @@ class Gs1Links extends Controller {
         redirect('gs1-links');
     }
 
+    public function delete() {
+        \SeeGap\Authentication::guard();
+
+        /* Team checks */
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('delete.gs1_links')) {
+            Alerts::add_info(l('global.info_message.team_no_access'));
+            redirect('gs1-links');
+        }
+
+        if(empty($_POST)) {
+            redirect('gs1-links');
+        }
+
+        $gs1_link_id = (int) query_clean($_POST['gs1_link_id']);
+
+        //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
+
+        if(!\SeeGap\Csrf::check()) {
+            Alerts::add_error(l('global.error_message.invalid_csrf_token'));
+            redirect('gs1-links');
+        }
+
+        /* Make sure the gs1 link id is created by the logged in user */
+        if(!$gs1_link = db()->where('gs1_link_id', $gs1_link_id)->where('user_id', $this->user->user_id)->getOne('gs1_links', ['gs1_link_id'])) {
+            redirect('gs1-links');
+        }
+
+        if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
+
+            /* Delete the resource */
+            (new \SeeGap\Models\Gs1Link())->delete($gs1_link->gs1_link_id);
+
+            /* Set a nice success message */
+            Alerts::add_success(l('global.success_message.delete2'));
+
+            redirect('gs1-links');
+
+        }
+
+        redirect('gs1-links');
+    }
+
     public function reset() {
         \SeeGap\Authentication::guard();
 

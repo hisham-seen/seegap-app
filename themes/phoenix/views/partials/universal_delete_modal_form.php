@@ -46,15 +46,31 @@
         let related_target = event.relatedTarget;
         let current_target = event.currentTarget;
 
-        let <?= $data->resource_id ?> = related_target.getAttribute('data-<?= str_replace('_', '-', $data->resource_id) ?>');
-        current_target.querySelector('<?= 'form[name="' . $data->name . '_delete_modal_form"]' ?>').setAttribute('action', `${url}<?= $data->path ?>`);
-        current_target.querySelector('<?= 'form[name="' . $data->name . '_delete_modal_form"] input[name*="id"]' ?>').setAttribute('value', <?= $data->resource_id ?>);
-        current_target.querySelector('<?= 'form[name="' . $data->name . '_delete_modal_form"] input[name*="id"]' ?>').setAttribute('name', '<?= $data->resource_id ?>');
+        let resource_id_value = related_target.getAttribute('data-<?= str_replace('_', '-', $data->resource_id) ?>');
+        
+        let form = current_target.querySelector('<?= 'form[name="' . $data->name . '_delete_modal_form"]' ?>');
+        if (form) {
+            form.setAttribute('action', `${url}<?= $data->path ?>`);
+        }
+        
+        let input = current_target.querySelector('<?= 'form[name="' . $data->name . '_delete_modal_form"] input[name*="id"]' ?>');
+        if (input) {
+            input.setAttribute('value', resource_id_value);
+            input.setAttribute('name', '<?= $data->resource_id ?>');
+        }
 
         <?php if($data->has_dynamic_resource_name): ?>
-        current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader' ?>').innerHTML = current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader_hidden' ?>').innerHTML.replace('%s', related_target.getAttribute('data-resource-name'));
+        let subheader = current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader' ?>');
+        let subheader_hidden = current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader_hidden' ?>');
+        if (subheader && subheader_hidden) {
+            subheader.innerHTML = subheader_hidden.innerHTML.replace('%s', related_target.getAttribute('data-resource-name'));
+        }
         <?php else: ?>
-        current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader' ?>').innerHTML = current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader_hidden' ?>').innerHTML;
+        let subheader = current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader' ?>');
+        let subheader_hidden = current_target.querySelector('<?= '#' . $data->name . '_delete_modal_subheader_hidden' ?>');
+        if (subheader && subheader_hidden) {
+            subheader.innerHTML = subheader_hidden.innerHTML;
+        }
         <?php endif ?>
     });
 </script>

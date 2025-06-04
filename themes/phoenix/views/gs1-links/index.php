@@ -160,9 +160,16 @@
                                     </span>
                                 </div>
 
-                                <div class="text-truncate">
-                                    <div>
+                                <div class="d-flex flex-column min-width-0">
+                                    <div class="d-inline-block text-truncate">
                                         <a href="<?= url('gs1-link-manager/edit/' . $row->gs1_link_id) ?>" class="font-weight-bold"><?= $row->gtin ?></a>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <span class="d-inline-block text-truncate small">
+                                            <img referrerpolicy="no-referrer" src="<?= get_favicon_url_from_domain(parse_url(url('01/' . $row->gtin))['host']) ?>" class="img-fluid icon-favicon-small mr-1" loading="lazy" />
+                                            <a href="<?= url('01/' . $row->gtin) ?>" class="text-muted" title="<?= remove_url_protocol_from_url(url('01/' . $row->gtin)) ?>" target="_blank" rel="noreferrer"><?= string_truncate(remove_url_protocol_from_url(url('01/' . $row->gtin)), 32) ?></a>
+                                        </span>
                                     </div>
 
                                     <?php if(!empty($row->title)): ?>
@@ -257,7 +264,7 @@
                                     <i class="fas fa-fw fa-redo"></i>
                                 </a>
 
-                                <a href="#" class="text-danger" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" data-resource-name="<?= $row->gtin ?>" title="<?= l('global.delete') ?>">
+                                <a href="#" class="text-danger" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $row->gs1_link_id ?>" data-gtin="<?= $row->gtin ?>" data-name="<?= $row->title ?: $row->gtin ?>" data-target-url="<?= $row->target_url ?>" title="<?= l('global.delete') ?>">
                                     <i class="fas fa-fw fa-trash-alt"></i>
                                 </a>
 
@@ -280,12 +287,7 @@
     <?php endif ?>
 </div>
 
-<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
-    'name' => 'gs1_link',
-    'resource_id' => 'gs1_link_id',
-    'has_dynamic_resource_name' => true,
-    'path' => 'gs1-links/delete'
-]), 'modals') ?>
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/gs1_link_delete_modal.php'), 'modals') ?>
 
 <?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'gs1_link_duplicate_modal', 'resource_id' => 'gs1_link_id', 'path' => 'gs1-link-ajax/duplicate']), 'modals'); ?>
 

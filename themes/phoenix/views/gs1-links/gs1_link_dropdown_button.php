@@ -30,7 +30,7 @@
 
         <div class="dropdown-divider"></div>
 
-        <a href="#" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $data->id ?>" data-resource-name="<?= $data->resource_name ?>" class="dropdown-item">
+        <a href="#" data-toggle="modal" data-target="#gs1_link_delete_modal" data-gs1-link-id="<?= $data->id ?>" data-gtin="<?= $data->resource_name ?>" data-name="<?= $data->name ?: $data->resource_name ?>" data-target-url="<?= $data->target_url ?>" class="dropdown-item">
             <i class="fas fa-fw fa-sm fa-trash-alt mr-2"></i> <?= l('global.delete') ?>
         </a>
     </div>
