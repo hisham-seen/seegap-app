@@ -47,3 +47,31 @@ yarn-error.log
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Temporary deployment files
+*.tar.gz
+nginx-*.conf
+startup-script.sh
+docker-compose.prod.yml
+.env.prod
+
+# Terraform files
+terraform/*.tfvars
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfplan
+
+# SSH keys
+*.pem
+*.key
+id_rsa*
+seegap-deployment*
+
+# Application specific
+install/installed
+uploads/*
+!uploads/.gitkeep
+logs/
+cache/

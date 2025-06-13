@@ -157,7 +157,7 @@ body.admin-sidebar-opened .app-sidebar {
 }
 
 .app-sidebar-links li.active > a {
-    background: var(--phoenix-sidebar-active, #5e44ff);
+    background: var(--phoenix-sidebar-active, #038747);
     color: var(--white);
 }
 
@@ -453,8 +453,8 @@ img {
 }
 
 .btn-primary {
-    background-color: var(--phoenix-primary, #5e44ff);
-    border-color: var(--phoenix-primary, #5e44ff);
+    background-color: var(--phoenix-primary, #038747);
+    border-color: var(--phoenix-primary, #038747);
 }
 
 .btn-primary:hover {
@@ -471,7 +471,7 @@ img {
 }
 
 .form-control:focus {
-    border-color: var(--phoenix-primary, #5e44ff);
+    border-color: var(--phoenix-primary, #038747);
     box-shadow: 0 0 0 0.2rem rgba(94, 68, 255, 0.25);
 }
 
@@ -767,13 +767,13 @@ a:active svg {
 .dropdown-item:hover, 
 .dropdown-item:focus {
     background-color: var(--phoenix-light, #f9fafd);
-    color: var(--phoenix-primary, #5e44ff);
+    color: var(--phoenix-primary, #038747);
     border-radius: .4rem;
 }
 
 .dropdown-item.active, 
 .dropdown-item:active {
-    background-color: var(--phoenix-primary, #5e44ff);
+    background-color: var(--phoenix-primary, #038747);
     color: white;
 }
 

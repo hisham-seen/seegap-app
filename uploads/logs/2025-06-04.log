@@ -1,107 +1,243 @@
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:24:37 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:07 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:08 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:25:08 UTC] PHP Warning:  Undefined property: stdClass::$white_labeling_is_enabled in /var/www/html/app/core/App.php on line 210
-[04-Jun-2025 11:27:21 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in /var/www/html/app/init.php on line 38
-[04-Jun-2025 11:27:21 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /var/www/html/app/init.php on line 50
-[04-Jun-2025 11:27:21 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/test_app.php:8) in /var/www/html/app/core/App.php on line 65
-[04-Jun-2025 11:27:21 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/test_app.php:8) in /var/www/html/app/controllers/Index.php on line 22
-[04-Jun-2025 11:27:22 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in /var/www/html/app/init.php on line 38
-[04-Jun-2025 11:27:22 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /var/www/html/app/init.php on line 50
-[04-Jun-2025 11:27:22 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/test_app.php:8) in /var/www/html/app/core/App.php on line 65
-[04-Jun-2025 11:27:22 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/html/test_app.php:8) in /var/www/html/app/controllers/Index.php on line 22
-[04-Jun-2025 12:19:47 UTC] PHP Notice:  unserialize(): Error at offset 877 of 5595 bytes in /var/www/html/vendor/phpfastcache/phpfastcache/lib/Phpfastcache/Core/Pool/DriverBaseTrait.php on line 238
-[04-Jun-2025 12:20:29 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/basic_wrapper.php on line 74
-[04-Jun-2025 12:20:29 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/basic_wrapper.php on line 74
-[04-Jun-2025 12:24:35 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/basic_wrapper.php on line 74
-[04-Jun-2025 12:24:35 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/basic_wrapper.php on line 74
-[04-Jun-2025 18:37:16 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/basic_wrapper.php on line 74
-[04-Jun-2025 18:37:16 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/basic_wrapper.php on line 74
-[04-Jun-2025 18:37:25 UTC] PHP Notice:  unserialize(): Error at offset 877 of 5595 bytes in /var/www/html/vendor/phpfastcache/phpfastcache/lib/Phpfastcache/Core/Pool/DriverBaseTrait.php on line 238
-[04-Jun-2025 18:37:25 UTC] PHP Notice:  unserialize(): Error at offset 877 of 5595 bytes in /var/www/html/vendor/phpfastcache/phpfastcache/lib/Phpfastcache/Core/Pool/DriverBaseTrait.php on line 238
-[04-Jun-2025 18:37:25 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
-[04-Jun-2025 18:37:25 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
-[04-Jun-2025 18:37:25 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:25 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:29 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:29 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 384
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 384
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 384
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 390
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 390
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 390
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 396
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 396
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 396
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 402
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 402
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 402
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 408
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 408
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 408
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 414
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 414
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 414
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 426
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 426
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 426
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 432
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 432
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 432
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 438
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 438
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 438
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 444
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 444
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 444
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 450
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 450
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 450
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 456
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 456
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 456
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:31 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:57 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:57 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:59 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
-[04-Jun-2025 18:37:59 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
-[04-Jun-2025 18:37:59 UTC] PHP Warning:  Undefined property: stdClass::$admin_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
-[04-Jun-2025 18:37:59 UTC] PHP Warning:  Undefined property: stdClass::$user_spotlight_is_enabled in /var/www/html/themes/phoenix/views/app_wrapper.php on line 76
+[04-Jun-2025 22:22:00 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 181
+[04-Jun-2025 22:22:00 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:22:00 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:22:06 UTC] PHP Warning:  Undefined variable $qr_code in /var/www/html/app/controllers/QrCodes.php on line 236
+[04-Jun-2025 22:22:06 UTC] PHP Warning:  Attempt to read property "qr_code_id" on null in /var/www/html/app/controllers/QrCodes.php on line 236
+[04-Jun-2025 22:22:06 UTC] PHP Warning:  Undefined variable $qr_code in /var/www/html/app/controllers/QrCodes.php on line 239
+[04-Jun-2025 22:22:06 UTC] PHP Warning:  Attempt to read property "name" on null in /var/www/html/app/controllers/QrCodes.php on line 239
+[04-Jun-2025 22:22:06 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 181
+[04-Jun-2025 22:22:06 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:22:06 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:23:35 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 181
+[04-Jun-2025 22:23:35 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:23:35 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:23:38 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 181
+[04-Jun-2025 22:23:38 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:23:44 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_default_order_by in /var/www/html/app/controllers/SplashPages.php on line 28
+[04-Jun-2025 22:23:51 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_default_order_by in /var/www/html/app/controllers/SplashPages.php on line 28
+[04-Jun-2025 22:23:56 UTC] PHP Warning:  Undefined property: stdClass::$splash_pages_default_order_by in /var/www/html/app/controllers/SplashPages.php on line 28
+[04-Jun-2025 22:23:58 UTC] PHP Warning:  Undefined property: stdClass::$pixels_default_order_by in /var/www/html/app/controllers/Pixels.php on line 28
+[04-Jun-2025 22:24:07 UTC] PHP Warning:  Undefined property: stdClass::$pixels_default_order_by in /var/www/html/app/controllers/Pixels.php on line 28
+[04-Jun-2025 22:24:11 UTC] PHP Warning:  Undefined property: stdClass::$pixels_default_order_by in /var/www/html/app/controllers/Pixels.php on line 28
+[04-Jun-2025 22:24:13 UTC] PHP Warning:  Undefined property: stdClass::$domains_default_order_by in /var/www/html/app/controllers/Domains.php on line 29
+[04-Jun-2025 22:24:21 UTC] PHP Warning:  Undefined property: stdClass::$domains_default_order_by in /var/www/html/app/controllers/Domains.php on line 29
+[04-Jun-2025 22:24:43 UTC] PHP Warning:  Undefined property: stdClass::$domains_default_order_by in /var/www/html/app/controllers/admin/AdminDomains.php on line 23
+[04-Jun-2025 22:25:09 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:25:09 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:25:09 UTC] PHP Warning:  Undefined property: stdClass::$domains in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[04-Jun-2025 22:25:09 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/links/links_content.php on line 176
+[04-Jun-2025 22:25:22 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 181
+[04-Jun-2025 22:25:22 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 65
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "facetime" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 249
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 249
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "location" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 257
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 257
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 257
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "location" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 263
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 263
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 263
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "wifi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 271
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 271
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 271
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "wifi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 286
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 286
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 286
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "event" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 302
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 302
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "event" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 308
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 308
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 308
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "event" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 314
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 314
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 314
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "event" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 320
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 320
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 320
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "crypto" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 362
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 362
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 362
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "crypto" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 370
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 370
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 370
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 384
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 384
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 384
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 390
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 390
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 390
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 396
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 396
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 396
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 402
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 402
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 402
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 408
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 408
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 408
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 414
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 414
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 414
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 426
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 426
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 426
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 432
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 432
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 432
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 438
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 438
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 438
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 444
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 444
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 444
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 450
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 450
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 450
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "vcard" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 456
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 456
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 456
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "paypal" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 513
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 513
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 513
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "paypal" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 521
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 521
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 521
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "paypal" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 527
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 527
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 527
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "paypal" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 533
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 533
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 533
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "paypal" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 545
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 545
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 545
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "paypal" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 551
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 551
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 551
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "upi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 559
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 559
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 559
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "upi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 565
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 565
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 565
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "upi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 577
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 577
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 577
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "upi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 583
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 583
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 583
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "upi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 589
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 589
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 589
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "upi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 595
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 595
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 595
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "upi" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 601
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 601
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 601
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "epc" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 609
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 609
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 609
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "epc" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 615
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 615
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 615
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "epc" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 627
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 627
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 627
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "epc" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 633
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 633
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 633
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "epc" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 639
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 639
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 639
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "epc" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 645
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 645
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 645
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "epc" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 651
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 651
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 651
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "pix" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 659
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 659
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 659
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "pix" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 666
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 666
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 666
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "pix" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 678
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 678
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 678
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "pix" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 684
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 684
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 684
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "pix" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 690
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 690
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 690
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Undefined array key "pix" in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 696
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 696
+[04-Jun-2025 22:25:25 UTC] PHP Warning:  Trying to access array offset on value of type null in /var/www/html/themes/phoenix/views/qr-code-manager/index.php on line 696
+[04-Jun-2025 22:25:30 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:25:30 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:25:40 UTC] PHP Warning:  Undefined property: stdClass::$schedule in /var/www/html/themes/phoenix/views/link/settings/link.php on line 186
+[04-Jun-2025 22:25:40 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/link/settings/link.php on line 683
+[04-Jun-2025 22:25:42 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:25:42 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:25:59 UTC] PHP Warning:  Undefined property: stdClass::$schedule in /var/www/html/themes/phoenix/views/link/settings/link.php on line 186
+[04-Jun-2025 22:25:59 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/link/settings/link.php on line 683
+[04-Jun-2025 22:26:02 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:26:02 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:26:04 UTC] PHP Warning:  Undefined property: stdClass::$schedule in /var/www/html/themes/phoenix/views/link/settings/link.php on line 186
+[04-Jun-2025 22:26:04 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/link/settings/link.php on line 683
+[04-Jun-2025 22:26:06 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:26:06 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:26:15 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:26:15 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$header in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$mixcloud in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$kick in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$calendly in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$coupon in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$powerpoint_presentation in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$excel_spreadsheet in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$header in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$mixcloud in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$kick in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$calendly in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$coupon in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$powerpoint_presentation in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$excel_spreadsheet in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$header in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$mixcloud in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$kick in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$calendly in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$coupon in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$powerpoint_presentation in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$excel_spreadsheet in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$header in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$mixcloud in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$kick in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$calendly in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$coupon in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$powerpoint_presentation in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$excel_spreadsheet in /var/www/html/app/includes/enabled_microsite_blocks.php on line 15
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$directory_is_enabled in /var/www/html/themes/phoenix/views/link/settings/microsite.php on line 833
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/link/settings/microsite.php on line 853
+[04-Jun-2025 22:26:18 UTC] PHP Warning:  Undefined property: stdClass::$microsites_report_is_enabled in /var/www/html/themes/phoenix/views/l/partials/microsite.php on line 149
+[04-Jun-2025 22:26:52 UTC] PHP Warning:  Undefined array key "pwa_display_install_bar_delay" in /var/www/html/app/controllers/link-handlers/handlers/MicrositeHandler.php on line 597
+[04-Jun-2025 22:26:53 UTC] PHP Warning:  Undefined property: stdClass::$microsites_report_is_enabled in /var/www/html/themes/phoenix/views/l/partials/microsite.php on line 149
+[04-Jun-2025 22:26:55 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:26:55 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:27:13 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:27:13 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:27:29 UTC] PHP Warning:  Undefined property: stdClass::$schedule in /var/www/html/themes/phoenix/views/link/settings/link.php on line 186
+[04-Jun-2025 22:27:29 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/link/settings/link.php on line 683
+[04-Jun-2025 22:27:32 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:27:32 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:27:38 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:27:38 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:27:40 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:27:40 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:27:41 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:27:41 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:27:42 UTC] PHP Warning:  Undefined property: stdClass::$claim_url_is_enabled in /var/www/html/themes/phoenix/views/links/create_link_modals.php on line 409
+[04-Jun-2025 22:27:42 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/links/links_content.php on line 153
+[04-Jun-2025 22:27:42 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 181
+[04-Jun-2025 22:27:42 UTC] PHP Warning:  Undefined property: stdClass::$projects_is_enabled in /var/www/html/themes/phoenix/views/qr-codes/index.php on line 240

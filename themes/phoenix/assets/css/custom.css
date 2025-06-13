@@ -327,7 +327,7 @@ b, strong {
 
 /* Phoenix Theme Variables */
 :root {
-  --phoenix-primary: #5e44ff;
+  --phoenix-primary: #038747;
   --phoenix-secondary: #6c757d;
   --phoenix-success: #00d27a;
   --phoenix-info: #27bcfd;
@@ -341,7 +341,7 @@ b, strong {
   --phoenix-enhanced-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --phoenix-sidebar-bg: #0b1727;
   --phoenix-sidebar-color: #9da9bb;
-  --phoenix-sidebar-active: #5e44ff;
+  --phoenix-sidebar-active: #038747;
 }
 
 /* Cancel the bg white for dark mode */
@@ -3879,4 +3879,11 @@ input[type="range"] {
     background: rgba(45, 55, 72, 0.95);
     border-color: rgba(245, 158, 11, 0.3);
   }
+}
+
+/* Logo styling */
+.app-sidebar-title img {
+    max-height: 2rem;
+    height: 2rem;
+    padding-right: 66px;
 }
