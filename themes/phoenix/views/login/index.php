@@ -17,7 +17,7 @@
 
 <div class="card">
     <div class="card-body">
-        <!-- Test deployment update - June 13, 2025 -->
+        <!-- Test deployment update - June 13, 2025 - AUTO DEPLOY TEST -->
         <h1><?= l('login.header') ?></h1>
 
         <form action="" method="post" role="form">
