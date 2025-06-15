@@ -75,3 +75,9 @@ uploads/*
 !uploads/.gitkeep
 logs/
 cache/
+
+# Configuration files
+config.php
+
+# Local development tools
+reset-local-app.php
