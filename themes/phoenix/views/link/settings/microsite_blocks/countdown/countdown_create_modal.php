@@ -35,6 +35,30 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="countdown_style"><i class="fas fa-fw fa-palette fa-sm text-muted mr-1"></i> <?= l('microsite_countdown.style') ?></label>
+                        <select id="countdown_style" name="style" class="custom-select">
+                            <optgroup label="Digital Styles">
+                                <option value="digital-led">LED Display</option>
+                                <option value="digital-lcd">LCD Display</option>
+                                <option value="neon-style">Neon Style</option>
+                                <option value="matrix-style">Matrix Style</option>
+                            </optgroup>
+                            <optgroup label="Analog/Visual Styles">
+                                <option value="circular-progress">Circular Progress</option>
+                                <option value="gauge-style">Gauge Style</option>
+                                <option value="card-flip">Card Flip</option>
+                                <option value="slide-animation">Slide Animation</option>
+                            </optgroup>
+                            <optgroup label="Modern Styles">
+                                <option value="glassmorphism">Glassmorphism</option>
+                                <option value="neumorphism">Neumorphism</option>
+                                <option value="gradient">Gradient</option>
+                                <option value="minimalist">Minimalist</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label for="countdown_theme"><i class="fas fa-fw fa-sun fa-sm text-muted mr-1"></i> <?= l('microsite_countdown.theme') ?></label>
                         <select id="countdown_theme" name="theme" class="custom-select">
                             <option value="light"><?= l('global.theme_style_light') ?></option>
@@ -51,4 +75,3 @@
         </div>
     </div>
 </div>
-

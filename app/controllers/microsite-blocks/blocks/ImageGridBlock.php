@@ -17,7 +17,7 @@ defined('SEEGAP') || die();
 /**
  * Image Grid Block Handler
  * 
- * Handles the creation and updating of image grid microsite blocks.
+ * Advanced implementation for image grid microsite blocks with comprehensive image management.
  */
 class ImageGridBlock extends BaseBlockHandler {
     
@@ -27,17 +27,67 @@ class ImageGridBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
+        $_POST['open_in_new_tab'] = isset($_POST['open_in_new_tab']);
+        
+        // Grid-specific settings with validation
+        $_POST['columns'] = in_array($_POST['columns'], range(1, 6)) ? (int) $_POST['columns'] : 3;
+        $_POST['grid_gap'] = in_array($_POST['grid_gap'], range(0, 50)) ? (int) $_POST['grid_gap'] : 10;
+        $_POST['image_height'] = max(100, min(500, (int) ($_POST['image_height'] ?? 200)));
+        $_POST['aspect_ratio'] = in_array($_POST['aspect_ratio'], ['16:9', '4:3', '1:1', '21:9', 'custom']) ? $_POST['aspect_ratio'] : '1:1';
+        $_POST['image_fit'] = in_array($_POST['image_fit'], ['cover', 'contain', 'fill', 'scale-down']) ? $_POST['image_fit'] : 'cover';
+        $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;
+        $_POST['hover_effect'] = in_array($_POST['hover_effect'], ['none', 'zoom', 'fade', 'lift']) ? $_POST['hover_effect'] : 'none';
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
         }
 
         $type = 'image_grid';
+        
+        // Handle initial image uploads using the system method
+        $items = [];
+        if(isset($_FILES['new_images']) && is_array($_FILES['new_images']['name'])) {
+            foreach($_FILES['new_images']['name'] as $key => $file_name) {
+                if(empty($file_name) || $_FILES['new_images']['error'][$key] != UPLOAD_ERR_OK) {
+                    continue;
+                }
+                
+                // Temporarily set the single file for the system upload handler
+                $_FILES['image'] = [
+                    'name' => $_FILES['new_images']['name'][$key],
+                    'type' => $_FILES['new_images']['type'][$key],
+                    'tmp_name' => $_FILES['new_images']['tmp_name'][$key],
+                    'error' => $_FILES['new_images']['error'][$key],
+                    'size' => $_FILES['new_images']['size'][$key]
+                ];
+                
+                $db_image = $this->handle_image_upload(null, 'block_images/', settings()->links->image_size_limit);
+                
+                if($db_image) {
+                    $items[] = [
+                        'image' => $db_image,
+                        'image_alt' => '',
+                        'location_url' => ''
+                    ];
+                }
+            }
+            
+            // Clean up the temporary $_FILES entry
+            unset($_FILES['image']);
+        }
+        
         $settings = json_encode([
-            'images' => [],
-            'columns' => 2,
-            'gap' => 10,
-            'border_radius' => 'rounded',
+            'items' => $items,
+            'open_in_new_tab' => $_POST['open_in_new_tab'],
+
+            /* Grid-specific Visual & Layout Settings */
+            'columns' => $_POST['columns'],
+            'grid_gap' => $_POST['grid_gap'],
+            'image_height' => $_POST['image_height'],
+            'aspect_ratio' => $_POST['aspect_ratio'],
+            'image_fit' => $_POST['image_fit'],
+            'border_radius' => $_POST['border_radius'],
+            'hover_effect' => $_POST['hover_effect'],
 
             /* Display settings */
             'display_continents' => [],
@@ -70,57 +120,110 @@ class ImageGridBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['columns'] = in_array($_POST['columns'], [1, 2, 3, 4]) ? (int) $_POST['columns'] : 2;
-        $_POST['gap'] = in_array($_POST['gap'], range(0, 50)) ? (int) $_POST['gap'] : 10;
-        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
+        $_POST['open_in_new_tab'] = isset($_POST['open_in_new_tab']);
+        
+        // Grid-specific settings with validation
+        $_POST['columns'] = in_array($_POST['columns'], range(1, 6)) ? (int) $_POST['columns'] : 3;
+        $_POST['grid_gap'] = in_array($_POST['grid_gap'], range(0, 50)) ? (int) $_POST['grid_gap'] : 10;
+        $_POST['image_height'] = max(100, min(500, (int) ($_POST['image_height'] ?? 200)));
+        $_POST['aspect_ratio'] = in_array($_POST['aspect_ratio'], ['16:9', '4:3', '1:1', '21:9', 'custom']) ? $_POST['aspect_ratio'] : '1:1';
+        $_POST['image_fit'] = in_array($_POST['image_fit'], ['cover', 'contain', 'fill', 'scale-down']) ? $_POST['image_fit'] : 'cover';
+        $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;
+        $_POST['hover_effect'] = in_array($_POST['hover_effect'], ['none', 'zoom', 'fade', 'lift']) ? $_POST['hover_effect'] : 'none';
 
         /* Display settings */
         $this->process_display_settings();
 
         if(!$microsite_block = db()->where('microsite_block_id', $_POST['microsite_block_id'])->where('user_id', $this->user->user_id)->getOne('microsites_blocks')) {
-            die();
+            Response::json('Block not found', 'error');
+            return;
         }
+        
         $microsite_block->settings = json_decode($microsite_block->settings ?? '');
-
-        /* Process image uploads */
-        $images = [];
-        if(isset($_FILES['images'])) {
-            foreach($_FILES['images']['name'] as $key => $value) {
-                if(empty($value)) continue;
-                if($key >= 20) continue;
-
-                $file_name = $_FILES['images']['name'][$key];
-                $file_extension = explode('.', $file_name);
-                $file_extension = mb_strtolower(end($file_extension));
-                $file_temp = $_FILES['images']['tmp_name'][$key];
-
-                if($_FILES['images']['error'][$key] == UPLOAD_ERR_OK && $_FILES['images']['size'][$key] <= settings()->links->thumbnail_image_size_limit * 1000000) {
-                    if(in_array($file_extension, \SeeGap\Uploads::get_whitelisted_file_extensions('images'))) {
-                        $new_file_name = md5(time() . $file_name . $key) . '.' . $file_extension;
-                        $full_path = \SeeGap\Uploads::get_full_path('block_thumbnail_images') . $new_file_name;
-
-                        if(move_uploaded_file($file_temp, $full_path)) {
-                            $images[] = [
-                                'image' => $new_file_name,
-                                'alt' => $_POST['image_alt'][$key] ?? '',
-                                'url' => $_POST['image_url'][$key] ?? ''
-                            ];
-                        }
-                    }
+        
+        // Handle image management (reordering, editing, removing)
+        $items = [];
+        
+        // Check if we have updated images data from the form
+        if(isset($_POST['images_data']) && !empty($_POST['images_data'])) {
+            $updated_images_data = json_decode($_POST['images_data'], true);
+            if(is_array($updated_images_data)) {
+                foreach($updated_images_data as $item) {
+                    $items[] = [
+                        'image' => is_array($item) ? $item['image'] : $item->image,
+                        'image_alt' => is_array($item) ? ($item['image_alt'] ?? '') : ($item->image_alt ?? ''),
+                        'location_url' => is_array($item) ? ($item['location_url'] ?? '') : ($item->location_url ?? '')
+                    ];
+                }
+            }
+        } else {
+            // Fallback to existing items if no updated data
+            if(isset($microsite_block->settings->items) && is_array($microsite_block->settings->items)) {
+                foreach($microsite_block->settings->items as $item) {
+                    $items[] = [
+                        'image' => is_object($item) ? $item->image : $item['image'],
+                        'image_alt' => is_object($item) ? ($item->image_alt ?? '') : ($item['image_alt'] ?? ''),
+                        'location_url' => is_object($item) ? ($item->location_url ?? '') : ($item['location_url'] ?? '')
+                    ];
                 }
             }
         }
-
-        /* Keep existing images if no new ones uploaded */
-        if(empty($images) && isset($microsite_block->settings->images)) {
-            $images = $microsite_block->settings->images;
+        
+        // Apply reordering if specified
+        if(isset($_POST['image_order']) && !empty($_POST['image_order'])) {
+            $order = explode(',', $_POST['image_order']);
+            $reordered_items = [];
+            foreach($order as $index) {
+                if(isset($items[$index])) {
+                    $reordered_items[] = $items[$index];
+                }
+            }
+            $items = $reordered_items;
+        }
+        
+        // Handle new image uploads using the system method
+        if(isset($_FILES['new_images']) && is_array($_FILES['new_images']['name'])) {
+            foreach($_FILES['new_images']['name'] as $key => $file_name) {
+                if(empty($file_name) || $_FILES['new_images']['error'][$key] != UPLOAD_ERR_OK) {
+                    continue;
+                }
+                
+                // Temporarily set the single file for the system upload handler
+                $_FILES['image'] = [
+                    'name' => $_FILES['new_images']['name'][$key],
+                    'type' => $_FILES['new_images']['type'][$key],
+                    'tmp_name' => $_FILES['new_images']['tmp_name'][$key],
+                    'error' => $_FILES['new_images']['error'][$key],
+                    'size' => $_FILES['new_images']['size'][$key]
+                ];
+                
+                $db_image = $this->handle_image_upload(null, 'block_images/', settings()->links->image_size_limit);
+                
+                if($db_image) {
+                    $items[] = [
+                        'image' => $db_image,
+                        'image_alt' => '',
+                        'location_url' => ''
+                    ];
+                }
+            }
+            
+            // Clean up the temporary $_FILES entry
+            unset($_FILES['image']);
         }
 
         $settings = json_encode([
-            'images' => $images,
+            'items' => $items,
+            'open_in_new_tab' => $_POST['open_in_new_tab'],
+
+            /* Grid-specific Visual & Layout Settings */
             'columns' => $_POST['columns'],
-            'gap' => $_POST['gap'],
+            'grid_gap' => $_POST['grid_gap'],
+            'image_height' => $_POST['image_height'],
+            'aspect_ratio' => $_POST['aspect_ratio'],
+            'image_fit' => $_POST['image_fit'],
             'border_radius' => $_POST['border_radius'],
+            'hover_effect' => $_POST['hover_effect'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

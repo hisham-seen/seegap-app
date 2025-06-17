@@ -35,31 +35,60 @@ class Language {
 
     public static function initialize() {
 
-        /* Determine all the languages available in the directory */
-        foreach(glob(self::$path . '*.php') as $file_path) {
-            $file_path_exploded = explode('/', $file_path);
-            $file_name = str_replace('.php', '', trim(end($file_path_exploded)));
+        /* Initialize with default English language for modular system */
+        $default_language = [
+            'name' => 'english',
+            'code' => 'en',
+            'status' => true,
+            'content' => null,
+            'order' => 1,
+            'language_flag' => '',
+        ];
 
-            if($file_name == 'english#en#active' || $file_name == 'english#en#inactive') {
-                continue;
-            }
+        self::$languages['english'] = $default_language;
+        self::$active_languages['english'] = 'en';
 
-            /* Parse file details */
-            $file_name_exploded = explode('#', $file_name);
+        /* Check for additional language directories in modules folder */
+        $modules_path = self::$path . 'modules/';
+        if (is_dir($modules_path)) {
+            foreach (glob($modules_path . '*', GLOB_ONLYDIR) as $language_dir) {
+                $language_name = basename($language_dir);
+                
+                /* Skip if it's not a language directory (avoid base module files) */
+                if (in_array($language_name, ['core.php', 'auth.php', 'links.php', 'dashboard.php', 'account.php', 'domains.php', 'pixels.php', 'teams.php', 'plans.php', 'payments.php', 'admin.php', 'api.php', 'index.php', 'contact.php', 'pages.php', 'date.php', 'emails.php', 'qr-codes.php', 'projects.php'])) {
+                    continue;
+                }
 
-            $language = [
-                'name' => $file_name_exploded[0],
-                'code' => $file_name_exploded[1],
-                'status' => settings()->languages->{$file_name_exploded[0]}->status ?? true,
-                'content' => null,
-                'order' => settings()->languages->{$file_name_exploded[0]}->order ?? 1,
-                'language_flag' => settings()->languages->{$file_name_exploded[0]}->language_flag ?? '',
-            ];
+                /* Determine language code from directory name or use default mapping */
+                $language_code_map = [
+                    'spanish' => 'es',
+                    'french' => 'fr',
+                    'german' => 'de',
+                    'italian' => 'it',
+                    'portuguese' => 'pt',
+                    'russian' => 'ru',
+                    'chinese' => 'zh',
+                    'japanese' => 'ja',
+                    'korean' => 'ko',
+                    'arabic' => 'ar',
+                ];
 
-            self::$languages[$language['name']] = $language;
+                $language_code = $language_code_map[$language_name] ?? substr($language_name, 0, 2);
 
-            if($language['status']) {
-                self::$active_languages[$language['name']] = $language['code'];
+                $language = [
+                    'name' => $language_name,
+                    'code' => $language_code,
+                    'status' => settings()->languages->{$language_name}->status ?? true,
+                    'content' => null,
+                    'order' => settings()->languages->{$language_name}->order ?? 2,
+                    'language_flag' => settings()->languages->{$language_name}->language_flag ?? '',
+                ];
+
+                self::$languages[$language['name']] = $language;
+
+                if($language['status']) {
+                    self::$active_languages[$language['name']] = $language['code'];
+                }
             }
         }
 
@@ -110,16 +139,14 @@ class Language {
 
             /* We need to generate the caching */
             else {
-                /* Include the language file */
-                if(file_exists(self::$path . $name . '#' . self::$languages[$name]['code'] . '.php')) {
-                    self::$languages[$name]['content'] = require self::$path . $name . '#' . self::$languages[$name]['code'] . '.php';
+                /* Load modular language system only */
+                self::$languages[$name]['content'] = self::load_modular_language($name);
 
-                    /* Only generate the caching if permissions allow */
-                    if(is_writable(self::$path . 'cache/')) {
-                        /* Run processing hook */
-                        $prefixes_to_skip = \SeeGap\CustomHooks::generate_language_prefixes_to_skip();
-                        self::$languages[$name]['content'] = self::generate_cached_language_file(self::$languages[$name], $prefixes_to_skip);
-                    }
+                /* Only generate the caching if permissions allow */
+                if(is_writable(self::$path . 'cache/')) {
+                    /* Run processing hook */
+                    $prefixes_to_skip = \SeeGap\CustomHooks::generate_language_prefixes_to_skip();
+                    self::$languages[$name]['content'] = self::generate_cached_language_file(self::$languages[$name], $prefixes_to_skip);
                 }
             }
 
@@ -127,10 +154,8 @@ class Language {
 
         /* Include the original file if we are in the admin panel */
         else {
-            /* Include the language file */
-            if(file_exists(self::$path . $name . '#' . self::$languages[$name]['code'] . '.php')) {
-                self::$languages[$name]['content'] = require self::$path . $name . '#' . self::$languages[$name]['code'] . '.php';
-            }
+            /* Load modular language system only */
+            self::$languages[$name]['content'] = self::load_modular_language($name);
         }
 
         /* Check the language file */
@@ -195,6 +220,57 @@ class Language {
             unlink($file_path);
         }
 
+    }
+
+    public static function load_modular_language($language_name) {
+        /* Available language modules */
+        $modules = [
+            'core',
+            'date', 
+            'auth',
+            'emails',
+            'dashboard',
+            'account',
+            'links',
+            'microsites',
+            'qr-codes',
+            'projects',
+            'domains',
+            'pixels',
+            'teams',
+            'plans',
+            'payments',
+            'admin',
+            'api',
+            'index',
+            'contact',
+            'pages',
+            'data',
+            'reports',
+            'splash-pages',
+            'gs1-links'
+        ];
+
+        $all_content = [];
+        
+        /* Load each module */
+        foreach ($modules as $module_name) {
+            /* Try to load the default module file */
+            $module_path = self::$path . 'modules/' . $module_name . '.php';
+            if (file_exists($module_path)) {
+                $module_content = require $module_path;
+                $all_content = array_merge($all_content, $module_content);
+            }
+
+            /* Try to load language-specific module override */
+            $language_module_path = self::$path . 'modules/' . $language_name . '/' . $module_name . '.php';
+            if (file_exists($language_module_path)) {
+                $language_specific_content = require $language_module_path;
+                $all_content = array_merge($all_content, $language_specific_content);
+            }
+        }
+        
+        return $all_content;
     }
 
     public static function generate_cached_language_file($language, $prefixes_to_skip) {

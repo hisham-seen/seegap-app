@@ -305,7 +305,6 @@ class MicrositeBlockAjax extends Controller {
             'calendly' => 'CalendlyBlock',
             'typeform' => 'TypeformBlock',
             'soundcloud' => 'SoundcloudBlock',
-            'applemusic' => 'AppleMusicBlock',
             'facebook' => 'FacebookBlock',
             'pdf_document' => 'PdfDocumentBlock',
             'discord' => 'DiscordBlock',
@@ -328,13 +327,9 @@ class MicrositeBlockAjax extends Controller {
             'excel_spreadsheet' => 'ExcelSpreadsheetBlock',
             'anchor' => 'AnchorBlock',
             'threads' => 'ThreadsBlock',
-            'snapchat' => 'SnapchatBlock',
             'tidal' => 'TidalBlock',
-            'mixcloud' => 'MixcloudBlock',
-            'kick' => 'KickBlock',
             'twitter_video' => 'TwitterVideoBlock',
             'twitter_profile' => 'TwitterProfileBlock',
-            'pinterest_profile' => 'PinterestProfileBlock',
         ];
 
         /* Check if we have a handler for this block type */

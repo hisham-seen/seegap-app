@@ -27,8 +27,10 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
+        $_POST['form_heading'] = mb_substr(input_clean($_POST['form_heading'] ?? ''), 0, 128);
+        $_POST['form_text'] = mb_substr(trim($_POST['form_text'] ?? ''), 0, 2048);
         $_POST['name'] = mb_substr(input_clean($_POST['name']), 0, 128);
-        $_POST['description'] = mb_substr(input_clean($_POST['description']), 0, 256);
+        $_POST['description'] = mb_substr(input_clean($_POST['description'] ?? ''), 0, 256);
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -38,6 +40,7 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
         
         // Process questions
         $questions = [];
+        $layout_index = 0; // Separate index for layout array
         if(isset($_POST['question_type']) && is_array($_POST['question_type'])) {
             foreach($_POST['question_type'] as $key => $question_type) {
                 if(!empty($_POST['question_text'][$key])) {
@@ -55,15 +58,26 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
                     
                     if(in_array($question_type, ['checkbox', 'radio', 'dropdown'])) {
                         $choices = isset($_POST['question_choices'][$key]) ? explode("\n", $_POST['question_choices'][$key]) : [];
-                        $question['options']->choices = array_filter(array_map('trim', $choices));
+                        $filtered_choices = array_values(array_filter(array_map('trim', $choices)));
+                        $question['options']->choices = $filtered_choices;
+                        
+                        // Add layout option for checkbox and radio
+                        if(in_array($question_type, ['checkbox', 'radio'])) {
+                            $question['options']->layout = isset($_POST['question_layout'][$layout_index]) && $_POST['question_layout'][$layout_index] == 'inline' ? 'inline' : 'block';
+                            $layout_index++; // Increment only for checkbox/radio questions
+                        }
+                        
                     }
                     
                     $questions[] = $question;
                 }
             }
         }
+        
 
         $settings = json_encode([
+            'form_heading' => $_POST['form_heading'],
+            'form_text' => $_POST['form_text'],
             'name' => $_POST['name'],
             'description' => $_POST['description'],
             'questions' => $questions,
@@ -113,13 +127,15 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
+        $_POST['form_heading'] = mb_substr(input_clean($_POST['form_heading'] ?? ''), 0, 128);
+        $_POST['form_text'] = mb_substr(trim($_POST['form_text'] ?? ''), 0, 2048);
         $_POST['name'] = mb_substr(input_clean($_POST['name']), 0, 128);
-        $_POST['description'] = mb_substr(input_clean($_POST['description']), 0, 256);
+        $_POST['description'] = mb_substr(input_clean($_POST['description'] ?? ''), 0, 256);
         $_POST['button_text'] = mb_substr(input_clean($_POST['button_text']), 0, 64);
         $_POST['success_text'] = mb_substr(input_clean($_POST['success_text']), 0, 128);
         $_POST['thank_you_url'] = get_url($_POST['thank_you_url']);
         $_POST['agreement_text'] = mb_substr(input_clean($_POST['agreement_text']), 0, 256);
-        $_POST['agreement_url'] = get_url($_POST['agreement_url']);
+        $_POST['agreement_url'] = filter_var($_POST['agreement_url'] ?? '', FILTER_SANITIZE_URL);
         $_POST['email_notification'] = mb_substr(filter_var($_POST['email_notification'], FILTER_SANITIZE_EMAIL), 0, 320);
         $_POST['webhook_url'] = get_url($_POST['webhook_url']);
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
@@ -128,6 +144,12 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
         $_POST['border_width'] = in_array($_POST['border_width'], [0, 1, 2, 3, 4, 5]) ? (int) $_POST['border_width'] : 0;
         $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'inset', 'outset']) ? query_clean($_POST['border_style']) : 'solid';
         $_POST['border_color'] = !verify_hex_color($_POST['border_color']) ? '#ffffff' : $_POST['border_color'];
+        $_POST['image_display'] = in_array($_POST['image_display'] ?? 'icon', ['icon', 'image', 'background', 'mega_button']) ? $_POST['image_display'] : 'icon';
+        $_POST['image_fit'] = in_array($_POST['image_fit'] ?? 'cover', ['cover', 'contain', 'fill']) ? $_POST['image_fit'] : 'cover';
+        $_POST['mega_button_height'] = (int) ($_POST['mega_button_height'] ?? 200);
+        $_POST['text_alignment'] = in_array($_POST['text_alignment'] ?? 'center', ['center', 'left', 'right', 'justify']) ? $_POST['text_alignment'] : 'center';
+        $_POST['animation'] = in_array($_POST['animation'] ?? 'false', array_merge(['false'], require APP_PATH . 'includes/microsite_animations.php')) ? $_POST['animation'] : 'false';
+        $_POST['animation_runs'] = in_array($_POST['animation_runs'] ?? 'repeat-1', ['repeat-1', 'repeat-2', 'repeat-3', 'infinite']) ? $_POST['animation_runs'] : 'repeat-1';
 
         /* Display settings */
         $this->process_display_settings();
@@ -136,19 +158,14 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
             die();
         }
 
-        /* Check for any errors */
-        $required_fields = ['name'];
+        $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
-        /* Check for any errors */
-        foreach($required_fields as $field) {
-            if(!isset($_POST[$field]) || (isset($_POST[$field]) && empty($_POST[$field]) && $_POST[$field] != '0')) {
-                Response::json(l('global.error_message.empty_fields'), 'error');
-                break 1;
-            }
-        }
+        /* Image upload */
+        $image = \SeeGap\Uploads::process_upload($microsite_block->settings->image ?? '', 'block_thumbnail_images', 'image', 'image_remove', settings()->links->thumbnail_image_size_limit, 'json_error');
 
         // Process questions
         $questions = [];
+        $layout_index = 0; // Separate index for layout array
         if(isset($_POST['question_type']) && is_array($_POST['question_type'])) {
             foreach($_POST['question_type'] as $key => $question_type) {
                 if(!empty($_POST['question_text'][$key])) {
@@ -166,7 +183,15 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
                     
                     if(in_array($question_type, ['checkbox', 'radio', 'dropdown'])) {
                         $choices = isset($_POST['question_choices'][$key]) ? explode("\n", $_POST['question_choices'][$key]) : [];
-                        $question['options']->choices = array_filter(array_map('trim', $choices));
+                        $filtered_choices = array_values(array_filter(array_map('trim', $choices)));
+                        $question['options']->choices = $filtered_choices;
+                        
+                        // Add layout option for checkbox and radio
+                        if(in_array($question_type, ['checkbox', 'radio'])) {
+                            $question['options']->layout = isset($_POST['question_layout'][$layout_index]) && $_POST['question_layout'][$layout_index] == 'inline' ? 'inline' : 'block';
+                            $layout_index++; // Increment only for checkbox/radio questions
+                        }
+                        
                     }
                     
                     $questions[] = $question;
@@ -175,6 +200,8 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
         }
 
         $settings = json_encode([
+            'form_heading' => $_POST['form_heading'],
+            'form_text' => $_POST['form_text'],
             'name' => $_POST['name'],
             'description' => $_POST['description'],
             'questions' => $questions,
@@ -187,13 +214,13 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
             'email_notification' => $_POST['email_notification'],
             'webhook_url' => $_POST['webhook_url'],
             'icon' => $_POST['icon'] ?? '',
-            'image' => $_POST['image'] ?? '',
-            'image_display' => $_POST['image_display'] ?? 'icon',
-            'image_fit' => $_POST['image_fit'] ?? 'cover',
-            'mega_button_height' => $_POST['mega_button_height'] ?? '200',
+            'image' => $image ?? $microsite_block->settings->image ?? '',
+            'image_display' => $_POST['image_display'],
+            'image_fit' => $_POST['image_fit'],
+            'mega_button_height' => $_POST['mega_button_height'],
             'show_text' => isset($_POST['show_text']),
             'text_color' => $_POST['text_color'],
-            'text_alignment' => $_POST['text_alignment'] ?? 'center',
+            'text_alignment' => $_POST['text_alignment'],
             'background_color' => $_POST['background_color'],
             'border_radius' => $_POST['border_radius'],
             'border_width' => $_POST['border_width'],
@@ -204,8 +231,8 @@ class FeedbackCollectorBlock extends BaseBlockHandler {
             'border_shadow_blur' => $_POST['border_shadow_blur'] ?? 0,
             'border_shadow_spread' => $_POST['border_shadow_spread'] ?? 0,
             'border_shadow_color' => $_POST['border_shadow_color'] ?? '#000000',
-            'animation' => $_POST['animation'] ?? false,
-            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            'animation' => $_POST['animation'],
+            'animation_runs' => $_POST['animation_runs'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

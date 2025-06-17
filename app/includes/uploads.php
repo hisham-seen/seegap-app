@@ -94,11 +94,26 @@ return [
     ],
 
     /* :) */
-    'block_thumbnail_images' => [],
-    'block_images' => [],
-    'avatars' => [],
-    'products_files' => [],
-    'backgrounds' => [],
+    'block_thumbnail_images' => [
+        'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
+        'path' => 'block_images/',
+    ],
+    'block_images' => [
+        'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
+        'path' => 'block_images/',
+    ],
+    'avatars' => [
+        'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
+        'path' => 'avatars/',
+    ],
+    'products_files' => [
+        'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'pdf', 'zip', 'rar', 'doc', 'docx'],
+        'path' => 'products_files/',
+    ],
+    'backgrounds' => [
+        'whitelisted_file_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'mp4', 'avif'],
+        'path' => 'backgrounds/',
+    ],
 
     /* File upload links */
     'files' => [

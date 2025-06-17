@@ -1,0 +1,1449 @@
+/**
+ * SeeGap Countdown Styles
+ * Comprehensive CSS for all 12 countdown timer styles
+ * Copyright (c) 2025 SeeGap Ltd.
+ */
+
+/* Base Countdown Styles */
+.seegap-countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    user-select: none;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.countdown-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 15px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Viewport-aware scaling for all countdown styles */
+.seegap-countdown {
+    /* Use CSS clamp() for responsive sizing based on viewport width */
+    --base-font-size: clamp(0.8rem, 4vw, 3rem);
+    --separator-size: clamp(0.6rem, 3vw, 2.5rem);
+    --padding-size: clamp(5px, 2vw, 20px);
+    --gap-size: clamp(3px, 1.5vw, 15px);
+    --min-width: clamp(30px, 8vw, 80px);
+    --label-size: clamp(0.6rem, 2vw, 0.9rem);
+    --border-radius: clamp(4px, 1vw, 8px);
+}
+
+.countdown-display {
+    gap: var(--gap-size);
+}
+
+/* Apply viewport-aware sizing to all countdown styles */
+.seegap-countdown .time-value,
+.seegap-countdown .neon-value,
+.seegap-countdown .matrix-value,
+.seegap-countdown .flip-value,
+.seegap-countdown .slide-value,
+.seegap-countdown .glass-value,
+.seegap-countdown .neuro-value,
+.seegap-countdown .gradient-value,
+.seegap-countdown .minimal-value {
+    font-size: var(--base-font-size) !important;
+    padding: var(--padding-size) !important;
+    min-width: var(--min-width) !important;
+}
+
+.seegap-countdown .separator,
+.seegap-countdown .neon-separator,
+.seegap-countdown .slide-separator,
+.seegap-countdown .minimal-separator {
+    font-size: var(--separator-size) !important;
+}
+
+.seegap-countdown .time-label,
+.seegap-countdown .neon-label,
+.seegap-countdown .matrix-label,
+.seegap-countdown .flip-label,
+.seegap-countdown .slide-label,
+.seegap-countdown .glass-label,
+.seegap-countdown .neuro-label,
+.seegap-countdown .gradient-label,
+.seegap-countdown .minimal-label,
+.seegap-countdown .circular-label,
+.seegap-countdown .gauge-label {
+    font-size: var(--label-size) !important;
+}
+
+/* Ensure containers never exceed viewport width */
+.seegap-countdown .neon-container,
+.seegap-countdown .matrix-content,
+.seegap-countdown .glass-container,
+.seegap-countdown .neuro-container,
+.seegap-countdown .gradient-container,
+.seegap-countdown .minimal-container,
+.seegap-countdown .flip-container,
+.seegap-countdown .slide-container {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-wrap: nowrap;
+}
+
+/* Force single line layout for very small screens */
+@media (max-width: 480px) {
+    .countdown-display {
+        flex-wrap: nowrap !important;
+        flex-direction: row !important;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 100vw;
+        overflow: hidden;
+    }
+    
+    .seegap-countdown .time-unit,
+    .seegap-countdown .neon-unit,
+    .seegap-countdown .matrix-unit,
+    .seegap-countdown .flip-unit,
+    .seegap-countdown .slide-unit,
+    .seegap-countdown .glass-unit,
+    .seegap-countdown .neuro-unit,
+    .seegap-countdown .gradient-unit,
+    .seegap-countdown .minimal-unit {
+        flex: 1;
+        min-width: 0;
+        margin: 0 !important;
+    }
+    
+    /* Adjust circular and gauge styles for small screens */
+    .seegap-countdown.circular-progress .circular-container,
+    .seegap-countdown.gauge-style .gauge-container {
+        flex-wrap: nowrap !important;
+        flex-direction: row !important;
+        gap: var(--gap-size);
+    }
+    
+    .seegap-countdown.circular-progress .circular-unit,
+    .seegap-countdown.gauge-style .gauge-unit {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .seegap-countdown.circular-progress .progress-ring {
+        width: clamp(50px, 15vw, 80px);
+        height: clamp(50px, 15vw, 80px);
+    }
+    
+    .seegap-countdown.gauge-style .gauge-meter {
+        width: clamp(50px, 15vw, 80px);
+        height: clamp(25px, 7.5vw, 40px);
+    }
+}
+
+/* Ultra-compact mode for very tiny screens */
+@media (max-width: 320px) {
+    .seegap-countdown {
+        --base-font-size: clamp(0.7rem, 5vw, 1.2rem);
+        --separator-size: clamp(0.5rem, 4vw, 1rem);
+        --padding-size: clamp(3px, 1.5vw, 8px);
+        --gap-size: clamp(2px, 1vw, 5px);
+        --min-width: clamp(25px, 10vw, 40px);
+        --label-size: clamp(0.5rem, 2.5vw, 0.7rem);
+    }
+    
+    .countdown-display {
+        justify-content: space-around;
+    }
+    
+    .seegap-countdown .time-unit,
+    .seegap-countdown .neon-unit,
+    .seegap-countdown .matrix-unit,
+    .seegap-countdown .flip-unit,
+    .seegap-countdown .slide-unit,
+    .seegap-countdown .glass-unit,
+    .seegap-countdown .neuro-unit,
+    .seegap-countdown .gradient-unit,
+    .seegap-countdown .minimal-unit {
+        flex: 1;
+        max-width: 22%;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .seegap-countdown {
+        padding: 15px 10px;
+    }
+    .countdown-display {
+        gap: 10px;
+    }
+}
+
+/* ===========================================
+   1. DIGITAL LED STYLE
+   =========================================== */
+.seegap-countdown.digital-led .time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.seegap-countdown.digital-led .time-value {
+    font-family: 'Courier New', monospace;
+    font-size: var(--base-font-size);
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 
+        0 0 5px #ff0000,
+        0 0 10px #ff0000,
+        0 0 15px #ff0000,
+        0 0 20px #ff0000;
+    background: #000;
+    padding: var(--padding-size);
+    border-radius: 8px;
+    border: 2px solid #333;
+    min-width: var(--min-width);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.seegap-countdown.digital-led .time-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.seegap-countdown.digital-led .separator {
+    font-family: 'Courier New', monospace;
+    font-size: var(--separator-size);
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+    margin: 0 5px;
+}
+
+/* Dark theme for LED */
+.seegap-countdown.digital-led.dark .time-value {
+    color: #00ff00;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00,
+        0 0 15px #00ff00,
+        0 0 20px #00ff00;
+    background: #111;
+    border-color: #444;
+}
+
+.seegap-countdown.digital-led.dark .separator {
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+.seegap-countdown.digital-led.dark .time-label {
+    color: #999;
+}
+
+/* ===========================================
+   2. DIGITAL LCD STYLE
+   =========================================== */
+.seegap-countdown.digital-lcd .lcd-display {
+    background: #2a2a2a;
+    border: 3px solid #444;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.seegap-countdown.digital-lcd .lcd-screen {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 15px;
+    border: 2px inset #333;
+}
+
+.seegap-countdown.digital-lcd .time-segment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 15px;
+}
+
+.seegap-countdown.digital-lcd .time-value {
+    font-family: 'Courier New', monospace;
+    font-size: 2.5rem;
+    color: #00ff41;
+    background: #000;
+    padding: 10px 15px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    min-width: 70px;
+    text-align: center;
+    box-shadow: inset 0 0 10px rgba(0,255,65,0.3);
+}
+
+.seegap-countdown.digital-lcd .time-label {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+/* Dark theme for LCD */
+.seegap-countdown.digital-lcd.dark .lcd-display {
+    background: #1a1a1a;
+    border-color: #555;
+}
+
+.seegap-countdown.digital-lcd.dark .lcd-screen {
+    background: #0a0a0a;
+    border-color: #444;
+}
+
+.seegap-countdown.digital-lcd.dark .time-value {
+    color: #00ff88;
+    background: #000;
+    border-color: #444;
+    box-shadow: inset 0 0 10px rgba(0,255,136,0.3);
+}
+
+.seegap-countdown.digital-lcd.dark .time-label {
+    color: #aaa;
+}
+
+/* ===========================================
+   3. NEON STYLE
+   =========================================== */
+.seegap-countdown.neon-style {
+    background: #000;
+    border-radius: 15px;
+}
+
+.seegap-countdown.neon-style .neon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.seegap-countdown.neon-style .neon-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 20px;
+}
+
+.seegap-countdown.neon-style .neon-value {
+    font-family: 'Arial', sans-serif;
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #ff006e;
+    text-shadow: 
+        0 0 5px #ff006e,
+        0 0 10px #ff006e,
+        0 0 15px #ff006e,
+        0 0 20px #ff006e,
+        0 0 35px #ff006e,
+        0 0 40px #ff006e;
+    animation: neonPulse 2s ease-in-out infinite alternate;
+    transition: all 0.3s ease;
+}
+
+.seegap-countdown.neon-style .neon-label {
+    font-size: 1rem;
+    color: #ff006e;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #ff006e;
+}
+
+.seegap-countdown.neon-style .neon-separator {
+    font-size: 3rem;
+    color: #00ffff;
+    text-shadow: 0 0 20px #00ffff;
+    margin: 0 10px;
+    animation: neonFlicker 3s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+    from { text-shadow: 0 0 5px #ff006e, 0 0 10px #ff006e, 0 0 15px #ff006e, 0 0 20px #ff006e; }
+    to { text-shadow: 0 0 10px #ff006e, 0 0 20px #ff006e, 0 0 30px #ff006e, 0 0 40px #ff006e; }
+}
+
+@keyframes neonFlicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* Dark theme for neon (enhanced colors) */
+.seegap-countdown.neon-style.dark .neon-value {
+    color: #00ffff;
+    text-shadow: 
+        0 0 5px #00ffff,
+        0 0 10px #00ffff,
+        0 0 15px #00ffff,
+        0 0 20px #00ffff,
+        0 0 35px #00ffff,
+        0 0 40px #00ffff;
+}
+
+.seegap-countdown.neon-style.dark .neon-label {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+.seegap-countdown.neon-style.dark .neon-separator {
+    color: #ff006e;
+    text-shadow: 0 0 20px #ff006e;
+}
+
+/* ===========================================
+   4. MATRIX STYLE
+   =========================================== */
+.seegap-countdown.matrix-style {
+    background: #000;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.seegap-countdown.matrix-style .matrix-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(90deg, transparent 98%, #00ff41 100%),
+        linear-gradient(180deg, transparent 98%, #00ff41 100%);
+    background-size: 20px 20px;
+    opacity: 0.1;
+    animation: matrixRain 20s linear infinite;
+}
+
+.seegap-countdown.matrix-style .matrix-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.seegap-countdown.matrix-style .matrix-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 25px;
+}
+
+.seegap-countdown.matrix-style .matrix-value {
+    font-family: 'Courier New', monospace;
+    font-size: 3rem;
+    color: #00ff41;
+    text-shadow: 0 0 10px #00ff41;
+    background: rgba(0,0,0,0.8);
+    padding: 15px 20px;
+    border: 1px solid #00ff41;
+    border-radius: 5px;
+    animation: matrixGlow 2s ease-in-out infinite alternate;
+}
+
+.seegap-countdown.matrix-style .matrix-label {
+    font-size: 0.9rem;
+    color: #00ff41;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px #00ff41;
+}
+
+@keyframes matrixRain {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+@keyframes matrixGlow {
+    from { box-shadow: 0 0 5px #00ff41; }
+    to { box-shadow: 0 0 20px #00ff41, 0 0 30px #00ff41; }
+}
+
+/* ===========================================
+   5. CIRCULAR PROGRESS STYLE
+   =========================================== */
+.seegap-countdown.circular-progress .circular-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.seegap-countdown.circular-progress .circular-unit {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.circular-progress .progress-ring {
+    transform: rotate(-90deg);
+}
+
+.seegap-countdown.circular-progress .progress-ring-bg {
+    fill: none;
+    stroke: #e0e0e0;
+    stroke-width: 8;
+}
+
+.seegap-countdown.circular-progress .progress-ring-fill {
+    fill: none;
+    stroke: #4285f4;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.seegap-countdown.circular-progress .circular-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.seegap-countdown.circular-progress .circular-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.seegap-countdown.circular-progress .circular-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+/* Dark theme for circular */
+.seegap-countdown.circular-progress.dark .progress-ring-bg {
+    stroke: #333;
+}
+
+.seegap-countdown.circular-progress.dark .circular-value {
+    color: #fff;
+}
+
+.seegap-countdown.circular-progress.dark .circular-label {
+    color: #ccc;
+}
+
+/* ===========================================
+   6. GAUGE STYLE
+   =========================================== */
+.seegap-countdown.gauge-style .gauge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.seegap-countdown.gauge-style .gauge-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.gauge-style .gauge-meter {
+    position: relative;
+    width: 120px;
+    height: 60px;
+    background: conic-gradient(from 180deg, #e0e0e0 0deg, #e0e0e0 180deg, transparent 180deg);
+    border-radius: 120px 120px 0 0;
+    overflow: hidden;
+}
+
+.seegap-countdown.gauge-style .gauge-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: conic-gradient(from 180deg, #ff6b35 0deg, #f7931e 90deg, #ffcc02 180deg);
+    border-radius: 120px 120px 0 0;
+    transform-origin: center bottom;
+    transition: transform 0.5s ease;
+}
+
+.seegap-countdown.gauge-style .gauge-center {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.seegap-countdown.gauge-style .gauge-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.seegap-countdown.gauge-style .gauge-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+/* Dark theme for gauge */
+.seegap-countdown.gauge-style.dark .gauge-meter {
+    background: conic-gradient(from 180deg, #333 0deg, #333 180deg, transparent 180deg);
+}
+
+.seegap-countdown.gauge-style.dark .gauge-value {
+    color: #fff;
+}
+
+.seegap-countdown.gauge-style.dark .gauge-label {
+    color: #ccc;
+}
+
+/* ===========================================
+   7. CARD FLIP STYLE
+   =========================================== */
+.seegap-countdown.card-flip .flip-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.seegap-countdown.card-flip .flip-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.card-flip .flip-card {
+    width: 80px;
+    height: 100px;
+    perspective: 1000px;
+}
+
+.seegap-countdown.card-flip .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.seegap-countdown.card-flip .flip-card-front,
+.seegap-countdown.card-flip .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #f0f0f0, #cacaca);
+    border-radius: 10px;
+    box-shadow: 
+        5px 5px 10px #bebebe,
+        -5px -5px 10px #ffffff;
+}
+
+.seegap-countdown.card-flip .flip-card-back {
+    transform: rotateY(180deg);
+}
+
+.seegap-countdown.card-flip .flip-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.seegap-countdown.card-flip .flip-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+/* Dark theme for flip cards */
+.seegap-countdown.card-flip.dark .flip-card-front,
+.seegap-countdown.card-flip.dark .flip-card-back {
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    box-shadow: 
+        5px 5px 10px #0f0f0f,
+        -5px -5px 10px #3f3f3f;
+}
+
+.seegap-countdown.card-flip.dark .flip-value {
+    color: #fff;
+}
+
+.seegap-countdown.card-flip.dark .flip-label {
+    color: #ccc;
+}
+
+/* ===========================================
+   8. SLIDE ANIMATION STYLE
+   =========================================== */
+.seegap-countdown.slide-animation .slide-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.seegap-countdown.slide-animation .slide-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.slide-animation .slide-wrapper {
+    height: 80px;
+    overflow: hidden;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+}
+
+.seegap-countdown.slide-animation .slide-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #495057;
+    transition: transform 0.3s ease;
+}
+
+.seegap-countdown.slide-animation .slide-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+.seegap-countdown.slide-animation .slide-separator {
+    font-size: 2rem;
+    color: #495057;
+    margin: 0 5px;
+}
+
+/* Dark theme for slide animation */
+.seegap-countdown.slide-animation.dark .slide-wrapper {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+.seegap-countdown.slide-animation.dark .slide-value {
+    color: #f8f9fa;
+}
+
+.seegap-countdown.slide-animation.dark .slide-label {
+    color: #adb5bd;
+}
+
+.seegap-countdown.slide-animation.dark .slide-separator {
+    color: #f8f9fa;
+}
+
+/* ===========================================
+   9. GLASSMORPHISM STYLE
+   =========================================== */
+.seegap-countdown.glassmorphism {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+}
+
+.seegap-countdown.glassmorphism .glass-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.seegap-countdown.glassmorphism .glass-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.glassmorphism .glass-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.seegap-countdown.glassmorphism .glass-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.seegap-countdown.glassmorphism .glass-label {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Dark theme for glassmorphism */
+.seegap-countdown.glassmorphism.dark {
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+    border-color: rgba(255,255,255,0.1);
+}
+
+.seegap-countdown.glassmorphism.dark .glass-card {
+    background: rgba(0,0,0,0.2);
+    border-color: rgba(255,255,255,0.1);
+}
+
+.seegap-countdown.glassmorphism.dark .glass-value {
+    color: rgba(255,255,255,0.95);
+}
+
+.seegap-countdown.glassmorphism.dark .glass-label {
+    color: rgba(255,255,255,0.8);
+}
+
+/* ===========================================
+   10. NEUMORPHISM STYLE
+   =========================================== */
+.seegap-countdown.neumorphism {
+    background: #e0e5ec;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.seegap-countdown.neumorphism .neuro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+.seegap-countdown.neumorphism .neuro-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.neumorphism .neuro-card {
+    background: #e0e5ec;
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 
+        9px 9px 16px #a3b1c6,
+        -9px -9px 16px #ffffff;
+    transition: all 0.3s ease;
+}
+
+.seegap-countdown.neumorphism .neuro-card:hover {
+    box-shadow: 
+        inset 9px 9px 16px #a3b1c6,
+        inset -9px -9px 16px #ffffff;
+}
+
+.seegap-countdown.neumorphism .neuro-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+.seegap-countdown.neumorphism .neuro-label {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Dark theme for neumorphism */
+.seegap-countdown.neumorphism.dark {
+    background: #2d3748;
+}
+
+.seegap-countdown.neumorphism.dark .neuro-card {
+    background: #2d3748;
+    box-shadow: 
+        9px 9px 16px #1a202c,
+        -9px -9px 16px #4a5568;
+}
+
+.seegap-countdown.neumorphism.dark .neuro-card:hover {
+    box-shadow: 
+        inset 9px 9px 16px #1a202c,
+        inset -9px -9px 16px #4a5568;
+}
+
+.seegap-countdown.neumorphism.dark .neuro-value {
+    color: #f7fafc;
+}
+
+.seegap-countdown.neumorphism.dark .neuro-label {
+    color: #cbd5e0;
+}
+
+/* ===========================================
+   11. GRADIENT STYLE
+   =========================================== */
+.seegap-countdown.gradient {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.seegap-countdown.gradient .gradient-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.seegap-countdown.gradient .gradient-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.gradient .gradient-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+.seegap-countdown.gradient .gradient-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.seegap-countdown.gradient .gradient-label {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.9);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Dark theme for gradient */
+.seegap-countdown.gradient.dark {
+    background: linear-gradient(45deg, #1a202c 0%, #2d3748 100%);
+}
+
+.seegap-countdown.gradient.dark .gradient-card {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 50%, #553c9a 100%);
+}
+
+.seegap-countdown.gradient.dark .gradient-value {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+}
+
+.seegap-countdown.gradient.dark .gradient-label {
+    color: rgba(255,255,255,0.95);
+}
+
+/* ===========================================
+   12. MINIMALIST STYLE
+   =========================================== */
+.seegap-countdown.minimalist .minimal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.seegap-countdown.minimalist .minimal-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seegap-countdown.minimalist .minimal-value {
+    font-size: 3rem;
+    font-weight: 300;
+    color: #2d3748;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.seegap-countdown.minimalist .minimal-label {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+}
+
+.seegap-countdown.minimalist .minimal-separator {
+    font-size: 2rem;
+    color: #cbd5e0;
+    margin: 0 10px;
+    font-weight: 300;
+}
+
+/* Dark theme for minimalist */
+.seegap-countdown.minimalist.dark .minimal-value {
+    color: #f7fafc;
+}
+
+.seegap-countdown.minimalist.dark .minimal-label {
+    color: #a0aec0;
+}
+
+.seegap-countdown.minimalist.dark .minimal-separator {
+    color: #4a5568;
+}
+
+/* ===========================================
+   COMPLETION STATE
+   =========================================== */
+.countdown-completed {
+    text-align: center;
+    padding: 40px;
+}
+
+.completed-message {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #e53e3e;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: completedPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes completedPulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+/* ===========================================
+   RESPONSIVE DESIGN
+   =========================================== */
+
+/* Extra Large Screens (1200px and up) */
+@media (min-width: 1200px) {
+    .seegap-countdown {
+        padding: 30px;
+    }
+    
+    .seegap-countdown .time-value,
+    .seegap-countdown .neon-value,
+    .seegap-countdown .matrix-value,
+    .seegap-countdown .minimal-value {
+        font-size: 3.5rem;
+        padding: 20px 25px;
+    }
+    
+    .seegap-countdown .flip-value {
+        font-size: 3rem;
+    }
+    
+    .seegap-countdown .glass-value,
+    .seegap-countdown .neuro-value,
+    .seegap-countdown .gradient-value {
+        font-size: 3rem;
+    }
+    
+    .seegap-countdown .circular-value,
+    .seegap-countdown .gauge-value {
+        font-size: 2.2rem;
+    }
+    
+    .countdown-display {
+        gap: 25px;
+    }
+}
+
+/* Large Screens (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .seegap-countdown {
+        padding: 25px;
+    }
+    
+    .seegap-countdown .time-value,
+    .seegap-countdown .neon-value,
+    .seegap-countdown .matrix-value,
+    .seegap-countdown .minimal-value {
+        font-size: 3.2rem;
+        padding: 18px 22px;
+    }
+    
+    .countdown-display {
+        gap: 20px;
+    }
+}
+
+/* Medium Screens (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .seegap-countdown {
+        padding: 20px;
+    }
+    
+    .seegap-countdown .time-value,
+    .seegap-countdown .neon-value,
+    .seegap-countdown .matrix-value,
+    .seegap-countdown .minimal-value {
+        font-size: 2.8rem;
+        padding: 15px 20px;
+    }
+    
+    .seegap-countdown .flip-value {
+        font-size: 2.3rem;
+    }
+    
+    .seegap-countdown .glass-value,
+    .seegap-countdown .neuro-value,
+    .seegap-countdown .gradient-value {
+        font-size: 2.3rem;
+    }
+    
+    .seegap-countdown .circular-value,
+    .seegap-countdown .gauge-value {
+        font-size: 1.6rem;
+    }
+    
+    .countdown-display {
+        gap: 18px;
+    }
+}
+
+/* Small Screens (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .seegap-countdown {
+        padding: 15px 10px;
+    }
+    
+    .seegap-countdown .time-value,
+    .seegap-countdown .neon-value,
+    .seegap-countdown .matrix-value,
+    .seegap-countdown .flip-value,
+    .seegap-countdown .slide-value,
+    .seegap-countdown .glass-value,
+    .seegap-countdown .neuro-value,
+    .seegap-countdown .gradient-value,
+    .seegap-countdown .minimal-value {
+        font-size: 2rem;
+        padding: 12px 16px;
+    }
+    
+    .seegap-countdown .circular-value,
+    .seegap-countdown .gauge-value {
+        font-size: 1.3rem;
+    }
+    
+    .countdown-display {
+        gap: 15px;
+    }
+    
+    .seegap-countdown.circular-progress .circular-container,
+    .seegap-countdown.gauge-style .gauge-container {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .seegap-countdown .glass-card,
+    .seegap-countdown .neuro-card,
+    .seegap-countdown .gradient-card {
+        padding: 18px;
+    }
+    
+    /* Adjust circular progress rings for smaller screens */
+    .seegap-countdown.circular-progress .progress-ring {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .seegap-countdown.circular-progress .progress-ring circle {
+        r: 40;
+        cx: 50;
+        cy: 50;
+    }
+    
+    /* Adjust gauge meters for smaller screens */
+    .seegap-countdown.gauge-style .gauge-meter {
+        width: 100px;
+        height: 50px;
+    }
+}
+
+/* Extra Small Screens (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+    .seegap-countdown {
+        padding: 12px 8px;
+    }
+    
+    .seegap-countdown .time-value,
+    .seegap-countdown .neon-value,
+    .seegap-countdown .matrix-value,
+    .seegap-countdown .flip-value,
+    .seegap-countdown .slide-value,
+    .seegap-countdown .glass-value,
+    .seegap-countdown .neuro-value,
+    .seegap-countdown .gradient-value,
+    .seegap-countdown .minimal-value {
+        font-size: 1.8rem;
+        padding: 10px 14px;
+    }
+    
+    .seegap-countdown .circular-value,
+    .seegap-countdown .gauge-value {
+        font-size: 1.1rem;
+    }
+    
+    .countdown-display {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .seegap-countdown.circular-progress .circular-container,
+    .seegap-countdown.gauge-style .gauge-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .seegap-countdown .glass-card,
+    .seegap-countdown .neuro-card,
+    .seegap-countdown .gradient-card {
+        padding: 15px;
+    }
+    
+    /* Smaller flip cards */
+    .seegap-countdown.card-flip .flip-card {
+        width: 70px;
+        height: 85px;
+    }
+    
+    /* Smaller slide wrappers */
+    .seegap-countdown.slide-animation .slide-wrapper {
+        height: 70px;
+        min-width: 60px;
+    }
+}
+
+/* Very Small Screens (320px to 479px) */
+@media (max-width: 479px) {
+    .seegap-countdown {
+        padding: 10px 5px;
+    }
+    
+    .seegap-countdown .time-value,
+    .seegap-countdown .neon-value,
+    .seegap-countdown .matrix-value,
+    .seegap-countdown .flip-value,
+    .seegap-countdown .slide-value,
+    .seegap-countdown .glass-value,
+    .seegap-countdown .neuro-value,
+    .seegap-countdown .gradient-value,
+    .seegap-countdown .minimal-value {
+        font-size: 1.5rem;
+        padding: 8px 12px;
+    }
+    
+    .seegap-countdown .circular-value,
+    .seegap-countdown .gauge-value {
+        font-size: 1rem;
+    }
+    
+    .countdown-display {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .seegap-countdown.circular-progress .circular-container,
+    .seegap-countdown.gauge-style .gauge-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .seegap-countdown .glass-card,
+    .seegap-countdown .neuro-card,
+    .seegap-countdown .gradient-card {
+        padding: 12px;
+    }
+    
+    /* Very small flip cards */
+    .seegap-countdown.card-flip .flip-card {
+        width: 60px;
+        height: 75px;
+    }
+    
+    /* Very small slide wrappers */
+    .seegap-countdown.slide-animation .slide-wrapper {
+        height: 60px;
+        min-width: 50px;
+    }
+    
+    /* Smaller circular progress rings */
+    .seegap-countdown.circular-progress .progress-ring {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .seegap-countdown.circular-progress .progress-ring circle {
+        r: 30;
+        cx: 40;
+        cy: 40;
+    }
+    
+    /* Smaller gauge meters */
+    .seegap-countdown.gauge-style .gauge-meter {
+        width: 80px;
+        height: 40px;
+    }
+    
+    /* Adjust separators */
+    .seegap-countdown .separator,
+    .seegap-countdown .neon-separator,
+    .seegap-countdown .slide-separator,
+    .seegap-countdown .minimal-separator {
+        font-size: 1.5rem;
+        margin: 0 3px;
+    }
+    
+    /* Adjust labels */
+    .seegap-countdown .time-label,
+    .seegap-countdown .neon-label,
+    .seegap-countdown .matrix-label,
+    .seegap-countdown .flip-label,
+    .seegap-countdown .slide-label,
+    .seegap-countdown .glass-label,
+    .seegap-countdown .neuro-label,
+    .seegap-countdown .gradient-label,
+    .seegap-countdown .minimal-label,
+    .seegap-countdown .circular-label,
+    .seegap-countdown .gauge-label {
+        font-size: 0.7rem;
+        margin-top: 5px;
+    }
+}
+
+/* Ultra Small Screens (below 320px) */
+@media (max-width: 319px) {
+    .seegap-countdown {
+        padding: 8px 3px;
+    }
+    
+    .seegap-countdown .time-value,
+    .seegap-countdown .neon-value,
+    .seegap-countdown .matrix-value,
+    .seegap-countdown .flip-value,
+    .seegap-countdown .slide-value,
+    .seegap-countdown .glass-value,
+    .seegap-countdown .neuro-value,
+    .seegap-countdown .gradient-value,
+    .seegap-countdown .minimal-value {
+        font-size: 1.2rem;
+        padding: 6px 10px;
+    }
+    
+    .seegap-countdown .circular-value,
+    .seegap-countdown .gauge-value {
+        font-size: 0.9rem;
+    }
+    
+    .countdown-display {
+        gap: 8px;
+    }
+    
+    .seegap-countdown .glass-card,
+    .seegap-countdown .neuro-card,
+    .seegap-countdown .gradient-card {
+        padding: 10px;
+    }
+    
+    /* Ultra small flip cards */
+    .seegap-countdown.card-flip .flip-card {
+        width: 50px;
+        height: 65px;
+    }
+    
+    /* Ultra small slide wrappers */
+    .seegap-countdown.slide-animation .slide-wrapper {
+        height: 50px;
+        min-width: 45px;
+    }
+    
+    /* Ultra small circular progress rings */
+    .seegap-countdown.circular-progress .progress-ring {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .seegap-countdown.circular-progress .progress-ring circle {
+        r: 25;
+        cx: 35;
+        cy: 35;
+    }
+    
+    /* Ultra small gauge meters */
+    .seegap-countdown.gauge-style .gauge-meter {
+        width: 70px;
+        height: 35px;
+    }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .seegap-countdown {
+        padding: 10px;
+    }
+    
+    .countdown-display {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .seegap-countdown.circular-progress .circular-container,
+    .seegap-countdown.gauge-style .gauge-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}

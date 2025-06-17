@@ -10,9 +10,15 @@
 defined('SEEGAP') || die();
 
 $enabled_microsite_blocks = [];
+$available_blocks = settings()->links->available_microsite_blocks ?? new \stdClass();
 
 foreach(require APP_PATH . 'includes/microsite_blocks.php' as $type => $value) {
-    if(settings()->links->available_microsite_blocks->{$type}) {
+    // Initialize property if not set
+    if (!isset($available_blocks->{$type})) {
+        $available_blocks->{$type} = false;
+    }
+    
+    if($available_blocks->{$type}) {
         $enabled_microsite_blocks[$type] = $value;
     }
 }

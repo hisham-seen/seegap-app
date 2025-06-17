@@ -82,6 +82,7 @@ class ParagraphBlock extends BaseBlockHandler {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['text'] = mb_substr(input_clean($_POST['text']), 0, 2048);
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
+        $_POST['text_alignment'] = in_array($_POST['text_alignment'], ['center', 'justify', 'left', 'right']) ? query_clean($_POST['text_alignment']) : 'center';
         $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
         $_POST['border_width'] = in_array($_POST['border_width'], [0, 1, 2, 3, 4, 5]) ? (int) $_POST['border_width'] : 0;
         $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'inset', 'outset']) ? query_clean($_POST['border_style']) : 'solid';

@@ -28,10 +28,10 @@ class EmbeddableBlocksHandler extends BaseBlockHandler {
      */
     public function getSupportedTypes() {
         return [
-            'telegram', 'anchor', 'applemusic', 'soundcloud', 'threads', 'snapchat', 
-            'spotify', 'tidal', 'mixcloud', 'kick', 'tiktok_video', 'typeform', 
+            'telegram', 'anchor', 'soundcloud', 'threads', 
+            'spotify', 'tidal', 'tiktok_video', 'typeform', 
             'calendly', 'tiktok_profile', 'twitch', 'twitter_tweet', 'twitter_video', 
-            'twitter_profile', 'pinterest_profile', 'vimeo', 'youtube', 'instagram_media', 
+            'twitter_profile', 'vimeo', 'youtube', 'instagram_media', 
             'facebook', 'reddit'
         ];
     }
@@ -126,11 +126,6 @@ class EmbeddableBlocksHandler extends BaseBlockHandler {
 
                 break;
 
-            case 'mixcloud':
-
-                $settings['type'] = 'classic';
-
-                break;
         }
 
         $settings = $this->process_microsite_theme_id_settings($link, $settings, $type);
@@ -225,11 +220,6 @@ class EmbeddableBlocksHandler extends BaseBlockHandler {
 
                 break;
 
-            case 'mixcloud':
-
-                $settings['type'] = isset($_POST['type']) && in_array($_POST['type'], ['picture', 'classic', 'mini']) ? query_clean($_POST['type']) : 'classic';
-
-                break;
         }
 
         /* Database query */

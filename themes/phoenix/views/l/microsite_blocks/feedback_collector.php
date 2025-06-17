@@ -4,31 +4,40 @@
     <?php
     // Determine if this is a mega button
     $is_mega_button = isset($data->link->settings->image_display) && $data->link->settings->image_display === 'mega_button';
-    $mega_button_height = $is_mega_button ? ($data->link->settings->mega_button_height ?? '200') : null;
+    $mega_button_height = $is_mega_button ? ($data->link->settings->mega_button_height ?? 200) : null;
     $show_text = $is_mega_button ? ($data->link->settings->show_text ?? true) : true;
     $image_fit = $is_mega_button ? ($data->link->settings->image_fit ?? 'cover') : null;
     
-    // Prepare additional styles for mega button
-    $mega_button_style = '';
-    if ($is_mega_button && $data->link->settings->image) {
-        $mega_button_style = "height: {$mega_button_height}px; background-image: url('" . \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image . "'); background-size: {$image_fit}; background-position: center; background-repeat: no-repeat;";
+    // Prepare additional styles for mega button and background display
+    $button_style = '';
+    if ($is_mega_button) {
+        $button_style = "height: {$mega_button_height}px;";
+        if ($data->link->settings->image ?? '') {
+            $button_style .= " background-image: url('" . \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image . "'); background-size: {$image_fit}; background-position: center; background-repeat: no-repeat;";
+        }
+    } elseif (($data->link->settings->image_display ?? 'icon') == 'background' && ($data->link->settings->image ?? '')) {
+        $button_style = "background-image: url('" . \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image . "'); background-size: cover; background-position: center; background-repeat: no-repeat;";
     }
     ?>
-    <a href="#" data-toggle="modal" data-target="<?= '#feedback_collector_' . $data->link->microsite_block_id ?>" class="btn btn-block btn-primary link-btn <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?> <?= 'link-btn-' . $data->link->settings->border_radius ?> <?= $data->link->design->link_class ?> <?= $is_mega_button ? 'mega-button' : '' ?>" style="<?= $data->link->design->link_style ?> <?= $mega_button_style ?>" data-text-color data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-animation data-background-color data-text-alignment>
+    <a href="#" data-toggle="modal" data-target="<?= '#feedback_collector_' . $data->link->microsite_block_id ?>" class="btn btn-block btn-primary link-btn <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?> <?= 'link-btn-' . ($data->link->settings->border_radius ?? 'rounded') ?> <?= $data->link->design->link_class ?? '' ?> <?= $is_mega_button ? 'mega-button' : '' ?>" style="<?= $data->link->design->link_style ?? '' ?> <?= $button_style ?>" data-text-color data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-animation data-background-color data-text-alignment>
         <?php if (!$is_mega_button): ?>
-        <div class="link-btn-image-wrapper <?= 'link-btn-' . $data->link->settings->border_radius ?>" <?= $data->link->settings->image ? null : 'style="display: none;"' ?>>
-            <img src="<?= $data->link->settings->image ? \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image : null ?>" class="link-btn-image" loading="lazy" />
-        </div>
+            <?php if(($data->link->settings->image_display ?? 'icon') == 'image' && ($data->link->settings->image ?? '')): ?>
+            <div class="link-btn-image-wrapper <?= 'link-btn-' . ($data->link->settings->border_radius ?? 'rounded') ?>">
+                <img src="<?= \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $data->link->settings->image ?>" class="link-btn-image" loading="lazy" />
+            </div>
+            <?php endif; ?>
 
-        <span data-icon>
-            <?php if($data->link->settings->icon): ?>
-                <i class="<?= $data->link->settings->icon ?> mr-1"></i>
-            <?php endif ?>
-        </span>
+            <?php if(($data->link->settings->image_display ?? 'icon') == 'icon'): ?>
+            <span data-icon>
+                <?php if($data->link->settings->icon ?? ''): ?>
+                    <i class="<?= $data->link->settings->icon ?> mr-1"></i>
+                <?php endif ?>
+            </span>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($show_text): ?>
-        <span data-name><?= $data->link->settings->name ?></span>
+        <span data-name><?= $data->link->settings->name ?? '' ?></span>
         <?php endif; ?>
     </a>
 </div>
@@ -56,6 +65,7 @@
     font-weight: bold;
     font-size: 1.2em;
 }
+
 </style>
 
 <?php ob_start() ?>
@@ -64,13 +74,19 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title"><?= $data->link->settings->name ?></h5>
+                <h5 class="modal-title"><?= $data->link->settings->form_heading ?? $data->link->settings->name ?? '' ?></h5>
                 <button type="button" class="close" data-dismiss="modal" title="<?= l('global.close') ?>">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
             <div class="modal-body">
+                <?php if(!empty($data->link->settings->form_text ?? '')): ?>
+                    <div class="mb-3 form-text-content">
+                        <?= html_entity_decode($data->link->settings->form_text) ?>
+                    </div>
+                <?php endif; ?>
+                
                 <form id="<?= 'feedback_collector_form_' . $data->link->microsite_block_id ?>" method="post" role="form">
                     <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="microsite_block_id" value="<?= $data->link->microsite_block_id ?>" />
@@ -78,6 +94,10 @@
                     <div class="notification-container"></div>
 
                     <?php if(isset($data->link->settings->questions) && is_array($data->link->settings->questions) && count($data->link->settings->questions)): ?>
+                        <?php 
+                        // Debug: Uncomment the line below to see the question data structure
+                        // echo '<pre style="background: #f0f0f0; padding: 10px; margin: 10px 0; font-size: 12px;">DEBUG: ' . htmlspecialchars(print_r($data->link->settings->questions, true)) . '</pre>';
+                        ?>
                         <?php foreach($data->link->settings->questions as $question_index => $question): ?>
                             <div class="form-group">
                                 <label><?= $question->question ?> <?= $question->required ? '<span class="text-danger">*</span>' : '' ?></label>
@@ -115,32 +135,80 @@
                                     <input type="hidden" name="question_<?= $question_index ?>" class="rating-value" <?= $question->required ? 'required="required"' : '' ?>>
                                 
                                 <?php elseif($question->type == 'checkbox'): ?>
-                                    <?php if(isset($question->options->choices) && is_array($question->options->choices)): ?>
-                                        <?php foreach($question->options->choices as $choice_index => $choice): ?>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="question_<?= $question_index ?>_<?= $choice_index ?>" name="question_<?= $question_index ?>[]" value="<?= $choice ?>">
-                                                <label class="custom-control-label" for="question_<?= $question_index ?>_<?= $choice_index ?>"><?= $choice ?></label>
-                                            </div>
-                                        <?php endforeach; ?>
+                                    <?php 
+                                    $choices = [];
+                                    if(isset($question->options->choices)) {
+                                        if(is_array($question->options->choices)) {
+                                            $choices = $question->options->choices;
+                                        } elseif(is_object($question->options->choices)) {
+                                            $choices = (array) $question->options->choices;
+                                        }
+                                    }
+                                    ?>
+                                    <?php if(!empty($choices)): ?>
+                                        <?php $layout = $question->options->layout ?? 'block'; ?>
+                                        <div class="<?= $layout == 'inline' ? 'd-flex flex-wrap' : '' ?>">
+                                            <?php foreach($choices as $choice_index => $choice): ?>
+                                                <?php if(!empty(trim($choice))): ?>
+                                                    <div class="custom-control custom-checkbox <?= $layout == 'inline' ? 'mr-3 mb-2' : 'mb-2' ?>">
+                                                        <input type="checkbox" class="custom-control-input" id="question_<?= $question_index ?>_<?= $choice_index ?>" name="question_<?= $question_index ?>[]" value="<?= htmlspecialchars($choice) ?>">
+                                                        <label class="custom-control-label" for="question_<?= $question_index ?>_<?= $choice_index ?>"><?= htmlspecialchars($choice) ?></label>
+                                                    </div>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <p class="text-muted"><small>No choices configured for this question.</small></p>
                                     <?php endif; ?>
                                 
                                 <?php elseif($question->type == 'radio'): ?>
-                                    <?php if(isset($question->options->choices) && is_array($question->options->choices)): ?>
-                                        <?php foreach($question->options->choices as $choice_index => $choice): ?>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" id="question_<?= $question_index ?>_<?= $choice_index ?>" name="question_<?= $question_index ?>" value="<?= $choice ?>" <?= $question->required ? 'required="required"' : '' ?>>
-                                                <label class="custom-control-label" for="question_<?= $question_index ?>_<?= $choice_index ?>"><?= $choice ?></label>
-                                            </div>
-                                        <?php endforeach; ?>
+                                    <?php 
+                                    $choices = [];
+                                    if(isset($question->options->choices)) {
+                                        if(is_array($question->options->choices)) {
+                                            $choices = $question->options->choices;
+                                        } elseif(is_object($question->options->choices)) {
+                                            $choices = (array) $question->options->choices;
+                                        }
+                                    }
+                                    ?>
+                                    <?php if(!empty($choices)): ?>
+                                        <?php $layout = $question->options->layout ?? 'block'; ?>
+                                        <div class="<?= $layout == 'inline' ? 'd-flex flex-wrap' : '' ?>">
+                                            <?php foreach($choices as $choice_index => $choice): ?>
+                                                <?php if(!empty(trim($choice))): ?>
+                                                    <div class="custom-control custom-radio <?= $layout == 'inline' ? 'mr-3 mb-2' : 'mb-2' ?>">
+                                                        <input type="radio" class="custom-control-input" id="question_<?= $question_index ?>_<?= $choice_index ?>" name="question_<?= $question_index ?>" value="<?= htmlspecialchars($choice) ?>" <?= $question->required ? 'required="required"' : '' ?>>
+                                                        <label class="custom-control-label" for="question_<?= $question_index ?>_<?= $choice_index ?>"><?= htmlspecialchars($choice) ?></label>
+                                                    </div>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <p class="text-muted"><small>No choices configured for this question.</small></p>
                                     <?php endif; ?>
                                 
                                 <?php elseif($question->type == 'dropdown'): ?>
+                                    <?php 
+                                    $choices = [];
+                                    if(isset($question->options->choices)) {
+                                        if(is_array($question->options->choices)) {
+                                            $choices = $question->options->choices;
+                                        } elseif(is_object($question->options->choices)) {
+                                            $choices = (array) $question->options->choices;
+                                        }
+                                    }
+                                    ?>
                                     <select class="form-control" name="question_<?= $question_index ?>" <?= $question->required ? 'required="required"' : '' ?>>
                                         <option value="">-- <?= l('global.select') ?> --</option>
-                                        <?php if(isset($question->options->choices) && is_array($question->options->choices)): ?>
-                                            <?php foreach($question->options->choices as $choice): ?>
-                                                <option value="<?= $choice ?>"><?= $choice ?></option>
+                                        <?php if(!empty($choices)): ?>
+                                            <?php foreach($choices as $choice): ?>
+                                                <?php if(!empty(trim($choice))): ?>
+                                                    <option value="<?= htmlspecialchars($choice) ?>"><?= htmlspecialchars($choice) ?></option>
+                                                <?php endif; ?>
                                             <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option disabled>No choices configured</option>
                                         <?php endif; ?>
                                     </select>
                                 <?php endif; ?>
@@ -148,17 +216,17 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <div class="form-group">
-                            <textarea class="form-control" name="message" maxlength="512" required="required" placeholder="<?= $data->link->settings->message_placeholder ?>" aria-label="<?= $data->link->settings->message_placeholder ?>"></textarea>
+                            <textarea class="form-control" name="message" maxlength="512" required="required" placeholder="<?= $data->link->settings->message_placeholder ?? l('global.message') ?>" aria-label="<?= $data->link->settings->message_placeholder ?? l('global.message') ?>"></textarea>
                         </div>
                     <?php endif; ?>
 
-                    <?php if($data->link->settings->show_agreement): ?>
+                    <?php if($data->link->settings->show_agreement ?? false): ?>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" id="<?= 'feedback_collector_agreement_' . $data->link->microsite_block_id ?>" name="agreement" class="custom-control-input" required="required" />
                             <label class="custom-control-label font-weight-normal" for="<?= 'feedback_collector_agreement_' . $data->link->microsite_block_id ?>">
-                                <?= $data->link->settings->agreement_text ?>
+                                <?= $data->link->settings->agreement_text ?? '' ?>
 
-                                <?php if($data->link->settings->agreement_url): ?>
+                                <?php if($data->link->settings->agreement_url ?? ''): ?>
                                     <a href="<?= $data->link->settings->agreement_url ?>" target="_blank"><i class="fas fa-fw fa-sm fa-external-link-alt"></i></a>
                                 <?php endif ?>
                             </label>
@@ -172,7 +240,7 @@
                     <?php endif ?>
 
                     <div class="text-center mt-4">
-                        <button type="submit" name="submit" class="btn btn-block btn-lg btn-primary" data-is-ajax><?= $data->link->settings->button_text ?></button>
+                        <button type="submit" name="submit" class="btn btn-block btn-lg btn-primary" data-is-ajax><?= $data->link->settings->button_text ?? 'Submit' ?></button>
                     </div>
                 </form>
             </div>

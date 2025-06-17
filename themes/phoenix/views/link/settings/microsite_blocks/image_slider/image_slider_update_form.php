@@ -8,255 +8,592 @@
 
     <div class="notification-container"></div>
 
-    <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'slider_settings_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'slider_settings_container_' . $row->microsite_block_id ?>">
-        <i class="fas fa-fw fa-clone fa-sm mr-1"></i> <?= l('microsite_image_slider.slider_settings_header') ?>
-    </button>
-
-    <div class="collapse" id="<?= 'slider_settings_container_' . $row->microsite_block_id ?>">
-        <div class="form-group">
-            <label for="<?= 'image_slider_width_height_' . $row->microsite_block_id ?>"><?= l('microsite_image_slider.width_height') ?></label>
-            <input id="<?= 'image_slider_width_height_' . $row->microsite_block_id ?>" type="number" min="10" max="25" name="width_height" class="form-control" value="<?= $row->settings->width_height ?>" required="required" />
-        </div>
-
-        <div class="form-group">
-            <label for="<?= 'image_slider_autoplay_interval_' . $row->microsite_block_id ?>"><?= l('microsite_image_slider.autoplay_interval') ?></label>
-            <div class="input-group">
-                <input id="<?= 'image_slider_autoplay_interval_' . $row->microsite_block_id ?>" type="number" min="1" max="20" name="autoplay_interval" class="form-control" value="<?= $row->settings->autoplay_interval ?? 5 ?>" required="required" />
-                <div class="input-group-append">
-                    <span class="input-group-text"><?= l('global.date.seconds') ?></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="<?= 'image_slider_gap_' . $row->microsite_block_id ?>"><?= l('microsite_image_slider.gap') ?></label>
-            <input id="<?= 'image_slider_gap_' . $row->microsite_block_id ?>" type="number" min="0" max="5" name="gap" class="form-control" value="<?= $row->settings->gap ?>" required="required" />
-        </div>
-
-        <div class="form-group custom-control custom-switch">
-            <input
-                    id="<?= 'image_slider_display_multiple_' . $row->microsite_block_id ?>"
-                    name="display_multiple" type="checkbox"
-                    class="custom-control-input"
-                <?= $row->settings->display_multiple ? 'checked="checked"' : null ?>
-            >
-            <label class="custom-control-label" for="<?= 'image_slider_display_multiple_' . $row->microsite_block_id ?>"><?= l('microsite_image_slider.display_multiple') ?></label>
-        </div>
-
-        <div class="form-group custom-control custom-switch">
-            <input
-                    id="<?= 'image_slider_display_arrows_' . $row->microsite_block_id ?>"
-                    name="display_arrows" type="checkbox"
-                    class="custom-control-input"
-                <?= $row->settings->display_arrows ? 'checked="checked"' : null ?>
-            >
-            <label class="custom-control-label" for="<?= 'image_slider_display_arrows_' . $row->microsite_block_id ?>"><?= l('microsite_image_slider.display_arrows') ?></label>
-        </div>
-
-        <div class="form-group custom-control custom-switch">
-            <input
-                    id="<?= 'image_slider_autoplay_' . $row->microsite_block_id ?>"
-                    name="autoplay" type="checkbox"
-                    class="custom-control-input"
-                <?= $row->settings->autoplay ? 'checked="checked"' : null ?>
-            >
-            <label class="custom-control-label" for="<?= 'image_slider_autoplay_' . $row->microsite_block_id ?>"><?= l('microsite_image_slider.autoplay') ?></label>
-        </div>
-
-        <div class="form-group custom-control custom-switch">
-            <input
-                    id="<?= 'image_slider_display_pagination_' . $row->microsite_block_id ?>"
-                    name="display_pagination" type="checkbox"
-                    class="custom-control-input"
-                <?= $row->settings->display_pagination ? 'checked="checked"' : null ?>
-            >
-            <label class="custom-control-label" for="<?= 'image_slider_display_pagination_' . $row->microsite_block_id ?>"><?= l('microsite_image_slider.display_pagination') ?></label>
-        </div>
-
-        <div class="form-group custom-control custom-switch">
-            <input
-                    id="<?= 'alert_open_in_new_tab_' . $row->microsite_block_id ?>"
-                    name="open_in_new_tab" type="checkbox"
-                    class="custom-control-input"
-                <?= $row->settings->open_in_new_tab ? 'checked="checked"' : null ?>
-            >
-            <label class="custom-control-label" for="<?= 'alert_open_in_new_tab_' . $row->microsite_block_id ?>"><?= l('microsite_link.open_in_new_tab') ?></label>
-        </div>
+    <!-- Image Upload Section -->
+    <div class="form-group">
+        <label for="<?= 'new_images_' . $row->microsite_block_id ?>">
+            <i class="fas fa-fw fa-images fa-sm text-muted mr-1"></i> <?= l('global.images') ?>
+        </label>
+        <input 
+            id="<?= 'new_images_' . $row->microsite_block_id ?>" 
+            type="file" 
+            name="new_images[]" 
+            multiple 
+            accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_slider']['whitelisted_image_extensions']) ?>" 
+            class="form-control-file" 
+        />
+        <small class="form-text text-muted">
+            <?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_slider']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?>
+            <br>Hold Ctrl/Cmd to select multiple images.
+        </small>
     </div>
 
-
-    <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'slider_items_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'slider_items_container_' . $row->microsite_block_id ?>">
-        <i class="fas fa-fw fa-images fa-sm mr-1"></i> <?= l('microsite_image_slider.slider_items_header') ?>
-    </button>
-
-    <div class="collapse" id="<?= 'slider_items_container_' . $row->microsite_block_id ?>">
-        <div id="<?= 'image_slider_items_' . $row->microsite_block_id ?>" data-microsite-block-id="<?= $row->microsite_block_id ?>">
-            <?php foreach($row->settings->items as $key => $item): ?>
-                <div class="mb-4">
-                    <div class="form-group">
-                        <label for="<?= 'item_image_' . $key . '_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('global.image') ?></label>
-                        <?= include_view(THEME_PATH . 'views/partials/custom_file_image_input.php', [
-                            'id'=> 'block_image_' . $key . '_' . $row->microsite_block_id,
-                            'uploads_file_key' => 'block_images',
-                            'file_key' => 'item_image_' . $key,
-                            'already_existing_image' => $item->image,
-                            'image_container' => 'image',
-                            'accept' => \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_slider']['whitelisted_image_extensions']),
-                            'input_data' => 'data-crop data-aspect-ratio="1"'
-                        ]) ?>
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_slider']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="<?= 'item_image_alt_' . $key . '_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-comment-dots fa-sm text-muted mr-1"></i> <?= l('microsite_link.image_alt') ?></label>
-                        <input id="<?= 'item_image_alt_' . $key . '_' . $row->microsite_block_id ?>" type="text" class="form-control" name="item_image_alt[<?= $key ?>]" value="<?= $item->image_alt ?>" maxlength="100" />
-                        <small class="form-text text-muted"><?= l('microsite_link.image_alt_help') ?></small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="<?= 'item_location_url_' . $key . '_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_link.location_url') ?></label>
-                        <input id="<?= 'item_location_url_' . $key . '_' . $row->microsite_block_id ?>" type="text" class="form-control" name="item_location_url[<?= $key ?>]" value="<?= $item->location_url ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                    </div>
-
-                    <button type="button" data-remove="item" class="btn btn-block btn-sm btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('global.delete') ?></button>
-                </div>
-            <?php endforeach ?>
-        </div>
-
+    <!-- Current Images Display -->
+    <?php 
+    // Handle both new (items) and legacy (images) data structures
+    $items_to_display = [];
+    if(!empty($row->settings->items)) {
+        $items_to_display = $row->settings->items;
+    } elseif(!empty($row->settings->images)) {
+        $items_to_display = $row->settings->images;
+    }
+    ?>
+    
+    <?php if(!empty($items_to_display)): ?>
         <div class="mb-3">
-            <button data-add="image_slider_item" data-microsite-block-id="<?= $row->microsite_block_id ?>" type="button" class="btn btn-outline-success btn-block"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-        </div>
-    </div>
-
-    <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'display_settings_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'display_settings_container_' . $row->microsite_block_id ?>">
-        <i class="fas fa-fw fa-display fa-sm mr-1"></i> <?= l('microsite_link.display_settings_header') ?>
-    </button>
-
-    <div class="collapse" id="<?= 'display_settings_container_' . $row->microsite_block_id ?>">
-        <div <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-            <div class="<?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'container-disabled' ?>">
-                <div class="form-group custom-control custom-switch">
-                    <input
-                            id="<?= 'link_schedule_' . $row->microsite_block_id ?>"
-                            name="schedule" type="checkbox"
-                            class="custom-control-input"
-                        <?= !empty($row->start_date) && !empty($row->end_date) ? 'checked="checked"' : null ?>
-                        <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'disabled="disabled"' ?>
-                    >
-                    <label class="custom-control-label" for="<?= 'link_schedule_' . $row->microsite_block_id ?>"><?= l('link.settings.schedule') ?></label>
-                    <small class="form-text text-muted"><?= l('link.settings.schedule_help') ?></small>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-3 schedule_container" style="display: none;">
-            <div <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                <div class="<?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'container-disabled' ?>">
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="<?= 'link_start_date_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-hourglass-start fa-sm text-muted mr-1"></i> <?= l('link.settings.start_date') ?></label>
-                                <input
-                                        id="<?= 'link_start_date_' . $row->microsite_block_id ?>"
-                                        type="text"
-                                        class="form-control"
-                                        name="start_date"
-                                        value="<?= \SeeGap\Date::get($row->start_date, 1) ?>"
-                                        placeholder="<?= l('link.settings.start_date') ?>"
-                                        autocomplete="off"
-                                        data-daterangepicker
-                                >
+            <h6><i class="fas fa-fw fa-images fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.current_images') ?> (<?= count($items_to_display) ?>)</h6>
+            <small class="text-muted d-block mb-2">
+                <i class="fas fa-arrows-alt fa-xs mr-1"></i> Drag to reorder • 
+                <i class="fas fa-edit fa-xs mr-1"></i> Click to edit • 
+                <i class="fas fa-trash fa-xs mr-1"></i> Click × to remove
+            </small>
+            <div class="row" id="image-grid-<?= $row->microsite_block_id ?>">
+                <?php foreach($items_to_display as $key => $item): ?>
+                    <div class="col-4 mb-2 image-item" data-index="<?= $key ?>" data-image="<?= is_object($item) ? $item->image : $item['image'] ?>">
+                        <div class="card h-100 image-card">
+                            <div class="position-relative">
+                                <img 
+                                    src="<?= \SeeGap\Uploads::get_full_url('block_images') . (is_object($item) ? $item->image : $item['image']) ?>" 
+                                    class="card-img-top" 
+                                    style="height: 60px; object-fit: cover; cursor: pointer;" 
+                                    alt="Image <?= $key + 1 ?>" 
+                                    onclick="editImage(<?= $row->microsite_block_id ?>, <?= $key ?>, '<?= is_object($item) ? $item->image : $item['image'] ?>', '<?= is_object($item) ? ($item->image_alt ?? '') : ($item['image_alt'] ?? '') ?>', '<?= is_object($item) ? ($item->location_url ?? '') : ($item['location_url'] ?? '') ?>')"
+                                />
+                                <div class="position-absolute" style="top: 2px; right: 2px;">
+                                    <span class="badge badge-dark badge-sm" style="font-size: 0.7rem;"><?= $key + 1 ?></span>
+                                </div>
+                                <div class="position-absolute" style="top: 2px; left: 2px;">
+                                    <button type="button" class="btn btn-danger btn-sm" style="padding: 1px 4px; font-size: 0.6rem;" onclick="removeImage(<?= $row->microsite_block_id ?>, <?= $key ?>)" title="Remove image">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="position-absolute drag-handle" style="bottom: 2px; right: 2px; cursor: move;" title="Drag to reorder">
+                                    <i class="fas fa-grip-vertical text-white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.7); font-size: 0.8rem;"></i>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="<?= 'link_end_date_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.end_date') ?></label>
-                                <input
-                                        id="<?= 'link_end_date_' . $row->microsite_block_id ?>"
-                                        type="text"
-                                        class="form-control"
-                                        name="end_date"
-                                        value="<?= \SeeGap\Date::get($row->end_date, 1) ?>"
-                                        placeholder="<?= l('link.settings.end_date') ?>"
-                                        autocomplete="off"
-                                        data-daterangepicker
-                                >
+                            <div class="card-body p-1">
+                                <small class="text-muted d-block text-truncate" style="font-size: 0.7rem;" title="<?= is_object($item) ? $item->image : $item['image'] ?>"><?= is_object($item) ? $item->image : $item['image'] ?></small>
+                                <?php 
+                                $alt_text = is_object($item) ? ($item->image_alt ?? '') : ($item['image_alt'] ?? '');
+                                if(!empty($alt_text)): 
+                                ?>
+                                    <small class="text-info d-block text-truncate" style="font-size: 0.65rem;" title="<?= $alt_text ?>">Alt: <?= $alt_text ?></small>
+                                <?php endif ?>
+                                <?php 
+                                $location_url = is_object($item) ? ($item->location_url ?? '') : ($item['location_url'] ?? '');
+                                if(!empty($location_url)): 
+                                ?>
+                                    <small class="text-success d-block text-truncate" style="font-size: 0.65rem;" title="<?= $location_url ?>">
+                                        <i class="fas fa-link fa-xs"></i> Link
+                                    </small>
+                                <?php endif ?>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach ?>
+            </div>
+            
+            <!-- Hidden inputs to store image order and data -->
+            <input type="hidden" name="image_order" id="image-order-<?= $row->microsite_block_id ?>" value="<?= implode(',', array_keys($items_to_display)) ?>">
+            <input type="hidden" name="images_data" id="images-data-<?= $row->microsite_block_id ?>" value="<?= htmlspecialchars(json_encode($items_to_display)) ?>">
+        </div>
+    <?php else: ?>
+        <div class="mb-3">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i>
+                No images uploaded yet. Use the upload section above to add images to your slider.
             </div>
         </div>
+    <?php endif ?>
 
-        <div class="form-group">
-            <label for="<?= 'link_display_continents_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-earth-europe fa-sm text-muted mr-1"></i> <?= l('global.continents') ?></label>
-            <select id="<?= 'link_display_continents_' . $row->microsite_block_id ?>" name="display_continents[]" class="custom-select" multiple="multiple">
-                <?php foreach(get_continents_array() as $continent_code => $continent_name): ?>
-                    <option value="<?= $continent_code ?>" <?= in_array($continent_code, $row->settings->display_continents ?? []) ? 'selected="selected"' : null ?>><?= $continent_name ?></option>
-                <?php endforeach ?>
-            </select>
-            <small class="form-text text-muted"><?= l('microsite_link.settings.display_help') ?></small>
-        </div>
+    <!-- Basic Settings -->
+    <div class="form-group custom-control custom-switch">
+        <input
+            id="<?= 'autoplay_' . $row->microsite_block_id ?>"
+            name="autoplay" 
+            type="checkbox"
+            class="custom-control-input"
+            <?= ($row->settings->autoplay ?? true) ? 'checked="checked"' : null ?>
+        >
+        <label class="custom-control-label" for="<?= 'autoplay_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-play fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.autoplay') ?></label>
+    </div>
 
-        <div class="form-group">
-            <label for="<?= 'link_display_countries_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-globe fa-sm text-muted mr-1"></i> <?= l('global.countries') ?></label>
-            <select id="<?= 'link_display_countries_' . $row->microsite_block_id ?>" name="display_countries[]" class="custom-select" multiple="multiple">
-                <?php foreach(get_countries_array() as $country => $country_name): ?>
-                    <option value="<?= $country ?>" <?= in_array($country, $row->settings->display_countries ?? []) ? 'selected="selected"' : null ?>><?= $country_name ?></option>
-                <?php endforeach ?>
-            </select>
-            <small class="form-text text-muted"><?= l('microsite_link.settings.display_help') ?></small>
-        </div>
+    <div class="form-group custom-control custom-switch">
+        <input
+            id="<?= 'display_arrows_' . $row->microsite_block_id ?>"
+            name="display_arrows" 
+            type="checkbox"
+            class="custom-control-input"
+            <?= ($row->settings->display_arrows ?? true) ? 'checked="checked"' : null ?>
+        >
+        <label class="custom-control-label" for="<?= 'display_arrows_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-chevron-left fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.display_arrows') ?></label>
+    </div>
 
-        <div class="form-group">
-            <label for="<?= 'link_display_cities_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-sm fa-city text-muted mr-1"></i> <?= l('global.cities') ?></label>
-            <input type="text" id="<?= 'link_display_cities_' . $row->microsite_block_id ?>" name="display_cities" value="<?= implode(',', $row->settings->display_cities ?? []) ?>" class="form-control" placeholder="<?= l('microsite_link.display_cities_placeholder') ?>" />
-            <small class="form-text text-muted"><?= l('microsite_link.display_cities_help') ?></small>
-        </div>
+    <div class="form-group custom-control custom-switch">
+        <input
+            id="<?= 'display_pagination_' . $row->microsite_block_id ?>"
+            name="display_pagination" 
+            type="checkbox"
+            class="custom-control-input"
+            <?= ($row->settings->display_pagination ?? true) ? 'checked="checked"' : null ?>
+        >
+        <label class="custom-control-label" for="<?= 'display_pagination_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-circle fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.display_pagination') ?></label>
+    </div>
 
-        <div class="form-group">
-            <label for="<?= 'link_display_devices_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-laptop fa-sm text-muted mr-1"></i> <?= l('microsite_link.display_devices') ?></label>
-            <select id="<?= 'link_display_devices_' . $row->microsite_block_id ?>" name="display_devices[]" class="custom-select" multiple="multiple">
-                <?php foreach(['desktop', 'tablet', 'mobile'] as $device_type): ?>
-                    <option value="<?= $device_type ?>" <?= in_array($device_type, $row->settings->display_devices ?? []) ? 'selected="selected"' : null ?>><?= l('global.device.' . $device_type) ?></option>
-                <?php endforeach ?>
-            </select>
-            <small class="form-text text-muted"><?= l('microsite_link.settings.display_help') ?></small>
-        </div>
+    <div class="form-group custom-control custom-switch">
+        <input
+            id="<?= 'open_in_new_tab_' . $row->microsite_block_id ?>"
+            name="open_in_new_tab" 
+            type="checkbox"
+            class="custom-control-input"
+            <?= ($row->settings->open_in_new_tab ?? false) ? 'checked="checked"' : null ?>
+        >
+        <label class="custom-control-label" for="<?= 'open_in_new_tab_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-external-link-alt fa-sm text-muted mr-1"></i> <?= l('microsite_link.open_in_new_tab') ?></label>
+    </div>
 
-        <div class="form-group">
-            <label for="<?= 'link_display_operating_systems_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-server fa-sm text-muted mr-1"></i> <?= l('microsite_link.display_operating_systems') ?></label>
-            <select id="<?= 'link_display_operating_systems_' . $row->microsite_block_id ?>" name="display_operating_systems[]" class="custom-select" multiple="multiple">
-                <?php foreach(['iOS', 'Android', 'Windows', 'OS X', 'Linux', 'Ubuntu', 'Chrome OS'] as $os_name): ?>
-                    <option value="<?= $os_name ?>" <?= in_array($os_name, $row->settings->display_operating_systems ?? []) ? 'selected="selected"' : null ?>><?= $os_name ?></option>
-                <?php endforeach ?>
-            </select>
-            <small class="form-text text-muted"><?= l('microsite_link.settings.display_help') ?></small>
-        </div>
-
-        <div class="form-group">
-            <label for="<?= 'link_display_browsers_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-window-restore fa-sm text-muted mr-1"></i> <?= l('microsite_link.display_browsers') ?></label>
-            <select id="<?= 'link_display_browsers_' . $row->microsite_block_id ?>" name="display_browsers[]" class="custom-select" multiple="multiple">
-                <?php foreach(['Chrome', 'Firefox', 'Safari', 'Edge', 'Opera', 'Samsung Internet'] as $browser_name): ?>
-                    <option value="<?= $browser_name ?>" <?= in_array($browser_name, $row->settings->display_browsers ?? []) ? 'selected="selected"' : null ?>><?= $browser_name ?></option>
-                <?php endforeach ?>
-            </select>
-            <small class="form-text text-muted"><?= l('microsite_link.settings.display_help') ?></small>
-        </div>
-
-        <div class="form-group">
-            <label for="<?= 'link_display_languages_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-language fa-sm text-muted mr-1"></i> <?= l('microsite_link.display_languages') ?></label>
-            <select id="<?= 'link_display_languages_' . $row->microsite_block_id ?>" name="display_languages[]" class="custom-select" multiple="multiple">
-                <?php foreach(get_locale_languages_array() as $locale => $language): ?>
-                    <option value="<?= $locale ?>" <?= in_array($locale, $row->settings->display_languages ?? []) ? 'selected="selected"' : null ?>><?= $language ?></option>
-                <?php endforeach ?>
-            </select>
-            <small class="form-text text-muted"><?= l('microsite_link.settings.display_help') ?></small>
+    <div class="form-group">
+        <label for="<?= 'autoplay_interval_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-clock fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.autoplay_interval') ?></label>
+        <div class="input-group">
+            <input 
+                id="<?= 'autoplay_interval_' . $row->microsite_block_id ?>" 
+                type="number" 
+                min="1" 
+                max="20" 
+                name="autoplay_interval" 
+                class="form-control" 
+                value="<?= $row->settings->autoplay_interval ?? 5 ?>" 
+                required="required" 
+            />
+            <div class="input-group-append">
+                <span class="input-group-text"><?= l('global.date.seconds') ?></span>
+            </div>
         </div>
     </div>
+
+    <!-- Visual & Layout Settings -->
+    <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'visual_settings_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'visual_settings_container_' . $row->microsite_block_id ?>">
+        <i class="fas fa-fw fa-palette fa-sm mr-1"></i> <?= l('microsite_image_slider.visual_layout_settings') ?>
+    </button>
+
+    <div class="collapse" id="<?= 'visual_settings_container_' . $row->microsite_block_id ?>">
+        <!-- Slider Height -->
+        <div class="form-group" data-range-counter data-range-counter-suffix="px">
+            <label for="<?= 'slider_height_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-v fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.slider_height') ?></label>
+            <input 
+                id="<?= 'slider_height_' . $row->microsite_block_id ?>" 
+                type="range" 
+                min="200" 
+                max="800" 
+                step="10"
+                name="slider_height" 
+                class="form-control-range" 
+                value="<?= $row->settings->slider_height ?? 300 ?>" 
+                required="required"
+            />
+        </div>
+
+        <!-- Aspect Ratio -->
+        <div class="form-group">
+            <label for="<?= 'aspect_ratio_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-expand-arrows-alt fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.aspect_ratio') ?></label>
+            <select id="<?= 'aspect_ratio_' . $row->microsite_block_id ?>" name="aspect_ratio" class="custom-select">
+                <option value="custom" <?= ($row->settings->aspect_ratio ?? 'custom') == 'custom' ? 'selected' : '' ?>><?= l('microsite_image_slider.aspect_ratio_custom') ?></option>
+                <option value="16:9" <?= ($row->settings->aspect_ratio ?? '') == '16:9' ? 'selected' : '' ?>><?= l('microsite_image_slider.aspect_ratio_16_9') ?></option>
+                <option value="4:3" <?= ($row->settings->aspect_ratio ?? '') == '4:3' ? 'selected' : '' ?>><?= l('microsite_image_slider.aspect_ratio_4_3') ?></option>
+                <option value="1:1" <?= ($row->settings->aspect_ratio ?? '') == '1:1' ? 'selected' : '' ?>><?= l('microsite_image_slider.aspect_ratio_1_1') ?></option>
+                <option value="21:9" <?= ($row->settings->aspect_ratio ?? '') == '21:9' ? 'selected' : '' ?>><?= l('microsite_image_slider.aspect_ratio_21_9') ?></option>
+            </select>
+        </div>
+
+        <!-- Image Fit -->
+        <div class="form-group">
+            <label for="<?= 'image_fit_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-expand fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.image_fit') ?></label>
+            <select id="<?= 'image_fit_' . $row->microsite_block_id ?>" name="image_fit" class="custom-select">
+                <option value="cover" <?= ($row->settings->image_fit ?? 'cover') == 'cover' ? 'selected' : '' ?>><?= l('microsite_image_slider.image_fit_cover') ?></option>
+                <option value="contain" <?= ($row->settings->image_fit ?? '') == 'contain' ? 'selected' : '' ?>><?= l('microsite_image_slider.image_fit_contain') ?></option>
+                <option value="fill" <?= ($row->settings->image_fit ?? '') == 'fill' ? 'selected' : '' ?>><?= l('microsite_image_slider.image_fit_fill') ?></option>
+                <option value="scale-down" <?= ($row->settings->image_fit ?? '') == 'scale-down' ? 'selected' : '' ?>><?= l('microsite_image_slider.image_fit_scale_down') ?></option>
+            </select>
+        </div>
+
+        <!-- Border Radius -->
+        <div class="form-group" data-range-counter data-range-counter-suffix="px">
+            <label for="<?= 'border_radius_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-all fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.border_radius') ?></label>
+            <input 
+                id="<?= 'border_radius_' . $row->microsite_block_id ?>" 
+                type="range" 
+                min="0" 
+                max="50" 
+                step="1"
+                name="border_radius" 
+                class="form-control-range" 
+                value="<?= $row->settings->border_radius ?? 0 ?>" 
+                required="required"
+            />
+        </div>
+    </div>
+
+    <!-- Slider Behavior Settings -->
+    <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'behavior_settings_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'behavior_settings_container_' . $row->microsite_block_id ?>">
+        <i class="fas fa-fw fa-cogs fa-sm mr-1"></i> <?= l('microsite_image_slider.slider_behavior_settings') ?>
+    </button>
+
+    <div class="collapse" id="<?= 'behavior_settings_container_' . $row->microsite_block_id ?>">
+        <!-- Transition Type -->
+        <div class="form-group">
+            <label for="<?= 'transition_type_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-exchange-alt fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.transition_type') ?></label>
+            <select id="<?= 'transition_type_' . $row->microsite_block_id ?>" name="transition_type" class="custom-select">
+                <option value="slide" <?= ($row->settings->transition_type ?? 'slide') == 'slide' ? 'selected' : '' ?>><?= l('microsite_image_slider.transition_type_slide') ?></option>
+                <option value="fade" <?= ($row->settings->transition_type ?? '') == 'fade' ? 'selected' : '' ?>><?= l('microsite_image_slider.transition_type_fade') ?></option>
+                <option value="loop" <?= ($row->settings->transition_type ?? '') == 'loop' ? 'selected' : '' ?>><?= l('microsite_image_slider.transition_type_loop') ?></option>
+            </select>
+        </div>
+
+        <!-- Transition Speed -->
+        <div class="form-group" data-range-counter data-range-counter-suffix="ms">
+            <label for="<?= 'transition_speed_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-tachometer-alt fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.transition_speed') ?></label>
+            <input 
+                id="<?= 'transition_speed_' . $row->microsite_block_id ?>" 
+                type="range" 
+                min="200" 
+                max="2000" 
+                step="100"
+                name="transition_speed" 
+                class="form-control-range" 
+                value="<?= $row->settings->transition_speed ?? 600 ?>" 
+                required="required"
+            />
+        </div>
+
+        <!-- Slides Per View -->
+        <div class="form-group">
+            <label for="<?= 'slides_per_view_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-th fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.slides_per_view') ?></label>
+            <select id="<?= 'slides_per_view_' . $row->microsite_block_id ?>" name="slides_per_view" class="custom-select">
+                <option value="1" <?= ($row->settings->slides_per_view ?? 1) == 1 ? 'selected' : '' ?>><?= l('microsite_image_slider.slides_per_view_1') ?></option>
+                <option value="2" <?= ($row->settings->slides_per_view ?? 1) == 2 ? 'selected' : '' ?>><?= l('microsite_image_slider.slides_per_view_2') ?></option>
+                <option value="3" <?= ($row->settings->slides_per_view ?? 1) == 3 ? 'selected' : '' ?>><?= l('microsite_image_slider.slides_per_view_3') ?></option>
+                <option value="4" <?= ($row->settings->slides_per_view ?? 1) == 4 ? 'selected' : '' ?>><?= l('microsite_image_slider.slides_per_view_4') ?></option>
+            </select>
+        </div>
+
+        <!-- Slide Gap -->
+        <div class="form-group" data-range-counter data-range-counter-suffix="px">
+            <label for="<?= 'slide_gap_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-h fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.slide_gap') ?></label>
+            <input 
+                id="<?= 'slide_gap_' . $row->microsite_block_id ?>" 
+                type="range" 
+                min="0" 
+                max="50" 
+                step="5"
+                name="slide_gap" 
+                class="form-control-range" 
+                value="<?= $row->settings->slide_gap ?? 0 ?>" 
+                required="required"
+            />
+        </div>
+
+        <!-- Behavior Toggles -->
+        <div class="form-group custom-control custom-switch">
+            <input
+                id="<?= 'pause_on_hover_' . $row->microsite_block_id ?>"
+                name="pause_on_hover" 
+                type="checkbox"
+                class="custom-control-input"
+                <?= ($row->settings->pause_on_hover ?? true) ? 'checked="checked"' : null ?>
+            >
+            <label class="custom-control-label" for="<?= 'pause_on_hover_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-pause fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.pause_on_hover') ?></label>
+        </div>
+
+        <div class="form-group custom-control custom-switch">
+            <input
+                id="<?= 'infinite_loop_' . $row->microsite_block_id ?>"
+                name="infinite_loop" 
+                type="checkbox"
+                class="custom-control-input"
+                <?= ($row->settings->infinite_loop ?? true) ? 'checked="checked"' : null ?>
+            >
+            <label class="custom-control-label" for="<?= 'infinite_loop_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-sync fa-sm text-muted mr-1"></i> <?= l('microsite_image_slider.infinite_loop') ?></label>
+        </div>
+    </div>
+
+    <?php include THEME_PATH . 'views/partials/display_settings.php'; ?>
 
     <div class="mt-4">
         <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.update') ?></button>
     </div>
 </form>
+
+<!-- Image Edit Modal -->
+<div class="modal fade" id="editImageModal-<?= $row->microsite_block_id ?>" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit mr-2"></i>Edit Image
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <div class="text-center mb-3">
+                        <img id="editImagePreview-<?= $row->microsite_block_id ?>" src="" class="img-fluid" style="max-height: 150px; border-radius: 8px;">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editImageFile-<?= $row->microsite_block_id ?>">
+                        <i class="fas fa-image mr-1"></i>Replace Image (Optional)
+                    </label>
+                    <input type="file" id="editImageFile-<?= $row->microsite_block_id ?>" class="form-control-file" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_slider']['whitelisted_image_extensions']) ?>">
+                    <small class="form-text text-muted">Leave empty to keep current image</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editImageAlt-<?= $row->microsite_block_id ?>">
+                        <i class="fas fa-tag mr-1"></i>Alt Text
+                    </label>
+                    <input type="text" id="editImageAlt-<?= $row->microsite_block_id ?>" class="form-control" placeholder="Describe this image..." maxlength="255">
+                    <small class="form-text text-muted">Helps with accessibility and SEO</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editImageUrl-<?= $row->microsite_block_id ?>">
+                        <i class="fas fa-link mr-1"></i>Link URL (Optional)
+                    </label>
+                    <input type="url" id="editImageUrl-<?= $row->microsite_block_id ?>" class="form-control" placeholder="https://example.com">
+                    <small class="form-text text-muted">Where should this image link to when clicked?</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveImageEdit(<?= $row->microsite_block_id ?>)">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const blockId = <?= $row->microsite_block_id ?>;
+    
+    // Initialize drag and drop functionality
+    initializeDragAndDrop(blockId);
+});
+
+function initializeDragAndDrop(blockId) {
+    const grid = document.getElementById('image-grid-' + blockId);
+    if (!grid) return;
+    
+    let draggedElement = null;
+    
+    // Add drag event listeners to all image items
+    const imageItems = grid.querySelectorAll('.image-item');
+    imageItems.forEach(item => {
+        item.draggable = true;
+        
+        item.addEventListener('dragstart', function(e) {
+            draggedElement = this;
+            this.style.opacity = '0.5';
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        item.addEventListener('dragend', function(e) {
+            this.style.opacity = '';
+            draggedElement = null;
+        });
+        
+        item.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+        
+        item.addEventListener('drop', function(e) {
+            e.preventDefault();
+            if (draggedElement && draggedElement !== this) {
+                // Swap the elements
+                const draggedIndex = Array.from(grid.children).indexOf(draggedElement);
+                const targetIndex = Array.from(grid.children).indexOf(this);
+                
+                if (draggedIndex < targetIndex) {
+                    this.parentNode.insertBefore(draggedElement, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedElement, this);
+                }
+                
+                updateImageOrder(blockId);
+                updateImageNumbers(blockId);
+            }
+        });
+    });
+}
+
+function updateImageOrder(blockId) {
+    const grid = document.getElementById('image-grid-' + blockId);
+    const orderInput = document.getElementById('image-order-' + blockId);
+    
+    if (grid && orderInput) {
+        const items = grid.querySelectorAll('.image-item');
+        const order = Array.from(items).map(item => item.dataset.index);
+        orderInput.value = order.join(',');
+    }
+}
+
+function updateImageNumbers(blockId) {
+    const grid = document.getElementById('image-grid-' + blockId);
+    if (!grid) return;
+    
+    const items = grid.querySelectorAll('.image-item');
+    items.forEach((item, index) => {
+        const badge = item.querySelector('.badge');
+        if (badge) {
+            badge.textContent = index + 1;
+        }
+    });
+}
+
+function editImage(blockId, index, imageName, altText, linkUrl) {
+    const modal = document.getElementById('editImageModal-' + blockId);
+    const preview = document.getElementById('editImagePreview-' + blockId);
+    const altInput = document.getElementById('editImageAlt-' + blockId);
+    const urlInput = document.getElementById('editImageUrl-' + blockId);
+    
+    // Set current values
+    preview.src = '<?= \SeeGap\Uploads::get_full_url('block_images') ?>' + imageName;
+    altInput.value = altText || '';
+    urlInput.value = linkUrl || '';
+    
+    // Store current editing info
+    modal.dataset.editingIndex = index;
+    modal.dataset.currentImage = imageName;
+    
+    // Show modal
+    $(modal).modal('show');
+}
+
+function saveImageEdit(blockId) {
+    const modal = document.getElementById('editImageModal-' + blockId);
+    const index = modal.dataset.editingIndex;
+    const altInput = document.getElementById('editImageAlt-' + blockId);
+    const urlInput = document.getElementById('editImageUrl-' + blockId);
+    const fileInput = document.getElementById('editImageFile-' + blockId);
+    const imagesDataInput = document.getElementById('images-data-' + blockId);
+    
+    try {
+        // Get current images data
+        let imagesData = JSON.parse(imagesDataInput.value);
+        
+        // Update the specific image data
+        if (imagesData[index]) {
+            imagesData[index].image_alt = altInput.value;
+            imagesData[index].location_url = urlInput.value;
+            
+            // Update the hidden input
+            imagesDataInput.value = JSON.stringify(imagesData);
+            
+            // Update the display
+            const imageItem = document.querySelector(`[data-index="${index}"]`);
+            if (imageItem) {
+                const altDisplay = imageItem.querySelector('.text-info');
+                const linkDisplay = imageItem.querySelector('.text-success');
+                
+                // Update alt text display
+                if (altInput.value) {
+                    if (altDisplay) {
+                        altDisplay.textContent = 'Alt: ' + altInput.value;
+                        altDisplay.title = altInput.value;
+                    } else {
+                        const cardBody = imageItem.querySelector('.card-body');
+                        const altElement = document.createElement('small');
+                        altElement.className = 'text-info d-block text-truncate';
+                        altElement.style.fontSize = '0.65rem';
+                        altElement.textContent = 'Alt: ' + altInput.value;
+                        altElement.title = altInput.value;
+                        cardBody.appendChild(altElement);
+                    }
+                } else if (altDisplay) {
+                    altDisplay.remove();
+                }
+                
+                // Update link display
+                if (urlInput.value) {
+                    if (linkDisplay) {
+                        linkDisplay.title = urlInput.value;
+                    } else {
+                        const cardBody = imageItem.querySelector('.card-body');
+                        const linkElement = document.createElement('small');
+                        linkElement.className = 'text-success d-block text-truncate';
+                        linkElement.style.fontSize = '0.65rem';
+                        linkElement.innerHTML = '<i class="fas fa-link fa-xs"></i> Link';
+                        linkElement.title = urlInput.value;
+                        cardBody.appendChild(linkElement);
+                    }
+                } else if (linkDisplay) {
+                    linkDisplay.remove();
+                }
+            }
+            
+            // Handle file replacement if provided
+            if (fileInput.files && fileInput.files[0]) {
+                // For now, just show a message that the file will be replaced on save
+                // The actual file upload will be handled by the form submission
+                console.log('New file selected for replacement');
+            }
+            
+            // Close modal
+            $(modal).modal('hide');
+            
+            // Clear form
+            altInput.value = '';
+            urlInput.value = '';
+            fileInput.value = '';
+            
+        }
+    } catch (e) {
+        console.error('Error saving image edit:', e);
+        alert('Error saving changes. Please try again.');
+    }
+}
+
+function removeImage(blockId, index) {
+    if (!confirm('Are you sure you want to remove this image?')) {
+        return;
+    }
+    
+    const imageItem = document.querySelector(`[data-index="${index}"]`);
+    const imagesDataInput = document.getElementById('images-data-' + blockId);
+    
+    if (imageItem && imagesDataInput) {
+        try {
+            // Remove from data
+            let imagesData = JSON.parse(imagesDataInput.value);
+            imagesData.splice(index, 1);
+            imagesDataInput.value = JSON.stringify(imagesData);
+            
+            // Remove from DOM
+            imageItem.remove();
+            
+            // Update order and numbers
+            updateImageOrder(blockId);
+            updateImageNumbers(blockId);
+            
+            // Update the count in the header
+            const header = document.querySelector('h6');
+            if (header) {
+                const countMatch = header.textContent.match(/\((\d+)\)/);
+                if (countMatch) {
+                    const newCount = parseInt(countMatch[1]) - 1;
+                    header.textContent = header.textContent.replace(/\(\d+\)/, `(${newCount})`);
+                }
+            }
+            
+            // Re-initialize drag and drop for remaining items
+            initializeDragAndDrop(blockId);
+            
+        } catch (e) {
+            console.error('Error removing image:', e);
+            alert('Error removing image. Please try again.');
+        }
+    }
+}
+</script>

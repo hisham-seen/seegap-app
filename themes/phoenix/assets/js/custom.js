@@ -13,55 +13,79 @@ document.querySelectorAll('[data-file-input-wrapper-size-limit]').forEach(elemen
     })
 });
 
-/* File upload handler */
-document.querySelectorAll('[data-file-input-wrapper-size-limit]').forEach(element => {
-    element.querySelector('input[type="file"]').addEventListener('change', event => {
-        let input = event.currentTarget;
-
-        if(input.files && input.files[0] && (input.files[0].size / 1024 / 1024) > element.getAttribute('data-file-input-wrapper-size-limit')) {
-            alert(element.getAttribute('data-file-input-wrapper-size-limit-error'));
-            input.value = '';
-            event.stopPropagation();
-        }
-    })
-});
-
 /* Image upload preview handler */
 document.querySelectorAll('[data-file-image-input-wrapper]').forEach(element => {
-    element.querySelector('input[type="file"]').addEventListener('change', event => {
+    const fileInput = element.querySelector('input[type="file"]');
+    if (!fileInput) return;
+
+    // Store initial image URL if exists
+    const preview_wrapper = element.querySelector('[id*="_preview"]');
+    const preview_image = preview_wrapper?.querySelector('img');
+    if (preview_image && preview_image.getAttribute('src')) {
+        preview_image.setAttribute('data-initial-src', preview_image.getAttribute('src'));
+    }
+
+    fileInput.addEventListener('change', event => {
         let input = event.currentTarget;
-        let preview_image = element.querySelector('[id*="_preview"] img');
+        if (!preview_wrapper || !preview_image) return;
 
         /* Preview image */
         if(input.files && input.files[0]) {
-            let reader = new FileReader();
+            // Validate file size
+            const maxSize = parseInt(element.getAttribute('data-file-input-wrapper-size-limit')) || 2;
+            if ((input.files[0].size / 1024 / 1024) > maxSize) {
+                const errorMessage = element.getAttribute('data-file-input-wrapper-size-limit-error') || 'File is too large';
+                showToast('error', errorMessage);
+                input.value = '';
+                return;
+            }
 
+            // Validate file type
+            const accept = input.getAttribute('accept');
+            if (accept) {
+                const allowedTypes = accept.split(',').map(type => type.trim());
+                const fileType = input.files[0].type;
+                if (!allowedTypes.some(type => fileType.match(new RegExp(type.replace('*', '.*'))))) {
+                    showToast('error', 'Invalid file type');
+                    input.value = '';
+                    return;
+                }
+            }
+
+            let reader = new FileReader();
             reader.onload = event => {
                 /* Display preview wrapper */
-                element.querySelector('[id*="_preview"]').classList.remove('d-none');
-
-                /* Mark it as no default */
-                if(!preview_image.getAttribute('src') && !preview_image.getAttribute('data-src')) {
-                    preview_image.setAttribute('data-no-default-src', 'yes');
-                }
-
-                /* Make sure to save the default src */
-                if(preview_image.getAttribute('src') && !preview_image.getAttribute('data-src') && !preview_image.getAttribute('data-no-default-src')) {
-                    preview_image.setAttribute('data-src', preview_image.getAttribute('src'))
-                }
+                preview_wrapper.classList.remove('d-none');
 
                 /* Display new preview */
                 preview_image.setAttribute('src', event.target.result);
                 preview_image.classList.remove('d-none');
 
                 /* Remove selected file handler */
-                element.querySelector('[id$="_remove_selected_file_wrapper"]').classList.remove('d-none');
+                const removeSelectedWrapper = element.querySelector('[id$="_remove_selected_file_wrapper"]');
+                if (removeSelectedWrapper) {
+                    removeSelectedWrapper.classList.remove('d-none');
+                }
 
                 /* Main remove wrapper */
-                element.querySelector('[id$="_remove_wrapper"]').classList.add('d-none');
+                const removeWrapper = element.querySelector('[id$="_remove_wrapper"]');
+                if (removeWrapper) {
+                    removeWrapper.classList.add('d-none');
+                }
 
                 /* Disable clicks */
-                element.querySelector('[id*="_preview"] a').style.pointerEvents = 'none';
+                const previewLink = preview_wrapper.querySelector('a');
+                if (previewLink) {
+                    previewLink.style.pointerEvents = 'none';
+                    previewLink.setAttribute('href', '#');
+                }
+
+                /* Trigger form change */
+                const form = element.closest('form');
+                if (form) {
+                    const event = new Event('change', { bubbles: true });
+                    form.dispatchEvent(event);
+                }
             };
 
             reader.readAsDataURL(input.files[0]);
@@ -69,26 +93,48 @@ document.querySelectorAll('[data-file-image-input-wrapper]').forEach(element => 
 
         /* Remove image preview / fallback to original */
         else {
-            if(preview_image.getAttribute('data-src')) {
-                preview_image.setAttribute('src', preview_image.getAttribute('data-src'));
+            const initialSrc = preview_image.getAttribute('data-initial-src');
+            if (initialSrc) {
+                preview_image.setAttribute('src', initialSrc);
+                preview_wrapper.classList.remove('d-none');
+                preview_image.classList.remove('d-none');
 
                 /* Enable clicks */
-                element.querySelector('[id*="_preview"] a').style.pointerEvents = 'inherit';
+                const previewLink = preview_wrapper.querySelector('a');
+                if (previewLink) {
+                    previewLink.style.pointerEvents = 'inherit';
+                    previewLink.setAttribute('href', initialSrc);
+                }
+
+                /* Show remove wrapper */
+                const removeWrapper = element.querySelector('[id$="_remove_wrapper"]');
+                if (removeWrapper) {
+                    removeWrapper.classList.remove('d-none');
+                }
             } else {
                 /* Hide preview wrapper */
-                element.querySelector('[id*="_preview"]').classList.add('d-none');
+                preview_wrapper.classList.add('d-none');
                 preview_image.classList.add('d-none');
+                preview_image.setAttribute('src', '');
 
-                /* Remove image link */
-                preview_image.setAttribute('src', '')
+                /* Hide remove wrapper */
+                const removeWrapper = element.querySelector('[id$="_remove_wrapper"]');
+                if (removeWrapper) {
+                    removeWrapper.classList.add('d-none');
+                }
             }
 
-            /* Remove selected file handler */
-            element.querySelector('[id$="_remove_selected_file_wrapper"]').classList.add('d-none');
+            /* Hide remove selected file handler */
+            const removeSelectedWrapper = element.querySelector('[id$="_remove_selected_file_wrapper"]');
+            if (removeSelectedWrapper) {
+                removeSelectedWrapper.classList.add('d-none');
+            }
 
-            /* Main remove wrapper */
-            if(preview_image.getAttribute('src')) {
-                element.querySelector('[id$="_remove_wrapper"]').classList.remove('d-none');
+            /* Trigger form change */
+            const form = element.closest('form');
+            if (form) {
+                const event = new Event('change', { bubbles: true });
+                form.dispatchEvent(event);
             }
         }
     });
@@ -493,6 +539,431 @@ document.querySelectorAll('input[type="url"]').forEach(input => {
     input.addEventListener('blur', fixURL);
     input.addEventListener('keydown', e => e.key === 'Enter' && fixURL());
 });
+
+/* Feedback Collector Functions */
+function initializeFeedbackCollector(blockId) {
+    // Add question button handler
+    const addQuestionBtn = document.getElementById('add_question_' + blockId);
+    if (addQuestionBtn) {
+        addQuestionBtn.addEventListener('click', () => addNewQuestion(blockId));
+    }
+
+    // Initialize existing questions
+    const questionsContainer = document.getElementById('questions_container_' + blockId);
+    if (questionsContainer) {
+        questionsContainer.querySelectorAll('.question-item').forEach(initializeQuestionItem);
+    }
+
+    // Initialize color pickers
+    initializeBlockColorPickers(blockId);
+}
+
+function initializeBlockColorPickers(blockId) {
+    const block = document.getElementById('feedback_collector_settings_container_' + blockId);
+    if (!block) return;
+
+    const pickrOptions = {
+        comparison: false,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: false,
+                hsla: false,
+                hsva: false,
+                cmyk: false,
+                input: true,
+                clear: false,
+                save: false
+            }
+        }
+    };
+
+    // Initialize text color picker
+    const textColorPickr = block.querySelector('.text_color_pickr');
+    const textColorInput = block.querySelector('input[name="text_color"]');
+    if (textColorPickr && textColorInput) {
+        const pickr = Pickr.create({
+            el: textColorPickr,
+            default: textColorInput.value || '#000000',
+            ...pickrOptions
+        });
+
+        pickr.on('change', hsva => {
+            textColorInput.value = hsva.toHEXA().toString();
+        });
+    }
+
+    // Initialize background color picker
+    const bgColorPickr = block.querySelector('.background_color_pickr');
+    const bgColorInput = block.querySelector('input[name="background_color"]');
+    if (bgColorPickr && bgColorInput) {
+        const pickr = Pickr.create({
+            el: bgColorPickr,
+            default: bgColorInput.value || '#FFFFFF',
+            ...pickrOptions
+        });
+
+        pickr.on('change', hsva => {
+            bgColorInput.value = hsva.toHEXA().toString();
+        });
+    }
+}
+
+function initializeQuestionItem(questionItem) {
+    // Question type change handler
+    const questionType = questionItem.querySelector('.question-type');
+    if (questionType) {
+        questionType.addEventListener('change', () => updateQuestionOptions(questionItem));
+    }
+
+    // Remove button handler
+    const removeButton = questionItem.querySelector('.remove-question');
+    if (removeButton) {
+        removeButton.addEventListener('click', () => questionItem.remove());
+    }
+
+    // Initialize any existing options
+    updateQuestionOptions(questionItem);
+}
+
+function addNewQuestion(blockId) {
+    const questionsContainer = document.getElementById('questions_container_' + blockId);
+    const questionCount = questionsContainer.querySelectorAll('.question-item').length;
+
+    const questionItem = document.createElement('div');
+    questionItem.className = 'card mb-3 question-item';
+    questionItem.innerHTML = `
+        <div class="card-body">
+            <div class="form-group">
+                <label>Question Type</label>
+                <select class="form-control question-type" name="question_type[]">
+                    <option value="text">Text Input</option>
+                    <option value="textarea">Text Area</option>
+                    <option value="rating_star">Star Rating</option>
+                    <option value="rating_number">Number Rating</option>
+                    <option value="rating_emoji">Emoji Rating</option>
+                    <option value="checkbox">Checkboxes</option>
+                    <option value="radio">Radio Buttons</option>
+                    <option value="dropdown">Dropdown</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Question Text</label>
+                <input type="text" class="form-control question-text" name="question_text[]" placeholder="Enter your question">
+            </div>
+            
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input question-required" 
+                           id="question_required_${blockId}_${questionCount}" 
+                           name="question_required[]" value="1">
+                    <label class="custom-control-label" 
+                           for="question_required_${blockId}_${questionCount}">Required</label>
+                </div>
+            </div>
+            
+            <div class="question-options-container">
+                <!-- Will be populated based on question type -->
+            </div>
+            
+            <button type="button" class="btn btn-sm btn-outline-danger mt-3 remove-question">
+                <i class="fas fa-trash fa-sm mr-1"></i> Remove Question
+            </button>
+        </div>
+    `;
+
+    questionsContainer.appendChild(questionItem);
+    initializeQuestionItem(questionItem);
+}
+
+function updateQuestionOptions(questionItem) {
+    const type = questionItem.querySelector('.question-type').value;
+    const optionsContainer = questionItem.querySelector('.question-options-container');
+    
+    optionsContainer.innerHTML = '';
+    
+    switch(type) {
+        case 'rating_star':
+        case 'rating_number':
+            optionsContainer.innerHTML = `
+                <div class="form-group">
+                    <label>Maximum Rating</label>
+                    <select class="form-control option-max-rating" name="question_max_rating[]" style="min-width: 80px;">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            `;
+            break;
+            
+        case 'checkbox':
+        case 'radio':
+        case 'dropdown':
+            optionsContainer.innerHTML = `
+                <div class="form-group">
+                    <label>Choices</label>
+                    <textarea class="form-control option-choices" name="question_choices[]" rows="4" 
+                             placeholder="Enter each choice on a new line"></textarea>
+                    <small class="form-text text-muted">Enter each choice on a new line</small>
+                </div>
+            `;
+            break;
+    }
+}
+
+
+/* Initialize feedback collector when block is expanded */
+document.addEventListener('show.bs.collapse', function(event) {
+    const blockContent = event.target;
+    if (blockContent.id && blockContent.id.startsWith('feedback_collector_settings_container_')) {
+        const blockId = blockContent.id.replace('feedback_collector_settings_container_', '');
+
+        // Initialize daterangepicker for schedule dates
+        const startDateInput = document.getElementById(`link_start_date_${blockId}`);
+        const endDateInput = document.getElementById(`link_end_date_${blockId}`);
+        if (startDateInput && endDateInput) {
+            $(`#link_start_date_${blockId},#link_end_date_${blockId}`).daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                minDate: new Date(),
+                locale: {
+                    format: 'YYYY-MM-DD HH:mm:ss'
+                }
+            });
+        }
+
+        // Initialize select2 for multiple select inputs
+        const multiSelects = [
+            `link_display_continents_${blockId}`,
+            `link_display_countries_${blockId}`,
+            `link_display_devices_${blockId}`,
+            `link_display_operating_systems_${blockId}`,
+            `link_display_browsers_${blockId}`,
+            `link_display_languages_${blockId}`
+        ];
+
+        multiSelects.forEach(selectId => {
+            const select = document.getElementById(selectId);
+            if (select && typeof $ === 'function') {
+                $(select).select2({
+                    theme: 'bootstrap4',
+                    placeholder: 'Select options'
+                });
+            }
+        });
+        
+        // Initialize all color pickers in the block
+        const colorPickers = {
+            text_color: document.querySelector(`#feedback_collector_text_color_${blockId}`),
+            background_color: document.querySelector(`#feedback_collector_background_color_${blockId}`),
+            border_color: document.querySelector(`#block_border_color_${blockId}`),
+            border_shadow_color: document.querySelector(`#block_border_shadow_color_${blockId}`)
+        };
+
+        const pickrOptions = {
+            comparison: false,
+            components: {
+                preview: true,
+                opacity: true,
+                hue: true,
+                interaction: {
+                    hex: true,
+                    rgba: false,
+                    hsla: false,
+                    hsva: false,
+                    cmyk: false,
+                    input: true,
+                    clear: false,
+                    save: false
+                }
+            }
+        };
+
+        // Initialize each color picker
+        for (let [key, input] of Object.entries(colorPickers)) {
+            if (input) {
+                const pickrElement = input.parentElement.querySelector(`.${key}_pickr`);
+                if (pickrElement) {
+                    const pickr = Pickr.create({
+                        el: pickrElement,
+                        default: input.value || '#000000',
+                        ...pickrOptions
+                    });
+
+                    pickr.on('change', hsva => {
+                        input.value = hsva.toHEXA().toString();
+                    });
+                }
+            }
+        }
+
+        // Initialize schedule container visibility
+        const scheduleCheckbox = document.getElementById(`link_schedule_${blockId}`);
+        const scheduleContainer = scheduleCheckbox.closest('.form-group').parentElement.nextElementSibling;
+        
+        if (scheduleCheckbox) {
+            scheduleCheckbox.addEventListener('change', () => {
+                scheduleContainer.style.display = scheduleCheckbox.checked ? 'block' : 'none';
+            });
+            // Set initial state
+            scheduleContainer.style.display = scheduleCheckbox.checked ? 'block' : 'none';
+        }
+
+        // Initialize image display type handler
+        const imageDisplaySelect = document.getElementById(`feedback_collector_image_display_${blockId}`);
+        const iconOptionsContainer = document.getElementById(`icon_options_${blockId}`);
+        const megaButtonOptionsContainer = document.getElementById(`mega_button_options_${blockId}`);
+        
+        if (imageDisplaySelect) {
+            const updateImageDisplayOptions = () => {
+                const selectedValue = imageDisplaySelect.value;
+                
+                if (selectedValue === 'icon') {
+                    iconOptionsContainer.style.display = 'block';
+                    megaButtonOptionsContainer.style.display = 'none';
+                } else {
+                    iconOptionsContainer.style.display = 'none';
+                    megaButtonOptionsContainer.style.display = selectedValue === 'mega_button' ? 'block' : 'none';
+                }
+            };
+            
+            imageDisplaySelect.addEventListener('change', updateImageDisplayOptions);
+            // Set initial state
+            updateImageDisplayOptions();
+        }
+
+        // Initialize the questions functionality
+        const questionsContainer = document.getElementById('questions_container_' + blockId);
+        if (questionsContainer) {
+            // Initialize existing questions
+            questionsContainer.querySelectorAll('.question-item').forEach(questionItem => {
+                const questionType = questionItem.querySelector('.question-type');
+                if (questionType) {
+                    questionType.addEventListener('change', () => {
+                        const type = questionType.value;
+                        const optionsContainer = questionItem.querySelector('.question-options-container');
+                        updateQuestionOptions(questionItem, type, optionsContainer);
+                    });
+                }
+
+                const removeButton = questionItem.querySelector('.remove-question');
+                if (removeButton) {
+                    removeButton.addEventListener('click', () => questionItem.remove());
+                }
+            });
+
+            // Add question button handler
+            const addQuestionBtn = document.getElementById('add_question_' + blockId);
+            if (addQuestionBtn) {
+                addQuestionBtn.addEventListener('click', () => {
+                    const questionCount = questionsContainer.querySelectorAll('.question-item').length;
+                    const questionItem = createQuestionItem(blockId, questionCount);
+                    questionsContainer.appendChild(questionItem);
+                });
+            }
+        }
+    }
+});
+
+/* Helper function to create a new question item */
+function createQuestionItem(blockId, questionCount) {
+    const questionItem = document.createElement('div');
+    questionItem.className = 'card mb-3 question-item';
+    questionItem.innerHTML = `
+        <div class="card-body">
+            <div class="form-group">
+                <label>Question Type</label>
+                <select class="form-control question-type" name="question_type[]">
+                    <option value="text">Text Input</option>
+                    <option value="textarea">Text Area</option>
+                    <option value="rating_star">Star Rating</option>
+                    <option value="rating_number">Number Rating</option>
+                    <option value="rating_emoji">Emoji Rating</option>
+                    <option value="checkbox">Checkboxes</option>
+                    <option value="radio">Radio Buttons</option>
+                    <option value="dropdown">Dropdown</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Question Text</label>
+                <input type="text" class="form-control question-text" name="question_text[]" placeholder="Enter your question">
+            </div>
+            
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input question-required" 
+                           id="question_required_${blockId}_${questionCount}" 
+                           name="question_required[]" value="1">
+                    <label class="custom-control-label" 
+                           for="question_required_${blockId}_${questionCount}">Required</label>
+                </div>
+            </div>
+            
+            <div class="question-options-container">
+                <!-- Will be populated based on question type -->
+            </div>
+            
+            <button type="button" class="btn btn-sm btn-outline-danger mt-3 remove-question">
+                <i class="fas fa-trash fa-sm mr-1"></i> Remove Question
+            </button>
+        </div>
+    `;
+
+    // Add event listeners
+    const questionType = questionItem.querySelector('.question-type');
+    questionType.addEventListener('change', () => {
+        const type = questionType.value;
+        const optionsContainer = questionItem.querySelector('.question-options-container');
+        updateQuestionOptions(questionItem, type, optionsContainer);
+    });
+
+    const removeButton = questionItem.querySelector('.remove-question');
+    removeButton.addEventListener('click', () => questionItem.remove());
+
+    // Initialize options for default type
+    const optionsContainer = questionItem.querySelector('.question-options-container');
+    updateQuestionOptions(questionItem, 'text', optionsContainer);
+
+    return questionItem;
+}
+
+/* Helper function to update question options based on type */
+function updateQuestionOptions(questionItem, type, optionsContainer) {
+    optionsContainer.innerHTML = '';
+    
+    switch(type) {
+        case 'rating_star':
+        case 'rating_number':
+            optionsContainer.innerHTML = `
+                <div class="form-group">
+                    <label>Maximum Rating</label>
+                    <select class="form-control option-max-rating" name="question_max_rating[]" style="min-width: 80px;">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            `;
+            break;
+            
+        case 'checkbox':
+        case 'radio':
+        case 'dropdown':
+            optionsContainer.innerHTML = `
+                <div class="form-group">
+                    <label>Choices</label>
+                    <textarea class="form-control option-choices" name="question_choices[]" rows="4" 
+                             placeholder="Enter each choice on a new line"></textarea>
+                    <small class="form-text text-muted">Enter each choice on a new line</small>
+                </div>
+            `;
+            break;
+    }
+}
 
 /* Product specific functions */
 const ajax_call_helper = (event, controller, request_type, success_callback = () => {}) => {

@@ -1,0 +1,141 @@
+[2025-06-17 09:56:17] Created backup directory: backup_display_settings_2025-06-17_09-56-17
+[2025-06-17 09:56:17] Found 65 files to process
+[2025-06-17 09:56:17] Processing: alert/alert_update_form.php
+[2025-06-17 09:56:17] SUCCESS: Updated alert/alert_update_form.php
+[2025-06-17 09:56:17] Processing: anchor/anchor_update_form.php
+[2025-06-17 09:56:17] SUCCESS: Updated anchor/anchor_update_form.php
+[2025-06-17 09:56:17] Processing: applemusic/applemusic_update_form.php
+[2025-06-17 09:56:17] SUCCESS: Updated applemusic/applemusic_update_form.php
+[2025-06-17 09:56:17] Processing: audio/audio_update_form.php
+[2025-06-17 09:56:17] SUCCESS: Updated audio/audio_update_form.php
+[2025-06-17 09:56:17] Processing: avatar/avatar_update_form.php
+[2025-06-17 09:56:18] SUCCESS: Updated avatar/avatar_update_form.php
+[2025-06-17 09:56:18] Processing: big_link/big_link_update_form.php
+[2025-06-17 09:56:18] SUCCESS: Updated big_link/big_link_update_form.php
+[2025-06-17 09:56:18] Processing: calendly/calendly_update_form.php
+[2025-06-17 09:56:18] SUCCESS: Updated calendly/calendly_update_form.php
+[2025-06-17 09:56:18] Processing: contact_collector/contact_collector_update_form.php
+[2025-06-17 09:56:18] SUCCESS: Updated contact_collector/contact_collector_update_form.php
+[2025-06-17 09:56:18] Processing: countdown/countdown_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated countdown/countdown_update_form.php
+[2025-06-17 09:56:19] Processing: coupon/coupon_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated coupon/coupon_update_form.php
+[2025-06-17 09:56:19] Processing: cta/cta_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated cta/cta_update_form.php
+[2025-06-17 09:56:19] Processing: custom_html/custom_html_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated custom_html/custom_html_update_form.php
+[2025-06-17 09:56:19] Processing: discord/discord_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated discord/discord_update_form.php
+[2025-06-17 09:56:19] Processing: divider/divider_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated divider/divider_update_form.php
+[2025-06-17 09:56:19] Processing: donation/donation_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated donation/donation_update_form.php
+[2025-06-17 09:56:19] Processing: email_collector/email_collector_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated email_collector/email_collector_update_form.php
+[2025-06-17 09:56:19] Processing: excel_spreadsheet/excel_spreadsheet_update_form.php
+[2025-06-17 09:56:19] SUCCESS: Updated excel_spreadsheet/excel_spreadsheet_update_form.php
+[2025-06-17 09:56:19] Processing: external_item/external_item_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated external_item/external_item_update_form.php
+[2025-06-17 09:56:20] Processing: facebook/facebook_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated facebook/facebook_update_form.php
+[2025-06-17 09:56:20] Processing: faq/faq_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated faq/faq_update_form.php
+[2025-06-17 09:56:20] Processing: feedback_collector/feedback_collector_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated feedback_collector/feedback_collector_update_form.php
+[2025-06-17 09:56:20] Processing: file/file_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated file/file_update_form.php
+[2025-06-17 09:56:20] Processing: header/header_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated header/header_update_form.php
+[2025-06-17 09:56:20] Processing: heading/heading_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated heading/heading_update_form.php
+[2025-06-17 09:56:20] Processing: iframe/iframe_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated iframe/iframe_update_form.php
+[2025-06-17 09:56:20] Processing: image/image_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated image/image_update_form.php
+[2025-06-17 09:56:20] Processing: image_grid/image_grid_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated image_grid/image_grid_update_form.php
+[2025-06-17 09:56:20] Processing: image_slider/image_slider_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated image_slider/image_slider_update_form.php
+[2025-06-17 09:56:20] Processing: instagram_media/instagram_media_update_form.php
+[2025-06-17 09:56:20] SUCCESS: Updated instagram_media/instagram_media_update_form.php
+[2025-06-17 09:56:20] Processing: kick/kick_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated kick/kick_update_form.php
+[2025-06-17 09:56:21] Processing: link/link_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated link/link_update_form.php
+[2025-06-17 09:56:21] Processing: list/list_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated list/list_update_form.php
+[2025-06-17 09:56:21] Processing: map/map_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated map/map_update_form.php
+[2025-06-17 09:56:21] Processing: markdown/markdown_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated markdown/markdown_update_form.php
+[2025-06-17 09:56:21] Processing: mixcloud/mixcloud_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated mixcloud/mixcloud_update_form.php
+[2025-06-17 09:56:21] Processing: paragraph/paragraph_update_form.php
+[2025-06-17 09:56:21] SKIP: No display settings found in paragraph/paragraph_update_form.php
+[2025-06-17 09:56:21] Processing: paypal/paypal_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated paypal/paypal_update_form.php
+[2025-06-17 09:56:21] Processing: pdf_document/pdf_document_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated pdf_document/pdf_document_update_form.php
+[2025-06-17 09:56:21] Processing: phone_collector/phone_collector_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated phone_collector/phone_collector_update_form.php
+[2025-06-17 09:56:21] Processing: pinterest_profile/pinterest_profile_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated pinterest_profile/pinterest_profile_update_form.php
+[2025-06-17 09:56:21] Processing: powerpoint_presentation/powerpoint_presentation_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated powerpoint_presentation/powerpoint_presentation_update_form.php
+[2025-06-17 09:56:21] Processing: product/product_update_form.php
+[2025-06-17 09:56:21] SUCCESS: Updated product/product_update_form.php
+[2025-06-17 09:56:21] Processing: reddit/reddit_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated reddit/reddit_update_form.php
+[2025-06-17 09:56:22] Processing: review/review_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated review/review_update_form.php
+[2025-06-17 09:56:22] Processing: service/service_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated service/service_update_form.php
+[2025-06-17 09:56:22] Processing: share/share_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated share/share_update_form.php
+[2025-06-17 09:56:22] Processing: snapchat/snapchat_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated snapchat/snapchat_update_form.php
+[2025-06-17 09:56:22] Processing: socials/socials_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated socials/socials_update_form.php
+[2025-06-17 09:56:22] Processing: soundcloud/soundcloud_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated soundcloud/soundcloud_update_form.php
+[2025-06-17 09:56:22] Processing: spotify/spotify_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated spotify/spotify_update_form.php
+[2025-06-17 09:56:22] Processing: telegram/telegram_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated telegram/telegram_update_form.php
+[2025-06-17 09:56:22] Processing: text/text_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated text/text_update_form.php
+[2025-06-17 09:56:22] Processing: threads/threads_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated threads/threads_update_form.php
+[2025-06-17 09:56:22] Processing: tiktok_profile/tiktok_profile_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated tiktok_profile/tiktok_profile_update_form.php
+[2025-06-17 09:56:22] Processing: tiktok_video/tiktok_video_update_form.php
+[2025-06-17 09:56:22] SUCCESS: Updated tiktok_video/tiktok_video_update_form.php
+[2025-06-17 09:56:22] Processing: timeline/timeline_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated timeline/timeline_update_form.php
+[2025-06-17 09:56:23] Processing: twitch/twitch_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated twitch/twitch_update_form.php
+[2025-06-17 09:56:23] Processing: twitter_profile/twitter_profile_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated twitter_profile/twitter_profile_update_form.php
+[2025-06-17 09:56:23] Processing: twitter_tweet/twitter_tweet_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated twitter_tweet/twitter_tweet_update_form.php
+[2025-06-17 09:56:23] Processing: twitter_video/twitter_video_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated twitter_video/twitter_video_update_form.php
+[2025-06-17 09:56:23] Processing: typeform/typeform_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated typeform/typeform_update_form.php
+[2025-06-17 09:56:23] Processing: video/video_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated video/video_update_form.php
+[2025-06-17 09:56:23] Processing: vimeo/vimeo_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated vimeo/vimeo_update_form.php
+[2025-06-17 09:56:23] Processing: youtube/youtube_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated youtube/youtube_update_form.php
+[2025-06-17 09:56:23] Processing: youtube_feed/youtube_feed_update_form.php
+[2025-06-17 09:56:23] SUCCESS: Updated youtube_feed/youtube_feed_update_form.php
+[2025-06-17 09:56:23] 
+=== BULK UPDATE COMPLETE ===
+[2025-06-17 09:56:23] Files processed: 65
+[2025-06-17 09:56:23] Files updated: 64
+[2025-06-17 09:56:23] Files skipped: 1
+[2025-06-17 09:56:23] Errors: 0
+[2025-06-17 09:56:23] Backup directory: backup_display_settings_2025-06-17_09-56-17
+[2025-06-17 09:56:23] 
+SUCCESS: All files processed successfully!

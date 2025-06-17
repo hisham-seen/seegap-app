@@ -21,39 +21,145 @@
 
                     <div class="notification-container"></div>
 
+                    <!-- Image Upload Section -->
                     <div class="form-group">
-                        <label for="image_grid_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_link.name') ?></label>
-                        <input id="image_grid_name" type="text" name="name" class="form-control" />
+                        <label for="new_images_create">
+                            <i class="fas fa-fw fa-images fa-sm text-muted mr-1"></i> <?= l('global.images') ?>
+                        </label>
+                        <input 
+                            id="new_images_create" 
+                            type="file" 
+                            name="new_images[]" 
+                            multiple 
+                            accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_grid']['whitelisted_image_extensions']) ?>" 
+                            class="form-control-file" 
+                            required="required"
+                        />
+                        <small class="form-text text-muted">
+                            <?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_grid']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?>
+                            <br>Hold Ctrl/Cmd to select multiple images.
+                        </small>
                     </div>
 
-                    <div class="form-group">
-                        <label for="image_grid_image"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('global.image') ?></label>
-                        <input id="image_grid_image" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_grid']['whitelisted_image_extensions']) ?>" class="form-control-file seegap-file-input" required="required" data-crop />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image_grid']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
+                    <!-- Basic Settings -->
+                    <div class="form-group custom-control custom-switch">
+                        <input
+                            id="open_in_new_tab_create"
+                            name="open_in_new_tab" 
+                            type="checkbox"
+                            class="custom-control-input"
+                        >
+                        <label class="custom-control-label" for="open_in_new_tab_create"><i class="fas fa-fw fa-external-link-alt fa-sm text-muted mr-1"></i> <?= l('microsite_link.open_in_new_tab') ?></label>
                     </div>
 
-                    <div class="form-group">
-                        <label for="image_grid_location_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_link.location_url') ?></label>
-                        <input id="image_grid_location_url" type="url" class="form-control" name="location_url" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                    </div>
+                    <!-- Grid Layout Settings -->
+                    <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#grid_layout_container_create" aria-expanded="false" aria-controls="grid_layout_container_create">
+                        <i class="fas fa-fw fa-th fa-sm mr-1"></i> <?= l('microsite_image_grid.grid_layout_settings') ?>
+                    </button>
 
-                    <div class="form-group">
-                        <label for="image_grid_columns"><i class="fas fa-fw fa-grip fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.columns') ?></label>
-                        <div class="row btn-group-toggle" data-toggle="buttons">
-                            <div class="col-12 col-lg-6 h-100">
-                                <label class="btn btn-light btn-block text-truncate active">
-                                    <input type="radio" name="columns" value="2" class="custom-control-input" checked="checked" required="required" />
-                                    2
-                                </label>
-                            </div>
-
-                            <div class="col-12 col-lg-6 h-100">
-                                <label class="btn btn-light btn-block text-truncate">
-                                    <input type="radio" name="columns" value="3" class="custom-control-input" required="required" />
-                                    3
-                                </label>
-                            </div>
+                    <div class="collapse" id="grid_layout_container_create">
+                        <!-- Columns -->
+                        <div class="form-group">
+                            <label for="columns_create"><i class="fas fa-fw fa-columns fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.columns') ?></label>
+                            <select id="columns_create" name="columns" class="custom-select">
+                                <option value="1"><?= l('microsite_image_grid.columns_1') ?></option>
+                                <option value="2"><?= l('microsite_image_grid.columns_2') ?></option>
+                                <option value="3" selected><?= l('microsite_image_grid.columns_3') ?></option>
+                                <option value="4"><?= l('microsite_image_grid.columns_4') ?></option>
+                                <option value="5"><?= l('microsite_image_grid.columns_5') ?></option>
+                                <option value="6"><?= l('microsite_image_grid.columns_6') ?></option>
+                            </select>
                         </div>
+
+                        <!-- Grid Gap -->
+                        <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                            <label for="grid_gap_create"><i class="fas fa-fw fa-arrows-alt fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.grid_gap') ?></label>
+                            <input 
+                                id="grid_gap_create" 
+                                type="range" 
+                                min="0" 
+                                max="50" 
+                                step="5"
+                                name="grid_gap" 
+                                class="form-control-range" 
+                                value="10" 
+                                required="required"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Visual & Layout Settings -->
+                    <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#visual_settings_container_create" aria-expanded="false" aria-controls="visual_settings_container_create">
+                        <i class="fas fa-fw fa-palette fa-sm mr-1"></i> <?= l('microsite_image_grid.visual_layout_settings') ?>
+                    </button>
+
+                    <div class="collapse" id="visual_settings_container_create">
+                        <!-- Image Height -->
+                        <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                            <label for="image_height_create"><i class="fas fa-fw fa-arrows-alt-v fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.image_height') ?></label>
+                            <input 
+                                id="image_height_create" 
+                                type="range" 
+                                min="100" 
+                                max="500" 
+                                step="10"
+                                name="image_height" 
+                                class="form-control-range" 
+                                value="200" 
+                                required="required"
+                            />
+                        </div>
+
+                        <!-- Aspect Ratio -->
+                        <div class="form-group">
+                            <label for="aspect_ratio_create"><i class="fas fa-fw fa-expand-arrows-alt fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.aspect_ratio') ?></label>
+                            <select id="aspect_ratio_create" name="aspect_ratio" class="custom-select">
+                                <option value="custom"><?= l('microsite_image_grid.aspect_ratio_custom') ?></option>
+                                <option value="16:9"><?= l('microsite_image_grid.aspect_ratio_16_9') ?></option>
+                                <option value="4:3"><?= l('microsite_image_grid.aspect_ratio_4_3') ?></option>
+                                <option value="1:1" selected><?= l('microsite_image_grid.aspect_ratio_1_1') ?></option>
+                                <option value="21:9"><?= l('microsite_image_grid.aspect_ratio_21_9') ?></option>
+                            </select>
+                        </div>
+
+                        <!-- Image Fit -->
+                        <div class="form-group">
+                            <label for="image_fit_create"><i class="fas fa-fw fa-expand fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.image_fit') ?></label>
+                            <select id="image_fit_create" name="image_fit" class="custom-select">
+                                <option value="cover" selected><?= l('microsite_image_grid.image_fit_cover') ?></option>
+                                <option value="contain"><?= l('microsite_image_grid.image_fit_contain') ?></option>
+                                <option value="fill"><?= l('microsite_image_grid.image_fit_fill') ?></option>
+                                <option value="scale-down"><?= l('microsite_image_grid.image_fit_scale_down') ?></option>
+                            </select>
+                        </div>
+
+                        <!-- Border Radius -->
+                        <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                            <label for="border_radius_create"><i class="fas fa-fw fa-border-all fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.border_radius') ?></label>
+                            <input 
+                                id="border_radius_create" 
+                                type="range" 
+                                min="0" 
+                                max="50" 
+                                step="1"
+                                name="border_radius" 
+                                class="form-control-range" 
+                                value="0" 
+                                required="required"
+                            />
+                        </div>
+
+                        <!-- Hover Effect -->
+                        <div class="form-group">
+                            <label for="hover_effect_create"><i class="fas fa-fw fa-magic fa-sm text-muted mr-1"></i> <?= l('microsite_image_grid.hover_effect') ?></label>
+                            <select id="hover_effect_create" name="hover_effect" class="custom-select">
+                                <option value="none" selected><?= l('microsite_image_grid.hover_effect_none') ?></option>
+                                <option value="zoom"><?= l('microsite_image_grid.hover_effect_zoom') ?></option>
+                                <option value="fade"><?= l('microsite_image_grid.hover_effect_fade') ?></option>
+                                <option value="lift"><?= l('microsite_image_grid.hover_effect_lift') ?></option>
+                            </select>
+                        </div>
+
                     </div>
 
                     <div class="text-center mt-4">

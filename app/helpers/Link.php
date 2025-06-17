@@ -269,13 +269,7 @@ class Link {
                     $link->utm_query = '?utm_medium=' . $link->utm->medium . '&utm_source=' . $link->utm->source . '&utm_campaign=' . $link->settings->name;
                 }
 
-                if($microsite_blocks[$link->type]['type'] == 'default') {
-                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-                } elseif($microsite_blocks[$link->type]['type'] == 'pro') {
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                } elseif($microsite_blocks[$link->type]['type'] == 'ultimate') {
-                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
+                $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 
@@ -291,7 +285,7 @@ class Link {
 
                 $data['embed'] = $match[1] ?? null;
 
-                $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 
@@ -316,15 +310,6 @@ class Link {
 
                 break;
 
-            case 'snapchat':
-
-                if(preg_match('/(snapchat\.com)/', $link->location_url)) {
-                    $data['embed'] = $link->location_url;
-
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
 
             case 'soundcloud':
 
@@ -369,15 +354,6 @@ class Link {
 
                 break;
 
-            case 'telegram':
-
-                if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:t\.me\/)(.+)$/', $link->location_url, $match)) {
-                    $data['embed'] = $match[1];
-
-                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
 
             case 'spotify':
 
@@ -405,102 +381,18 @@ class Link {
                 if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:tiktok\.com\/@)([^\/\?]+)/', $link->location_url, $match)) {
                     $data['embed'] = $match[1];
 
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
 
-            case 'vk_video':
-
-                if(preg_match('/^https:\/\/vk\.com\/(?:.*)video-(\d+)_(\d+)/', $link->location_url, $match)) {
-                    $data['embed_oid'] = $match[1];
-                    $data['embed_id'] = $match[2];
-
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
-
-            case 'applemusic':
-
-                if(preg_match('/(https:\/\/music\.apple\.com)/', $link->location_url)) {
-
-                    $position = mb_strpos($link->location_url, 'music.apple.com');
-
-                    if($position !== false) {
-                        $link->location_url = str_replace('music.apple.com', 'embed.music.apple.com', $link->location_url);
-
-                        $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                    }
-
-                }
-
-                break;
-
-            case 'tidal':
-
-                if(preg_match('/(https:\/\/tidal\.com)/', $link->location_url)) {
-
-                    $position = mb_strpos($link->location_url, 'tidal.com');
-
-                    if($position !== false) {
-                        $link->location_url = str_replace('tidal.com', 'embed.tidal.com', $link->location_url) . '?disableAnalytics=true';
-                        $link->location_url = str_replace('browse/', '', $link->location_url);
-                        $link->location_url = str_replace('track/', 'tracks/', $link->location_url);
-                        $link->location_url = str_replace('album/', 'albums/', $link->location_url);
-
-                        $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                    }
-
-                }
-
-                break;
-
-            case 'mixcloud':
-
-                if(preg_match('/(https:\/\/www.mixcloud\.com)/', $link->location_url)) {
-
-                    $data['embed'] = str_replace('https://www.mixcloud.com', '', $link->location_url);
-
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-
-                }
-
-                break;
-
-            case 'kick':
-
-                if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:kick\.com\/)(.+)$/', $link->location_url, $match)) {
-                    $data['embed'] = $match[1];
-
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
-
-            case 'anchor':
-
-                if(preg_match('/(https:\/\/anchor\.fm)/', $link->location_url)) {
-
-                    $position = mb_strpos($link->location_url, '/', 18);
-
-                    if($position !== false) {
-
-                        $link->location_url = substr_replace($link->location_url, '/embed', $position, 0);
-
-                        $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                    }
-
-                }
-
-                break;
 
             case 'twitter_profile':
 
                 $link->location_url = str_replace('https://x.com/', 'https://twitter.com/', $link->location_url);
 
                 if(preg_match('/(https:\/\/twitter\.com)/', $link->location_url)) {
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -510,7 +402,7 @@ class Link {
                 $link->location_url = str_replace('https://x.com/', 'https://twitter.com/', $link->location_url);
 
                 if(preg_match('/(https:\/\/twitter\.com)/', $link->location_url)) {
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -520,15 +412,7 @@ class Link {
                 $link->location_url = str_replace('https://x.com/', 'https://twitter.com/', $link->location_url);
 
                 if(preg_match('/(https:\/\/twitter\.com)/', $link->location_url)) {
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
-
-            case 'pinterest_profile':
-
-                if(preg_match('/(pinterest\.com)/', $link->location_url)) {
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -536,7 +420,7 @@ class Link {
             case 'instagram_media':
 
                 if(preg_match('/(https:\/\/www.instagram\.com)/', $link->location_url)) {
-                    $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -546,7 +430,7 @@ class Link {
                 if(preg_match('/https:\/\/.+.typeform\.com\/to\/([a-zA-Z0-9]+)/', $link->location_url, $match)) {
                     $data['embed'] = $match[1];
 
-                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -554,7 +438,7 @@ class Link {
             case 'calendly':
 
                 if(preg_match('/(https:\/\/calendly\.com)/', $link->location_url)) {
-                    $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 
                 break;
@@ -562,22 +446,18 @@ class Link {
             case 'custom_html':
             case 'divider':
 
-                $view_path = \SeeGap\Plugin::get('pro-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 
-            case 'discord':
             case 'facebook':
-            case 'reddit':
-            case 'audio':
-            case 'video':
             case 'countdown':
             case 'timeline':
             case 'review':
             case 'markdown':
             case 'iframe':
 
-                $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 
@@ -599,7 +479,7 @@ class Link {
                     $link->utm_query = '?utm_medium=' . $link->utm->medium . '&utm_source=' . $link->utm->source . '&utm_campaign=' . $link->settings->name;
                 }
 
-                $view_path = \SeeGap\Plugin::get('ultimate-blocks')->path . 'views/l/microsite_blocks/' . $link->type . '.php';
+                $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 
                 break;
 

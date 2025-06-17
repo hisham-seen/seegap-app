@@ -19,17 +19,33 @@
                     <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
                     <input type="hidden" name="block_type" value="feedback_collector" />
 
-                    <div class="notification-container"></div>
+    <div class="notification-container"></div>
 
-                    <div class="form-group">
-                        <label for="feedback_collector_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_link.name') ?></label>
-                        <input id="feedback_collector_name" type="text" name="name" maxlength="128" class="form-control" required="required" />
-                    </div>
+    <div class="form-group">
+        <label for="feedback_collector_form_heading"><i class="fas fa-fw fa-heading fa-sm text-muted mr-1"></i> Form Heading</label>
+        <input id="feedback_collector_form_heading" type="text" name="form_heading" class="form-control" maxlength="128" placeholder="Enter form heading..." />
+    </div>
 
-                    <div class="form-group">
-                        <label for="feedback_collector_description"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('microsite_link.description') ?></label>
-                        <textarea id="feedback_collector_description" name="description" class="form-control" maxlength="256"></textarea>
-                    </div>
+    <div class="form-group">
+        <label for="feedback_collector_form_text"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> Form Text</label>
+        <div 
+            id="feedback_collector_form_text_editor" 
+            class="minimalistic-editor" 
+            contenteditable="true"
+            data-placeholder="Enter form description..."
+        ></div>
+        <input type="hidden" name="form_text" id="feedback_collector_form_text" />
+    </div>
+
+    <div class="form-group">
+        <label for="feedback_collector_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_link.name') ?></label>
+        <input id="feedback_collector_name" type="text" name="name" class="form-control" maxlength="128" required="required" />
+    </div>
+
+    <div class="form-group">
+        <label for="feedback_collector_description"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('microsite_link.description') ?></label>
+        <textarea id="feedback_collector_description" name="description" class="form-control" maxlength="256"></textarea>
+    </div>
 
                     <div class="form-group">
                         <label><?= l('microsite_feedback_collector.questions') ?></label>
@@ -128,6 +144,9 @@
             updateQuestionOptions(this.closest('.card'));
         });
 
+        // Initialize options for the newly added question
+        updateQuestionOptions(document.querySelector(`[id="feedback_collector_questions_${microsite_block_id}"] .card:last-child`));
+
         feedback_question_remove_initiator();
     };
 
@@ -170,6 +189,22 @@
                 
             case 'checkbox':
             case 'radio':
+                optionsContainer.innerHTML = `
+                    <div class="form-group">
+                        <label><?= l('microsite_feedback_collector.choices') ?></label>
+                        <textarea class="form-control option-choices" name="question_choices[]" rows="4"></textarea>
+                        <small class="form-text text-muted"><?= l('microsite_feedback_collector.choices_help') ?></small>
+                    </div>
+                    <div class="form-group">
+                        <label><?= l('microsite_feedback_collector.layout') ?></label>
+                        <select class="form-control option-layout" name="question_layout[]">
+                            <option value="block"><?= l('microsite_feedback_collector.layout_block') ?></option>
+                            <option value="inline"><?= l('microsite_feedback_collector.layout_inline') ?></option>
+                        </select>
+                    </div>
+                `;
+                break;
+                
             case 'dropdown':
                 optionsContainer.innerHTML = `
                     <div class="form-group">
@@ -185,3 +220,32 @@
     feedback_question_remove_initiator();
 </script>
 <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript', 'feedback_collector_block') ?>
+
+<?php include THEME_PATH . 'views/partials/wysiwyg_editor.php'; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize minimalistic editor for create modal when modal is shown
+    $('#create_microsite_feedback_collector').on('shown.bs.modal', function() {
+        const editorInstance = initMinimalisticEditor(
+            'feedback_collector_form_text_editor',
+            'feedback_collector_form_text',
+            {
+                placeholder: 'Enter form description...',
+                toolbar: ['bold', 'italic', 'underline', '|', 'insertUnorderedList', 'insertOrderedList', '|', 'createLink']
+            }
+        );
+        
+        // Handle form submission manually since form doesn't have an ID
+        const form = document.querySelector('form[name="create_microsite_feedback_collector"]');
+        if (form && editorInstance) {
+            form.addEventListener('submit', function() {
+                const hiddenInput = document.getElementById('feedback_collector_form_text');
+                if (hiddenInput && editorInstance) {
+                    hiddenInput.value = editorInstance.getContent();
+                }
+            });
+        }
+    });
+});
+</script>

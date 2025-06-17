@@ -27,7 +27,12 @@ class CountdownBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
-        $_POST['end_date'] = (new \DateTime($_POST['end_date']))->format('Y-m-d H:i:s');
+        $_POST['counter_end_date'] = (new \DateTime($_POST['counter_end_date']))->format('Y-m-d H:i:s');
+        $_POST['style'] = in_array($_POST['style'], [
+            'digital-led', 'digital-lcd', 'neon-style', 'matrix-style',
+            'circular-progress', 'gauge-style', 'card-flip', 'slide-animation',
+            'glassmorphism', 'neumorphism', 'gradient', 'minimalist'
+        ]) ? query_clean($_POST['style']) : 'digital-led';
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -35,7 +40,8 @@ class CountdownBlock extends BaseBlockHandler {
 
         $type = 'countdown';
         $settings = json_encode([
-            'end_date' => $_POST['end_date'],
+            'counter_end_date' => $_POST['counter_end_date'],
+            'style' => $_POST['style'],
             'theme' => 'light',
             'text_color' => '#000000',
             'background_color' => '#ffffff',
@@ -71,7 +77,12 @@ class CountdownBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['end_date'] = (new \DateTime($_POST['end_date']))->format('Y-m-d H:i:s');
+        $_POST['counter_end_date'] = (new \DateTime($_POST['counter_end_date']))->format('Y-m-d H:i:s');
+        $_POST['style'] = in_array($_POST['style'], [
+            'digital-led', 'digital-lcd', 'neon-style', 'matrix-style',
+            'circular-progress', 'gauge-style', 'card-flip', 'slide-animation',
+            'glassmorphism', 'neumorphism', 'gradient', 'minimalist'
+        ]) ? query_clean($_POST['style']) : 'digital-led';
         $_POST['theme'] = in_array($_POST['theme'], ['light', 'dark']) ? query_clean($_POST['theme']) : 'light';
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#000000' : $_POST['text_color'];
         $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
@@ -84,7 +95,7 @@ class CountdownBlock extends BaseBlockHandler {
         }
 
         /* Check for any errors */
-        $required_fields = ['end_date'];
+        $required_fields = ['counter_end_date'];
 
         /* Check for any errors */
         foreach($required_fields as $field) {
@@ -95,7 +106,8 @@ class CountdownBlock extends BaseBlockHandler {
         }
 
         $settings = json_encode([
-            'end_date' => $_POST['end_date'],
+            'counter_end_date' => $_POST['counter_end_date'],
+            'style' => $_POST['style'],
             'theme' => $_POST['theme'],
             'text_color' => $_POST['text_color'],
             'background_color' => $_POST['background_color'],

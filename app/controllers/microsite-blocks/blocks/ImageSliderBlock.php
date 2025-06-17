@@ -17,7 +17,7 @@ defined('SEEGAP') || die();
 /**
  * Image Slider Block Handler
  * 
- * Handles the creation and updating of image slider microsite blocks.
+ * Simple, clean implementation for image slider microsite blocks.
  */
 class ImageSliderBlock extends BaseBlockHandler {
     
@@ -27,19 +27,81 @@ class ImageSliderBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
+        $_POST['autoplay'] = isset($_POST['autoplay']);
+        $_POST['display_arrows'] = isset($_POST['display_arrows']);
+        $_POST['display_pagination'] = isset($_POST['display_pagination']);
+        $_POST['open_in_new_tab'] = isset($_POST['open_in_new_tab']);
+        $_POST['autoplay_interval'] = (int) ($_POST['autoplay_interval'] ?? 5);
+        
+        // Phase 1: Core Visual & Layout Settings - ensure minimum height
+        $_POST['slider_height'] = max(200, min(800, (int) ($_POST['slider_height'] ?? 300)));
+        $_POST['aspect_ratio'] = in_array($_POST['aspect_ratio'], ['16:9', '4:3', '1:1', '21:9', 'custom']) ? $_POST['aspect_ratio'] : 'custom';
+        $_POST['image_fit'] = in_array($_POST['image_fit'], ['cover', 'contain', 'fill', 'scale-down']) ? $_POST['image_fit'] : 'cover';
+        $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;
+        $_POST['transition_type'] = in_array($_POST['transition_type'], ['slide', 'fade', 'loop']) ? $_POST['transition_type'] : 'slide';
+        $_POST['transition_speed'] = in_array($_POST['transition_speed'], range(200, 2000)) ? (int) $_POST['transition_speed'] : 600;
+        $_POST['slides_per_view'] = in_array($_POST['slides_per_view'], range(1, 4)) ? (int) $_POST['slides_per_view'] : 1;
+        $_POST['slide_gap'] = in_array($_POST['slide_gap'], range(0, 50)) ? (int) $_POST['slide_gap'] : 0;
+        $_POST['pause_on_hover'] = isset($_POST['pause_on_hover']);
+        $_POST['infinite_loop'] = isset($_POST['infinite_loop']);
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
         }
 
         $type = 'image_slider';
+        
+        // Handle initial image uploads using the system method
+        $items = [];
+        if(isset($_FILES['new_images']) && is_array($_FILES['new_images']['name'])) {
+            foreach($_FILES['new_images']['name'] as $key => $file_name) {
+                if(empty($file_name) || $_FILES['new_images']['error'][$key] != UPLOAD_ERR_OK) {
+                    continue;
+                }
+                
+                // Temporarily set the single file for the system upload handler
+                $_FILES['image'] = [
+                    'name' => $_FILES['new_images']['name'][$key],
+                    'type' => $_FILES['new_images']['type'][$key],
+                    'tmp_name' => $_FILES['new_images']['tmp_name'][$key],
+                    'error' => $_FILES['new_images']['error'][$key],
+                    'size' => $_FILES['new_images']['size'][$key]
+                ];
+                
+                $db_image = $this->handle_image_upload(null, 'block_images/', settings()->links->image_size_limit);
+                
+                if($db_image) {
+                    $items[] = [
+                        'image' => $db_image,
+                        'image_alt' => '',
+                        'location_url' => ''
+                    ];
+                }
+            }
+            
+            // Clean up the temporary $_FILES entry
+            unset($_FILES['image']);
+        }
+        
         $settings = json_encode([
-            'images' => [],
-            'autoplay' => true,
-            'autoplay_speed' => 3000,
-            'show_dots' => true,
-            'show_arrows' => true,
-            'border_radius' => 'rounded',
+            'items' => $items,
+            'autoplay' => $_POST['autoplay'],
+            'autoplay_interval' => $_POST['autoplay_interval'],
+            'display_arrows' => $_POST['display_arrows'],
+            'display_pagination' => $_POST['display_pagination'],
+            'open_in_new_tab' => $_POST['open_in_new_tab'],
+
+            /* Phase 1: Core Visual & Layout Settings */
+            'slider_height' => $_POST['slider_height'],
+            'aspect_ratio' => $_POST['aspect_ratio'],
+            'image_fit' => $_POST['image_fit'],
+            'border_radius' => $_POST['border_radius'],
+            'transition_type' => $_POST['transition_type'],
+            'transition_speed' => $_POST['transition_speed'],
+            'slides_per_view' => $_POST['slides_per_view'],
+            'slide_gap' => $_POST['slide_gap'],
+            'pause_on_hover' => $_POST['pause_on_hover'],
+            'infinite_loop' => $_POST['infinite_loop'],
 
             /* Display settings */
             'display_continents' => [],
@@ -73,60 +135,123 @@ class ImageSliderBlock extends BaseBlockHandler {
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['autoplay'] = isset($_POST['autoplay']);
-        $_POST['autoplay_speed'] = in_array($_POST['autoplay_speed'], range(1000, 10000, 500)) ? (int) $_POST['autoplay_speed'] : 3000;
-        $_POST['show_dots'] = isset($_POST['show_dots']);
-        $_POST['show_arrows'] = isset($_POST['show_arrows']);
-        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
+        $_POST['display_arrows'] = isset($_POST['display_arrows']);
+        $_POST['display_pagination'] = isset($_POST['display_pagination']);
+        $_POST['open_in_new_tab'] = isset($_POST['open_in_new_tab']);
+        $_POST['autoplay_interval'] = (int) ($_POST['autoplay_interval'] ?? 5);
+        
+        // Phase 1: Core Visual & Layout Settings - ensure minimum height
+        $_POST['slider_height'] = max(200, min(800, (int) ($_POST['slider_height'] ?? 300)));
+        $_POST['aspect_ratio'] = in_array($_POST['aspect_ratio'], ['16:9', '4:3', '1:1', '21:9', 'custom']) ? $_POST['aspect_ratio'] : 'custom';
+        $_POST['image_fit'] = in_array($_POST['image_fit'], ['cover', 'contain', 'fill', 'scale-down']) ? $_POST['image_fit'] : 'cover';
+        $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;
+        $_POST['transition_type'] = in_array($_POST['transition_type'], ['slide', 'fade', 'loop']) ? $_POST['transition_type'] : 'slide';
+        $_POST['transition_speed'] = in_array($_POST['transition_speed'], range(200, 2000)) ? (int) $_POST['transition_speed'] : 600;
+        $_POST['slides_per_view'] = in_array($_POST['slides_per_view'], range(1, 4)) ? (int) $_POST['slides_per_view'] : 1;
+        $_POST['slide_gap'] = in_array($_POST['slide_gap'], range(0, 50)) ? (int) $_POST['slide_gap'] : 0;
+        $_POST['pause_on_hover'] = isset($_POST['pause_on_hover']);
+        $_POST['infinite_loop'] = isset($_POST['infinite_loop']);
 
         /* Display settings */
         $this->process_display_settings();
 
         if(!$microsite_block = db()->where('microsite_block_id', $_POST['microsite_block_id'])->where('user_id', $this->user->user_id)->getOne('microsites_blocks')) {
-            die();
+            Response::json('Block not found', 'error');
+            return;
         }
+        
         $microsite_block->settings = json_decode($microsite_block->settings ?? '');
-
-        /* Process image uploads */
-        $images = [];
-        if(isset($_FILES['images'])) {
-            foreach($_FILES['images']['name'] as $key => $value) {
-                if(empty($value)) continue;
-                if($key >= 10) continue;
-
-                $file_name = $_FILES['images']['name'][$key];
-                $file_extension = explode('.', $file_name);
-                $file_extension = mb_strtolower(end($file_extension));
-                $file_temp = $_FILES['images']['tmp_name'][$key];
-
-                if($_FILES['images']['error'][$key] == UPLOAD_ERR_OK && $_FILES['images']['size'][$key] <= settings()->links->thumbnail_image_size_limit * 1000000) {
-                    if(in_array($file_extension, \SeeGap\Uploads::get_whitelisted_file_extensions('images'))) {
-                        $new_file_name = md5(time() . $file_name . $key) . '.' . $file_extension;
-                        $full_path = \SeeGap\Uploads::get_full_path('block_thumbnail_images') . $new_file_name;
-
-                        if(move_uploaded_file($file_temp, $full_path)) {
-                            $images[] = [
-                                'image' => $new_file_name,
-                                'alt' => $_POST['image_alt'][$key] ?? '',
-                                'url' => $_POST['image_url'][$key] ?? ''
-                            ];
-                        }
-                    }
+        
+        // Handle image management (reordering, editing, removing)
+        $items = [];
+        
+        // Check if we have updated images data from the form
+        if(isset($_POST['images_data']) && !empty($_POST['images_data'])) {
+            $updated_images_data = json_decode($_POST['images_data'], true);
+            if(is_array($updated_images_data)) {
+                foreach($updated_images_data as $item) {
+                    $items[] = [
+                        'image' => is_array($item) ? $item['image'] : $item->image,
+                        'image_alt' => is_array($item) ? ($item['image_alt'] ?? '') : ($item->image_alt ?? ''),
+                        'location_url' => is_array($item) ? ($item['location_url'] ?? '') : ($item->location_url ?? '')
+                    ];
+                }
+            }
+        } else {
+            // Fallback to existing items if no updated data
+            if(isset($microsite_block->settings->items) && is_array($microsite_block->settings->items)) {
+                foreach($microsite_block->settings->items as $item) {
+                    $items[] = [
+                        'image' => is_object($item) ? $item->image : $item['image'],
+                        'image_alt' => is_object($item) ? ($item->image_alt ?? '') : ($item['image_alt'] ?? ''),
+                        'location_url' => is_object($item) ? ($item->location_url ?? '') : ($item['location_url'] ?? '')
+                    ];
                 }
             }
         }
-
-        /* Keep existing images if no new ones uploaded */
-        if(empty($images) && isset($microsite_block->settings->images)) {
-            $images = $microsite_block->settings->images;
+        
+        // Apply reordering if specified
+        if(isset($_POST['image_order']) && !empty($_POST['image_order'])) {
+            $order = explode(',', $_POST['image_order']);
+            $reordered_items = [];
+            foreach($order as $index) {
+                if(isset($items[$index])) {
+                    $reordered_items[] = $items[$index];
+                }
+            }
+            $items = $reordered_items;
+        }
+        
+        // Handle new image uploads using the system method
+        if(isset($_FILES['new_images']) && is_array($_FILES['new_images']['name'])) {
+            foreach($_FILES['new_images']['name'] as $key => $file_name) {
+                if(empty($file_name) || $_FILES['new_images']['error'][$key] != UPLOAD_ERR_OK) {
+                    continue;
+                }
+                
+                // Temporarily set the single file for the system upload handler
+                $_FILES['image'] = [
+                    'name' => $_FILES['new_images']['name'][$key],
+                    'type' => $_FILES['new_images']['type'][$key],
+                    'tmp_name' => $_FILES['new_images']['tmp_name'][$key],
+                    'error' => $_FILES['new_images']['error'][$key],
+                    'size' => $_FILES['new_images']['size'][$key]
+                ];
+                
+                $db_image = $this->handle_image_upload(null, 'block_images/', settings()->links->image_size_limit);
+                
+                if($db_image) {
+                    $items[] = [
+                        'image' => $db_image,
+                        'image_alt' => '',
+                        'location_url' => ''
+                    ];
+                }
+            }
+            
+            // Clean up the temporary $_FILES entry
+            unset($_FILES['image']);
         }
 
         $settings = json_encode([
-            'images' => $images,
+            'items' => $items,
             'autoplay' => $_POST['autoplay'],
-            'autoplay_speed' => $_POST['autoplay_speed'],
-            'show_dots' => $_POST['show_dots'],
-            'show_arrows' => $_POST['show_arrows'],
+            'autoplay_interval' => $_POST['autoplay_interval'],
+            'display_arrows' => $_POST['display_arrows'],
+            'display_pagination' => $_POST['display_pagination'],
+            'open_in_new_tab' => $_POST['open_in_new_tab'],
+
+            /* Phase 1: Core Visual & Layout Settings */
+            'slider_height' => $_POST['slider_height'],
+            'aspect_ratio' => $_POST['aspect_ratio'],
+            'image_fit' => $_POST['image_fit'],
             'border_radius' => $_POST['border_radius'],
+            'transition_type' => $_POST['transition_type'],
+            'transition_speed' => $_POST['transition_speed'],
+            'slides_per_view' => $_POST['slides_per_view'],
+            'slide_gap' => $_POST['slide_gap'],
+            'pause_on_hover' => $_POST['pause_on_hover'],
+            'infinite_loop' => $_POST['infinite_loop'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],
