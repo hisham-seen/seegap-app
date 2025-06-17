@@ -81,3 +81,4 @@ config.php
 
 # Local development tools
 reset-local-app.php
+deploy-webhook.php
