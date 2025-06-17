@@ -140,24 +140,34 @@ document.querySelectorAll('[data-file-image-input-wrapper]').forEach(element => 
     });
 
     /* Handle remove checkbox */
-    element.querySelector('[id$="_remove"]').addEventListener('change', event => {
-        let is_checked = event.currentTarget.checked;
+    const removeCheckbox = element.querySelector('[id$="_remove"]');
+    if (removeCheckbox) {
+        removeCheckbox.addEventListener('change', event => {
+            let is_checked = event.currentTarget.checked;
+            const fileInput = element.querySelector('input[type="file"]');
+            const previewElement = element.querySelector('[id*="_preview"]');
 
-        if(is_checked) {
-            element.querySelector('input[type="file"]').classList.add('container-disabled');
-            element.querySelector('[id*="_preview"]').classList.add('container-disabled');
-        } else {
-            element.querySelector('input[type="file"]').classList.remove('container-disabled');
-            element.querySelector('[id*="_preview"]').classList.remove('container-disabled');
-        }
-    });
+            if(is_checked) {
+                if (fileInput) fileInput.classList.add('container-disabled');
+                if (previewElement) previewElement.classList.add('container-disabled');
+            } else {
+                if (fileInput) fileInput.classList.remove('container-disabled');
+                if (previewElement) previewElement.classList.remove('container-disabled');
+            }
+        });
+    }
 
     /* Handle remove selected file */
-    element.querySelector('[id$="_remove_selected_file"]').addEventListener('click', event => {
-        let input = event.currentTarget.closest('.row').querySelector('input');
-        input.value = '';
-        input.dispatchEvent(new Event('change'));
-    });
+    const removeSelectedFile = element.querySelector('[id$="_remove_selected_file"]');
+    if (removeSelectedFile) {
+        removeSelectedFile.addEventListener('click', event => {
+            let input = event.currentTarget.closest('.row')?.querySelector('input');
+            if (input) {
+                input.value = '';
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+    }
 });
 
 /* Global type handler */
