@@ -43,15 +43,17 @@ if(!empty($data->link->settings->items)) {
         }
     } else {
         // Ensure minimum height of 200px for custom height
-        $safe_height = max(200, (int)$slider_height);
+        // Fix: Handle both numeric and string values, ensure proper fallback
+        $height_value = is_numeric($slider_height) ? (int)$slider_height : (int)($slider_height ?? 300);
+        $safe_height = max(200, $height_value);
         $calculated_height = $safe_height . 'px';
     }
     ?>
 
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
-    <section class="splide <?= 'splide_' . $data->link->microsite_block_id ?>" style="border-radius: <?= $border_radius ?>px; overflow: hidden;">
-        <div class="splide__track">
-            <ul class="splide__list">
+    <section class="splide <?= 'splide_' . $data->link->microsite_block_id ?>" style="border-radius: <?= $border_radius ?>px; overflow: hidden; height: <?= $calculated_height ?>; min-height: <?= $calculated_height ?>;">
+        <div class="splide__track" style="height: <?= $calculated_height ?>;">
+            <ul class="splide__list" style="height: <?= $calculated_height ?>;">
                 <?php foreach($items_to_display as $key => $item): ?>
                     <li class="splide__slide">
                         <?php 

@@ -100,24 +100,24 @@
                         ?>
                         <?php foreach($data->link->settings->questions as $question_index => $question): ?>
                             <div class="form-group">
-                                <label><?= $question->question ?> <?= $question->required ? '<span class="text-danger">*</span>' : '' ?></label>
+                                <label class="form-question-label"><?= $question->question ?> <?= $question->required ? '<span class="text-danger">*</span>' : '' ?></label>
                                 
                                 <?php if($question->type == 'text'): ?>
-                                    <input type="text" class="form-control" name="question_<?= $question_index ?>" <?= $question->required ? 'required="required"' : '' ?>>
+                                    <input type="text" class="form-control mt-2" name="question_<?= $question_index ?>" <?= $question->required ? 'required="required"' : '' ?>>
                                 
                                 <?php elseif($question->type == 'textarea'): ?>
-                                    <textarea class="form-control" name="question_<?= $question_index ?>" rows="3" <?= $question->required ? 'required="required"' : '' ?>></textarea>
+                                    <textarea class="form-control mt-2" name="question_<?= $question_index ?>" rows="3" <?= $question->required ? 'required="required"' : '' ?>></textarea>
                                 
                                 <?php elseif($question->type == 'rating_star'): ?>
-                                    <div class="star-rating" data-question-index="<?= $question_index ?>" data-max="<?= $question->options->max_rating ?? 5 ?>">
+                                    <div class="star-rating mt-2" data-question-index="<?= $question_index ?>" data-max="<?= $question->options->max_rating ?? 5 ?>">
                                         <?php for($i = 1; $i <= ($question->options->max_rating ?? 5); $i++): ?>
-                                            <i class="far fa-star rating-star" data-value="<?= $i ?>"></i>
+                                            <i class="fa-regular fa-star rating-star" data-value="<?= $i ?>"></i>
                                         <?php endfor; ?>
                                     </div>
                                     <input type="hidden" name="question_<?= $question_index ?>" class="rating-value" <?= $question->required ? 'required="required"' : '' ?>>
                                 
                                 <?php elseif($question->type == 'rating_number'): ?>
-                                    <div class="number-rating" data-question-index="<?= $question_index ?>">
+                                    <div class="number-rating mt-2" data-question-index="<?= $question_index ?>">
                                         <?php for($i = 1; $i <= ($question->options->max_rating ?? 5); $i++): ?>
                                             <span class="number-rating-item" data-value="<?= $i ?>"><?= $i ?></span>
                                         <?php endfor; ?>
@@ -125,7 +125,7 @@
                                     <input type="hidden" name="question_<?= $question_index ?>" class="rating-value" <?= $question->required ? 'required="required"' : '' ?>>
                                 
                                 <?php elseif($question->type == 'rating_emoji'): ?>
-                                    <div class="emoji-rating" data-question-index="<?= $question_index ?>">
+                                    <div class="emoji-rating mt-2" data-question-index="<?= $question_index ?>">
                                         <span class="emoji-rating-item" data-value="1">😞</span>
                                         <span class="emoji-rating-item" data-value="2">😐</span>
                                         <span class="emoji-rating-item" data-value="3">🙂</span>
@@ -147,7 +147,7 @@
                                     ?>
                                     <?php if(!empty($choices)): ?>
                                         <?php $layout = $question->options->layout ?? 'block'; ?>
-                                        <div class="<?= $layout == 'inline' ? 'd-flex flex-wrap' : '' ?>">
+                                        <div class="mt-2 <?= $layout == 'inline' ? 'd-flex flex-wrap' : '' ?>">
                                             <?php foreach($choices as $choice_index => $choice): ?>
                                                 <?php if(!empty(trim($choice))): ?>
                                                     <div class="custom-control custom-checkbox <?= $layout == 'inline' ? 'mr-3 mb-2' : 'mb-2' ?>">
@@ -158,7 +158,7 @@
                                             <?php endforeach; ?>
                                         </div>
                                     <?php else: ?>
-                                        <p class="text-muted"><small>No choices configured for this question.</small></p>
+                                        <p class="text-muted mt-2"><small>No choices configured for this question.</small></p>
                                     <?php endif; ?>
                                 
                                 <?php elseif($question->type == 'radio'): ?>
@@ -174,7 +174,7 @@
                                     ?>
                                     <?php if(!empty($choices)): ?>
                                         <?php $layout = $question->options->layout ?? 'block'; ?>
-                                        <div class="<?= $layout == 'inline' ? 'd-flex flex-wrap' : '' ?>">
+                                        <div class="mt-2 <?= $layout == 'inline' ? 'd-flex flex-wrap' : '' ?>">
                                             <?php foreach($choices as $choice_index => $choice): ?>
                                                 <?php if(!empty(trim($choice))): ?>
                                                     <div class="custom-control custom-radio <?= $layout == 'inline' ? 'mr-3 mb-2' : 'mb-2' ?>">
@@ -185,7 +185,7 @@
                                             <?php endforeach; ?>
                                         </div>
                                     <?php else: ?>
-                                        <p class="text-muted"><small>No choices configured for this question.</small></p>
+                                        <p class="text-muted mt-2"><small>No choices configured for this question.</small></p>
                                     <?php endif; ?>
                                 
                                 <?php elseif($question->type == 'dropdown'): ?>
@@ -199,7 +199,7 @@
                                         }
                                     }
                                     ?>
-                                    <select class="form-control" name="question_<?= $question_index ?>" <?= $question->required ? 'required="required"' : '' ?>>
+                                    <select class="form-control mt-2" name="question_<?= $question_index ?>" <?= $question->required ? 'required="required"' : '' ?>>
                                         <option value="">-- <?= l('global.select') ?> --</option>
                                         <?php if(!empty($choices)): ?>
                                             <?php foreach($choices as $choice): ?>
@@ -253,7 +253,7 @@
 <style>
 /* Star Rating */
 .star-rating {
-    display: inline-flex;
+    display: flex;
     font-size: 24px;
     cursor: pointer;
     margin-bottom: 10px;
@@ -263,11 +263,50 @@
     color: #ffc107;
     margin-right: 5px;
     transition: transform 0.2s;
+    min-width: 1.25em;
+    text-align: center;
+    display: inline-block;
 }
 
 .star-rating .rating-star:hover,
 .star-rating .rating-star.active {
     transform: scale(1.2);
+}
+
+/* Ensure FontAwesome icons display properly */
+.star-rating .rating-star:before {
+    font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", sans-serif;
+    font-weight: 400;
+}
+
+.star-rating .rating-star.fa-solid:before {
+    font-weight: 900;
+}
+
+.star-rating .rating-star.fa-regular:before {
+    font-weight: 400;
+}
+
+/* Fallback for when FontAwesome doesn't load */
+.star-rating .rating-star.fa-regular:before {
+    content: "☆";
+    font-family: Arial, sans-serif;
+}
+
+.star-rating .rating-star.fa-solid:before {
+    content: "★";
+    font-family: Arial, sans-serif;
+}
+
+/* Additional fallback for older FontAwesome classes */
+.star-rating .rating-star.far:before {
+    content: "☆";
+    font-family: Arial, sans-serif;
+}
+
+.star-rating .rating-star.fas:before {
+    content: "★";
+    font-family: Arial, sans-serif;
 }
 
 /* Number Rating */
@@ -302,7 +341,7 @@
 
 /* Emoji Rating */
 .emoji-rating {
-    display: inline-flex;
+    display: flex;
     gap: 10px;
     font-size: 24px;
     margin-bottom: 10px;
@@ -338,18 +377,54 @@
             initRatingSystems(element);
         });
         
+        /* Ensure FontAwesome is loaded for star ratings */
+        function ensureFontAwesomeLoaded(formElement) {
+            function checkFontAwesome() {
+                const stars = $(formElement).find('.star-rating .rating-star');
+                
+                // Check if FontAwesome is loaded by testing a known icon
+                const testIcon = document.createElement('i');
+                testIcon.className = 'fa-solid fa-star';
+                testIcon.style.position = 'absolute';
+                testIcon.style.left = '-9999px';
+                document.body.appendChild(testIcon);
+                
+                const computedStyle = window.getComputedStyle(testIcon, ':before');
+                const fontFamily = computedStyle.getPropertyValue('font-family');
+                
+                document.body.removeChild(testIcon);
+                
+                // If FontAwesome is loaded, show stars
+                if (fontFamily.includes('Font Awesome') || fontFamily.includes('FontAwesome')) {
+                    stars.css('opacity', '1');
+                } else {
+                    // Retry after a short delay
+                    setTimeout(checkFontAwesome, 100);
+                }
+            }
+            
+            // Start checking immediately and set a fallback timeout
+            checkFontAwesome();
+            setTimeout(() => {
+                $(formElement).find('.star-rating .rating-star').css('opacity', '1');
+            }, 2000); // Fallback after 2 seconds
+        }
+
         /* Initialize rating systems */
         function initRatingSystems(formElement) {
+            // Ensure FontAwesome is loaded for star ratings
+            ensureFontAwesomeLoaded(formElement);
+            
             /* Star rating functionality */
             $(formElement).find('.star-rating .rating-star').on('click', function() {
                 const container = $(this).closest('.star-rating');
                 const value = $(this).data('value');
                 
                 // Update visual state
-                container.find('.rating-star').removeClass('fas').addClass('far');
+                container.find('.rating-star').removeClass('fa-solid').addClass('fa-regular');
                 container.find('.rating-star').each(function(index) {
                     if (index < value) {
-                        $(this).removeClass('far').addClass('fas');
+                        $(this).removeClass('fa-regular').addClass('fa-solid');
                     }
                 });
                 

@@ -34,7 +34,9 @@ class ImageSliderBlock extends BaseBlockHandler {
         $_POST['autoplay_interval'] = (int) ($_POST['autoplay_interval'] ?? 5);
         
         // Phase 1: Core Visual & Layout Settings - ensure minimum height
-        $_POST['slider_height'] = max(200, min(800, (int) ($_POST['slider_height'] ?? 300)));
+        $slider_height_input = $_POST['slider_height'] ?? 300;
+        $slider_height_value = is_numeric($slider_height_input) ? (int)$slider_height_input : 300;
+        $_POST['slider_height'] = max(200, min(800, $slider_height_value));
         $_POST['aspect_ratio'] = in_array($_POST['aspect_ratio'], ['16:9', '4:3', '1:1', '21:9', 'custom']) ? $_POST['aspect_ratio'] : 'custom';
         $_POST['image_fit'] = in_array($_POST['image_fit'], ['cover', 'contain', 'fill', 'scale-down']) ? $_POST['image_fit'] : 'cover';
         $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;
@@ -141,7 +143,9 @@ class ImageSliderBlock extends BaseBlockHandler {
         $_POST['autoplay_interval'] = (int) ($_POST['autoplay_interval'] ?? 5);
         
         // Phase 1: Core Visual & Layout Settings - ensure minimum height
-        $_POST['slider_height'] = max(200, min(800, (int) ($_POST['slider_height'] ?? 300)));
+        $slider_height_input = $_POST['slider_height'] ?? 300;
+        $slider_height_value = is_numeric($slider_height_input) ? (int)$slider_height_input : 300;
+        $_POST['slider_height'] = max(200, min(800, $slider_height_value));
         $_POST['aspect_ratio'] = in_array($_POST['aspect_ratio'], ['16:9', '4:3', '1:1', '21:9', 'custom']) ? $_POST['aspect_ratio'] : 'custom';
         $_POST['image_fit'] = in_array($_POST['image_fit'], ['cover', 'contain', 'fill', 'scale-down']) ? $_POST['image_fit'] : 'cover';
         $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;

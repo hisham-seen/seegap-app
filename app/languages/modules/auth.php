@@ -33,6 +33,7 @@ return [
     'login.error_message.wrong_login_credentials' => 'Your login combination is invalid.',
     'login.error_message.user_not_active' => 'Your account is not confirmed or banned.',
     'login.error_message.email_is_null' => 'Your social account doesn\'t have an email associated with it.',
+    'login.classic.success' => 'Login successful. Welcome back!',
 
     // Lost password
     'lost_password.title' => 'Lost password',

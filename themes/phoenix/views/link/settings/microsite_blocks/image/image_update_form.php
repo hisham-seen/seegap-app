@@ -29,6 +29,23 @@
     </div>
 
     <div class="form-group">
+        <label for="<?= 'image_height_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-v fa-sm text-muted mr-1"></i> <?= l('microsite_image.height') ?? 'Image Height' ?></label>
+        <select id="<?= 'image_height_' . $row->microsite_block_id ?>" name="image_height" class="form-control">
+            <option value="auto" <?= ($row->settings->image_height ?? 'auto') == 'auto' ? 'selected' : '' ?>><?= l('microsite_image.height_auto') ?? 'Auto (Original)' ?></option>
+            <option value="small" <?= ($row->settings->image_height ?? 'auto') == 'small' ? 'selected' : '' ?>><?= l('microsite_image.height_small') ?? 'Small (200px)' ?></option>
+            <option value="medium" <?= ($row->settings->image_height ?? 'auto') == 'medium' ? 'selected' : '' ?>><?= l('microsite_image.height_medium') ?? 'Medium (400px)' ?></option>
+            <option value="large" <?= ($row->settings->image_height ?? 'auto') == 'large' ? 'selected' : '' ?>><?= l('microsite_image.height_large') ?? 'Large (600px)' ?></option>
+            <option value="custom" <?= ($row->settings->image_height ?? 'auto') == 'custom' ? 'selected' : '' ?>><?= l('microsite_image.height_custom') ?? 'Custom' ?></option>
+        </select>
+    </div>
+
+    <div class="form-group" id="<?= 'image_height_custom_container_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->image_height ?? 'auto') == 'custom' ? 'block' : 'none' ?>;">
+        <label for="<?= 'image_height_custom_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-ruler fa-sm text-muted mr-1"></i> <?= l('microsite_image.height_custom_value') ?? 'Custom Height (px)' ?></label>
+        <input id="<?= 'image_height_custom_' . $row->microsite_block_id ?>" type="number" class="form-control" name="image_height_custom" min="50" max="1000" value="<?= $row->settings->image_height_custom ?? 200 ?>" placeholder="200" />
+        <small class="form-text text-muted"><?= l('microsite_image.height_custom_help') ?? 'Enter height in pixels (50-1000)' ?></small>
+    </div>
+
+    <div class="form-group">
         <label for="<?= 'image_location_url_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_link.location_url') ?></label>
         <input id="<?= 'image_location_url_' . $row->microsite_block_id ?>" type="text" class="form-control" name="location_url" value="<?= $row->location_url ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
     </div>
@@ -47,3 +64,20 @@
         <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.update') ?></button>
     </div>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const heightSelect = document.getElementById('<?= 'image_height_' . $row->microsite_block_id ?>');
+    const customContainer = document.getElementById('<?= 'image_height_custom_container_' . $row->microsite_block_id ?>');
+    
+    if (heightSelect && customContainer) {
+        heightSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customContainer.style.display = 'block';
+            } else {
+                customContainer.style.display = 'none';
+            }
+        });
+    }
+});
+</script>

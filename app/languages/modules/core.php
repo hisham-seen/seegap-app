@@ -91,6 +91,7 @@ return [
     'global.password' => 'Password',
     'global.user' => 'User',
     'global.image' => 'Image',
+    'global.images' => 'Images',
     'global.icon' => 'Icon',
     'global.icon_placeholder' => 'fas fa-bolt',
     'global.icon_help' => '<a href="https://fontawesome.com/search?o=r&m=free" target="_blank">FontAwesome</a> icon class.',

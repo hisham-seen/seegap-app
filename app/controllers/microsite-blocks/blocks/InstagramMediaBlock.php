@@ -36,6 +36,33 @@ class InstagramMediaBlock extends BaseBlockHandler {
         $type = 'instagram_media';
         $settings = json_encode([
             'instagram_media_url' => $_POST['instagram_media_url'],
+            'display_mode' => $_POST['display_mode'] ?? 'page',
+            'button_text' => $_POST['button_text'] ?? 'View Instagram Post',
+            'button_icon' => $_POST['button_icon'] ?? 'fab fa-instagram',
+            'open_in_new_tab' => isset($_POST['open_in_new_tab']),
+            
+            /* Button styling settings */
+            'name' => $_POST['name'] ?? 'View Instagram Post',
+            'image' => null,
+            'icon' => $_POST['icon'] ?? 'fab fa-instagram',
+            'text_color' => $_POST['text_color'] ?? '#ffffff',
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
+            'background_color' => $_POST['background_color'] ?? '#E4405F',
+            'animation' => $_POST['animation'] ?? 'false',
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            
+            /* Border settings */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#000000',
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Border shadow settings */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#000000',
 
             /* Display settings */
             'display_continents' => [],
@@ -90,6 +117,33 @@ class InstagramMediaBlock extends BaseBlockHandler {
 
         $settings = json_encode([
             'instagram_media_url' => $_POST['instagram_media_url'],
+            'display_mode' => $_POST['display_mode'] ?? 'page',
+            'button_text' => $_POST['button_text'] ?? 'View Instagram Post',
+            'button_icon' => $_POST['button_icon'] ?? 'fab fa-instagram',
+            'open_in_new_tab' => isset($_POST['open_in_new_tab']),
+            
+            /* Button styling settings */
+            'name' => $_POST['name'] ?? 'View Instagram Post',
+            'image' => null,
+            'icon' => $_POST['icon'] ?? 'fab fa-instagram',
+            'text_color' => $_POST['text_color'] ?? '#ffffff',
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
+            'background_color' => $_POST['background_color'] ?? '#E4405F',
+            'animation' => $_POST['animation'] ?? 'false',
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            
+            /* Border settings */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#000000',
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Border shadow settings */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#000000',
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

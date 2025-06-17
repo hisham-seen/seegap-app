@@ -28,6 +28,8 @@ class ImageBlock extends BaseBlockHandler {
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
         $_POST['location_url'] = get_url($_POST['location_url']);
+        $_POST['image_height'] = in_array($_POST['image_height'] ?? 'auto', ['auto', 'small', 'medium', 'large', 'custom']) ? $_POST['image_height'] : 'auto';
+        $_POST['image_height_custom'] = $_POST['image_height'] == 'custom' ? (int) max(50, min(1000, (int) ($_POST['image_height_custom'] ?? 200))) : null;
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -43,6 +45,8 @@ class ImageBlock extends BaseBlockHandler {
             'image' => $db_image,
             'image_alt' => null,
             'open_in_new_tab' => false,
+            'image_height' => $_POST['image_height'],
+            'image_height_custom' => $_POST['image_height_custom'],
 
             /* Display settings */
             'display_continents' => [],
@@ -78,6 +82,8 @@ class ImageBlock extends BaseBlockHandler {
         $_POST['location_url'] = get_url($_POST['location_url']);
         $_POST['image_alt'] = mb_substr(query_clean($_POST['image_alt']), 0, 100);
         $_POST['open_in_new_tab'] = (int) isset($_POST['open_in_new_tab']);
+        $_POST['image_height'] = in_array($_POST['image_height'], ['auto', 'small', 'medium', 'large', 'custom']) ? $_POST['image_height'] : 'auto';
+        $_POST['image_height_custom'] = $_POST['image_height'] == 'custom' ? (int) max(50, min(1000, (int) $_POST['image_height_custom'])) : null;
 
         /* Display settings */
         $this->process_display_settings();
@@ -98,6 +104,8 @@ class ImageBlock extends BaseBlockHandler {
             'image' => $db_image,
             'image_alt' => $_POST['image_alt'],
             'open_in_new_tab' => $_POST['open_in_new_tab'],
+            'image_height' => $_POST['image_height'],
+            'image_height_custom' => $_POST['image_height_custom'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

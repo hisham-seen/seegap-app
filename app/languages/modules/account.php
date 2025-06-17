@@ -128,4 +128,9 @@ return [
     'account.error.email_exists' => 'This email address is already in use.',
     'account.error.avatar_upload' => 'Failed to upload avatar.',
     'account.error.delete_confirmation' => 'Please confirm account deletion.',
+
+    // Account menu items
+    'account_preferences.menu' => 'Preferences',
+    'account_plan.menu' => 'Plan',
+    'account_api.menu' => 'API',
 ];

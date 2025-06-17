@@ -35,7 +35,10 @@ class SocialsBlock extends BaseBlockHandler {
         $type = 'socials';
         $settings = json_encode([
             'color' => '#ffffff',
-            'socials' => [],
+            'background_color' => '#FFFFFF00',
+            'border_radius' => 'rounded',
+            'size' => 'l',
+            'socials' => new \stdClass(),
 
             /* Display settings */
             'display_continents' => [],
@@ -69,15 +72,19 @@ class SocialsBlock extends BaseBlockHandler {
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['color'] = !verify_hex_color($_POST['color']) ? '#ffffff' : $_POST['color'];
+        $_POST['background_color'] = !empty($_POST['background_color']) && verify_hex_color($_POST['background_color']) ? $_POST['background_color'] : '#FFFFFF00';
+        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? $_POST['border_radius'] : 'rounded';
+        $_POST['size'] = in_array($_POST['size'], ['s', 'm', 'l', 'xl']) ? $_POST['size'] : 'l';
 
-        /* Socials */
-        $socials = [];
+        /* Socials - store as associative array with platform keys */
+        $socials = new \stdClass();
         if(isset($_POST['socials'])) {
             foreach($_POST['socials'] as $key => $social) {
                 if(empty(trim($social))) continue;
-                if($key >= 20) continue;
-
-                $socials[] = mb_substr(get_url($social), 0, 1024);
+                
+                // Store with platform key for proper access in view
+                // Don't use get_url here as the view template handles URL formatting
+                $socials->{$key} = mb_substr(trim($social), 0, 1024);
             }
         }
 
@@ -90,6 +97,9 @@ class SocialsBlock extends BaseBlockHandler {
 
         $settings = json_encode([
             'color' => $_POST['color'],
+            'background_color' => $_POST['background_color'],
+            'border_radius' => $_POST['border_radius'],
+            'size' => $_POST['size'],
             'socials' => $socials,
 
             /* Display settings */

@@ -31,7 +31,7 @@ class EmbeddableBlocksHandler extends BaseBlockHandler {
             'telegram', 'anchor', 'soundcloud', 'threads', 
             'spotify', 'tidal', 'tiktok_video', 'typeform', 
             'calendly', 'tiktok_profile', 'twitch', 'twitter_tweet', 'twitter_video', 
-            'twitter_profile', 'vimeo', 'youtube', 'instagram_media', 
+            'twitter_profile', 'vimeo', 'youtube', 
             'facebook', 'reddit'
         ];
     }

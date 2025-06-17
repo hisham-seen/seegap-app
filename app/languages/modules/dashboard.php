@@ -107,4 +107,12 @@ return [
     'dashboard.quick_actions.import_data' => 'Import data',
     'dashboard.quick_actions.backup_data' => 'Backup data',
     'dashboard.quick_actions.restore_data' => 'Restore data',
+
+    // Dashboard menu items
+    'dashboard.microsites' => 'Microsites',
+    'dashboard.links' => 'Links',
+    'dashboard.file_links' => 'File Links',
+    'dashboard.event_links' => 'Event Links',
+    'dashboard.static_links' => 'Static Links',
+    'dashboard.statistics' => 'Statistics',
 ];

@@ -156,4 +156,9 @@ return [
     'gs1_links.digital_link' => 'GS1 Digital Link',
     'gs1_links.digital_link_format' => 'Digital Link Format',
     'gs1_links.digital_link_help' => 'GS1 Digital Links follow the format: domain.com/01/GTIN',
+
+    // GS1 Links table columns
+    'gs1_links.table.gtin' => 'GTIN',
+    'gs1_links.table.target_url' => 'Target URL',
+    'gs1_links.table.clicks' => 'Clicks',
 ];

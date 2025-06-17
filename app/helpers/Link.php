@@ -419,7 +419,8 @@ class Link {
 
             case 'instagram_media':
 
-                if(preg_match('/(https:\/\/www.instagram\.com)/', $link->location_url)) {
+                $instagram_url = $link->settings->instagram_media_url ?? $link->location_url ?? '';
+                if(preg_match('/(https:\/\/www.instagram\.com)/', $instagram_url)) {
                     $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
                 }
 

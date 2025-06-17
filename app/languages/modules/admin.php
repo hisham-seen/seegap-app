@@ -215,4 +215,15 @@ return [
     'admin.error.cache_clear_failed' => 'Failed to clear cache.',
     'admin.error.backup_failed' => 'Backup creation failed.',
     'admin.error.invalid_data' => 'Invalid data provided.',
+
+    // Admin menu items
+    'admin_gs1_links.menu' => 'GS1 Links',
+    'admin_reports.menu' => 'Reports',
+    'admin_gs1_links.header' => 'GS1 Links Management',
+    'admin_reports.header' => 'Reports Management',
+    'admin_reports.assigned_users' => 'Assigned Users',
+    'admin_reports.create' => 'Create Report',
+
+    // Admin settings tabs
+    'admin_settings.gs1_links.tab' => 'GS1 Links Settings',
 ];

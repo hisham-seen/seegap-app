@@ -326,6 +326,16 @@ return [
     // Link microsite blocks
     'link.microsite_blocks.link_sort' => 'Drag to reorder',
     'link.microsite_blocks.is_enabled_tooltip' => 'Enable/disable this block',
+    'link.microsite_blocks.no_data' => 'No blocks found',
+    'link.microsite_blocks.no_data_help' => 'Add your first block to get started with your microsite.',
+
+    // Link microsite verified
+    'link.microsite.verified' => 'Verified',
+    'link.microsite.verified_help' => 'This microsite has been verified and displays a verified badge.',
+
+    // Link settings targeting and cloaking headers
+    'link.settings.targeting_header' => 'Targeting Settings',
+    'link.settings.cloaking_header' => 'Cloaking Settings',
 
     // Link microsite block names
     'link.microsite.blocks.link' => 'Link',

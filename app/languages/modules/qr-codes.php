@@ -48,6 +48,10 @@ return [
     'qr_codes.type.paypal' => 'PayPal',
     'qr_codes.type.whatsapp' => 'WhatsApp',
     'qr_codes.type.facetime' => 'FaceTime',
+    'qr_codes.type.upi' => 'UPI Payment',
+    'qr_codes.type.epc' => 'EPC Payment',
+    'qr_codes.type.pix' => 'PIX Payment',
+    'qr_codes.type.location' => 'Location',
 
     // QR Code fields
     'qr_codes.name' => 'Name',

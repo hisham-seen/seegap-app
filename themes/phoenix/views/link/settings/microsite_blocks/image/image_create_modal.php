@@ -28,6 +28,23 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="image_height"><i class="fas fa-fw fa-arrows-alt-v fa-sm text-muted mr-1"></i> <?= l('microsite_image.height') ?? 'Image Height' ?></label>
+                        <select id="image_height" name="image_height" class="form-control">
+                            <option value="auto"><?= l('microsite_image.height_auto') ?? 'Auto (Original)' ?></option>
+                            <option value="small"><?= l('microsite_image.height_small') ?? 'Small (200px)' ?></option>
+                            <option value="medium"><?= l('microsite_image.height_medium') ?? 'Medium (400px)' ?></option>
+                            <option value="large"><?= l('microsite_image.height_large') ?? 'Large (600px)' ?></option>
+                            <option value="custom"><?= l('microsite_image.height_custom') ?? 'Custom' ?></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="image_height_custom_container" style="display: none;">
+                        <label for="image_height_custom"><i class="fas fa-fw fa-ruler fa-sm text-muted mr-1"></i> <?= l('microsite_image.height_custom_value') ?? 'Custom Height (px)' ?></label>
+                        <input id="image_height_custom" type="number" class="form-control" name="image_height_custom" min="50" max="1000" value="200" placeholder="200" />
+                        <small class="form-text text-muted"><?= l('microsite_image.height_custom_help') ?? 'Enter height in pixels (50-1000)' ?></small>
+                    </div>
+
+                    <div class="form-group">
                         <label for="image_location_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_link.location_url') ?></label>
                         <input id="image_location_url" type="url" class="form-control" name="location_url" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
                     </div>
@@ -41,3 +58,20 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const heightSelect = document.getElementById('image_height');
+    const customContainer = document.getElementById('image_height_custom_container');
+    
+    if (heightSelect && customContainer) {
+        heightSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customContainer.style.display = 'block';
+            } else {
+                customContainer.style.display = 'none';
+            }
+        });
+    }
+});
+</script>

@@ -27,7 +27,8 @@ class IframeBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
-        $_POST['iframe_url'] = get_url($_POST['iframe_url']);
+        $_POST['location_url'] = get_url($_POST['location_url']);
+        $_POST['height'] = in_array($_POST['height'] ?? 400, range(100, 1000)) ? (int) $_POST['height'] : 400;
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -35,8 +36,35 @@ class IframeBlock extends BaseBlockHandler {
 
         $type = 'iframe';
         $settings = json_encode([
-            'iframe_url' => $_POST['iframe_url'],
-            'height' => 400,
+            'iframe_url' => $_POST['location_url'],
+            'height' => $_POST['height'],
+            'display_mode' => $_POST['display_mode'] ?? 'page',
+            'button_text' => $_POST['button_text'] ?? 'View Content',
+            'button_icon' => $_POST['button_icon'] ?? 'fas fa-external-link-alt',
+            'open_in_new_tab' => isset($_POST['open_in_new_tab']),
+            
+            /* Button styling settings */
+            'name' => $_POST['name'] ?? 'View Content',
+            'image' => null,
+            'icon' => $_POST['icon'] ?? 'fas fa-external-link-alt',
+            'text_color' => $_POST['text_color'] ?? '#ffffff',
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
+            'background_color' => $_POST['background_color'] ?? '#007bff',
+            'animation' => $_POST['animation'] ?? 'false',
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            
+            /* Border settings */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#000000',
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Border shadow settings */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#000000',
 
             /* Display settings */
             'display_continents' => [],
@@ -55,7 +83,7 @@ class IframeBlock extends BaseBlockHandler {
             'user_id' => $this->user->user_id,
             'link_id' => $_POST['link_id'],
             'type' => $type,
-            'location_url' => null,
+            'location_url' => $_POST['location_url'],
             'settings' => $settings,
             'order' => settings()->links->microsites_new_blocks_position == 'top' ? -$this->total_microsite_blocks : $this->total_microsite_blocks,
             'datetime' => get_date(),
@@ -69,8 +97,8 @@ class IframeBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['iframe_url'] = get_url($_POST['iframe_url']);
-        $_POST['height'] = in_array($_POST['height'], range(100, 1000)) ? (int) $_POST['height'] : 400;
+        $_POST['location_url'] = get_url($_POST['location_url']);
+        $_POST['height'] = in_array($_POST['height'] ?? 400, range(100, 1000)) ? (int) $_POST['height'] : 400;
 
         /* Display settings */
         $this->process_display_settings();
@@ -80,7 +108,7 @@ class IframeBlock extends BaseBlockHandler {
         }
 
         /* Check for any errors */
-        $required_fields = ['iframe_url'];
+        $required_fields = ['location_url'];
 
         /* Check for any errors */
         foreach($required_fields as $field) {
@@ -91,8 +119,35 @@ class IframeBlock extends BaseBlockHandler {
         }
 
         $settings = json_encode([
-            'iframe_url' => $_POST['iframe_url'],
+            'iframe_url' => $_POST['location_url'],
             'height' => $_POST['height'],
+            'display_mode' => $_POST['display_mode'] ?? 'page',
+            'button_text' => $_POST['button_text'] ?? 'View Content',
+            'button_icon' => $_POST['button_icon'] ?? 'fas fa-external-link-alt',
+            'open_in_new_tab' => isset($_POST['open_in_new_tab']),
+            
+            /* Button styling settings */
+            'name' => $_POST['name'] ?? 'View Content',
+            'image' => null,
+            'icon' => $_POST['icon'] ?? 'fas fa-external-link-alt',
+            'text_color' => $_POST['text_color'] ?? '#ffffff',
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
+            'background_color' => $_POST['background_color'] ?? '#007bff',
+            'animation' => $_POST['animation'] ?? 'false',
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            
+            /* Border settings */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#000000',
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Border shadow settings */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#000000',
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],
@@ -106,6 +161,7 @@ class IframeBlock extends BaseBlockHandler {
 
         /* Database query */
         db()->where('microsite_block_id', $_POST['microsite_block_id'])->update('microsites_blocks', [
+            'location_url' => $_POST['location_url'],
             'settings' => $settings,
             'start_date' => $_POST['start_date'],
             'end_date' => $_POST['end_date'],

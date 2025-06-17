@@ -50,6 +50,9 @@
             <link href="<?= ASSETS_FULL_URL . 'css/' . $file . '?v=' . PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
         <?php endforeach ?>
 
+        <!-- FontAwesome 6 CDN for reliable icon loading -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
         <?php if($this->link->settings->font ?? null): ?>
             <?php $microsite_fonts = require APP_PATH . 'includes/microsite_fonts.php' ?>
             <?php if($microsite_fonts[$this->link->settings->font]['font_css_url']): ?>
