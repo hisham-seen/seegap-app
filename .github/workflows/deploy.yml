@@ -107,8 +107,22 @@ jobs:
         echo "🛑 Stopping any existing services..."
         sudo docker-compose down || true
         
+        # Also stop services from current directory if it exists
+        if [ -d "/var/www/seegap/current" ]; then
+          echo "🛑 Stopping services from current deployment..."
+          cd /var/www/seegap/current
+          sudo docker-compose down || true
+          cd /var/www/seegap/new
+        fi
+        
         echo "🧹 Cleaning up any orphaned containers..."
         sudo docker container prune -f || true
+        
+        echo "🔍 Checking for any remaining containers using port 80..."
+        sudo docker ps --filter "publish=80" --format "table {{.ID}}\t{{.Image}}\t{{.Ports}}" || true
+        
+        echo "🛑 Stopping all running containers to ensure clean start..."
+        sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
         
         echo "🚀 Starting services with new application code..."
         sudo docker-compose up -d
