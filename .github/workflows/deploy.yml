@@ -114,19 +114,38 @@ jobs:
         
         echo "📊 Setting up database..."
         sudo docker-compose up -d mysql
-        sleep 30
         
         echo "⏳ Waiting for MySQL to be ready..."
-        until sudo docker-compose exec -T mysql mysqladmin ping -h"localhost" --silent; do
-          echo "Waiting for MySQL..."
-          sleep 5
+        for i in {1..60}; do
+          if sudo docker-compose exec -T mysql mysqladmin ping -h"localhost" --silent 2>/dev/null; then
+            echo "MySQL is ready!"
+            break
+          else
+            echo "Waiting for MySQL... ($i/60)"
+            sleep 5
+          fi
+          if [ $i -eq 60 ]; then
+            echo "MySQL failed to start after 5 minutes"
+            exit 1
+          fi
         done
         
+        # Wait a bit more for MySQL to fully initialize
+        sleep 10
+        
         echo "📥 Setting up database and user..."
-        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "CREATE DATABASE IF NOT EXISTS seegap_production_db; CREATE USER IF NOT EXISTS 'seegap_prod_user_2025'@'%' IDENTIFIED BY 'SeeGap#Prod\$2025!MySQL@Secure'; GRANT ALL PRIVILEGES ON seegap_production_db.* TO 'seegap_prod_user_2025'@'%'; FLUSH PRIVILEGES;"
+        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "CREATE DATABASE IF NOT EXISTS seegap_production_db; CREATE USER IF NOT EXISTS 'seegap_prod_user_2025'@'%' IDENTIFIED BY 'SeeGap#Prod\$2025!MySQL@Secure'; GRANT ALL PRIVILEGES ON seegap_production_db.* TO 'seegap_prod_user_2025'@'%'; FLUSH PRIVILEGES;" || {
+          echo "Database setup failed, checking MySQL logs..."
+          sudo docker-compose logs mysql
+          exit 1
+        }
         
         echo "📥 Importing database dump..."
-        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < ~/dump.sql
+        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < ~/dump.sql || {
+          echo "Database import failed, checking MySQL logs..."
+          sudo docker-compose logs mysql
+          exit 1
+        }
         
         echo "🚀 Starting all services..."
         sudo docker-compose up -d
