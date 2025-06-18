@@ -112,6 +112,10 @@ jobs:
         echo "🛑 Stopping current services..."
         sudo docker-compose down || true
         
+        # Remove MySQL data volume to ensure fresh start
+        echo "🗑️ Cleaning MySQL data for fresh installation..."
+        sudo docker volume rm new_mysql-data 2>/dev/null || true
+        
         echo "📊 Setting up database..."
         sudo docker-compose up -d mysql
         
@@ -126,12 +130,27 @@ jobs:
           fi
           if [ $i -eq 60 ]; then
             echo "MySQL failed to start after 5 minutes"
+            sudo docker-compose logs mysql
             exit 1
           fi
         done
         
         # Wait a bit more for MySQL to fully initialize
-        sleep 10
+        sleep 15
+        
+        echo "📥 Testing MySQL connection..."
+        if ! sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "SELECT 1;" 2>/dev/null; then
+          echo "❌ MySQL root authentication failed. Checking if password is already set..."
+          # Try without password (fresh installation)
+          if sudo docker-compose exec -T mysql mysql -u root -e "SELECT 1;" 2>/dev/null; then
+            echo "🔧 Setting root password for fresh MySQL installation..."
+            sudo docker-compose exec -T mysql mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'Root#MySQL\$2025!SuperSecure@GCP'; FLUSH PRIVILEGES;"
+          else
+            echo "❌ Cannot connect to MySQL. Checking logs..."
+            sudo docker-compose logs mysql
+            exit 1
+          fi
+        fi
         
         echo "📥 Setting up database and user..."
         sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "CREATE DATABASE IF NOT EXISTS seegap_production_db; CREATE USER IF NOT EXISTS 'seegap_prod_user_2025'@'%' IDENTIFIED BY 'SeeGap#Prod\$2025!MySQL@Secure'; GRANT ALL PRIVILEGES ON seegap_production_db.* TO 'seegap_prod_user_2025'@'%'; FLUSH PRIVILEGES;" || {
