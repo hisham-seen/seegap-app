@@ -55,11 +55,6 @@ jobs:
         echo "🚀 Uploading application files to GCP VM..."
         gcloud beta compute scp seegap-app.tar.gz ${{ env.GCP_VM_NAME }}:~/ --zone=${{ env.GCP_ZONE }} --project=${{ env.GCP_PROJECT_ID }}
           
-    - name: Upload database dump
-      run: |
-        echo "📊 Uploading database dump..."
-        gcloud beta compute scp install/dump.sql ${{ env.GCP_VM_NAME }}:~/ --zone=${{ env.GCP_ZONE }} --project=${{ env.GCP_PROJECT_ID }}
-          
     - name: Create deployment script
       run: |
         cat > deploy.sh << 'EOF'
@@ -109,66 +104,9 @@ jobs:
         chmod -R 755 plugins/
         chmod -R 777 uploads/
         
-        echo "🛑 Stopping current services..."
-        sudo docker-compose down || true
-        
-        # Remove MySQL data volume to ensure fresh start
-        echo "🗑️ Cleaning MySQL data for fresh installation..."
-        sudo docker volume rm new_mysql-data 2>/dev/null || true
-        
-        echo "📊 Setting up database..."
-        sudo docker-compose up -d mysql
-        
-        echo "⏳ Waiting for MySQL to be ready..."
-        for i in {1..60}; do
-          if sudo docker-compose exec -T mysql mysqladmin ping -h"localhost" --silent 2>/dev/null; then
-            echo "MySQL is ready!"
-            break
-          else
-            echo "Waiting for MySQL... ($i/60)"
-            sleep 5
-          fi
-          if [ $i -eq 60 ]; then
-            echo "MySQL failed to start after 5 minutes"
-            sudo docker-compose logs mysql
-            exit 1
-          fi
-        done
-        
-        # Wait a bit more for MySQL to fully initialize
-        sleep 15
-        
-        echo "📥 Testing MySQL connection..."
-        if ! sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "SELECT 1;" 2>/dev/null; then
-          echo "❌ MySQL root authentication failed. Checking if password is already set..."
-          # Try without password (fresh installation)
-          if sudo docker-compose exec -T mysql mysql -u root -e "SELECT 1;" 2>/dev/null; then
-            echo "🔧 Setting root password for fresh MySQL installation..."
-            sudo docker-compose exec -T mysql mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'Root#MySQL\$2025!SuperSecure@GCP'; FLUSH PRIVILEGES;"
-          else
-            echo "❌ Cannot connect to MySQL. Checking logs..."
-            sudo docker-compose logs mysql
-            exit 1
-          fi
-        fi
-        
-        echo "📥 Setting up database and user..."
-        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "CREATE DATABASE IF NOT EXISTS seegap_production_db; CREATE USER IF NOT EXISTS 'seegap_prod_user_2025'@'%' IDENTIFIED BY 'SeeGap#Prod\$2025!MySQL@Secure'; GRANT ALL PRIVILEGES ON seegap_production_db.* TO 'seegap_prod_user_2025'@'%'; FLUSH PRIVILEGES;" || {
-          echo "Database setup failed, checking MySQL logs..."
-          sudo docker-compose logs mysql
-          exit 1
-        }
-        
-        echo "📥 Importing database dump..."
-        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < ~/dump.sql || {
-          echo "Database import failed, checking MySQL logs..."
-          sudo docker-compose logs mysql
-          exit 1
-        }
-        
-        echo "🚀 Starting all services..."
+        echo "🚀 Restarting services with new application code..."
         sudo docker-compose up -d
-        sleep 30
+        sleep 20
         
         echo "🔄 Switching to new deployment..."
         cd /var/www/seegap
@@ -176,7 +114,6 @@ jobs:
         mv new current
         
         rm -f ~/seegap-app.tar.gz
-        rm -f ~/dump.sql
         
         echo "✅ Deployment completed successfully!"
         EOF
@@ -209,17 +146,12 @@ jobs:
           fi
         done
         
-    - name: Verify database connection
-      run: |
-        echo "🔍 Verifying database connection..."
-        gcloud beta compute ssh ${{ env.GCP_VM_NAME }} --zone=${{ env.GCP_ZONE }} --project=${{ env.GCP_PROJECT_ID }} --command='cd /var/www/seegap/current && docker-compose exec -T mysql mysql -u seegap_prod_user_2025 -p"SeeGap#Prod$2025!MySQL@Secure" seegap_production_db -e "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = \"seegap_production_db\";"'
-        
     - name: Deployment Summary
       run: |
         echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
         echo "- **Domain**: https://si.seegap.com" >> $GITHUB_STEP_SUMMARY
         echo "- **Status**: ✅ Deployment Successful" >> $GITHUB_STEP_SUMMARY
-        echo "- **Database**: ✅ Production DB Imported" >> $GITHUB_STEP_SUMMARY
+        echo "- **Database**: ✅ Using Existing Database" >> $GITHUB_STEP_SUMMARY
         echo "- **Deployed at**: $(date -u)" >> $GITHUB_STEP_SUMMARY
         echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         
