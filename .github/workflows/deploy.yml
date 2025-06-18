@@ -5,6 +5,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  GCP_PROJECT_ID: eminent-subset-462023-f9
+  GCP_VM_NAME: seegap-app-vm
+  GCP_ZONE: europe-west1-b
+  GCP_VM_IP: 34.140.57.52
+  DEPLOY_PATH: /var/www/seegap
+
 jobs:
   deploy:
     name: Deploy to Production
@@ -14,31 +21,184 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Deploy via webhook
+    - name: Setup SSH
       run: |
-        echo "🚀 Triggering deployment via webhook..."
-        curl -X POST https://si.seegap.com/deploy-webhook.php \
-          -H "Content-Type: application/json" \
-          -d '{"ref":"refs/heads/main","repository":{"name":"seegap-app"}}'
+        mkdir -p ~/.ssh
+        echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.GCP_VM_IP }} >> ~/.ssh/known_hosts
         
-    - name: Wait for deployment
+    - name: Create deployment package
       run: |
-        echo "⏳ Waiting for deployment to complete..."
+        echo "📦 Creating deployment package..."
+        tar -czf seegap-app.tar.gz \
+          --exclude='.git' \
+          --exclude='.github' \
+          --exclude='node_modules' \
+          --exclude='*.log' \
+          --exclude='uploads/logs/*' \
+          --exclude='terraform' \
+          --exclude='backup_*' \
+          --exclude='test_*' \
+          .
+        
+    - name: Upload application files
+      run: |
+        echo "🚀 Uploading application files to GCP VM..."
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          seegap-app.tar.gz \
+          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }}:/tmp/
+          
+    - name: Upload database dump
+      run: |
+        echo "📊 Uploading database dump..."
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          seegap_production_db_dump_20250618_064538.sql \
+          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }}:/tmp/
+          
+    - name: Deploy application
+      run: |
+        echo "🔧 Deploying application on GCP VM..."
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }} \
+          'bash -s' << 'DEPLOY_SCRIPT'
+        
+        # Set up deployment directory
+        sudo mkdir -p /var/www/seegap
+        sudo chown $USER:$USER /var/www/seegap
+        
+        # Create backup of current deployment if exists
+        if [ -d "/var/www/seegap/current" ]; then
+          echo "📋 Creating backup of current deployment..."
+          sudo cp -r /var/www/seegap/current /var/www/seegap/backup-$(date +%Y%m%d-%H%M%S)
+        fi
+        
+        # Extract new deployment
+        echo "📂 Extracting new deployment..."
+        cd /var/www/seegap
+        rm -rf new
+        mkdir -p new
+        cd new
+        tar -xzf /tmp/seegap-app.tar.gz
+        
+        # Create production config
+        echo "⚙️ Creating production configuration..."
+        cat > config.php << 'CONFIG_END'
+        <?php
+        define('DATABASE_SERVER',   'mysql');
+        define('DATABASE_USERNAME', 'seegap_prod_user_2025');
+        define('DATABASE_PASSWORD', 'SeeGap#Prod$2025!MySQL@Secure');
+        define('DATABASE_NAME',     'seegap_production_db');
+        define('SITE_URL',          'https://si.seegap.com/');
+        CONFIG_END
+        
+        # Set proper permissions
+        chmod 644 config.php
+        chmod -R 755 themes/
+        chmod -R 755 plugins/
+        chmod -R 777 uploads/
+        
+        # Stop current services
+        echo "🛑 Stopping current services..."
+        docker-compose down || true
+        
+        # Start MySQL service
+        echo "📊 Setting up database..."
+        docker-compose up -d mysql
         sleep 30
         
-    - name: Verify deployment
+        # Wait for MySQL to be ready
+        echo "⏳ Waiting for MySQL to be ready..."
+        until docker-compose exec -T mysql mysqladmin ping -h"localhost" --silent; do
+          echo "Waiting for MySQL..."
+          sleep 5
+        done
+        
+        # Create database and user
+        echo "📥 Setting up database and user..."
+        docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "
+        CREATE DATABASE IF NOT EXISTS seegap_production_db;
+        CREATE USER IF NOT EXISTS 'seegap_prod_user_2025'@'%' IDENTIFIED BY 'SeeGap#Prod$2025!MySQL@Secure';
+        GRANT ALL PRIVILEGES ON seegap_production_db.* TO 'seegap_prod_user_2025'@'%';
+        FLUSH PRIVILEGES;"
+        
+        # Import the SQL dump
+        echo "📥 Importing database dump..."
+        docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < /tmp/seegap_production_db_dump_20250618_064538.sql
+        
+        # Start all services
+        echo "🚀 Starting all services..."
+        docker-compose up -d
+        
+        # Wait for services to be ready
+        sleep 30
+        
+        # Switch to new deployment
+        echo "🔄 Switching to new deployment..."
+        cd /var/www/seegap
+        rm -rf current
+        mv new current
+        
+        # Clean up
+        rm -f /tmp/seegap-app.tar.gz
+        rm -f /tmp/seegap_production_db_dump_20250618_064538.sql
+        
+        echo "✅ Deployment completed successfully!"
+        DEPLOY_SCRIPT
+        
+    - name: Health check
       run: |
-        echo "🔍 Verifying deployment..."
-        if curl -f -s https://si.seegap.com/login | grep -q "AUTO DEPLOY TEST"; then
-          echo "✅ Deployment successful - changes are live!"
-        else
-          echo "❌ Deployment verification failed"
-          exit 1
-        fi
+        echo "🔍 Performing health check..."
+        sleep 30
+        
+        # Check if the application is responding
+        for i in {1..10}; do
+          if curl -f -s https://si.seegap.com/ | grep -q "SeeGap\|login\|dashboard"; then
+            echo "✅ Application is responding correctly!"
+            break
+          else
+            echo "⏳ Attempt $i: Application not ready yet, waiting..."
+            sleep 10
+          fi
+          
+          if [ $i -eq 10 ]; then
+            echo "❌ Health check failed after 10 attempts"
+            exit 1
+          fi
+        done
+        
+    - name: Verify database connection
+      run: |
+        echo "🔍 Verifying database connection..."
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }} \
+          'cd /var/www/seegap/current && docker-compose exec -T mysql mysql -u seegap_prod_user_2025 -p"SeeGap#Prod$2025!MySQL@Secure" seegap_production_db -e "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = \"seegap_production_db\";"'
         
     - name: Deployment Summary
       run: |
         echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
         echo "- **Domain**: https://si.seegap.com" >> $GITHUB_STEP_SUMMARY
         echo "- **Status**: ✅ Deployment Successful" >> $GITHUB_STEP_SUMMARY
+        echo "- **Database**: ✅ Production DB Imported" >> $GITHUB_STEP_SUMMARY
         echo "- **Deployed at**: $(date -u)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        
+    - name: Cleanup on failure
+      if: failure()
+      run: |
+        echo "🔄 Rolling back deployment due to failure..."
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }} \
+          'bash -s' << 'ROLLBACK_SCRIPT'
+        cd /var/www/seegap
+        LATEST_BACKUP=$(ls -t backup-* 2>/dev/null | head -n1)
+        if [ -n "$LATEST_BACKUP" ]; then
+          echo "📋 Restoring from backup: $LATEST_BACKUP"
+          rm -rf current
+          cp -r "$LATEST_BACKUP" current
+          cd current
+          docker-compose up -d
+        else
+          echo "❌ No backup found for rollback"
+        fi
+        ROLLBACK_SCRIPT
