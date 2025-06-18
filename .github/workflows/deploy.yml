@@ -36,6 +36,11 @@ jobs:
       with:
         project_id: ${{ env.GCP_PROJECT_ID }}
         
+    - name: Install gcloud beta components
+      run: |
+        echo "📦 Installing gcloud beta components..."
+        gcloud components install beta --quiet
+        
     - name: Create deployment package
       run: |
         echo "📦 Creating deployment package..."
