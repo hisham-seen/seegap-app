@@ -70,6 +70,9 @@ jobs:
         sudo mkdir -p /var/www/seegap
         sudo chown $USER:$USER /var/www/seegap
         
+        # Add user to docker group if not already
+        sudo usermod -aG docker $USER || true
+        
         if [ -d "/var/www/seegap/current" ]; then
           echo "📋 Creating backup of current deployment..."
           sudo cp -r /var/www/seegap/current /var/www/seegap/backup-$(date +%Y%m%d-%H%M%S)
@@ -92,32 +95,41 @@ jobs:
         define('SITE_URL',          'https://si.seegap.com/');
         CONFIG_EOF
         
-        chmod 644 config.php
+        # Create environment file for Docker Compose
+        cat > .env << 'ENV_EOF'
+        DB_USERNAME=seegap_prod_user_2025
+        DB_PASSWORD=SeeGap#Prod$2025!MySQL@Secure
+        DB_DATABASE=seegap_production_db
+        DB_ROOT_PASSWORD=Root#MySQL$2025!SuperSecure@GCP
+        SITE_URL=https://si.seegap.com/
+        ENV_EOF
+        
+        chmod 644 config.php .env
         chmod -R 755 themes/
         chmod -R 755 plugins/
         chmod -R 777 uploads/
         
         echo "🛑 Stopping current services..."
-        docker-compose down || true
+        sudo docker-compose down || true
         
         echo "📊 Setting up database..."
-        docker-compose up -d mysql
+        sudo docker-compose up -d mysql
         sleep 30
         
         echo "⏳ Waiting for MySQL to be ready..."
-        until docker-compose exec -T mysql mysqladmin ping -h"localhost" --silent; do
+        until sudo docker-compose exec -T mysql mysqladmin ping -h"localhost" --silent; do
           echo "Waiting for MySQL..."
           sleep 5
         done
         
         echo "📥 Setting up database and user..."
-        docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "CREATE DATABASE IF NOT EXISTS seegap_production_db; CREATE USER IF NOT EXISTS 'seegap_prod_user_2025'@'%' IDENTIFIED BY 'SeeGap#Prod\$2025!MySQL@Secure'; GRANT ALL PRIVILEGES ON seegap_production_db.* TO 'seegap_prod_user_2025'@'%'; FLUSH PRIVILEGES;"
+        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' -e "CREATE DATABASE IF NOT EXISTS seegap_production_db; CREATE USER IF NOT EXISTS 'seegap_prod_user_2025'@'%' IDENTIFIED BY 'SeeGap#Prod\$2025!MySQL@Secure'; GRANT ALL PRIVILEGES ON seegap_production_db.* TO 'seegap_prod_user_2025'@'%'; FLUSH PRIVILEGES;"
         
         echo "📥 Importing database dump..."
-        docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < ~/dump.sql
+        sudo docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < ~/dump.sql
         
         echo "🚀 Starting all services..."
-        docker-compose up -d
+        sudo docker-compose up -d
         sleep 30
         
         echo "🔄 Switching to new deployment..."
