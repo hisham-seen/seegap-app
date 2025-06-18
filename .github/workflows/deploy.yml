@@ -130,8 +130,9 @@ jobs:
         
         echo "🔄 Switching to new deployment..."
         cd /var/www/seegap
-        rm -rf current
+        sudo rm -rf current
         mv new current
+        sudo chown -R $USER:$USER current
         
         rm -f ~/seegap-app.tar.gz
         
