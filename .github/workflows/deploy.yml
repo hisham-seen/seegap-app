@@ -12,6 +12,10 @@ env:
   GCP_VM_IP: 34.140.57.52
   DEPLOY_PATH: /var/www/seegap
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy:
     name: Deploy to Production
@@ -21,12 +25,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.GCP_VM_IP }} >> ~/.ssh/known_hosts
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: 'projects/179814022008/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
+        service_account: 'github-actions-deploy@eminent-subset-462023-f9.iam.gserviceaccount.com'
+        
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ env.GCP_PROJECT_ID }}
         
     - name: Create deployment package
       run: |
@@ -45,23 +53,24 @@ jobs:
     - name: Upload application files
       run: |
         echo "🚀 Uploading application files to GCP VM..."
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
-          seegap-app.tar.gz \
-          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }}:/tmp/
+        gcloud compute scp seegap-app.tar.gz ${{ env.GCP_VM_NAME }}:/tmp/ \
+          --zone=${{ env.GCP_ZONE }} \
+          --project=${{ env.GCP_PROJECT_ID }}
           
     - name: Upload database dump
       run: |
         echo "📊 Uploading database dump..."
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
-          seegap_production_db_dump_20250618_064538.sql \
-          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }}:/tmp/
+        gcloud compute scp install/dump.sql ${{ env.GCP_VM_NAME }}:/tmp/ \
+          --zone=${{ env.GCP_ZONE }} \
+          --project=${{ env.GCP_PROJECT_ID }}
           
     - name: Deploy application
       run: |
         echo "🔧 Deploying application on GCP VM..."
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
-          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }} \
-          'bash -s' << 'DEPLOY_SCRIPT'
+        gcloud compute ssh ${{ env.GCP_VM_NAME }} \
+          --zone=${{ env.GCP_ZONE }} \
+          --project=${{ env.GCP_PROJECT_ID }} \
+          --command='bash -s' << 'DEPLOY_SCRIPT'
         
         # Set up deployment directory
         sudo mkdir -p /var/www/seegap
@@ -124,7 +133,7 @@ jobs:
         
         # Import the SQL dump
         echo "📥 Importing database dump..."
-        docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < /tmp/seegap_production_db_dump_20250618_064538.sql
+        docker-compose exec -T mysql mysql -u root -p'Root#MySQL$2025!SuperSecure@GCP' seegap_production_db < /tmp/dump.sql
         
         # Start all services
         echo "🚀 Starting all services..."
@@ -141,7 +150,7 @@ jobs:
         
         # Clean up
         rm -f /tmp/seegap-app.tar.gz
-        rm -f /tmp/seegap_production_db_dump_20250618_064538.sql
+        rm -f /tmp/dump.sql
         
         echo "✅ Deployment completed successfully!"
         DEPLOY_SCRIPT
@@ -170,9 +179,10 @@ jobs:
     - name: Verify database connection
       run: |
         echo "🔍 Verifying database connection..."
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
-          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }} \
-          'cd /var/www/seegap/current && docker-compose exec -T mysql mysql -u seegap_prod_user_2025 -p"SeeGap#Prod$2025!MySQL@Secure" seegap_production_db -e "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = \"seegap_production_db\";"'
+        gcloud compute ssh ${{ env.GCP_VM_NAME }} \
+          --zone=${{ env.GCP_ZONE }} \
+          --project=${{ env.GCP_PROJECT_ID }} \
+          --command='cd /var/www/seegap/current && docker-compose exec -T mysql mysql -u seegap_prod_user_2025 -p"SeeGap#Prod$2025!MySQL@Secure" seegap_production_db -e "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = \"seegap_production_db\";"'
         
     - name: Deployment Summary
       run: |
@@ -187,9 +197,10 @@ jobs:
       if: failure()
       run: |
         echo "🔄 Rolling back deployment due to failure..."
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
-          ${{ secrets.GCP_SSH_USER }}@${{ secrets.GCP_VM_IP }} \
-          'bash -s' << 'ROLLBACK_SCRIPT'
+        gcloud compute ssh ${{ env.GCP_VM_NAME }} \
+          --zone=${{ env.GCP_ZONE }} \
+          --project=${{ env.GCP_PROJECT_ID }} \
+          --command='bash -s' << 'ROLLBACK_SCRIPT'
         cd /var/www/seegap
         LATEST_BACKUP=$(ls -t backup-* 2>/dev/null | head -n1)
         if [ -n "$LATEST_BACKUP" ]; then

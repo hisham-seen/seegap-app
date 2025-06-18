@@ -112,9 +112,9 @@ data "cloudflare_zone" "seegap_zone" {
 resource "cloudflare_record" "seegap_a_record" {
   zone_id = data.cloudflare_zone.seegap_zone.id
   name    = var.subdomain
-  value   = google_compute_address.seegap_static_ip.address
+  content = google_compute_address.seegap_static_ip.address
   type    = "A"
-  ttl     = 300
+  ttl     = 1
   proxied = true
 }
 
@@ -122,9 +122,9 @@ resource "cloudflare_record" "seegap_a_record" {
 resource "cloudflare_record" "seegap_www_cname" {
   zone_id = data.cloudflare_zone.seegap_zone.id
   name    = "www.${var.subdomain}"
-  value   = "${var.subdomain}.${var.domain_name}"
+  content = "${var.subdomain}.${var.domain_name}"
   type    = "CNAME"
-  ttl     = 300
+  ttl     = 1
   proxied = true
 }
 
