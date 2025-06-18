@@ -104,7 +104,13 @@ jobs:
         chmod -R 755 plugins/
         chmod -R 777 uploads/
         
-        echo "🚀 Restarting services with new application code..."
+        echo "🛑 Stopping any existing services..."
+        sudo docker-compose down || true
+        
+        echo "🧹 Cleaning up any orphaned containers..."
+        sudo docker container prune -f || true
+        
+        echo "🚀 Starting services with new application code..."
         sudo docker-compose up -d
         sleep 20
         
