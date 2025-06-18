@@ -10,7 +10,7 @@ env:
   GCP_VM_NAME: seegap-app-vm
   GCP_ZONE: europe-west1-b
   GCP_VM_IP: 34.140.57.52
-  DEPLOY_PATH: /var/www/seegap
+  DEPLOY_PATH: /var/www/html
 
 permissions:
   contents: read
@@ -45,7 +45,7 @@ jobs:
       run: |
         echo "📦 Creating deployment package..."
         mkdir -p /tmp/deploy
-        rsync -av --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='*.log' --exclude='uploads/logs/*' --exclude='terraform' --exclude='backup_*' --exclude='test_*' --exclude='seegap-app.tar.gz' . /tmp/deploy/
+        rsync -av --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='*.log' --exclude='uploads/logs/*' --exclude='terraform' --exclude='backup_*' --exclude='test_*' --exclude='seegap-app.tar.gz' --exclude='docker*' --exclude='Dockerfile' . /tmp/deploy/
         cd /tmp/deploy
         tar -czf /tmp/seegap-app.tar.gz .
         mv /tmp/seegap-app.tar.gz $GITHUB_WORKSPACE/
@@ -62,78 +62,45 @@ jobs:
         set -e
         
         echo "🔧 Starting deployment..."
-        sudo mkdir -p /var/www/seegap
-        sudo chown $USER:$USER /var/www/seegap
         
-        # Add user to docker group if not already
-        sudo usermod -aG docker $USER || true
-        
-        if [ -d "/var/www/seegap/current" ]; then
+        # Create backup of current deployment
+        if [ -d "/var/www/html" ] && [ "$(ls -A /var/www/html 2>/dev/null)" ]; then
           echo "📋 Creating backup of current deployment..."
-          sudo cp -r /var/www/seegap/current /var/www/seegap/backup-$(date +%Y%m%d-%H%M%S)
+          sudo mkdir -p /var/backups/seegap
+          sudo tar -czf /var/backups/seegap/backup-$(date +%Y%m%d-%H%M%S).tar.gz -C /var/www/html .
         fi
         
         echo "📂 Extracting new deployment..."
-        cd /var/www/seegap
-        rm -rf new
-        mkdir -p new
-        cd new
+        mkdir -p /tmp/seegap-deploy
+        cd /tmp/seegap-deploy
         tar -xzf ~/seegap-app.tar.gz
         
         echo "⚙️ Creating production configuration..."
         cat > config.php << 'CONFIG_EOF'
         <?php
-        define('DATABASE_SERVER',   'mysql');
+        define('DATABASE_SERVER',   'localhost');
         define('DATABASE_USERNAME', 'seegap_prod_user_2025');
         define('DATABASE_PASSWORD', 'SeeGap#Prod$2025!MySQL@Secure');
         define('DATABASE_NAME',     'seegap_production_db');
         define('SITE_URL',          'https://si.seegap.com/');
         CONFIG_EOF
         
-        # Create environment file for Docker Compose
-        cat > .env << 'ENV_EOF'
-        DB_USERNAME=seegap_prod_user_2025
-        DB_PASSWORD=SeeGap#Prod$2025!MySQL@Secure
-        DB_DATABASE=seegap_production_db
-        DB_ROOT_PASSWORD=Root#MySQL$2025!SuperSecure@GCP
-        SITE_URL=https://si.seegap.com/
-        ENV_EOF
+        echo "🚀 Deploying files to Nginx web directory..."
+        sudo mkdir -p /var/www/html
+        sudo rsync -av --delete /tmp/seegap-deploy/ /var/www/html/
         
-        chmod 644 config.php .env
-        chmod -R 755 themes/
-        chmod -R 755 plugins/
-        chmod -R 777 uploads/
+        echo "🔧 Setting proper file permissions..."
+        sudo chown -R www-data:www-data /var/www/html
+        sudo find /var/www/html -type d -exec chmod 755 {} \;
+        sudo find /var/www/html -type f -exec chmod 644 {} \;
+        sudo chmod -R 777 /var/www/html/uploads/
         
-        echo "🛑 Stopping any existing services..."
-        sudo docker-compose down || true
+        echo "🔄 Restarting Nginx and PHP-FPM..."
+        sudo systemctl reload nginx
+        sudo systemctl restart php8.1-fpm || sudo systemctl restart php8.0-fpm || sudo systemctl restart php7.4-fpm
         
-        # Also stop services from current directory if it exists
-        if [ -d "/var/www/seegap/current" ]; then
-          echo "🛑 Stopping services from current deployment..."
-          cd /var/www/seegap/current
-          sudo docker-compose down || true
-          cd /var/www/seegap/new
-        fi
-        
-        echo "🧹 Cleaning up any orphaned containers..."
-        sudo docker container prune -f || true
-        
-        echo "🔍 Checking for any remaining containers using port 80..."
-        sudo docker ps --filter "publish=80" --format "table {{.ID}}\t{{.Image}}\t{{.Ports}}" || true
-        
-        echo "🛑 Stopping all running containers to ensure clean start..."
-        sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
-        
-        echo "🚀 Starting services with new application code..."
-        sudo docker-compose up -d
-        sleep 20
-        
-        echo "🔄 Switching to new deployment..."
-        cd /var/www/seegap
-        sudo rm -rf current
-        mv new current
-        sudo chown -R $USER:$USER current
-        
+        echo "🧹 Cleaning up temporary files..."
+        rm -rf /tmp/seegap-deploy
         rm -f ~/seegap-app.tar.gz
         
         echo "✅ Deployment completed successfully!"
@@ -150,7 +117,7 @@ jobs:
     - name: Health check
       run: |
         echo "🔍 Performing health check..."
-        sleep 30
+        sleep 10
         
         for i in {1..10}; do
           if curl -f -s https://si.seegap.com/ | grep -q "SeeGap\|login\|dashboard"; then
@@ -172,7 +139,8 @@ jobs:
         echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
         echo "- **Domain**: https://si.seegap.com" >> $GITHUB_STEP_SUMMARY
         echo "- **Status**: ✅ Deployment Successful" >> $GITHUB_STEP_SUMMARY
-        echo "- **Database**: ✅ Using Existing Database" >> $GITHUB_STEP_SUMMARY
+        echo "- **Web Server**: Nginx + PHP-FPM" >> $GITHUB_STEP_SUMMARY
+        echo "- **Database**: MySQL (localhost)" >> $GITHUB_STEP_SUMMARY
         echo "- **Deployed at**: $(date -u)" >> $GITHUB_STEP_SUMMARY
         echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         
@@ -180,4 +148,4 @@ jobs:
       if: failure()
       run: |
         echo "🔄 Rolling back deployment due to failure..."
-        gcloud beta compute ssh ${{ env.GCP_VM_NAME }} --zone=${{ env.GCP_ZONE }} --project=${{ env.GCP_PROJECT_ID }} --command='cd /var/www/seegap && LATEST_BACKUP=$(ls -t backup-* 2>/dev/null | head -n1) && if [ -n "$LATEST_BACKUP" ]; then echo "📋 Restoring from backup: $LATEST_BACKUP" && rm -rf current && cp -r "$LATEST_BACKUP" current && cd current && docker-compose up -d; else echo "❌ No backup found for rollback"; fi'
+        gcloud beta compute ssh ${{ env.GCP_VM_NAME }} --zone=${{ env.GCP_ZONE }} --project=${{ env.GCP_PROJECT_ID }} --command='LATEST_BACKUP=$(sudo ls -t /var/backups/seegap/backup-*.tar.gz 2>/dev/null | head -n1) && if [ -n "$LATEST_BACKUP" ]; then echo "📋 Restoring from backup: $LATEST_BACKUP" && sudo rm -rf /var/www/html/* && sudo tar -xzf "$LATEST_BACKUP" -C /var/www/html && sudo systemctl reload nginx; else echo "❌ No backup found for rollback"; fi'
