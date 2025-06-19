@@ -75,58 +75,9 @@ jobs:
         cd /tmp/seegap-deploy
         tar -xzf ~/seegap-app.tar.gz
         
-        echo "⚙️ Creating production configuration..."
-        cat > config.php << 'CONFIG_EOF'
-        <?php
-        /* Production Configuration for SeeGap Application - Nginx Deployment */
-        define('DATABASE_SERVER',   'localhost');
-        define('DATABASE_USERNAME', 'seegap_prod_user_2025');
-        define('DATABASE_PASSWORD', 'SeeGap#Prod$2025!MySQL@Secure');
-        define('DATABASE_NAME',     'seegap_production_db');
-        define('SITE_URL',          'https://si.seegap.com/');
-
-        /* Additional Production Settings */
-        define('ENVIRONMENT', 'production');
-        define('DEBUG_MODE', false);
-        define('ERROR_REPORTING', false);
-
-        /* Security Settings */
-        define('SECURE_COOKIES', true);
-        define('FORCE_HTTPS', true);
-
-        /* Performance Settings */
-        define('ENABLE_CACHING', true);
-        define('CACHE_LIFETIME', 3600);
-
-        /* File Upload Settings */
-        define('MAX_UPLOAD_SIZE', '10M');
-        define('ALLOWED_EXTENSIONS', 'jpg,jpeg,png,gif,webp,pdf,doc,docx');
-
-        /* Logging Configuration */
-        define('LOG_ERRORS', true);
-        define('LOG_FILE', '/var/www/html/uploads/logs/application.log');
-
-        /* Session Configuration */
-        define('SESSION_LIFETIME', 86400);
-        define('SESSION_NAME', 'SEEGAP_SESSION');
-
-        /* API Configuration */
-        define('API_RATE_LIMIT', 1000);
-        define('API_VERSION', 'v1');
-
-        /* Backup Configuration */
-        define('BACKUP_ENABLED', true);
-        define('BACKUP_RETENTION_DAYS', 30);
-
-        /* Monitoring Configuration */
-        define('HEALTH_CHECK_ENABLED', true);
-        define('METRICS_ENABLED', true);
-
-        /* Nginx-specific settings */
-        define('WEB_SERVER', 'nginx');
-        define('PHP_FPM_SOCKET', '/run/php/php8.1-fpm-seegap.sock');
-        ?>
-        CONFIG_EOF
+        echo "⚙️ Setting up production configuration..."
+        # Copy production config to replace the regular config file
+        cp config.production.php config.php
         
         echo "🚀 Deploying files to Docker web directory..."
         sudo mkdir -p /var/www/seegap
