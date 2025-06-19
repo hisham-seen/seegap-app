@@ -999,6 +999,27 @@
 
     process_utm();
 
+    /* Refresh microsite preview function */
+    let refresh_microsite_preview = () => {
+        let microsite_preview_iframe = document.querySelector('#microsite_preview_iframe');
+        if(microsite_preview_iframe) {
+            // Add loader
+            document.querySelector('#microsite_preview_iframe_loading').classList.remove('d-none');
+            
+            // Refresh iframe by updating its src
+            let current_src = microsite_preview_iframe.getAttribute('src');
+            let url = new URL(current_src);
+            url.searchParams.set('_refresh', Date.now()); // Add timestamp to force refresh
+            microsite_preview_iframe.setAttribute('src', url.toString());
+            
+            // Handle iframe load completion
+            microsite_preview_iframe.onload = () => {
+                microsite_preview_iframe.dispatchEvent(new Event('refreshed'));
+                document.querySelector('#microsite_preview_iframe_loading').classList.add('d-none');
+            }
+        }
+    };
+
     /* Switching themes & previewing */
     let microsite_theme_preview = () => {
         let microsite_theme_id = document.querySelector('input[name="microsite_theme_id"]:checked').value;
@@ -1384,8 +1405,8 @@
                     }
                 }
 
-                /* Refresh iframe */
-                refresh_microsite_preview();
+    /* Refresh iframe */
+    refresh_microsite_preview();
 
             },
             error: () => {
@@ -1491,13 +1512,16 @@
     });
 
     /* When an expanding happens for a link settings */
-    $('[id^="microsite_block_expanded_content"]').on('show.bs.collapse', event => {
+    $('[id^="microsite_block_expanded_content"]').off('show.bs.collapse').on('show.bs.collapse', event => {
         let update_form_content = event.currentTarget;
         let link_type = $(update_form_content).data('link-type');
         let microsite_block_id = $(update_form_content.querySelector('input[name="microsite_block_id"]')).val();
         let microsite_link = $('#microsite_preview_iframe').contents().find(`div[data-microsite-block-id="${microsite_block_id}"]`);
 
-        $('#microsite_preview_iframe').off().on('refreshed', event => {
+        // Clear any existing iframe event handlers to prevent multiple bindings
+        $('#microsite_preview_iframe').off('refreshed.block-' + microsite_block_id);
+        
+        $('#microsite_preview_iframe').on('refreshed.block-' + microsite_block_id, event => {
             setTimeout(() => {
                 microsite_link = $('#microsite_preview_iframe').contents().find(`div[data-microsite-block-id="${microsite_block_id}"]`);
                 block_expanded_content_init();
@@ -1507,6 +1531,9 @@
         let extra_updating_and_potentially_color_inputs = [];
 
         let block_expanded_content_init = () => {
+            // Clear any existing event handlers for this block to prevent duplicates
+            $(update_form_content).find('*').off('.block-' + microsite_block_id);
+            
             type_handler(`#microsite_block_expanded_content_${microsite_block_id} select[name="animation"]`, 'data-animation', '*=');
             update_form_content.querySelector(`#microsite_block_expanded_content_${microsite_block_id} select[name="animation"]`) && update_form_content.querySelectorAll(`#microsite_block_expanded_content_${microsite_block_id} select[name="animation"]`).forEach(element => element.addEventListener('change', () => { type_handler(`#microsite_block_expanded_content_${microsite_block_id} select[name="animation"]`, 'data-animation', '*='); }));
 
@@ -1944,7 +1971,24 @@
         }
 
         block_expanded_content_init();
-    })
+    });
+
+    /* Clean up when collapsing */
+    $('[id^="microsite_block_expanded_content"]').off('hide.bs.collapse').on('hide.bs.collapse', event => {
+        let update_form_content = event.currentTarget;
+        let microsite_block_id = $(update_form_content.querySelector('input[name="microsite_block_id"]')).val();
+        
+        // Clean up event handlers specific to this block
+        $('#microsite_preview_iframe').off('refreshed.block-' + microsite_block_id);
+        $(update_form_content).find('*').off('.block-' + microsite_block_id);
+        
+        // Destroy any color pickers to prevent memory leaks
+        $(update_form_content).find('.pickr').each(function() {
+            if(this._pickr) {
+                this._pickr.destroy();
+            }
+        });
+    });
 
 </script>
 
