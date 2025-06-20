@@ -98,11 +98,6 @@ class MicrositeBlockAjax extends Controller {
             redirect('links');
         }
 
-        /* Make sure that the user didn't exceed the limit */
-        $this->total_microsite_blocks = database()->query("SELECT COUNT(*) AS `total` FROM `microsites_blocks` WHERE `user_id` = {$this->user->user_id} AND `link_id` = {$microsite_block->link_id}")->fetch_object()->total;
-        if($this->user->plan_settings->microsite_blocks_limit != -1 && $this->total_microsite_blocks >= $this->user->plan_settings->microsite_blocks_limit) {
-            Alerts::add_error(l('global.info_message.plan_feature_limit'));
-        }
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
             $microsite_block->settings = json_decode($microsite_block->settings ?? '');
@@ -231,11 +226,6 @@ class MicrositeBlockAjax extends Controller {
             $_POST['block_type'] = query_clean($_POST['block_type']);
             $_POST['link_id'] = (int) $_POST['link_id'];
 
-            /* Make sure that the user didn't exceed the limit */
-            $this->total_microsite_blocks = database()->query("SELECT COUNT(*) AS `total` FROM `microsites_blocks` WHERE `user_id` = {$this->user->user_id} AND `link_id` = {$_POST['link_id']}")->fetch_object()->total;
-            if($this->user->plan_settings->microsite_blocks_limit != -1 && $this->total_microsite_blocks >= $this->user->plan_settings->microsite_blocks_limit) {
-                Response::json(l('global.info_message.plan_feature_limit'), 'error');
-            }
 
             /* Route to individual block handlers */
             $this->route_to_block_handler($_POST['block_type'], 'create');

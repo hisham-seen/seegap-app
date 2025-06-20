@@ -1000,7 +1000,7 @@
     process_utm();
 
     /* Refresh microsite preview function */
-    let refresh_microsite_preview = () => {
+    window.refresh_microsite_preview = window.refresh_microsite_preview || (() => {
         let microsite_preview_iframe = document.querySelector('#microsite_preview_iframe');
         if(microsite_preview_iframe) {
             // Add loader
@@ -1018,7 +1018,7 @@
                 document.querySelector('#microsite_preview_iframe_loading').classList.add('d-none');
             }
         }
-    };
+    });
 
     /* Switching themes & previewing */
     let microsite_theme_preview = () => {
@@ -1406,7 +1406,7 @@
                 }
 
     /* Refresh iframe */
-    refresh_microsite_preview();
+    window.refresh_microsite_preview();
 
             },
             error: () => {
@@ -1496,7 +1496,7 @@
             });
 
             /* Refresh iframe */
-            refresh_microsite_preview();
+            window.refresh_microsite_preview();
         }
     });
 

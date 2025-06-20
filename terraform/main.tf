@@ -71,7 +71,7 @@ resource "google_compute_instance" "seegap_vm" {
     ssh-keys = "${var.ssh_username}:${var.ssh_public_key}"
   }
 
-  metadata_startup_script = file("${path.module}/startup-script.sh")
+  metadata_startup_script = file("${path.module}/startup-script-docker.sh")
 
   service_account {
     email  = google_service_account.seegap_service_account.email

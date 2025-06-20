@@ -14,7 +14,8 @@ services:
     depends_on:
       - php
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.20.0.5
     restart: unless-stopped
     environment:
       - NGINX_HOST=${DOMAIN_NAME:-localhost}
@@ -28,14 +29,15 @@ services:
     depends_on:
       - mysql
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.20.0.8
     restart: unless-stopped
     environment:
       - DATABASE_SERVER=mysql
-      - DATABASE_USERNAME=${DB_USERNAME}
-      - DATABASE_PASSWORD=${DB_PASSWORD}
-      - DATABASE_NAME=${DB_DATABASE}
-      - SITE_URL=${SITE_URL}
+      - DATABASE_USERNAME=seegap_prod_user_2025
+      - DATABASE_PASSWORD=SeeGapProd2025MySQLSecure
+      - DATABASE_NAME=seegap_application_db
+      - SITE_URL=http://localhost/
       - PHP_OPCACHE_ENABLE=1
       - PHP_APCU_ENABLE=1
 
@@ -45,12 +47,13 @@ services:
       - mysql-data:/var/lib/mysql
       - ./docker/mysql:/docker-entrypoint-initdb.d
     environment:
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=seegap_application_db
+      - MYSQL_USER=seegap_prod_user_2025
+      - MYSQL_PASSWORD=SeeGapProd2025MySQLSecure
+      - MYSQL_ROOT_PASSWORD=Root#MySQL!SuperSecure@GCP
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.20.0.10
     restart: unless-stopped
     command: --innodb-buffer-pool-size=128M --max-connections=100
 
@@ -59,7 +62,8 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.20.0.12
     restart: unless-stopped
     command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
 
@@ -78,3 +82,6 @@ volumes:
 networks:
   app-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
