@@ -933,6 +933,25 @@
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/pickr.min.js?v=' . PRODUCT_CODE ?>"></script>
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/fontawesome-iconpicker.min.js?v=' . PRODUCT_CODE ?>"></script>
 <script>
+    /* Type handler function for form elements - declared first to prevent reference errors */
+    window.type_handler = window.type_handler || ((selector, attribute, operator = '=') => {
+        let element = document.querySelector(selector);
+        if(!element) return;
+        
+        let value = element.value;
+        let target_selector = `[${attribute}${operator}"${value}"]`;
+        
+        // Hide all elements first
+        document.querySelectorAll(`[${attribute}]`).forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // Show matching elements
+        document.querySelectorAll(target_selector).forEach(el => {
+            el.style.display = 'block';
+        });
+    });
+
     /* Settings Tab */
     const container = document.querySelector('.microsite-themes-wrapper');
     if(container) {
@@ -998,25 +1017,6 @@
     })
 
     process_utm();
-
-    /* Type handler function for form elements */
-    window.type_handler = window.type_handler || ((selector, attribute, operator = '=') => {
-        let element = document.querySelector(selector);
-        if(!element) return;
-        
-        let value = element.value;
-        let target_selector = `[${attribute}${operator}"${value}"]`;
-        
-        // Hide all elements first
-        document.querySelectorAll(`[${attribute}]`).forEach(el => {
-            el.style.display = 'none';
-        });
-        
-        // Show matching elements
-        document.querySelectorAll(target_selector).forEach(el => {
-            el.style.display = 'block';
-        });
-    });
 
     /* Refresh microsite preview function */
     window.refresh_microsite_preview = window.refresh_microsite_preview || (() => {
