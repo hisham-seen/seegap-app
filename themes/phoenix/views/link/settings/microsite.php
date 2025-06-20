@@ -1000,7 +1000,7 @@
     process_utm();
 
     /* Type handler function for form elements */
-    let type_handler = (selector, attribute, operator = '=') => {
+    window.type_handler = window.type_handler || ((selector, attribute, operator = '=') => {
         let element = document.querySelector(selector);
         if(!element) return;
         
@@ -1016,7 +1016,7 @@
         document.querySelectorAll(target_selector).forEach(el => {
             el.style.display = 'block';
         });
-    };
+    });
 
     /* Refresh microsite preview function */
     window.refresh_microsite_preview = window.refresh_microsite_preview || (() => {
