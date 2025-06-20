@@ -999,6 +999,25 @@
 
     process_utm();
 
+    /* Type handler function for form elements */
+    let type_handler = (selector, attribute, operator = '=') => {
+        let element = document.querySelector(selector);
+        if(!element) return;
+        
+        let value = element.value;
+        let target_selector = `[${attribute}${operator}"${value}"]`;
+        
+        // Hide all elements first
+        document.querySelectorAll(`[${attribute}]`).forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // Show matching elements
+        document.querySelectorAll(target_selector).forEach(el => {
+            el.style.display = 'block';
+        });
+    };
+
     /* Refresh microsite preview function */
     window.refresh_microsite_preview = window.refresh_microsite_preview || (() => {
         let microsite_preview_iframe = document.querySelector('#microsite_preview_iframe');
