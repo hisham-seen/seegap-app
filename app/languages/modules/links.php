@@ -214,6 +214,8 @@ return [
     'link.settings.verified_location' => 'Verified badge location',
     'link.settings.verified_location.top' => 'Top',
     'link.settings.verified_location.bottom' => 'Bottom',
+    'link.settings.verified_location.left' => 'Left',
+    'link.settings.verified_location.right' => 'Right',
     'link.settings.verified_help' => 'Contact us %s here %s to get your link verified.',
     'link.settings.verified_required' => 'Verification required for this feature.',
     'link.settings.display_branding' => 'Display branding',
@@ -280,6 +282,11 @@ return [
 
     // Targeting Settings
     'link.settings.targeting_type' => 'Targeting type',
+    'link.settings.targeting_type_device_type' => 'Device Type',
+    'link.settings.targeting_type_os_name' => 'Operating System',
+    'link.settings.targeting_type_browser_name' => 'Browser Name',
+    'link.settings.targeting_type_browser_language' => 'Browser Language',
+    'link.settings.targeting_type_rotation' => 'Rotation',
 
     // Cloaking Settings
     'link.settings.cloaking_is_enabled' => 'Enable cloaking',

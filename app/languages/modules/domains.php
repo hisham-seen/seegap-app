@@ -38,6 +38,7 @@ return [
     'domains.host' => 'Domain',
     'domains.host_placeholder' => 'short.example.com',
     'domains.host_help' => 'Your custom domain without http:// or https://',
+    'domains.help' => 'Domain Help & Documentation',
     'domains.scheme' => 'Protocol',
     'domains.scheme.http' => 'HTTP',
     'domains.scheme.https' => 'HTTPS',

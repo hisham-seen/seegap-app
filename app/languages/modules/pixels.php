@@ -57,6 +57,8 @@ return [
     'pixels.pixel_id' => 'Pixel ID',
     'pixels.pixel_id_placeholder' => 'Enter your pixel ID',
     'pixels.pixel_id_help' => 'The unique identifier for your pixel.',
+    'pixels.pixel' => 'Tracking Pixel',
+    'pixels.pixel_help' => 'Configure and manage your tracking pixels for analytics and retargeting.',
     'pixels.custom_code' => 'Custom code',
     'pixels.custom_code_placeholder' => '<script>/* Your tracking code */</script>',
     'pixels.custom_code_help' => 'Your custom tracking code or script.',

@@ -200,4 +200,23 @@ return [
     'payments.export.date_range' => 'Select date range',
     'payments.export.all_payments' => 'All payments',
     'payments.export.successful_only' => 'Successful payments only',
+
+    // Custom Plan Payment Processors
+    'pay.custom_plan.paypal' => 'PayPal Custom Plan',
+    'pay.custom_plan.stripe' => 'Stripe Custom Plan',
+    'pay.custom_plan.offline_payment' => 'Offline Payment Custom Plan',
+    'pay.custom_plan.coinbase' => 'Coinbase Custom Plan',
+    'pay.custom_plan.payu' => 'PayU Custom Plan',
+    'pay.custom_plan.iyzico' => 'Iyzico Custom Plan',
+    'pay.custom_plan.paystack' => 'Paystack Custom Plan',
+    'pay.custom_plan.razorpay' => 'Razorpay Custom Plan',
+    'pay.custom_plan.mollie' => 'Mollie Custom Plan',
+    'pay.custom_plan.yookassa' => 'YooKassa Custom Plan',
+    'pay.custom_plan.crypto_com' => 'Crypto.com Custom Plan',
+    'pay.custom_plan.paddle' => 'Paddle Custom Plan',
+    'pay.custom_plan.mercadopago' => 'MercadoPago Custom Plan',
+    'pay.custom_plan.midtrans' => 'Midtrans Custom Plan',
+    'pay.custom_plan.flutterwave' => 'Flutterwave Custom Plan',
+    'pay.custom_plan.lemonsqueezy' => 'Lemon Squeezy Custom Plan',
+    'pay.custom_plan.myfatoorah' => 'MyFatoorah Custom Plan',
 ];

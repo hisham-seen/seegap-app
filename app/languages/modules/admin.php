@@ -226,4 +226,45 @@ return [
 
     // Admin settings tabs
     'admin_settings.gs1_links.tab' => 'GS1 Links Settings',
+
+    // Admin GS1 Links Settings
+    'admin_settings.gs1_links.gs1_links_is_enabled' => 'Enable GS1 Links',
+    'admin_settings.gs1_links.gs1_links_is_enabled_help' => 'Allow users to create GS1 digital links.',
+    'admin_settings.gs1_links.gtin_validation_is_enabled' => 'Enable GTIN Validation',
+    'admin_settings.gs1_links.gtin_validation_is_enabled_help' => 'Validate GTIN format and check digit.',
+    'admin_settings.gs1_links.gtin_format_validation' => 'GTIN Format Validation',
+    'admin_settings.gs1_links.gtin_format_validation.strict' => 'Strict Validation',
+    'admin_settings.gs1_links.gtin_format_validation_help' => 'Choose the level of GTIN format validation.',
+    'admin_settings.gs1_links.require_target_url' => 'Require Target URL',
+    'admin_settings.gs1_links.require_target_url_help' => 'Make target URL mandatory for GS1 links.',
+    'admin_settings.gs1_links.default_target_url' => 'Default Target URL',
+    'admin_settings.gs1_links.default_target_url_help' => 'Default URL to use when no target URL is specified.',
+    'admin_settings.gs1_links.domains_is_enabled' => 'Enable Custom Domains',
+    'admin_settings.gs1_links.domains_is_enabled_help' => 'Allow custom domains for GS1 links.',
+    'admin_settings.gs1_links.projects_is_enabled' => 'Enable Projects',
+    'admin_settings.gs1_links.projects_is_enabled_help' => 'Allow organizing GS1 links into projects.',
+    'admin_settings.gs1_links.pixels_is_enabled' => 'Enable Pixels',
+    'admin_settings.gs1_links.pixels_is_enabled_help' => 'Allow tracking pixels on GS1 links.',
+    'admin_settings.gs1_links.analytics_is_enabled' => 'Enable Analytics',
+    'admin_settings.gs1_links.analytics_is_enabled_help' => 'Enable analytics tracking for GS1 links.',
+    'admin_settings.gs1_links.auto_generate_qr_codes' => 'Auto-generate QR Codes',
+    'admin_settings.gs1_links.auto_generate_qr_codes_help' => 'Automatically generate QR codes for new GS1 links.',
+    'admin_settings.gs1_links.branding' => 'GS1 Links Branding',
+    'admin_settings.gs1_links.branding_help' => 'Custom branding for GS1 links pages.',
+    'admin_settings.gs1_links.branding_help2' => 'This will be displayed on GS1 link landing pages.',
+    'admin_settings.gs1_links.random_gtin_length' => 'Random GTIN Length',
+    'admin_settings.gs1_links.random_gtin_length_help' => 'Length for randomly generated GTINs (8, 12, 13, or 14 digits).',
+    'admin_settings.gs1_links.blacklisted_gtins' => 'Blacklisted GTINs',
+    'admin_settings.gs1_links.blacklisted_gtins_help' => 'List of GTINs that are not allowed (one per line).',
+    'admin_settings.gs1_links.allowed_gtin_prefixes' => 'Allowed GTIN Prefixes',
+    'admin_settings.gs1_links.allowed_gtin_prefixes_help' => 'List of allowed GTIN prefixes (one per line). Leave empty to allow all.',
+
+    // Admin GS1 Links Settings Categories
+    'admin_settings.gs1_links.gtin_settings' => 'GTIN Settings',
+    'admin_settings.gs1_links.integration' => 'Integration Settings',
+    'admin_settings.gs1_links.features' => 'Feature Settings',
+    'admin_settings.gs1_links.security' => 'Security Settings',
+
+    // Admin Plans
+    'admin_plans.plan.gs1_links_limit' => 'GS1 Links Limit',
 ];

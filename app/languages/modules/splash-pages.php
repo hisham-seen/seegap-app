@@ -112,6 +112,7 @@ return [
     'splash_pages.settings.behavior' => 'Behavior',
     'splash_pages.settings.seo' => 'SEO',
     'splash_pages.settings.advanced' => 'Advanced',
+    'splash_pages.advanced' => 'Advanced Settings',
 
     // Splash Page templates
     'splash_pages.templates' => 'Templates',

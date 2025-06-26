@@ -47,6 +47,7 @@ return [
     'gs1_link_create.preview_disabled' => 'Preview Disabled',
     'gs1_link_create.preview_disabled_description' => 'Preview is not available until the GS1 link is created.',
     'gs1_link_create.preview_url_placeholder' => 'GS1 link will appear here',
+    'gs1_link_create.preview_landing_page' => 'Preview Landing Page',
 
     // GS1 Link update
     'gs1_link_update.title' => 'Update GS1 link',
