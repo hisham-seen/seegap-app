@@ -65,6 +65,11 @@ return [
     'qr_codes.url_placeholder' => 'https://example.com',
     'qr_codes.url_help' => 'The URL to encode in the QR code.',
 
+    // Dynamic URL
+    'qr_codes.input.url_dynamic' => 'Dynamic URL',
+    'qr_codes.input.url_dynamic_help' => 'Enable dynamic URL functionality for this QR code.',
+    'qr_codes.input.url_dynamic_help2' => 'Dynamic URLs allow you to change the destination without regenerating the QR code.',
+
     // Text type
     'qr_codes.text' => 'Text',
     'qr_codes.text_placeholder' => 'Enter your text here',
@@ -139,6 +144,47 @@ return [
     // FaceTime type
     'qr_codes.facetime_phone' => 'Phone number',
     'qr_codes.facetime_email' => 'Email',
+
+    // QR Code Information and Data
+    'qr_codes.info' => 'QR Code Information',
+    'qr_codes.embedded_data' => 'Embedded Data',
+    'qr_codes.is_readable' => 'QR Code is readable',
+
+    // Input fields for QR Code customization
+    'qr_codes.input.style' => 'QR Code Style',
+    'qr_codes.input.inner_eye_style' => 'Inner Eye Style',
+    'qr_codes.input.outer_eye_style' => 'Outer Eye Style',
+    'qr_codes.input.colors' => 'Colors',
+    'qr_codes.input.foreground_type' => 'Foreground Type',
+    'qr_codes.input.foreground_type_color' => 'Solid Color',
+    'qr_codes.input.foreground_type_gradient' => 'Gradient',
+    'qr_codes.input.foreground_color' => 'Foreground Color',
+    'qr_codes.input.background_color' => 'Background Color',
+    'qr_codes.input.background_color_transparency' => 'Background Transparency',
+    'qr_codes.input.custom_eyes_color' => 'Custom Eyes Color',
+    'qr_codes.input.frame' => 'Frame',
+    'qr_codes.input.frame_text' => 'Frame Text',
+    'qr_codes.input.frame_text_size' => 'Frame Text Size',
+    'qr_codes.input.frame_text_font' => 'Frame Text Font',
+    'qr_codes.input.frame_custom_colors' => 'Frame Custom Colors',
+    'qr_codes.input.branding' => 'Branding',
+    'qr_codes.input.qr_code_logo' => 'QR Code Logo',
+    'qr_codes.input.qr_code_logo_size' => 'Logo Size',
+    'qr_codes.input.qr_code_background' => 'QR Code Background',
+    'qr_codes.input.qr_code_background_transparency' => 'Background Transparency',
+    'qr_codes.input.qr_code_foreground' => 'QR Code Foreground',
+    'qr_codes.input.qr_code_foreground_transparency' => 'Foreground Transparency',
+    'qr_codes.input.options' => 'Options',
+    'qr_codes.input.size' => 'Size',
+    'qr_codes.input.margin' => 'Margin',
+    'qr_codes.input.ecc' => 'Error Correction Level',
+    'qr_codes.input.ecc_l' => 'Low (~7%)',
+    'qr_codes.input.ecc_m' => 'Medium (~15%)',
+    'qr_codes.input.ecc_q' => 'Quartile (~25%)',
+    'qr_codes.input.ecc_h' => 'High (~30%)',
+    'qr_codes.input.encoding' => 'Encoding',
+    'qr_codes.input.phone' => 'Phone Number',
+    'qr_codes.input.sms' => 'SMS Message',
 
     // Design settings
     'qr_codes.design' => 'Design',

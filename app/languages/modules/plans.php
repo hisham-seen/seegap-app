@@ -39,6 +39,13 @@ return [
     'plan.billing.lifetime' => 'Lifetime',
     'plan.billing.trial' => 'Trial',
 
+    // Custom plan billing cycles
+    'plan.custom_plan.monthly' => 'Custom Monthly Plan',
+    'plan.custom_plan.quarterly' => 'Custom Quarterly Plan',
+    'plan.custom_plan.biannual' => 'Custom Biannual Plan',
+    'plan.custom_plan.annual' => 'Custom Annual Plan',
+    'plan.custom_plan.lifetime' => 'Custom Lifetime Plan',
+
     // Plan actions
     'plan.upgrade' => 'Upgrade plan',
     'plan.downgrade' => 'Downgrade plan',
