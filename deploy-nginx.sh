@@ -142,7 +142,26 @@ tar -xzf ~/seegap-app-initial.tar.gz
 # Deploy to web directory
 echo "🚀 Deploying files to web directory..."
 sudo mkdir -p /var/www/html
-sudo rsync -av --delete /tmp/seegap-deploy/ /var/www/html/
+
+# Backup uploads folder if it exists
+if [ -d "/var/www/html/uploads" ]; then
+    echo "💾 Backing up uploads folder..."
+    sudo cp -r /var/www/html/uploads /tmp/uploads_backup
+fi
+
+# Deploy application files
+sudo rsync -av --delete --exclude='uploads' /tmp/seegap-deploy/ /var/www/html/
+
+# Restore uploads folder
+if [ -d "/tmp/uploads_backup" ]; then
+    echo "🔄 Restoring uploads folder..."
+    sudo rm -rf /var/www/html/uploads 2>/dev/null || true
+    sudo mv /tmp/uploads_backup /var/www/html/uploads
+    echo "✅ Uploads folder restored"
+else
+    # Create uploads folder if it doesn't exist
+    sudo mkdir -p /var/www/html/uploads
+fi
 
 # Set proper permissions
 echo "🔧 Setting file permissions..."

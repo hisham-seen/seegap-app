@@ -127,8 +127,30 @@ cd /var/www/seegap 2>/dev/null && docker-compose down || echo "No existing conta
 # Extract application files
 echo "📂 Extracting application files..."
 cd /var/www/seegap
-rm -rf * .* 2>/dev/null || true
+
+# Backup important data before deployment
+echo "💾 Backing up uploads and user data..."
+if [ -d "uploads" ]; then
+    cp -r uploads /tmp/uploads_backup
+    echo "✅ Uploads folder backed up"
+fi
+
+# Remove application files but preserve data
+echo "🧹 Cleaning old application files..."
+find . -maxdepth 1 -type f -not -name "*.env*" -not -name "config.php" -delete 2>/dev/null || true
+find . -maxdepth 1 -type d -not -name "uploads" -not -name "." -not -name ".." -exec rm -rf {} + 2>/dev/null || true
+
+# Extract new application files
+echo "📦 Extracting new application files..."
 tar -xzf /tmp/seegap-docker-app.tar.gz
+
+# Restore backed up data
+echo "🔄 Restoring uploads and user data..."
+if [ -d "/tmp/uploads_backup" ]; then
+    rm -rf uploads 2>/dev/null || true
+    mv /tmp/uploads_backup uploads
+    echo "✅ Uploads folder restored"
+fi
 
 # Set proper ownership
 echo "🔧 Setting file ownership..."
