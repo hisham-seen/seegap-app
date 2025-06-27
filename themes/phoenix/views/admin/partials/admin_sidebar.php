@@ -225,40 +225,42 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="<?= url('account') ?>"><i class="fas fa-fw fa-sm fa-user-cog mr-2"></i> <?= l('account.menu') ?></a>
-
-                <a class="dropdown-item" href="<?= url('account-preferences') ?>"><i class="fas fa-fw fa-sm fa-sliders-h mr-2"></i> <?= l('account_preferences.menu') ?></a>
-
-                <a class="dropdown-item" href="<?= url('account-plan') ?>"><i class="fas fa-fw fa-sm fa-box-open mr-2"></i> <?= l('account_plan.menu') ?></a>
-
-                <?php if(settings()->payment->is_enabled): ?>
-                    <a class="dropdown-item" href="<?= url('account-payments') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('account_payments.menu') ?></a>
-
-                    <?php if(\SeeGap\Plugin::is_active('affiliate')): ?>
-                        <a class="dropdown-item" href="<?= url('referrals') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('referrals.menu') ?></a>
-                    <?php endif ?>
-                <?php endif ?>
-
-                <?php if(settings()->main->api_is_enabled): ?>
-                    <a class="dropdown-item" href="<?= url('account-api') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('account_api.menu') ?></a>
-                <?php endif ?>
-
-                <?php if(\SeeGap\Plugin::is_active('teams')): ?>
-                    <a class="dropdown-item" href="<?= url('teams-system') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('teams_system.menu') ?></a>
-                <?php endif ?>
-
-                <div class="dropdown-divider"></div>
-
-                <a class="dropdown-item" href="<?= url('dashboard') ?>"><i class="fas fa-fw fa-sm fa-th mr-2"></i> <?= l('dashboard.menu') ?></a>
-
-                <?php if(settings()->sso->is_enabled && count((array) settings()->sso->websites)): ?>
+                <?php if(!\SeeGap\Teams::is_delegated()): ?>
+                    <a class="dropdown-item" href="<?= url('dashboard') ?>"><i class="fas fa-fw fa-sm fa-th text-primary mr-2"></i> <?= l('dashboard.menu') ?></a>
                     <div class="dropdown-divider"></div>
 
-                    <?php foreach(settings()->sso->websites as $website): ?>
-                        <a class="dropdown-item" href="<?= url('sso/switch?to=' . $website->id . '&redirect=admin') ?>"><i class="<?= $website->icon ?> fa-fw fa-sm mr-2"></i> <?= sprintf(l('sso.menu'), $website->name) ?></a>
-                    <?php endforeach ?>
+                    <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['Account']) ? 'active' : null ?>" href="<?= url('account') ?>"><i class="fas fa-fw fa-sm fa-user-cog mr-2"></i> <?= l('account.menu') ?></a>
+
+                    <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountPreferences']) ? 'active' : null ?>" href="<?= url('account-preferences') ?>"><i class="fas fa-fw fa-sm fa-sliders-h mr-2"></i> <?= l('account_preferences.menu') ?></a>
+
+                    <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountPlan']) ? 'active' : null ?>" href="<?= url('account-plan') ?>"><i class="fas fa-fw fa-sm fa-box-open mr-2"></i> <?= l('account_plan.menu') ?></a>
+
+                    <?php if(settings()->payment->is_enabled): ?>
+                        <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountPayments']) ? 'active' : null ?>" href="<?= url('account-payments') ?>"><i class="fas fa-fw fa-sm fa-credit-card mr-2"></i> <?= l('account_payments.menu') ?></a>
+
+                        <?php if(\SeeGap\Plugin::is_active('affiliate') && settings()->affiliate->is_enabled): ?>
+                            <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['Referrals']) ? 'active' : null ?>" href="<?= url('referrals') ?>"><i class="fas fa-fw fa-sm fa-wallet mr-2"></i> <?= l('referrals.menu') ?></a>
+                        <?php endif ?>
+                    <?php endif ?>
+
+                    <?php if(settings()->main->api_is_enabled): ?>
+                        <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['AccountApi']) ? 'active' : null ?>" href="<?= url('account-api') ?>"><i class="fas fa-fw fa-sm fa-code mr-2"></i> <?= l('account_api.menu') ?></a>
+                    <?php endif ?>
+
+                    <?php if(\SeeGap\Plugin::is_active('teams')): ?>
+                        <a class="dropdown-item <?= in_array(\SeeGap\Router::$controller, ['TeamsSystem', 'Teams', 'Team', 'TeamCreate', 'TeamUpdate', 'TeamsMember', 'TeamsMembers', 'TeamsMemberCreate', 'TeamsMemberUpdate']) ? 'active' : null ?>" href="<?= url('teams-system') ?>"><i class="fas fa-fw fa-sm fa-user-shield mr-2"></i> <?= l('teams_system.menu') ?></a>
+                    <?php endif ?>
+
+                    <?php if(settings()->sso->is_enabled && settings()->sso->display_menu_items && count((array) settings()->sso->websites)): ?>
+                        <div class="dropdown-divider"></div>
+
+                        <?php foreach(settings()->sso->websites as $website): ?>
+                            <a class="dropdown-item" href="<?= url('sso/switch?to=' . $website->id . '&redirect=admin') ?>"><i class="<?= $website->icon ?> fa-fw fa-sm mr-2"></i> <?= sprintf(l('sso.menu'), $website->name) ?></a>
+                        <?php endforeach ?>
+
+                        <div class="dropdown-divider"></div>
+                    <?php endif ?>
                 <?php endif ?>
-                <div class="dropdown-divider"></div>
 
                 <a class="dropdown-item" href="<?= url('logout') ?>"><i class="fas fa-fw fa-sm fa-sign-out-alt mr-2"></i> <?= l('global.menu.logout') ?></a>
             </div>

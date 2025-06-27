@@ -27,8 +27,15 @@ body {
     height: 100%;
     margin-top: 0;
     margin-bottom: 0;
-    background: var(--phoenix-sidebar-bg, #0b1727);
+    background: var(--white);
+    border-right: 1px solid var(--gray-100);
     box-shadow: var(--phoenix-card-shadow, 0 0 0.375rem 0.25rem rgba(0, 0, 0, 0.03));
+}
+
+/* Dark theme override - preserve existing dark sidebar */
+[data-theme-style="dark"] .app-sidebar {
+    background: var(--phoenix-sidebar-bg, #0b1727);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 [dir="rtl"] .app-sidebar {
@@ -59,7 +66,7 @@ body.admin-sidebar-opened .app-sidebar {
 }
 
 .app-sidebar-links-wrapper {
-    background: var(--phoenix-sidebar-bg, #0b1727);
+    background: var(--white);
     border-radius: 0;
     padding: 0.15rem 0.15rem;
     overflow-y: scroll;
@@ -67,6 +74,11 @@ body.admin-sidebar-opened .app-sidebar {
     width: calc(100%);
     scrollbar-width: none;
     flex-grow: 1;
+}
+
+/* Dark theme override */
+[data-theme-style="dark"] .app-sidebar-links-wrapper {
+    background: var(--phoenix-sidebar-bg, #0b1727);
 }
 
 .app-sidebar-links-wrapper:hover {
@@ -80,8 +92,13 @@ body.admin-sidebar-opened .app-sidebar {
 }
 
 .app-sidebar-links-wrapper::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
+}
+
+/* Dark theme scrollbar */
+[data-theme-style="dark"] .app-sidebar-links-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .app-sidebar-links-wrapper:hover::-webkit-scrollbar {
@@ -99,6 +116,11 @@ body.admin-sidebar-opened .app-sidebar {
 }
 
 .app-sidebar-links > .divider-wrapper > .divider {
+    border-top: 1px solid var(--gray-100);
+}
+
+/* Dark theme divider */
+[data-theme-style="dark"] .app-sidebar-links > .divider-wrapper > .divider {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -107,13 +129,22 @@ body.admin-sidebar-opened .app-sidebar {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--gray-100);
 }
 
 .app-sidebar-title a {
-    color: white;
+    color: var(--gray-900);
     font-weight: 600;
     font-size: 1.2rem;
+}
+
+/* Dark theme title */
+[data-theme-style="dark"] .app-sidebar-title {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme-style="dark"] .app-sidebar-title a {
+    color: white;
 }
 
 .app-sidebar-title a:hover {
@@ -138,7 +169,7 @@ body.admin-sidebar-opened .app-sidebar {
 }
 
 .app-sidebar-links li > a {
-    color: var(--phoenix-sidebar-color, #9da9bb);
+    color: var(--gray-700);
     padding: 0.20rem 0.75rem;
     font-size: 0.8rem;
     border-radius: 0.375rem;
@@ -147,12 +178,26 @@ body.admin-sidebar-opened .app-sidebar {
 }
 
 .app-sidebar-links li > a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--white);
+    background: var(--gray-100);
+    color: var(--gray-900);
     text-decoration: none;
 }
 
 .app-sidebar-links li > a svg {
+    color: var(--gray-700);
+}
+
+/* Dark theme links */
+[data-theme-style="dark"] .app-sidebar-links li > a {
+    color: var(--phoenix-sidebar-color, #9da9bb);
+}
+
+[data-theme-style="dark"] .app-sidebar-links li > a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+}
+
+[data-theme-style="dark"] .app-sidebar-links li > a svg {
     color: var(--phoenix-sidebar-color, #9da9bb);
 }
 
@@ -165,11 +210,19 @@ body.admin-sidebar-opened .app-sidebar {
     color: var(--white);
 }
 
-[data-theme-style="dark"] .app-sidebar-links li.active > a, [data-theme-style="dark"] .app-sidebar-links li.active > a svg {
+/* Active links work the same in both themes */
+[data-theme-style="dark"] .app-sidebar-links li.active > a, 
+[data-theme-style="dark"] .app-sidebar-links li.active > a svg {
+    background: var(--phoenix-sidebar-active, #038747);
     color: var(--white);
 }
 
 .admin-sidebar hr {
+    border-top: 1px solid var(--gray-100);
+}
+
+/* Dark theme hr */
+[data-theme-style="dark"] .admin-sidebar hr {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -290,7 +343,7 @@ body.admin-sidebar-opened .app-sidebar {
 /* App Sidebar Footer */
 .app-sidebar-footer {
     width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--gray-100);
 }
 
 .app-sidebar-footer > a {
@@ -298,7 +351,7 @@ body.admin-sidebar-opened .app-sidebar {
     padding: .75rem 1.75rem;
     display: flex;
     align-items: center;
-    color: var(--phoenix-sidebar-color, #9da9bb);
+    color: var(--gray-500);
     font-size: .9rem;
     font-weight: 500;
     transition: background .3s;
@@ -307,6 +360,20 @@ body.admin-sidebar-opened .app-sidebar {
 
 .app-sidebar-footer > a:hover {
     text-decoration: none;
+    background: var(--gray-100);
+    color: var(--gray-900);
+}
+
+/* Dark theme footer */
+[data-theme-style="dark"] .app-sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme-style="dark"] .app-sidebar-footer > a {
+    color: var(--phoenix-sidebar-color, #9da9bb);
+}
+
+[data-theme-style="dark"] .app-sidebar-footer > a:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--white);
 }
@@ -318,6 +385,11 @@ body.admin-sidebar-opened .app-sidebar {
 }
 
 .app-sidebar-footer-text {
+    color: var(--gray-500);
+}
+
+/* Dark theme footer text */
+[data-theme-style="dark"] .app-sidebar-footer-text {
     color: var(--phoenix-sidebar-color, #9da9bb);
 }
 
