@@ -406,7 +406,7 @@
     })
 
     <?php if(
-    settings()->links->claim_url_is_enabled
+    (settings()->links->claim_url_is_enabled ?? false)
     && isset($_GET['welcome'])
     && isset($_SESSION['claim_url'])
     && !empty($this->user->preferences->claim_url)

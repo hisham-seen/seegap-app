@@ -150,7 +150,7 @@
                             </select>
                         </div>
 
-                        <?php if(settings()->links->projects_is_enabled): ?>
+                        <?php if(settings()->links->projects_is_enabled ?? false): ?>
                         <div class="form-group px-4">
                             <div class="d-flex justify-content-between">
                                 <label for="filters_project_id" class="small"><?= l('projects.project_id') ?></label>
@@ -173,9 +173,9 @@
                                 </div>
                                 <select name="domain_id" id="filters_domain_id" class="custom-select custom-select-sm">
                                     <option value=""><?= l('global.all') ?></option>
-                                    <?php foreach($data->domains as $domain_id => $domain): ?>
+                                    <?php if($data->domains): foreach($data->domains as $domain_id => $domain): ?>
                                         <option value="<?= $domain_id ?>" <?= isset($data->filters->filters['domain_id']) && $data->filters->filters['domain_id'] == $domain_id ? 'selected="selected"' : null ?>><?= $domain->host ?></option>
-                                    <?php endforeach ?>
+                                    <?php endforeach; endif; ?>
                                 </select>
                             </div>
                         <?php endif ?>

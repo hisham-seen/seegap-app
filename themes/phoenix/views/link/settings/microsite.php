@@ -821,7 +821,7 @@
                                     <small class="form-text text-muted"><?= l('link.settings.scroll_buttons_is_enabled_help') ?></small>
                                 </div>
 
-                                <?php if(settings()->links->directory_is_enabled): ?>
+                                <?php if(settings()->links->directory_is_enabled ?? false): ?>
                                     <div <?= settings()->links->directory_display != 'all' && !$data->link->is_verified ? 'data-toggle="tooltip" title="' . l('link.settings.verified_required') . '"' : null ?>>
                                         <div class="<?= settings()->links->directory_display != 'all' && !$data->link->is_verified ? 'container-disabled' : null ?>">
                                             <div class="form-group custom-control custom-switch">
@@ -850,7 +850,7 @@
                                     <?php endif ?>
                                 <?php endif ?>
 
-                                <?php if(settings()->links->projects_is_enabled): ?>
+                                <?php if(settings()->links->projects_is_enabled ?? false): ?>
                                 <div class="form-group">
                                     <div class="d-flex flex-column flex-xl-row justify-content-between">
                                         <label for="project_id"><i class="fas fa-fw fa-sm fa-project-diagram text-muted mr-1"></i> <?= l('projects.project_id') ?></label>
