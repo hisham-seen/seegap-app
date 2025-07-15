@@ -73,5 +73,5 @@ variable "db_root_password" {
   description = "Database root password"
   type        = string
   sensitive   = true
-  default     = "Root#MySQL$2025!SuperSecure@GCP"
+  default     = "RootMySQL2025SuperSecureGCP"
 }
