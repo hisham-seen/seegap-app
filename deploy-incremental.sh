@@ -140,16 +140,22 @@ sudo chown -R HishamSait:HishamSait /var/www/seegap
 
 # Check if any PHP files were updated (restart PHP-FPM if needed)
 if grep -q "\.php$" changed_files.txt; then
-    echo "🔄 PHP files updated, restarting PHP-FPM..."
+    echo "🔄 PHP files updated, restarting PHP container..."
     cd /var/www/seegap
     if [ -f "docker-compose.yml" ]; then
         # Docker deployment
-        docker-compose restart php
-        echo "✅ PHP container restarted"
+        if docker-compose restart php 2>/dev/null; then
+            echo "✅ PHP container restarted"
+        else
+            echo "⚠️ PHP container restart failed, but files were updated"
+        fi
     else
         # Nginx deployment
-        sudo systemctl restart php8.1-fpm
-        echo "✅ PHP-FPM restarted"
+        if sudo systemctl restart php8.1-fpm 2>/dev/null; then
+            echo "✅ PHP-FPM restarted"
+        else
+            echo "⚠️ PHP-FPM restart failed, but files were updated"
+        fi
     fi
 fi
 
