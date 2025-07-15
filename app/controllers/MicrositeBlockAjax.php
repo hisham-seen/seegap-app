@@ -104,15 +104,6 @@ class MicrositeBlockAjax extends Controller {
 
             /* Duplication of resources */
             switch($microsite_block->type) {
-                case 'file':
-                case 'audio':
-                case 'video':
-                case 'pdf_document':
-                case 'powerpoint_presentation':
-                case 'excel_spreadsheet':
-                    $microsite_block->settings->file = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->file, \SeeGap\Uploads::get_path('files'), \SeeGap\Uploads::get_path('files'), 'json_error');
-                    break;
-
                 case 'review':
                     $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, \SeeGap\Uploads::get_path('block_images'), \SeeGap\Uploads::get_path('block_images'), 'json_error');
                     break;
@@ -262,62 +253,31 @@ class MicrositeBlockAjax extends Controller {
         /* Map block types to their handler classes */
         $block_handlers = [
             'link' => 'LinkBlock',
-            'heading' => 'HeadingBlock',
-            'email_collector' => 'EmailCollectorBlock',
+            'text' => 'TextBlock',
+            'form' => 'FormBlock',
             'big_link' => 'BigLinkBlock',
-            'paragraph' => 'ParagraphBlock',
             'image' => 'ImageBlock',
             'divider' => 'DividerBlock',
             'socials' => 'SocialsBlock',
-            'audio' => 'AudioBlock',
             'youtube' => 'YoutubeBlock',
             'countdown' => 'CountdownBlock',
-            'video' => 'VideoBlock',
-            'spotify' => 'SpotifyBlock',
-            'paypal' => 'PaypalBlock',
-            'list' => 'ListBlock',
             'alert' => 'AlertBlock',
             'faq' => 'FaqBlock',
-            'file' => 'FileBlock',
-            'vimeo' => 'VimeoBlock',
-            'twitch' => 'TwitchBlock',
             'instagram_media' => 'InstagramMediaBlock',
-            'phone_collector' => 'PhoneCollectorBlock',
-            'contact_collector' => 'ContactCollectorBlock',
             'twitter_tweet' => 'TwitterTweetBlock',
             'tiktok_video' => 'TiktokVideoBlock',
-            'product' => 'ProductBlock',
-            'map' => 'MapBlock',
             'custom_html' => 'CustomHtmlBlock',
-            'iframe' => 'IframeBlock',
             'avatar' => 'AvatarBlock',
-            'markdown' => 'MarkdownBlock',
-            'calendly' => 'CalendlyBlock',
-            'typeform' => 'TypeformBlock',
-            'soundcloud' => 'SoundcloudBlock',
             'facebook' => 'FacebookBlock',
-            'pdf_document' => 'PdfDocumentBlock',
-            'discord' => 'DiscordBlock',
             'telegram' => 'TelegramBlock',
-            'reddit' => 'RedditBlock',
             'header' => 'HeaderBlock',
             'image_grid' => 'ImageGridBlock',
-            'timeline' => 'TimelineBlock',
             'review' => 'ReviewBlock',
             'cta' => 'CtaBlock',
-            'external_item' => 'ExternalItemBlock',
             'share' => 'ShareBlock',
-            'coupon' => 'CouponBlock',
             'youtube_feed' => 'YoutubeFeedBlock',
-            'feedback_collector' => 'FeedbackCollectorBlock',
-            'donation' => 'DonationBlock',
-            'service' => 'ServiceBlock',
             'image_slider' => 'ImageSliderBlock',
-            'powerpoint_presentation' => 'PowerpointPresentationBlock',
-            'excel_spreadsheet' => 'ExcelSpreadsheetBlock',
-            'anchor' => 'AnchorBlock',
             'threads' => 'ThreadsBlock',
-            'tidal' => 'TidalBlock',
             'twitter_video' => 'TwitterVideoBlock',
             'twitter_profile' => 'TwitterProfileBlock',
         ];
@@ -584,28 +544,15 @@ class MicrositeBlockAjax extends Controller {
     private function process_microsite_theme_id_settings($link, $settings, $type) {
         /* Make sure the block is themable */
         $themable_blocks = [
-            'pdf_document',
             'socials',
-            'powerpoint_presentation',
-            'excel_spreadsheet',
             'review',
             'big_link',
             'link',
-            'email_collector',
-            'paypal',
-            'phone_collector',
-            'contact_collector',
-            'feedback_collector',
+            'form',
             'cta',
             'youtube_feed',
             'share',
-            'coupon',
-            'file',
-            'product',
-            'donation',
-            'service',
-            'paragraph',
-            'markdown'
+            'paragraph'
         ];
 
         if(!in_array($type, $themable_blocks)) {
@@ -634,12 +581,8 @@ class MicrositeBlockAjax extends Controller {
                 $new_settings = json_encode(array_merge((array) $settings, (array) $microsite_theme->settings->microsite_block_socials ?? []));
                 break;
 
-            case 'heading':
-                $new_settings = json_encode(array_merge((array) $settings, (array) $microsite_theme->settings->microsite_block_heading ?? []));
-                break;
-
-            case 'paragraph':
-                $new_settings = json_encode(array_merge((array) $settings, (array) $microsite_theme->settings->microsite_block_paragraph ?? []));
+            case 'text':
+                $new_settings = json_encode(array_merge((array) $settings, (array) $microsite_theme->settings->microsite_block ?? []));
                 break;
 
             default:

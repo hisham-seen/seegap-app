@@ -15,7 +15,8 @@ $available_blocks = settings()->links->available_microsite_blocks ?? new \stdCla
 foreach(require APP_PATH . 'includes/microsite_blocks.php' as $type => $value) {
     // Initialize property if not set
     if (!isset($available_blocks->{$type})) {
-        $available_blocks->{$type} = false;
+        // Enable text block by default since it replaces heading, paragraph, and list
+        $available_blocks->{$type} = ($type === 'text') ? true : false;
     }
     
     if($available_blocks->{$type}) {

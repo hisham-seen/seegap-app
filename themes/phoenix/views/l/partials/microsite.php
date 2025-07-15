@@ -69,7 +69,7 @@
                             }
 
                             /* Check if the user has permissions to use the link */
-                            if(!$data->user->plan_settings->enabled_microsite_blocks->{$row->type}) {
+                            if(!($data->user->plan_settings->enabled_microsite_blocks->{$row->type} ?? null) && $row->type !== 'text') {
                                 continue;
                             }
 
@@ -190,4 +190,3 @@
 <?= $this->views['pixels'] ?? null ?>
 
 <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
-

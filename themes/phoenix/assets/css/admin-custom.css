@@ -1062,3 +1062,53 @@ i {
     border: 1px solid var(--gray-200);
     font-size: .9rem;
 }
+
+/* Fix double scroll issue in list block modal */
+.modal-body {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.modal-dialog {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Ensure list items container doesn't create its own scroll */
+[id*="list_items_container"] {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Remove any height restrictions on form containers in modals */
+.modal .form-group {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Fix microsite block expanded content panels - prevent internal scrolling */
+[id*="microsite_block_expanded_content"] {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+[id*="microsite_block_expanded_content"] .form-group {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+[id*="microsite_block_expanded_content"] form {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Ensure microsite block containers don't create scroll areas */
+.microsite_block .collapse {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.microsite_block .card-body {
+    max-height: none !important;
+    overflow: visible !important;
+}

@@ -63,7 +63,8 @@ class Link extends Controller {
                     $link_links_result = database()->query("SELECT * FROM `microsites_blocks` WHERE `link_id` = {$this->link->link_id} ORDER BY `order` ASC");
 
                     /* Add the modals for creating the links inside the microsite */
-                    foreach($microsite_blocks as $key => $value) {
+                    $enabled_microsite_blocks = require APP_PATH . 'includes/enabled_microsite_blocks.php';
+                    foreach($enabled_microsite_blocks as $key => $value) {
                         $data = [
                             'link' => $this->link,
                             'microsite_blocks' => $microsite_blocks,

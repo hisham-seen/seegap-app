@@ -38,6 +38,18 @@ class ListBlock extends BaseBlockHandler {
             'list_type' => 'unordered',
             'text_color' => '#ffffff',
             'text_alignment' => 'left',
+            'background_color' => '#000000',
+            'border_width' => 0,
+            'border_color' => '#000000',
+            'border_radius' => 'rounded',
+            'border_style' => 'solid',
+            'border_shadow_offset_x' => 0,
+            'border_shadow_offset_y' => 0,
+            'border_shadow_blur' => 0,
+            'border_shadow_spread' => 0,
+            'border_shadow_color' => '#000000',
+            'margin_items_y' => 2,
+            'margin_items_x' => 1,
 
             /* Display settings */
             'display_continents' => [],
@@ -74,6 +86,24 @@ class ListBlock extends BaseBlockHandler {
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
         $_POST['text_alignment'] = in_array($_POST['text_alignment'], ['center', 'left', 'right', 'justify']) ? query_clean($_POST['text_alignment']) : 'left';
 
+        /* Background and styling settings */
+        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#000000' : $_POST['background_color'];
+        $_POST['border_width'] = isset($_POST['border_width']) ? (int) $_POST['border_width'] : 0;
+        $_POST['border_color'] = !verify_hex_color($_POST['border_color']) ? '#000000' : $_POST['border_color'];
+        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
+        $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'outset', 'inset']) ? query_clean($_POST['border_style']) : 'solid';
+        
+        /* Border shadow settings */
+        $_POST['border_shadow_offset_x'] = isset($_POST['border_shadow_offset_x']) ? (int) $_POST['border_shadow_offset_x'] : 0;
+        $_POST['border_shadow_offset_y'] = isset($_POST['border_shadow_offset_y']) ? (int) $_POST['border_shadow_offset_y'] : 0;
+        $_POST['border_shadow_blur'] = isset($_POST['border_shadow_blur']) ? (int) $_POST['border_shadow_blur'] : 0;
+        $_POST['border_shadow_spread'] = isset($_POST['border_shadow_spread']) ? (int) $_POST['border_shadow_spread'] : 0;
+        $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#000000' : $_POST['border_shadow_color'];
+        
+        /* Margin settings */
+        $_POST['margin_items_y'] = isset($_POST['margin_items_y']) ? (int) $_POST['margin_items_y'] : 2;
+        $_POST['margin_items_x'] = isset($_POST['margin_items_x']) ? (int) $_POST['margin_items_x'] : 1;
+
         /* List items */
         $list_items = [];
         if(isset($_POST['list_items'])) {
@@ -97,6 +127,18 @@ class ListBlock extends BaseBlockHandler {
             'list_type' => $_POST['list_type'],
             'text_color' => $_POST['text_color'],
             'text_alignment' => $_POST['text_alignment'],
+            'background_color' => $_POST['background_color'],
+            'border_width' => $_POST['border_width'],
+            'border_color' => $_POST['border_color'],
+            'border_radius' => $_POST['border_radius'],
+            'border_style' => $_POST['border_style'],
+            'border_shadow_offset_x' => $_POST['border_shadow_offset_x'],
+            'border_shadow_offset_y' => $_POST['border_shadow_offset_y'],
+            'border_shadow_blur' => $_POST['border_shadow_blur'],
+            'border_shadow_spread' => $_POST['border_shadow_spread'],
+            'border_shadow_color' => $_POST['border_shadow_color'],
+            'margin_items_y' => $_POST['margin_items_y'],
+            'margin_items_x' => $_POST['margin_items_x'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

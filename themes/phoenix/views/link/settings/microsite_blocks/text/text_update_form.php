@@ -8,29 +8,354 @@
 
     <div class="notification-container"></div>
 
+    <!-- Text Type Selection -->
     <div class="form-group">
-        <label for="<?= 'text_title_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-heading fa-sm text-muted mr-1"></i> <?= l('microsite_text.title') ?></label>
-        <input id="<?= 'text_title_' . $row->microsite_block_id ?>" type="text" class="form-control" name="title" value="<?= $row->settings->title ?>" />
+        <label for="<?= 'text_type_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-text-height fa-sm text-muted mr-1"></i> <?= l('microsite_text.type') ?></label>
+        <select id="<?= 'text_type_' . $row->microsite_block_id ?>" name="text_type" class="custom-select" onchange="toggleTextTypeFields<?= $row->microsite_block_id ?>()">
+            <option value="paragraph" <?= ($row->settings->text_type ?? 'paragraph') == 'paragraph' ? 'selected' : '' ?>><?= l('microsite_text.type_paragraph') ?></option>
+            <option value="heading" <?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? 'selected' : '' ?>><?= l('microsite_text.type_heading') ?></option>
+            <option value="list" <?= ($row->settings->text_type ?? 'paragraph') == 'list' ? 'selected' : '' ?>><?= l('microsite_text.type_list') ?></option>
+        </select>
     </div>
 
-    <div class="form-group">
-        <label for="<?= 'text_description_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('microsite_text.description') ?></label>
-        <textarea id="<?= 'text_description_' . $row->microsite_block_id ?>" name="description" class="form-control"><?= $row->settings->description ?></textarea>
+    <!-- Heading Type Selection (only for heading) -->
+    <div class="form-group" id="<?= 'heading_type_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? 'block' : 'none' ?>;">
+        <label for="<?= 'heading_type_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-heading fa-sm text-muted mr-1"></i> <?= l('microsite_text.heading_level') ?></label>
+        <select id="<?= 'heading_type_' . $row->microsite_block_id ?>" name="heading_type" class="custom-select">
+            <option value="h1" <?= ($row->settings->heading_type ?? 'h1') == 'h1' ? 'selected' : '' ?>>H1</option>
+            <option value="h2" <?= ($row->settings->heading_type ?? 'h1') == 'h2' ? 'selected' : '' ?>>H2</option>
+            <option value="h3" <?= ($row->settings->heading_type ?? 'h1') == 'h3' ? 'selected' : '' ?>>H3</option>
+            <option value="h4" <?= ($row->settings->heading_type ?? 'h1') == 'h4' ? 'selected' : '' ?>>H4</option>
+            <option value="h5" <?= ($row->settings->heading_type ?? 'h1') == 'h5' ? 'selected' : '' ?>>H5</option>
+            <option value="h6" <?= ($row->settings->heading_type ?? 'h1') == 'h6' ? 'selected' : '' ?>>H6</option>
+        </select>
     </div>
 
-    <div class="form-group">
-        <label><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_text.title_text_color') ?></label>
-        <input type="hidden" name="title_text_color" class="form-control" value="<?= $row->settings->title_text_color ?>" required="required" />
-        <div class="title_text_color_pickr"></div>
+    <!-- Verified Location (only for heading) -->
+    <div class="form-group" id="<?= 'verified_location_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? 'block' : 'none' ?>;">
+        <label for="<?= 'verified_location_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-certificate fa-sm text-muted mr-1"></i> <?= l('microsite_text.verified_location') ?></label>
+        <select id="<?= 'verified_location_' . $row->microsite_block_id ?>" name="verified_location" class="custom-select">
+            <option value="" <?= ($row->settings->verified_location ?? '') == '' ? 'selected' : '' ?>><?= l('global.none') ?></option>
+            <option value="left" <?= ($row->settings->verified_location ?? '') == 'left' ? 'selected' : '' ?>><?= l('global.left') ?></option>
+            <option value="right" <?= ($row->settings->verified_location ?? '') == 'right' ? 'selected' : '' ?>><?= l('global.right') ?></option>
+        </select>
     </div>
 
-    <div class="form-group">
-        <label><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_text.description_color') ?></label>
-        <input type="hidden" name="description_color" class="form-control" value="<?= $row->settings->description_color ?>" required="required" />
-        <div class="description_color_pickr"></div>
+    <!-- Text Content (for heading and paragraph) -->
+    <div class="form-group" id="<?= 'text_content_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'list' ? 'none' : 'block' ?>;">
+        <label for="<?= 'text_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_text.content') ?></label>
+        <textarea id="<?= 'text_' . $row->microsite_block_id ?>" name="text" class="form-control" rows="<?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? '2' : '4' ?>" maxlength="<?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? '256' : '2048' ?>"><?= $row->settings->text ?? '' ?></textarea>
+        <small class="form-text text-muted" id="<?= 'text_help_paragraph_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'paragraph' ? 'block' : 'none' ?>;"><?= l('microsite_text.content_help_paragraph') ?></small>
+        <small class="form-text text-muted" id="<?= 'text_help_heading_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? 'block' : 'none' ?>;"><?= l('microsite_text.content_help_heading') ?></small>
     </div>
+
+    <!-- List Type Selection (only for list) -->
+    <div class="form-group" id="<?= 'list_type_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'list' ? 'block' : 'none' ?>;">
+        <label for="<?= 'list_type_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-list fa-sm text-muted mr-1"></i> <?= l('microsite_text.list_type') ?></label>
+        <div class="row btn-group-toggle" data-toggle="buttons">
+            <div class="col-6">
+                <label class="btn btn-light btn-block text-truncate <?= ($row->settings->list_type ?? 'unordered') == 'unordered' ? 'active' : '' ?>">
+                    <input type="radio" name="list_type" value="unordered" class="custom-control-input" <?= ($row->settings->list_type ?? 'unordered') == 'unordered' ? 'checked="checked"' : '' ?> />
+                    <i class="fas fa-fw fa-list-ul fa-sm mr-1"></i> <?= l('microsite_text.list_unordered') ?>
+                </label>
+            </div>
+            <div class="col-6">
+                <label class="btn btn-light btn-block text-truncate <?= ($row->settings->list_type ?? 'unordered') == 'ordered' ? 'active' : '' ?>">
+                    <input type="radio" name="list_type" value="ordered" class="custom-control-input" <?= ($row->settings->list_type ?? 'unordered') == 'ordered' ? 'checked="checked"' : '' ?> />
+                    <i class="fas fa-fw fa-list-ol fa-sm mr-1"></i> <?= l('microsite_text.list_ordered') ?>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- List Items (only for list) -->
+    <div class="form-group" id="<?= 'list_items_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'list' ? 'block' : 'none' ?>;">
+        <label><i class="fas fa-fw fa-list fa-sm text-muted mr-1"></i> <?= l('microsite_text.list_items') ?></label>
+        <div id="<?= 'list_items_container_' . $row->microsite_block_id ?>">
+            <?php if(!empty($row->settings->list_items) && is_array($row->settings->list_items)): ?>
+                <?php foreach($row->settings->list_items as $key => $list_item): ?>
+                    <div class="list-item-wrapper mb-2">
+                        <div class="input-group">
+                            <input type="text" name="list_items[]" class="form-control" value="<?= htmlspecialchars($list_item) ?>" placeholder="<?= l('microsite_text.list_item_placeholder') ?>" maxlength="256" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-danger remove-list-item">
+                                    <i class="fas fa-times fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            <?php else: ?>
+                <div class="list-item-wrapper mb-2">
+                    <div class="input-group">
+                        <input type="text" name="list_items[]" class="form-control" value="" placeholder="<?= l('microsite_text.list_item_placeholder') ?>" maxlength="256" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-danger remove-list-item">
+                                <i class="fas fa-times fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <?php endif ?>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="<?= 'add_list_item_' . $row->microsite_block_id ?>">
+            <i class="fas fa-plus fa-sm mr-1"></i> <?= l('microsite_text.add_list_item') ?>
+        </button>
+        <small class="form-text text-muted"><?= l('microsite_text.list_items_help') ?></small>
+    </div>
+
+    <!-- Text Color -->
+    <div class="form-group">
+        <label><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_link.text_color') ?></label>
+        <input type="hidden" name="text_color" class="form-control" value="<?= $row->settings->text_color ?? '#ffffff' ?>" required="required" />
+        <div class="text_color_pickr"></div>
+    </div>
+
+    <!-- Text Alignment -->
+    <div class="form-group">
+        <label for="<?= 'block_text_alignment_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-align-center fa-sm text-muted mr-1"></i> <?= l('microsite_link.text_alignment') ?></label>
+        <div class="row btn-group-toggle" data-toggle="buttons">
+            <?php foreach(['center', 'justify', 'left', 'right'] as $text_alignment): ?>
+                <div class="col-6">
+                    <label class="btn btn-light btn-block text-truncate <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'active' : '' ?>">
+                        <input type="radio" name="text_alignment" value="<?= $text_alignment ?>" class="custom-control-input" <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'checked="checked"' : '' ?> />
+                        <i class="fas fa-fw fa-align-<?= $text_alignment ?> fa-sm mr-1"></i> <?= l('microsite_link.text_alignment.' . $text_alignment) ?>
+                    </label>
+                </div>
+            <?php endforeach ?>
+        </div>
+    </div>
+
+    <!-- Background Color (for paragraph and list) -->
+    <div class="form-group" id="<?= 'background_color_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? 'none' : 'block' ?>;">
+        <label for="<?= 'background_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.background_color') ?></label>
+        <input id="<?= 'background_color_' . $row->microsite_block_id ?>" type="hidden" name="background_color" class="form-control" value="<?= $row->settings->background_color ?? '#000000' ?>" required="required" />
+        <div class="background_color_pickr"></div>
+    </div>
+
+    <!-- List Margin Settings (only for list) -->
+    <div id="<?= 'list_margin_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'list' ? 'block' : 'none' ?>;">
+        <div class="form-group">
+            <label for="<?= 'margin_items_y_' . $row->microsite_block_id ?>"><?= l('microsite_text.margin_items_y') ?></label>
+            <input id="<?= 'margin_items_y_' . $row->microsite_block_id ?>" type="range" name="margin_items_y" min="0" max="5" step="1" value="<?= $row->settings->margin_items_y ?? 2 ?>" class="form-control-range" />
+        </div>
+
+        <div class="form-group">
+            <label for="<?= 'margin_items_x_' . $row->microsite_block_id ?>"><?= l('microsite_text.margin_items_x') ?></label>
+            <input id="<?= 'margin_items_x_' . $row->microsite_block_id ?>" type="range" name="margin_items_x" min="0" max="3" step="1" value="<?= $row->settings->margin_items_x ?? 1 ?>" class="form-control-range" />
+        </div>
+    </div>
+
+    <!-- Border Settings (for paragraph and list) -->
+    <div id="<?= 'border_settings_group_' . $row->microsite_block_id ?>" style="display: <?= ($row->settings->text_type ?? 'paragraph') == 'heading' ? 'none' : 'block' ?>;">
+        <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'border_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'border_container_' . $row->microsite_block_id ?>">
+            <i class="fas fa-fw fa-square-full fa-sm mr-1"></i> <?= l('microsite_link.border_header') ?>
+        </button>
+
+        <div class="collapse" id="<?= 'border_container_' . $row->microsite_block_id ?>">
+            <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                <label for="<?= 'block_border_width_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-style fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_width') ?></label>
+                <input id="<?= 'block_border_width_' . $row->microsite_block_id ?>" type="range" min="0" max="5" class="form-control-range" name="border_width" value="<?= $row->settings->border_width ?? '0' ?>" required="required" />
+            </div>
+
+            <div class="form-group">
+                <label for="<?= 'block_border_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_color') ?></label>
+                <input id="<?= 'block_border_color_' . $row->microsite_block_id ?>" type="hidden" name="border_color" class="form-control" value="<?= $row->settings->border_color ?? '#ffffff' ?>" required="required" />
+                <div class="border_color_pickr"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="<?= 'block_border_radius_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-all fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_radius') ?></label>
+                <div class="row btn-group-toggle" data-toggle="buttons">
+                    <div class="col-4">
+                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->border_radius ?? 'rounded') == 'straight' ? 'active' : '' ?>">
+                            <input type="radio" name="border_radius" value="straight" class="custom-control-input" <?= ($row->settings->border_radius ?? 'rounded') == 'straight' ? 'checked="checked"' : '' ?> />
+                            <i class="fas fa-fw fa-square-full fa-sm mr-1"></i> <?= l('microsite_link.border_radius_straight') ?>
+                        </label>
+                    </div>
+                    <div class="col-4">
+                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->border_radius ?? 'rounded') == 'round' ? 'active' : '' ?>">
+                            <input type="radio" name="border_radius" value="round" class="custom-control-input" <?= ($row->settings->border_radius ?? 'rounded') == 'round' ? 'checked="checked"' : '' ?> />
+                            <i class="fas fa-fw fa-circle fa-sm mr-1"></i> <?= l('microsite_link.border_radius_round') ?>
+                        </label>
+                    </div>
+                    <div class="col-4">
+                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->border_radius ?? 'rounded') == 'rounded' ? 'active' : '' ?>">
+                            <input type="radio" name="border_radius" value="rounded" class="custom-control-input" <?= ($row->settings->border_radius ?? 'rounded') == 'rounded' ? 'checked="checked"' : '' ?> />
+                            <i class="fas fa-fw fa-square fa-sm mr-1"></i> <?= l('microsite_link.border_radius_rounded') ?>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="<?= 'block_border_style_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-none fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_style') ?></label>
+                <div class="row btn-group-toggle" data-toggle="buttons">
+                    <?php foreach(['solid', 'dashed', 'double', 'outset', 'inset'] as $border_style): ?>
+                        <div class="col-4">
+                            <label class="btn btn-light btn-block text-truncate <?= ($row->settings->border_style ?? 'solid') == $border_style ? 'active' : '' ?>">
+                                <input type="radio" name="border_style" value="<?= $border_style ?>" class="custom-control-input" <?= ($row->settings->border_style ?? 'solid') == $border_style ? 'checked="checked"' : '' ?> />
+                                <?= l('microsite_link.border_style_' . $border_style) ?>
+                            </label>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'border_shadow_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'border_shadow_container_' . $row->microsite_block_id ?>">
+            <i class="fas fa-fw fa-cloud fa-sm mr-1"></i> <?= l('microsite_link.border_shadow_header') ?>
+        </button>
+
+        <div class="collapse" id="<?= 'border_shadow_container_' . $row->microsite_block_id ?>">
+            <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                <label for="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-h fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_offset_x') ?></label>
+                <input id="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_x" value="<?= $row->settings->border_shadow_offset_x ?? 0 ?>" required="required" />
+            </div>
+
+            <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                <label for="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-v fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_offset_y') ?></label>
+                <input id="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_y" value="<?= $row->settings->border_shadow_offset_y ?? 0 ?>" required="required" />
+            </div>
+
+            <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                <label for="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_blur') ?></label>
+                <input id="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>" type="range" min="0" max="20" class="form-control-range" name="border_shadow_blur" value="<?= $row->settings->border_shadow_blur ?? 0 ?>" required="required" />
+            </div>
+
+            <div class="form-group" data-range-counter data-range-counter-suffix="px">
+                <label for="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-all fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_spread') ?></label>
+                <input id="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>" type="range" min="0" max="10" class="form-control-range" name="border_shadow_spread" value="<?= $row->settings->border_shadow_spread ?? 0 ?>" required="required" />
+            </div>
+
+            <div class="form-group">
+                <label for="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_color') ?></label>
+                <input id="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>" type="hidden" name="border_shadow_color" class="form-control" value="<?= $row->settings->border_shadow_color ?? '#00000010' ?>" required="required" />
+                <div class="border_shadow_color_pickr"></div>
+            </div>
+        </div>
+    </div>
+
     <?php include THEME_PATH . 'views/partials/display_settings.php'; ?>
-<div class="mt-4">
+
+    <div class="mt-4">
         <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.update') ?></button>
     </div>
 </form>
+
+<script>
+function toggleTextTypeFields<?= $row->microsite_block_id ?>() {
+    const blockId = '<?= $row->microsite_block_id ?>';
+    const textType = document.getElementById('text_type_' + blockId).value;
+    
+    // Get all conditional groups
+    const headingTypeGroup = document.getElementById('heading_type_group_' + blockId);
+    const verifiedLocationGroup = document.getElementById('verified_location_group_' + blockId);
+    const textContentGroup = document.getElementById('text_content_group_' + blockId);
+    const listTypeGroup = document.getElementById('list_type_group_' + blockId);
+    const listItemsGroup = document.getElementById('list_items_group_' + blockId);
+    const backgroundColorGroup = document.getElementById('background_color_group_' + blockId);
+    const listMarginGroup = document.getElementById('list_margin_group_' + blockId);
+    const borderSettingsGroup = document.getElementById('border_settings_group_' + blockId);
+    const textHelpParagraph = document.getElementById('text_help_paragraph_' + blockId);
+    const textHelpHeading = document.getElementById('text_help_heading_' + blockId);
+    const textField = document.getElementById('text_' + blockId);
+
+    // Hide all conditional fields first
+    headingTypeGroup.style.display = 'none';
+    verifiedLocationGroup.style.display = 'none';
+    listTypeGroup.style.display = 'none';
+    listItemsGroup.style.display = 'none';
+    backgroundColorGroup.style.display = 'none';
+    listMarginGroup.style.display = 'none';
+    borderSettingsGroup.style.display = 'none';
+    textHelpParagraph.style.display = 'none';
+    textHelpHeading.style.display = 'none';
+
+    if (textType === 'heading') {
+        headingTypeGroup.style.display = 'block';
+        verifiedLocationGroup.style.display = 'block';
+        textContentGroup.style.display = 'block';
+        textHelpHeading.style.display = 'block';
+        textField.maxLength = 256;
+        textField.rows = 2;
+    } else if (textType === 'paragraph') {
+        textContentGroup.style.display = 'block';
+        backgroundColorGroup.style.display = 'block';
+        borderSettingsGroup.style.display = 'block';
+        textHelpParagraph.style.display = 'block';
+        textField.maxLength = 2048;
+        textField.rows = 4;
+    } else if (textType === 'list') {
+        textContentGroup.style.display = 'none';
+        listTypeGroup.style.display = 'block';
+        listItemsGroup.style.display = 'block';
+        backgroundColorGroup.style.display = 'block';
+        listMarginGroup.style.display = 'block';
+        borderSettingsGroup.style.display = 'block';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const blockId = '<?= $row->microsite_block_id ?>';
+    const container = document.getElementById('list_items_container_' + blockId);
+    const addButton = document.getElementById('add_list_item_' + blockId);
+    
+    // Initialize field visibility
+    toggleTextTypeFields<?= $row->microsite_block_id ?>();
+    
+    // Add new list item
+    if (addButton) {
+        addButton.addEventListener('click', function() {
+            const itemCount = container.querySelectorAll('.list-item-wrapper').length;
+            if (itemCount >= 100) {
+                alert('<?= l('microsite_text.max_items_reached') ?>');
+                return;
+            }
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'list-item-wrapper mb-2';
+            newItem.innerHTML = `
+                <div class="input-group">
+                    <input type="text" name="list_items[]" class="form-control" value="" placeholder="<?= l('microsite_text.list_item_placeholder') ?>" maxlength="256" />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-danger remove-list-item">
+                            <i class="fas fa-times fa-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(newItem);
+            
+            // Focus on the new input
+            newItem.querySelector('input').focus();
+            
+            // Add remove functionality to the new item
+            newItem.querySelector('.remove-list-item').addEventListener('click', function() {
+                removeListItem(newItem);
+            });
+        });
+    }
+    
+    // Remove list item function
+    function removeListItem(item) {
+        const itemCount = container.querySelectorAll('.list-item-wrapper').length;
+        if (itemCount <= 1) {
+            // Always keep at least one item, just clear its value
+            item.querySelector('input').value = '';
+        } else {
+            item.remove();
+        }
+    }
+    
+    // Add remove functionality to existing items
+    if (container) {
+        container.querySelectorAll('.remove-list-item').forEach(function(button) {
+            button.addEventListener('click', function() {
+                removeListItem(button.closest('.list-item-wrapper'));
+            });
+        });
+    }
+});
+</script>

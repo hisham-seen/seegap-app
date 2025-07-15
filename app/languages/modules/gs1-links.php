@@ -158,6 +158,12 @@ return [
     'gs1_links.digital_link_format' => 'Digital Link Format',
     'gs1_links.digital_link_help' => 'GS1 Digital Links follow the format: domain.com/01/GTIN',
 
+    // GS1 Link Settings (Additional)
+    'gs1_link.settings.header' => 'GS1 Link Settings',
+
+    // GS1 Link Create Error (Additional)
+    'gs1_link_create.error_message.gtin_invalid_checksum' => 'Invalid GTIN checksum. Please verify the GTIN number.',
+
     // GS1 Links table columns
     'gs1_links.table.gtin' => 'GTIN',
     'gs1_links.table.target_url' => 'Target URL',

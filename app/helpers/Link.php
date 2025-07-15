@@ -161,19 +161,10 @@ class Link {
             case 'email_collector':
             case 'contact_collector':
             case 'feedback_collector':
-            case 'file':
-            case 'pdf_document':
-            case 'powerpoint_presentation':
-            case 'excel_spreadsheet':
             case 'cta':
             case 'share':
-            case 'coupon':
             case 'youtube_feed':
-            case 'paypal':
             case 'phone_collector':
-            case 'donation':
-            case 'product':
-            case 'service':
             case 'faq':
             case 'list':
             case 'alert':
@@ -218,25 +209,6 @@ class Link {
                     }
                 }
 
-                /* Generate paypal payment link */
-                if($link->type == 'paypal') {
-                    $paypal_type = [
-                        'buy_now' => '_xclick',
-                        'add_to_cart' => '_cart',
-                        'donation' => '_donations'
-                    ];
-
-                    if($link->settings->type == 'add_to_cart') {
-                        $link->location_url = sprintf('https://www.paypal.com/cgi-bin/webscr?business=%s&cmd=%s&currency_code=%s&amount=%s&item_name=%s&button_subtype=products&add=1&return=%s&cancel_return=%s', $link->settings->email, $paypal_type[$link->settings->type], $link->settings->currency, $link->settings->price, $link->settings->title, $link->settings->thank_you_url, $link->settings->cancel_url);
-                    } else {
-                        $link->location_url = sprintf('https://www.paypal.com/cgi-bin/webscr?business=%s&cmd=%s&currency_code=%s&amount=%s&item_name=%s&return=%s&cancel_return=%s', $link->settings->email, $paypal_type[$link->settings->type], $link->settings->currency, $link->settings->price, $link->settings->title, $link->settings->thank_you_url, $link->settings->cancel_url);
-                    }
-                }
-
-                /* Get payment processors */
-                if(in_array($link->type, ['donation', 'product', 'service'])) {
-                    $data['payment_processors'] = (new \SeeGap\Models\PaymentProcessor())->get_payment_processors_by_user_id($user->user_id);
-                }
 
                 if($microsite_blocks[$link->type]['type'] == 'default') {
                     $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
@@ -246,8 +218,7 @@ class Link {
 
                 break;
 
-            case 'heading':
-            case 'paragraph':
+            case 'text':
 
                 $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 
@@ -311,60 +282,6 @@ class Link {
                 break;
 
 
-            case 'soundcloud':
-
-                if(preg_match('/(soundcloud\.com)/', $link->location_url)) {
-                    $data['embed'] = $link->location_url;
-
-                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
-
-            case 'vimeo':
-
-                if(preg_match('/https:\/\/(player\.)?vimeo\.com(\/video)?\/(\d+)/', $link->location_url, $match)) {
-                    $data['embed'] = $match[3];
-
-                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
-
-            case 'twitch':
-
-                if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:twitch\.tv\/(?:(?P<channel>[a-zA-Z0-9_]+)\/clip\/(?P<clip_slug>[a-zA-Z0-9_-]+)|videos\/(?P<video_id>\d+)|(?P<channel_only>[a-zA-Z0-9_]+))|clips\.twitch\.tv\/(?P<clip_direct>[a-zA-Z0-9_-]+))$/', $link->location_url, $match)) {
-
-                    if(!empty($match['video_id'])) {
-                        $data['embed'] = $match['video_id'];
-                        $data['embed_type'] = 'video';
-                    } elseif(!empty($match['clip_slug'])) {
-                        $data['embed'] = $match['clip_slug'];
-                        $data['embed_type'] = 'clip';
-                    } elseif(!empty($match['clip_direct'])) {
-                        $data['embed'] = $match['clip_direct'];
-                        $data['embed_type'] = 'clip';
-                    } else {
-                        $data['embed'] = $match['channel_only'];
-                        $data['embed_type'] = 'channel';
-                    }
-
-                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
-
-
-            case 'spotify':
-
-                if(preg_match('/^(?:https?:\/\/)?(?:www\.)?(?:open\.)?(?:spotify\.com\/)(?:intl-.+\/)*(album|track|show|episode|playlist)+\/(.+)$/', $link->location_url, $match)) {
-                    $data['embed_type'] = $match[1];
-                    $data['embed_value'] = $match[2];
-
-                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
 
             case 'tiktok_video':
 
@@ -426,23 +343,6 @@ class Link {
 
                 break;
 
-            case 'typeform':
-
-                if(preg_match('/https:\/\/.+.typeform\.com\/to\/([a-zA-Z0-9]+)/', $link->location_url, $match)) {
-                    $data['embed'] = $match[1];
-
-                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
-
-            case 'calendly':
-
-                if(preg_match('/(https:\/\/calendly\.com)/', $link->location_url)) {
-                    $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-                }
-
-                break;
 
             case 'custom_html':
             case 'divider':
@@ -453,32 +353,7 @@ class Link {
 
             case 'facebook':
             case 'countdown':
-            case 'timeline':
             case 'review':
-            case 'markdown':
-            case 'iframe':
-
-                $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
-
-                break;
-
-            case 'external_item':
-
-                /* Determine the css and styling of the button */
-                $link->design = new \StdClass();
-                $link->design->card_class = '';
-                $link->design->card_style = 'background: ' . $link->settings->background_color . ';border-width: ' . $link->settings->border_width . 'px; border-color: ' . $link->settings->border_color . ';border-style: ' . $link->settings->border_style . ';';
-
-                /* Animation */
-                if($link->settings->animation) {
-                    $link->design->card_class .= ' animate__animated animate__' . $link->settings->animation_runs . ' animate__' . $link->settings->animation . ' animate__delay-2s';
-                }
-
-                /* UTM Parameters */
-                $link->utm_query = null;
-                if($user->plan_settings->utm && $link->utm->medium && $link->utm->source) {
-                    $link->utm_query = '?utm_medium=' . $link->utm->medium . '&utm_source=' . $link->utm->source . '&utm_campaign=' . $link->settings->name;
-                }
 
                 $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 

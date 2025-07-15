@@ -308,6 +308,21 @@ return [
     'qr_codes.status.disabled' => 'Disabled',
     'qr_codes.status.expired' => 'Expired',
 
+    // Additional QR Code Input Fields (ensuring all requested hooks are present)
+    'qr_codes.input.text' => 'Text Content',
+    'qr_codes.input.is_bulk' => 'Bulk Generation',
+    'qr_codes.input.is_bulk_help' => 'Generate multiple QR codes at once',
+    'qr_codes.input.style' => 'QR Code Style',
+    'qr_codes.input.colors' => 'Color Settings',
+    'qr_codes.input.frame' => 'Frame Options',
+    'qr_codes.input.branding' => 'Branding Settings',
+    'qr_codes.input.options' => 'Additional Options',
+    'qr_codes.input.embedded_data' => 'Embedded Data',
+
+    // QR Code Information
+    'qr_codes.info' => 'QR Code Information',
+    'qr_codes.is_readable' => 'QR Code is readable and scannable',
+
     // QR Code errors
     'qr_codes.error.invalid_url' => 'Please enter a valid URL.',
     'qr_codes.error.invalid_email' => 'Please enter a valid email address.',

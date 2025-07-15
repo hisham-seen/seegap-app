@@ -27,7 +27,7 @@
                         <?php if($value['category'] != $microsite_block_category_key) continue ?>
 
                         <?php ob_start() ?>
-                        <?php if($this->user->plan_settings->enabled_microsite_blocks->{$key}): ?>
+                        <?php if(($this->user->plan_settings->enabled_microsite_blocks->{$key} ?? null) || ($key === 'text')): ?>
                             <div class="col-4 col-md-3 p-1" data-block-category="<?= $value['category'] ?>" data-block-id="<?= $key ?>" data-block-name="<?= l('link.microsite.blocks.' . $key) ?>">
                                 <button
                                     type="button"

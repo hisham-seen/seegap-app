@@ -2416,7 +2416,6 @@ i.xl {
   padding: 0.3rem 0.5rem !important;
   font-size: 0.85rem !important;
   min-height: 30px !important;
-  height: calc(1.5em + 0.5rem + 2px) !important;
 }
 
 /* Make input groups smaller in settings panel */
@@ -2425,7 +2424,6 @@ i.xl {
 .link-settings .card-body .input-group-sm > .input-group-append > .input-group-text {
   padding: 0.25rem 0.5rem !important;
   font-size: 0.85rem !important;
-  height: calc(1.5em + 0.5rem + 2px) !important;
 }
 
 /* Reduce padding in card body in settings panel */
@@ -2555,9 +2553,8 @@ i.xl {
 
 /* Make collapsible sections independently scrollable */
 .link-settings .collapse {
-  max-height: 70vh;
-  overflow-y: auto;
-  padding-right: 5px;
+  max-height: none;
+  overflow: visible;
 }
 
 /* Custom scrollbar for sections */

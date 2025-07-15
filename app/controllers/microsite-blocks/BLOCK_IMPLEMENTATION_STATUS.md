@@ -8,13 +8,14 @@ The original MicrositeBlockAjax.php file contained 66+ block types in a monolith
 
 ## Implementation Progress
 
-**✅ Completed**: 66/66 blocks (100%)
-**🏗️ In Progress**: 0/66 blocks (0%)
-**⏳ Pending**: 0/66 blocks (0%)
+**✅ Completed**: 40/40 blocks (100%)
+**🏗️ In Progress**: 0/40 blocks (0%)
+**⏳ Pending**: 0/40 blocks (0%)
+**🗑️ Removed**: 26 blocks removed from system
 
 ## ✅ All Individual Block Files Completed
 
-### Individual Content Blocks (25 blocks)
+### Individual Content Blocks (20 blocks)
 1. **LinkBlock.php** - Basic link blocks ✅
 2. **HeadingBlock.php** - Heading blocks (h1-h6) ✅
 3. **EmailCollectorBlock.php** - Email collection forms ✅
@@ -28,66 +29,68 @@ The original MicrositeBlockAjax.php file contained 66+ block types in a monolith
 11. **AlertBlock.php** - Alert/notification boxes ✅
 12. **FaqBlock.php** - FAQ accordion sections ✅
 13. **ContactCollectorBlock.php** - Contact form blocks ✅
-14. **ProductBlock.php** - Digital product sales ✅
-15. **MapBlock.php** - Google Maps integration ✅
-16. **CustomHtmlBlock.php** - Custom HTML content ✅
-17. **IframeBlock.php** - Iframe embeds ✅
-18. **AvatarBlock.php** - Profile avatar images ✅
-19. **MarkdownBlock.php** - Markdown content rendering ✅
-20. **HeaderBlock.php** - Header text blocks ✅
-21. **ImageGridBlock.php** - Multi-image grid layouts ✅
-22. **TimelineBlock.php** - Timeline/chronological displays ✅
-23. **ReviewBlock.php** - Customer review/testimonial blocks ✅
-24. **CtaBlock.php** - Call-to-action blocks with buttons ✅
-25. **ExternalItemBlock.php** - External product/item displays ✅
-26. **ShareBlock.php** - Social sharing buttons ✅
-27. **CouponBlock.php** - Discount/coupon blocks ✅
-28. **YoutubeFeedBlock.php** - YouTube channel feeds ✅
-29. **FeedbackCollectorBlock.php** - Feedback/survey forms ✅
-30. **DonationBlock.php** - Donation/fundraising blocks ✅
-31. **ServiceBlock.php** - Service booking/sales ✅
-32. **ImageSliderBlock.php** - Image carousel/slider ✅
+14. **CustomHtmlBlock.php** - Custom HTML content ✅
+15. **AvatarBlock.php** - Profile avatar images ✅
+16. **HeaderBlock.php** - Header text blocks ✅
+17. **ImageGridBlock.php** - Multi-image grid layouts ✅
+18. **ReviewBlock.php** - Customer review/testimonial blocks ✅
+19. **CtaBlock.php** - Call-to-action blocks with buttons ✅
+20. **ShareBlock.php** - Social sharing buttons ✅
+21. **YoutubeFeedBlock.php** - YouTube channel feeds ✅
+22. **FeedbackCollectorBlock.php** - Feedback/survey forms ✅
+23. **ImageSliderBlock.php** - Image carousel/slider ✅
 
-### File-Based Blocks (5 blocks)
-33. **AudioBlock.php** - Audio file players ✅
-34. **VideoBlock.php** - Video file players ✅
-35. **FileBlock.php** - Generic file downloads ✅
-36. **PdfDocumentBlock.php** - PDF document viewer/downloads ✅
-37. **PowerpointPresentationBlock.php** - PowerPoint presentations ✅
-38. **ExcelSpreadsheetBlock.php** - Excel spreadsheet viewers ✅
+### E-commerce Blocks (1 block)
+24. **PhoneCollectorBlock.php** - Phone number collection forms ✅
 
-### E-commerce Blocks (2 blocks)
-39. **PaypalBlock.php** - PayPal payment buttons ✅
-40. **PhoneCollectorBlock.php** - Phone number collection forms ✅
+### Embeddable/Social Blocks (16 blocks)
+25. **YoutubeBlock.php** - YouTube video embeds ✅
+26. **InstagramMediaBlock.php** - Instagram media embeds ✅
+27. **TwitterTweetBlock.php** - Twitter tweet embeds ✅
+28. **TiktokVideoBlock.php** - TikTok video embeds ✅
+29. **FacebookBlock.php** - Facebook embeds ✅
+30. **TelegramBlock.php** - Telegram channel/group embeds ✅
+31. **ThreadsBlock.php** - Meta Threads embeds ✅
+32. **TwitterVideoBlock.php** - Twitter video embeds ✅
+33. **TwitterProfileBlock.php** - Twitter profile embeds ✅
 
-### Embeddable/Social Blocks (26 blocks)
-41. **YoutubeBlock.php** - YouTube video embeds ✅
-42. **SpotifyBlock.php** - Spotify embeds ✅
-43. **VimeoBlock.php** - Vimeo video embeds ✅
-44. **TwitchBlock.php** - Twitch embeds ✅
-45. **InstagramMediaBlock.php** - Instagram media embeds ✅
-46. **TwitterTweetBlock.php** - Twitter tweet embeds ✅
-47. **TiktokVideoBlock.php** - TikTok video embeds ✅
-48. **CalendlyBlock.php** - Calendly scheduling embeds ✅
-49. **TypeformBlock.php** - Typeform survey embeds ✅
-50. **SoundcloudBlock.php** - SoundCloud audio embeds ✅
-51. **AppleMusicBlock.php** - Apple Music embeds ✅
-52. **FacebookBlock.php** - Facebook embeds ✅
-53. **TelegramBlock.php** - Telegram channel/group embeds ✅
-54. **RedditBlock.php** - Reddit post/community embeds ✅
-55. **AnchorBlock.php** - Anchor podcast embeds ✅
-56. **ThreadsBlock.php** - Meta Threads embeds ✅
-57. **SnapchatBlock.php** - Snapchat embeds ✅
-58. **TidalBlock.php** - Tidal music embeds ✅
-59. **MixcloudBlock.php** - Mixcloud embeds ✅
-60. **KickBlock.php** - Kick streaming embeds ✅
-61. **TwitterVideoBlock.php** - Twitter video embeds ✅
-62. **TwitterProfileBlock.php** - Twitter profile embeds ✅
-63. **PinterestProfileBlock.php** - Pinterest profile embeds ✅
-64. **RumbleBlock.php** - Rumble video embeds ✅
+## 🗑️ Removed Blocks (26 blocks)
 
-### Special Blocks (2 blocks)
-65. **DiscordBlock.php** - Discord server widgets ✅
+The following blocks have been completely removed from the system:
+
+### Removed Content Blocks (12 blocks)
+- **ProductBlock.php** - Digital product sales 🗑️
+- **MapBlock.php** - Google Maps integration 🗑️
+- **IframeBlock.php** - Iframe embeds 🗑️
+- **MarkdownBlock.php** - Markdown content rendering 🗑️
+- **TimelineBlock.php** - Timeline/chronological displays 🗑️
+- **ExternalItemBlock.php** - External product/item displays 🗑️
+- **CouponBlock.php** - Discount/coupon blocks 🗑️
+- **DonationBlock.php** - Donation/fundraising blocks 🗑️
+- **ServiceBlock.php** - Service booking/sales 🗑️
+
+### Removed File-Based Blocks (6 blocks)
+- **AudioBlock.php** - Audio file players 🗑️
+- **VideoBlock.php** - Video file players 🗑️
+- **FileBlock.php** - Generic file downloads 🗑️
+- **PdfDocumentBlock.php** - PDF document viewer/downloads 🗑️
+- **PowerpointPresentationBlock.php** - PowerPoint presentations 🗑️
+- **ExcelSpreadsheetBlock.php** - Excel spreadsheet viewers 🗑️
+
+### Removed E-commerce Blocks (1 block)
+- **PaypalBlock.php** - PayPal payment buttons 🗑️
+
+### Removed Embeddable/Social Blocks (10 blocks)
+- **SpotifyBlock.php** - Spotify embeds 🗑️
+- **VimeoBlock.php** - Vimeo video embeds 🗑️
+- **TwitchBlock.php** - Twitch embeds 🗑️
+- **CalendlyBlock.php** - Calendly scheduling embeds 🗑️
+- **TypeformBlock.php** - Typeform survey embeds 🗑️
+- **SoundcloudBlock.php** - SoundCloud audio embeds 🗑️
+- **RedditBlock.php** - Reddit post/community embeds 🗑️
+- **AnchorBlock.php** - Anchor podcast embeds 🗑️
+- **TidalBlock.php** - Tidal music embeds 🗑️
+- **DiscordBlock.php** - Discord server widgets 🗑️
 
 ## Complete File Structure
 

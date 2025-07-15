@@ -129,6 +129,48 @@ return [
     'account.error.avatar_upload' => 'Failed to upload avatar.',
     'account.error.delete_confirmation' => 'Please confirm account deletion.',
 
+    // Account Settings (Additional)
+    'account.settings.header' => 'Account Settings',
+    'account.settings.timezone' => 'Timezone',
+    'account.settings.timezone_help' => 'Select your preferred timezone for date and time display.',
+    'account.settings.anti_phishing_code' => 'Anti-Phishing Code',
+    'account.settings.anti_phishing_code_help' => 'A unique code to help you identify legitimate emails from us.',
+
+    // Two-Factor Authentication (Additional)
+    'account.twofa.header' => 'Two-Factor Authentication',
+    'account.twofa.is_enabled' => 'Two-Factor Authentication Status',
+
+    // Change Password (Additional)
+    'account.change_password.header' => 'Change Password',
+    'account.change_password.current_password' => 'Current Password',
+    'account.change_password.current_password_help' => 'Enter your current password to confirm changes.',
+    'account.change_password.new_password' => 'New Password',
+    'account.change_password.repeat_password' => 'Repeat New Password',
+
+    // Account Logs
+    'account_logs.header' => 'Account Activity Logs',
+    'account_logs.subheader' => 'View your recent account activity and login history',
+    'account_logs.menu' => 'Activity Logs',
+
+    // Account Delete (Additional)
+    'account_delete.menu' => 'Delete Account',
+    'account_delete.header' => 'Delete Account',
+    'account_delete.current_password' => 'Current Password',
+
+    // Account API (Additional)
+    'account_api.header' => 'API Management',
+    'account_api.subheader' => 'Manage your API keys and access tokens',
+    'account_api.api_key' => 'API Key',
+    'account_api.success_message' => 'API settings updated successfully.',
+    'account_api.button' => 'Generate New API Key',
+
+    // Account Preferences (Additional)
+    'account_preferences.header' => 'User Preferences',
+    'account_preferences.subheader' => 'Customize your account preferences and default settings',
+    'account_preferences.default_results_per_page' => 'Default Results Per Page',
+    'account_preferences.default_order_type' => 'Default Order Type',
+    'account_preferences.default_order_by_x' => 'Default Order By',
+
     // Account menu items
     'account_preferences.menu' => 'Preferences',
     'account_plan.menu' => 'Plan',
