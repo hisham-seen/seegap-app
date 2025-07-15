@@ -60,34 +60,52 @@ jobs:
           exit 0
         fi
         
-        # Get changed files between current commit and previous commit
-        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD || echo "")
+        # Get changed files with status (A=Added, M=Modified, D=Deleted)
+        CHANGED_FILES_STATUS=$(git diff --name-status HEAD~1 HEAD || echo "")
         
-        if [ -z "$CHANGED_FILES" ]; then
+        if [ -z "$CHANGED_FILES_STATUS" ]; then
           echo "✅ No files have changed. Skipping deployment."
           echo "deploy_type=skip" >> $GITHUB_OUTPUT
           exit 0
         fi
         
         echo "📝 Changed files detected:"
-        echo "$CHANGED_FILES"
+        echo "$CHANGED_FILES_STATUS"
         
-        # Count changed files
-        FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
-        echo "📊 Total changed files: $FILE_COUNT"
+        # Separate files by status
+        ADDED_FILES=$(echo "$CHANGED_FILES_STATUS" | grep "^A" | cut -f2 || true)
+        MODIFIED_FILES=$(echo "$CHANGED_FILES_STATUS" | grep "^M" | cut -f2 || true)
+        DELETED_FILES=$(echo "$CHANGED_FILES_STATUS" | grep "^D" | cut -f2 || true)
+        
+        # Count different types of changes
+        ADDED_COUNT=$(echo "$ADDED_FILES" | grep -c . || echo "0")
+        MODIFIED_COUNT=$(echo "$MODIFIED_FILES" | grep -c . || echo "0")
+        DELETED_COUNT=$(echo "$DELETED_FILES" | grep -c . || echo "0")
+        TOTAL_COUNT=$((ADDED_COUNT + MODIFIED_COUNT + DELETED_COUNT))
+        
+        echo "📊 Change summary:"
+        echo "  - Added files: $ADDED_COUNT"
+        echo "  - Modified files: $MODIFIED_COUNT"
+        echo "  - Deleted files: $DELETED_COUNT"
+        echo "  - Total changes: $TOTAL_COUNT"
         
         # Check if it's a major change (more than 20 files or critical files changed)
-        CRITICAL_FILES=$(echo "$CHANGED_FILES" | grep -E "(config\.php|docker-compose\.yml|\.sql|install/)" || true)
+        CRITICAL_FILES=$(echo "$CHANGED_FILES_STATUS" | grep -E "(config\.php|docker-compose\.yml|\.sql|install/)" || true)
         
-        if [ $FILE_COUNT -gt 20 ] || [ -n "$CRITICAL_FILES" ]; then
+        if [ $TOTAL_COUNT -gt 20 ] || [ -n "$CRITICAL_FILES" ]; then
           echo "⚠️ Major changes detected, using full deployment"
           echo "deploy_type=full" >> $GITHUB_OUTPUT
         else
           echo "✅ Minor changes detected, using incremental deployment"
           echo "deploy_type=incremental" >> $GITHUB_OUTPUT
           
-          # Save changed files list
-          echo "$CHANGED_FILES" > changed_files.txt
+          # Save file lists for incremental deployment
+          echo "$ADDED_FILES" > added_files.txt
+          echo "$MODIFIED_FILES" > modified_files.txt
+          echo "$DELETED_FILES" > deleted_files.txt
+          
+          # Also save the combined list for backward compatibility
+          echo "$CHANGED_FILES_STATUS" | cut -f2 > changed_files.txt
         fi
         
     - name: Create incremental deployment package
@@ -96,19 +114,34 @@ jobs:
         echo "📦 Creating incremental deployment package..."
         mkdir -p /tmp/incremental-deploy
         
-        # Copy only changed files
-        while read -r file; do
-          if [ -f "$file" ]; then
-            # Create directory structure
-            mkdir -p "/tmp/incremental-deploy/$(dirname "$file")"
-            # Copy the file
-            cp "$file" "/tmp/incremental-deploy/$file"
-            echo "  ✓ Added: $file"
-          fi
-        done < changed_files.txt
+        # Copy added and modified files
+        if [ -f "added_files.txt" ] && [ -s "added_files.txt" ]; then
+          echo "📁 Processing added files..."
+          while read -r file; do
+            if [ -f "$file" ]; then
+              mkdir -p "/tmp/incremental-deploy/$(dirname "$file")"
+              cp "$file" "/tmp/incremental-deploy/$file"
+              echo "  ✓ Added: $file"
+            fi
+          done < added_files.txt
+        fi
         
-        # Copy the changed files list
-        cp changed_files.txt /tmp/incremental-deploy/
+        if [ -f "modified_files.txt" ] && [ -s "modified_files.txt" ]; then
+          echo "📝 Processing modified files..."
+          while read -r file; do
+            if [ -f "$file" ]; then
+              mkdir -p "/tmp/incremental-deploy/$(dirname "$file")"
+              cp "$file" "/tmp/incremental-deploy/$file"
+              echo "  ✓ Modified: $file"
+            fi
+          done < modified_files.txt
+        fi
+        
+        # Copy all file lists to the deployment package
+        cp added_files.txt /tmp/incremental-deploy/ 2>/dev/null || echo "" > /tmp/incremental-deploy/added_files.txt
+        cp modified_files.txt /tmp/incremental-deploy/ 2>/dev/null || echo "" > /tmp/incremental-deploy/modified_files.txt
+        cp deleted_files.txt /tmp/incremental-deploy/ 2>/dev/null || echo "" > /tmp/incremental-deploy/deleted_files.txt
+        cp changed_files.txt /tmp/incremental-deploy/ 2>/dev/null || echo "" > /tmp/incremental-deploy/changed_files.txt
         
         cd /tmp/incremental-deploy
         tar -czf /tmp/seegap-incremental.tar.gz .
@@ -145,7 +178,7 @@ jobs:
         #!/bin/bash
         set -e
         
-        echo "🔧 Starting incremental deployment..."
+        echo "🔧 Starting enhanced incremental deployment..."
         
         # Extract incremental package
         echo "📂 Extracting incremental package..."
@@ -155,37 +188,85 @@ jobs:
         cd seegap-incremental
         tar -xzf /tmp/seegap-incremental.tar.gz
         
-        # Read the list of changed files
-        if [ -f "changed_files.txt" ]; then
-          echo "📝 Files to update:"
-          cat changed_files.txt | sed 's/^/  - /'
-          
-          # Update each changed file
+        # Initialize counters
+        ADDED_COUNT=0
+        MODIFIED_COUNT=0
+        DELETED_COUNT=0
+        
+        # Process added files
+        if [ -f "added_files.txt" ] && [ -s "added_files.txt" ]; then
+          echo "📁 Processing added files..."
           while read -r file; do
-            if [ -f "$file" ]; then
-              echo "🔄 Updating: $file"
-              
-              # Create directory if it doesn't exist
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "➕ Adding: $file"
               sudo mkdir -p "/var/www/seegap/$(dirname "$file")"
-              
-              # Copy the updated file
               sudo cp "$file" "/var/www/seegap/$file"
-              
-              echo "  ✅ Updated: $file"
+              ADDED_COUNT=$((ADDED_COUNT + 1))
+              echo "  ✅ Added: $file"
             fi
-          done < changed_files.txt
-        else
-          echo "❌ No file list found in package"
-          exit 1
+          done < added_files.txt
         fi
         
-        # Set proper ownership for updated files
+        # Process modified files
+        if [ -f "modified_files.txt" ] && [ -s "modified_files.txt" ]; then
+          echo "📝 Processing modified files..."
+          while read -r file; do
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "🔄 Updating: $file"
+              sudo mkdir -p "/var/www/seegap/$(dirname "$file")"
+              sudo cp "$file" "/var/www/seegap/$file"
+              MODIFIED_COUNT=$((MODIFIED_COUNT + 1))
+              echo "  ✅ Updated: $file"
+            fi
+          done < modified_files.txt
+        fi
+        
+        # Process deleted files
+        if [ -f "deleted_files.txt" ] && [ -s "deleted_files.txt" ]; then
+          echo "🗑️ Processing deleted files..."
+          while read -r file; do
+            if [ -n "$file" ]; then
+              FULL_PATH="/var/www/seegap/$file"
+              if [ -f "$FULL_PATH" ]; then
+                echo "🗑️ Deleting: $file"
+                sudo rm -f "$FULL_PATH"
+                DELETED_COUNT=$((DELETED_COUNT + 1))
+                echo "  ✅ Deleted: $file"
+                
+                # Clean up empty parent directories
+                PARENT_DIR=$(dirname "$FULL_PATH")
+                while [ "$PARENT_DIR" != "/var/www/seegap" ] && [ "$PARENT_DIR" != "/" ]; do
+                  if [ -d "$PARENT_DIR" ] && [ -z "$(ls -A "$PARENT_DIR" 2>/dev/null)" ]; then
+                    echo "🧹 Removing empty directory: ${PARENT_DIR#/var/www/seegap/}"
+                    sudo rmdir "$PARENT_DIR" 2>/dev/null || break
+                    PARENT_DIR=$(dirname "$PARENT_DIR")
+                  else
+                    break
+                  fi
+                done
+              else
+                echo "⚠️ File already deleted: $file"
+              fi
+            fi
+          done < deleted_files.txt
+        fi
+        
+        # Set proper ownership for all affected files
         echo "🔧 Setting file ownership..."
         sudo chown -R HishamSait:HishamSait /var/www/seegap
         
-        # Check if any PHP files were updated (restart PHP-FPM if needed)
-        if grep -q "\.php$" changed_files.txt; then
-          echo "🔄 PHP files updated, restarting services..."
+        # Check if services need to be restarted
+        RESTART_NEEDED=false
+        
+        # Check for PHP files in any of the change lists
+        if ([ -f "added_files.txt" ] && grep -q "\.php$" added_files.txt 2>/dev/null) || \
+           ([ -f "modified_files.txt" ] && grep -q "\.php$" modified_files.txt 2>/dev/null) || \
+           ([ -f "deleted_files.txt" ] && grep -q "\.php$" deleted_files.txt 2>/dev/null); then
+          RESTART_NEEDED=true
+        fi
+        
+        if [ "$RESTART_NEEDED" = true ]; then
+          echo "🔄 PHP files changed, restarting services..."
           cd /var/www/seegap
           if [ -f "docker-compose.yml" ]; then
             # Docker deployment
@@ -198,26 +279,34 @@ jobs:
           fi
         fi
         
-        # Check if any CSS/JS files were updated (clear cache if needed)
-        if grep -qE "\.(css|js|scss)$" changed_files.txt; then
-          echo "🧹 Frontend assets updated, clearing cache..."
+        # Check for frontend assets and clear cache if needed
+        if ([ -f "added_files.txt" ] && grep -qE "\.(css|js|scss)$" added_files.txt 2>/dev/null) || \
+           ([ -f "modified_files.txt" ] && grep -qE "\.(css|js|scss)$" modified_files.txt 2>/dev/null) || \
+           ([ -f "deleted_files.txt" ] && grep -qE "\.(css|js|scss)$" deleted_files.txt 2>/dev/null); then
+          echo "🧹 Frontend assets changed, clearing cache..."
           sudo rm -rf /var/www/seegap/uploads/cache/* 2>/dev/null || true
           echo "✅ Cache cleared"
         fi
         
-        # Check if any template files were updated
-        if grep -qE "\.(php|html|tpl)$" changed_files.txt; then
-          echo "🔄 Template files updated, clearing template cache..."
+        # Check for template files and clear template cache
+        if ([ -f "added_files.txt" ] && grep -qE "\.(php|html|tpl)$" added_files.txt 2>/dev/null) || \
+           ([ -f "modified_files.txt" ] && grep -qE "\.(php|html|tpl)$" modified_files.txt 2>/dev/null) || \
+           ([ -f "deleted_files.txt" ] && grep -qE "\.(php|html|tpl)$" deleted_files.txt 2>/dev/null); then
+          echo "🔄 Template files changed, clearing template cache..."
           sudo rm -rf /var/www/seegap/uploads/cache/templates/* 2>/dev/null || true
           echo "✅ Template cache cleared"
         fi
         
-        # Clean up
+        # Clean up deployment files
         rm -rf /tmp/seegap-incremental
         rm -f /tmp/seegap-incremental.tar.gz
         
-        echo "✅ Incremental deployment completed!"
-        echo "📊 Updated $(wc -l < changed_files.txt) files"
+        echo "✅ Enhanced incremental deployment completed!"
+        echo "📊 Deployment Summary:"
+        echo "  - Added files: $ADDED_COUNT"
+        echo "  - Modified files: $MODIFIED_COUNT"
+        echo "  - Deleted files: $DELETED_COUNT"
+        echo "  - Total changes: $((ADDED_COUNT + MODIFIED_COUNT + DELETED_COUNT))"
         EOF
         
     - name: Execute incremental deployment
