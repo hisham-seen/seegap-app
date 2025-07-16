@@ -45,6 +45,60 @@ resource "google_compute_firewall" "seegap_firewall" {
   target_tags   = ["seegap-app"]
 }
 
+# Create Cloud SQL instance
+resource "google_sql_database_instance" "seegap_mysql" {
+  name             = "seegap-mysql-instance"
+  database_version = "MYSQL_8_0"
+  region           = var.gcp_region
+  deletion_protection = false
+
+  settings {
+    tier = "db-f1-micro"
+    
+    backup_configuration {
+      enabled            = true
+      start_time         = "03:00"
+      binary_log_enabled = true
+      backup_retention_settings {
+        retained_backups = 7
+      }
+    }
+
+    ip_configuration {
+      ipv4_enabled    = true
+      authorized_networks {
+        name  = "seegap-vm-access"
+        value = google_compute_address.seegap_static_ip.address
+      }
+      authorized_networks {
+        name  = "allow-all-temp"
+        value = "0.0.0.0/0"
+      }
+    }
+
+    database_flags {
+      name  = "max_connections"
+      value = "100"
+    }
+  }
+}
+
+# Create database
+resource "google_sql_database" "seegap_database" {
+  name     = "seegap_application_db"
+  instance = google_sql_database_instance.seegap_mysql.name
+  charset  = "utf8mb4"
+  collation = "utf8mb4_unicode_ci"
+}
+
+# Create database user
+resource "google_sql_user" "seegap_user" {
+  name     = "seegap_prod_user_2025"
+  instance = google_sql_database_instance.seegap_mysql.name
+  password = "SeeGapProd2025MySQLSecure"
+  host     = "%"
+}
+
 # Create the VM instance
 resource "google_compute_instance" "seegap_vm" {
   name         = "seegap-app-vm"
@@ -69,6 +123,10 @@ resource "google_compute_instance" "seegap_vm" {
 
   metadata = {
     ssh-keys = "${var.ssh_username}:${var.ssh_public_key}"
+    db-host = google_sql_database_instance.seegap_mysql.public_ip_address
+    db-name = google_sql_database.seegap_database.name
+    db-user = google_sql_user.seegap_user.name
+    db-password = google_sql_user.seegap_user.password
   }
 
   metadata_startup_script = file("${path.module}/startup-script-docker.sh")
@@ -79,7 +137,10 @@ resource "google_compute_instance" "seegap_vm" {
   }
 
   depends_on = [
-    google_service_account.seegap_service_account
+    google_service_account.seegap_service_account,
+    google_sql_database_instance.seegap_mysql,
+    google_sql_database.seegap_database,
+    google_sql_user.seegap_user
   ]
 }
 

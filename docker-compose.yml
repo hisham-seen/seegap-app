@@ -26,36 +26,18 @@ services:
     volumes:
       - ./:/var/www/html
       - php-cache:/tmp
-    depends_on:
-      - mysql
     networks:
       app-network:
         ipv4_address: 172.20.0.8
     restart: unless-stopped
     environment:
-      - DATABASE_SERVER=mysql
+      - DATABASE_SERVER=${DB_HOST}
       - DATABASE_USERNAME=seegap_prod_user_2025
       - DATABASE_PASSWORD=SeeGapProd2025MySQLSecure
       - DATABASE_NAME=seegap_application_db
-      - SITE_URL=http://localhost/
+      - SITE_URL=https://si.seegap.com/
       - PHP_OPCACHE_ENABLE=1
       - PHP_APCU_ENABLE=1
-
-  mysql:
-    image: mysql:8.0
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - ./docker/mysql:/docker-entrypoint-initdb.d
-    environment:
-      - MYSQL_DATABASE=seegap_application_db
-      - MYSQL_USER=seegap_prod_user_2025
-      - MYSQL_PASSWORD=SeeGapProd2025MySQLSecure
-      - MYSQL_ROOT_PASSWORD=Root#MySQL!SuperSecure@GCP
-    networks:
-      app-network:
-        ipv4_address: 172.20.0.10
-    restart: unless-stopped
-    command: --innodb-buffer-pool-size=128M --max-connections=100
 
   redis:
     image: redis:7-alpine
@@ -68,8 +50,6 @@ services:
     command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
 
 volumes:
-  mysql-data:
-    driver: local
   redis-data:
     driver: local
   nginx-cache:

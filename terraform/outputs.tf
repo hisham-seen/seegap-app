@@ -49,15 +49,44 @@ output "ssh_connection_command" {
   value       = "gcloud compute ssh ${google_compute_instance.seegap_vm.name} --zone=${google_compute_instance.seegap_vm.zone}"
 }
 
+# Output Cloud SQL information
+output "cloud_sql_instance_name" {
+  description = "The name of the Cloud SQL instance"
+  value       = google_sql_database_instance.seegap_mysql.name
+}
+
+output "cloud_sql_public_ip" {
+  description = "The public IP address of the Cloud SQL instance"
+  value       = google_sql_database_instance.seegap_mysql.public_ip_address
+}
+
+output "cloud_sql_connection_name" {
+  description = "The connection name of the Cloud SQL instance"
+  value       = google_sql_database_instance.seegap_mysql.connection_name
+}
+
+output "database_name" {
+  description = "The name of the database"
+  value       = google_sql_database.seegap_database.name
+}
+
+output "database_user" {
+  description = "The database user name"
+  value       = google_sql_user.seegap_user.name
+  sensitive   = true
+}
+
 # Output deployment information
 output "deployment_info" {
   description = "Deployment information"
   value = {
-    vm_name     = google_compute_instance.seegap_vm.name
-    static_ip   = google_compute_address.seegap_static_ip.address
-    domain      = "${var.subdomain}.${var.domain_name}"
-    environment = var.app_environment
-    region      = var.gcp_region
-    zone        = var.gcp_zone
+    vm_name          = google_compute_instance.seegap_vm.name
+    static_ip        = google_compute_address.seegap_static_ip.address
+    domain           = "${var.subdomain}.${var.domain_name}"
+    environment      = var.app_environment
+    region           = var.gcp_region
+    zone             = var.gcp_zone
+    database_host    = google_sql_database_instance.seegap_mysql.public_ip_address
+    database_name    = google_sql_database.seegap_database.name
   }
 }
