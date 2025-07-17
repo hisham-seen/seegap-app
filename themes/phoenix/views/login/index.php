@@ -17,7 +17,7 @@
 
 <div class="card">
     <div class="card-body">
-        <!-- Test deployment update - June 19, 2025 - MICROSITE BUILDER FIX DEPLOYED ✅ -->
+        <!-- CI/CD Test - July 17, 2025 - DIRECTORY & PERMISSIONS FIX DEPLOYED ✅ -->
         <h1><?= l('login.header') ?></h1>
 
         <form action="" method="post" role="form">
