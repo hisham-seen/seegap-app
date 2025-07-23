@@ -82,31 +82,7 @@
             <small class="form-text text-muted"><?= l('admin_settings.links.branding_help2') ?></small>
         </div>
 
-        <div class="form-group mt-5">
-            <?php $microsite_blocks = require APP_PATH . 'includes/microsite_blocks.php'; ?>
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="h5"><?= l('admin_settings.links.available_microsite_blocks') . ' (' . count($microsite_blocks) . ')' ?></h3>
-
-                <div>
-                    <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.select_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='available_microsite_blocks[]']`).forEach(element => element.checked ? null : element.checked = true)"><i class="fas fa-fw fa-check-square"></i></button>
-                    <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.deselect_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='available_microsite_blocks[]']`).forEach(element => element.checked ? element.checked = false : null)"><i class="fas fa-fw fa-minus-square"></i></button>
-                </div>
-            </div>
-
-            <div class="row">
-                <?php foreach($microsite_blocks as $key => $value): ?>
-                    <div class="col-12 col-lg-6">
-                        <div class="custom-control custom-checkbox my-2">
-                            <input id="<?= 'available_microsite_blocks_' . $key ?>" name="available_microsite_blocks[]" value="<?= $key ?>" type="checkbox" class="custom-control-input" <?= settings()->links->available_microsite_blocks->{$key} ? 'checked="checked"' : null ?>>
-                            <label class="custom-control-label d-flex align-items-center" for="<?= 'available_microsite_blocks_' . $key ?>">
-                                <?= l('link.microsite.blocks.' . mb_strtolower($key)) ?>
-                            </label>
-                        </div>
-                    </div>
-                <?php endforeach ?>
-            </div>
-        </div>
+        <?php // Microsite block restrictions removed - all blocks are now available to all users ?>
     </div>
 
     <button class="btn btn-block btn-gray-200 mb-4" type="button" data-toggle="collapse" data-target="#links_container" aria-expanded="false" aria-controls="links_container">

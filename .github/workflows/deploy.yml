@@ -7,7 +7,7 @@ env:
   GCP_PROJECT_ID: eminent-subset-462023-f9
   GCP_VM_NAME: seegap-app-vm
   GCP_ZONE: europe-west1-b
-  GCP_VM_IP: 34.140.57.52
+  GCP_VM_IP: 35.195.20.161
   DEPLOY_PATH: /var/www/seegap
 
 permissions:
@@ -106,7 +106,8 @@ jobs:
         fi
         
         echo "🔧 Setting proper file permissions..."
-        sudo chown -R HishamSait:HishamSait /var/www/seegap
+        VM_USER=$(whoami)
+        sudo chown -R $VM_USER:$VM_USER /var/www/seegap
         sudo find /var/www/seegap -type d -exec chmod 755 {} \;
         sudo find /var/www/seegap -type f -exec chmod 644 {} \;
         sudo chmod -R 777 /var/www/seegap/uploads/

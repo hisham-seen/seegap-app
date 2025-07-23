@@ -10,7 +10,7 @@ services:
     volumes:
       - ./:/var/www/html
       - nginx-cache:/var/cache/nginx
-      - ssl-certs:/etc/letsencrypt
+      - ./ssl:/etc/letsencrypt:ro
     depends_on:
       - php
     networks:

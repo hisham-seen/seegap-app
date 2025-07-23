@@ -9,19 +9,5 @@
 
 defined('SEEGAP') || die();
 
-$enabled_microsite_blocks = [];
-$available_blocks = settings()->links->available_microsite_blocks ?? new \stdClass();
-
-foreach(require APP_PATH . 'includes/microsite_blocks.php' as $type => $value) {
-    // Initialize property if not set
-    if (!isset($available_blocks->{$type})) {
-        // Enable text block by default since it replaces heading, paragraph, and list
-        $available_blocks->{$type} = ($type === 'text') ? true : false;
-    }
-    
-    if($available_blocks->{$type}) {
-        $enabled_microsite_blocks[$type] = $value;
-    }
-}
-
-return $enabled_microsite_blocks;
+// Return all blocks without any filtering - all blocks are now available to all users
+return require APP_PATH . 'includes/microsite_blocks.php';

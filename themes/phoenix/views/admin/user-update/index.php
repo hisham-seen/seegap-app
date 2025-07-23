@@ -153,11 +153,7 @@
                     <small class="form-text text-muted"><?= l('admin_plans.plan.microsites_limit_help') ?></small>
                 </div>
 
-                <div class="form-group">
-                    <label for="microsite_blocks_limit"><?= l('admin_plans.plan.microsite_blocks_limit') ?></label>
-                    <input type="number" id="microsite_blocks_limit" name="microsite_blocks_limit" min="-1" class="form-control" value="<?= $data->user->plan_settings->microsite_blocks_limit ?>" />
-                    <small class="form-text text-muted"><?= l('admin_plans.plan.unlimited') ?></small>
-                </div>
+                <?php // Microsite blocks limit removed - all blocks are now available to all users ?>
 
                 <div class="form-group">
                     <label for="links_limit"><?= l('admin_plans.plan.links_limit') ?></label>
@@ -559,25 +555,7 @@
                     <label class="custom-control-label" for="export_pdf"><?= sprintf(l('global.export_to'), 'PDF') ?></label>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
-                    <h3 class="h5"><?= l('admin_plans.plan.enabled_microsite_blocks') ?></h3>
-
-                    <div>
-                        <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.select_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='enabled_microsite_blocks[]']`).forEach(element => element.checked ? null : element.checked = true)"><i class="fas fa-fw fa-check-square"></i></button>
-                        <button type="button" class="btn btn-sm btn-light" data-toggle="tooltip" title="<?= l('global.deselect_all') ?>" data-tooltip-hide-on-click onclick="document.querySelectorAll(`[name='enabled_microsite_blocks[]']`).forEach(element => element.checked ? element.checked = false : null)"><i class="fas fa-fw fa-minus-square"></i></button>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <?php foreach(require APP_PATH . 'includes/microsite_blocks.php' as $key => $value): ?>
-                        <div class="col-6 mb-3">
-                            <div class="custom-control custom-checkbox">
-                                <input id="enabled_microsite_blocks_<?= $key ?>" name="enabled_microsite_blocks[]" value="<?= $key ?>" type="checkbox" class="custom-control-input" <?= $data->user->plan_settings->enabled_microsite_blocks->{$key} ? 'checked="checked"' : null ?>>
-                                <label class="custom-control-label" for="enabled_microsite_blocks_<?= $key ?>"><?= l('link.microsite.blocks.' . mb_strtolower($key)) ?></label>
-                            </div>
-                        </div>
-                    <?php endforeach ?>
-                </div>
+                <?php // Enabled microsite blocks section removed - all blocks are now available to all users ?>
             </div>
 
             <div class="mt-5"></div>

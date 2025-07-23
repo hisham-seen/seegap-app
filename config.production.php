@@ -1,6 +1,6 @@
 <?php
 /* Production Configuration for SeeGap Application - Docker Deployment */
-define('DATABASE_SERVER',   'mysql');
+define('DATABASE_SERVER',   '34.76.46.27');
 define('DATABASE_USERNAME', 'seegap_prod_user_2025');
 define('DATABASE_PASSWORD', 'SeeGapProd2025MySQLSecure');
 define('DATABASE_NAME',     'seegap_application_db');

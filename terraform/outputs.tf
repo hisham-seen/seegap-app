@@ -76,6 +76,32 @@ output "database_user" {
   sensitive   = true
 }
 
+# Output snapshot information
+output "vm_snapshot_name" {
+  description = "The name of the VM snapshot"
+  value       = google_compute_snapshot.seegap_vm_snapshot.name
+}
+
+output "vm_snapshot_id" {
+  description = "The ID of the VM snapshot"
+  value       = google_compute_snapshot.seegap_vm_snapshot.id
+}
+
+output "vm_snapshot_self_link" {
+  description = "The self link of the VM snapshot"
+  value       = google_compute_snapshot.seegap_vm_snapshot.self_link
+}
+
+output "db_backup_status" {
+  description = "The status of the database backup creation"
+  value       = "Manual backup triggered via gcloud CLI - check Cloud SQL console for details"
+}
+
+output "snapshot_policy_name" {
+  description = "The name of the snapshot policy"
+  value       = google_compute_resource_policy.seegap_snapshot_policy.name
+}
+
 # Output deployment information
 output "deployment_info" {
   description = "Deployment information"
@@ -88,5 +114,7 @@ output "deployment_info" {
     zone             = var.gcp_zone
     database_host    = google_sql_database_instance.seegap_mysql.public_ip_address
     database_name    = google_sql_database.seegap_database.name
+    vm_snapshot      = google_compute_snapshot.seegap_vm_snapshot.name
+    db_backup_status = "Manual backup triggered via gcloud CLI"
   }
 }

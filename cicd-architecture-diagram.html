@@ -197,10 +197,12 @@
                             DOCKER[🐳 Docker Compose<br/>Production Stack]
                             NGINX[🌐 Nginx<br/>Reverse Proxy + SSL]
                             PHP[🐘 PHP-FPM<br/>Application Server]
-                            MYSQL[🗄️ MySQL 8.0<br/>Database]
                             REDIS[⚡ Redis<br/>Cache + Sessions]
-                            BACKUP[💾 Backup Service<br/>Automated Backups]
                             LOGS[📝 Log Management<br/>Centralized Logging]
+                        end
+                        
+                        subgraph "Google Cloud SQL"
+                            CLOUDSQL[🗄️ Cloud SQL MySQL<br/>External Database<br/>34.76.46.27]
                         end
                         
                         DEV --> LOCAL
@@ -215,13 +217,11 @@
                         VM --> DOCKER
                         DOCKER --> NGINX
                         DOCKER --> PHP
-                        DOCKER --> MYSQL
                         DOCKER --> REDIS
-                        DOCKER --> BACKUP
                         DOCKER --> LOGS
                         IP --> CF
                         NGINX --> PHP
-                        PHP --> MYSQL
+                        PHP --> CLOUDSQL
                         PHP --> REDIS
                 </div>
             </div>
@@ -281,36 +281,29 @@
                                 PHP[🐘 PHP-FPM Container<br/>Application Logic<br/>OPcache + APCu<br/>Session Management]
                             end
                             
-                            subgraph "Data Tier"
-                                MYSQL[🗄️ MySQL Container<br/>Primary Database<br/>InnoDB Engine<br/>Query Cache<br/>Slow Query Log]
+                            subgraph "Cache Tier"
                                 REDIS[⚡ Redis Container<br/>Cache Layer<br/>Session Store<br/>LRU Eviction<br/>Persistence]
                             end
-                            
-                            subgraph "Support Services"
-                                BACKUP[💾 Backup Container<br/>Automated DB Backups<br/>30-day Retention<br/>Scheduled Tasks]
-                                LOGROTATE[📝 Log Rotation<br/>Centralized Logging<br/>Daily Rotation<br/>Compression]
-                            end
+                        end
+                        
+                        subgraph "External Services"
+                            CLOUDSQL[🗄️ Cloud SQL MySQL<br/>External Database<br/>34.76.46.27<br/>Managed Service]
                         end
                         
                         subgraph "Persistent Storage"
-                            MYSQL_DATA[💾 MySQL Data<br/>/opt/seegap/data/mysql]
-                            REDIS_DATA[💾 Redis Data<br/>/opt/seegap/data/redis]
-                            UPLOADS[📁 File Uploads<br/>/opt/seegap/uploads]
-                            SSL_CERTS[🔐 SSL Certificates<br/>/opt/seegap/ssl]
-                            LOGS_DATA[📝 Application Logs<br/>/opt/seegap/logs]
-                            BACKUPS[💾 Database Backups<br/>/opt/seegap/backups]
+                            REDIS_DATA[💾 Redis Data<br/>/var/www/seegap/redis-data]
+                            UPLOADS[📁 File Uploads<br/>/var/www/seegap/uploads]
+                            SSL_CERTS[🔐 SSL Certificates<br/>/var/www/seegap/ssl]
+                            LOGS_DATA[📝 Application Logs<br/>/var/www/seegap/logs]
                         end
                         
                         NGINX --> PHP
-                        PHP --> MYSQL
+                        PHP --> CLOUDSQL
                         PHP --> REDIS
-                        BACKUP --> MYSQL
-                        MYSQL --> MYSQL_DATA
                         REDIS --> REDIS_DATA
                         NGINX --> UPLOADS
                         NGINX --> SSL_CERTS
-                        LOGROTATE --> LOGS_DATA
-                        BACKUP --> BACKUPS
+                        NGINX --> LOGS_DATA
                 </div>
             </div>
             

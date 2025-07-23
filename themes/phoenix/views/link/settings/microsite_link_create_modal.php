@@ -27,7 +27,7 @@
                         <?php if($value['category'] != $microsite_block_category_key) continue ?>
 
                         <?php ob_start() ?>
-                        <?php if(($this->user->plan_settings->enabled_microsite_blocks->{$key} ?? null) || ($key === 'text')): ?>
+                        <?php // All blocks are now available to all users ?>
                             <div class="col-4 col-md-3 p-1" data-block-category="<?= $value['category'] ?>" data-block-id="<?= $key ?>" data-block-name="<?= l('link.microsite.blocks.' . $key) ?>">
                                 <button
                                     type="button"
@@ -43,20 +43,6 @@
                                 </button>
                             </div>
                             <?php $enabled_blocks_html .= ob_get_clean(); ?>
-                        <?php else: ?>
-                            <div class="col-4 col-md-3 p-1" data-block-category="<?= $value['category'] ?>" data-block-id="<?= $key ?>" data-block-name="<?= l('link.microsite.blocks.' . $key) ?>">
-                                <button
-                                    type="button"
-                                    data-toggle="tooltip"
-                                    title="<?= l('global.info_message.plan_feature_no_access') ?>"
-                                    class="btn btn-sm btn-outline-secondary btn-block disabled d-flex align-items-center py-1 px-2"
-                                >
-                                    <i class="<?= $data->microsite_blocks[$key]['icon'] ?> fa-xs fa-fw mr-1" style="color: <?= $data->microsite_blocks[$key]['color'] ?>"></i>
-                                    <s class="text-truncate"><?= l('link.microsite.blocks.' . $key) ?></s>
-                                </button>
-                            </div>
-                            <?php $disabled_blocks_html .= ob_get_clean(); ?>
-                        <?php endif ?>
                     <?php endforeach ?>
 
                     <?php if($enabled_blocks_html || $disabled_blocks_html): ?>

@@ -50,10 +50,17 @@ Thumbs.db
 
 # Temporary deployment files
 *.tar.gz
-nginx-*.conf
 startup-script.sh
 docker-compose.prod.yml
 .env.prod
+
+# Removed redundant deployment scripts
+deploy-cloud-sql.sh
+deploy-docker.sh
+deploy-incremental.sh
+deploy-nginx.sh
+deploy-cloud-sql-backup.sh
+reset_database.sh
 
 # Terraform files
 terraform/*.tfvars
@@ -76,8 +83,12 @@ uploads/*
 logs/
 cache/
 
-# Configuration files
+# Configuration files (critical - contains database credentials)
 config.php
+
+# User uploads directory (critical - contains user data)
+uploads/
+!uploads/.gitkeep
 
 # Local development tools
 reset-local-app.php
