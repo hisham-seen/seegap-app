@@ -9,361 +9,200 @@
 
 defined('SEEGAP') || die();
 
-$payment_blocks = \SeeGap\Plugin::is_active('payment-blocks') && file_exists(\SeeGap\Plugin::get('payment-blocks')->path . 'payment_blocks.php') ? include \SeeGap\Plugin::get('payment-blocks')->path . 'payment_blocks.php' : [];
-
-$default_blocks = [
+return [
+    // Standard blocks (12)
     'link' => [
-        'type' => 'default',
-        'icon' => 'fas fa-fw fa-link',
-        'color' => '#004ecc',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'standard',
+        'icon' => 'fas fa-link',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'text' => [
-        'type' => 'default',
-        'icon' => 'fas fa-fw fa-text-height',
-        'color' => '#000000',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => 'text',
-        'category' => 'standard',
+        'icon' => 'fas fa-font',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'avatar' => [
-        'type' => 'default',
-        'icon' => 'fas fa-fw fa-user',
-        'color' => '#8b2abf',
-        'has_statistics' => true,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'standard',
+        'icon' => 'fas fa-user-circle',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'image' => [
-        'type' => 'default',
-        'icon' => 'fas fa-fw fa-image',
-        'color' => '#0682FF',
-        'has_statistics' => true,
-        'themable' => false,
-        'display_dynamic_name' => 'image_alt',
-        'whitelisted_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'standard',
+        'icon' => 'fas fa-image',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'socials' => [
-        'type' => 'default',
-        'icon' => 'fas fa-fw fa-users',
-        'color' => '#63d2ff',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => false,
-        'category' => 'standard',
-    ],
-    'form' => [
-        'type' => 'default',
-        'icon' => 'fas fa-fw fa-wpforms',
-        'color' => '#007bff',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'advanced',
-    ],
-    'threads' => [
-        'type' => 'default',
-        'icon' => 'fab fa-threads',
-        'color' => '#f54640',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['threads.net', 'www.threads.net'],
-        'category' => 'embeds',
-    ],
-    'youtube' => [
-        'type' => 'default',
-        'icon' => 'fab fa-youtube',
-        'color' => '#ff0000',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['www.youtube.com', 'youtu.be'],
-        'category' => 'embeds',
-    ],
-    'tiktok_video' => [
-        'type' => 'default',
-        'icon' => 'fab fa-tiktok',
-        'color' => '#FD3E3E',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['www.tiktok.com'],
-        'category' => 'embeds',
+        'icon' => 'fas fa-users',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'image_slider' => [
-        'type' => 'default',
-        'icon' => 'fas fa-clone',
-        'color' => '#290b5b',
-        'has_statistics' => true,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'standard',
+        'icon' => 'fas fa-images',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'image_grid' => [
-        'type' => 'default',
         'icon' => 'fas fa-th',
-        'color' => '#0682FF',
-        'has_statistics' => true,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'standard',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'big_link' => [
-        'type' => 'default',
-        'icon' => 'fas fa-fw fa-external-link-alt',
-        'color' => '#cc0084',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'standard',
-    ],
-    'faq' => [
-        'type' => 'default',
-        'icon' => 'fas fa-feather',
-        'color' => '#da2a73',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => false,
-        'category' => 'advanced',
-    ],
-    'facebook' => [
-        'type' => 'default',
-        'icon' => 'fab fa-facebook',
-        'color' => '#4267B2',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['www.facebook.com', 'fb.watch'],
-        'category' => 'embeds',
-    ],
-    'countdown' => [
-        'type' => 'default',
-        'icon' => 'fas fa-clock',
-        'color' => '#2b2b2b',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'category' => 'advanced',
+        'icon' => 'fas fa-external-link-alt',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'cta' => [
-        'type' => 'default',
-        'icon' => 'fas fa-comments',
-        'color' => '#3100d6',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'standard',
-    ],
-    'share' => [
-        'type' => 'default',
-        'icon' => 'fas fa-share-square',
-        'color' => '#00d3ac',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'whitelisted_thumbnail_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'advanced',
-    ],
-    'youtube_feed' => [
-        'type' => 'default',
-        'icon' => 'fab fa-youtube',
-        'color' => '#282828',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => false,
-        'category' => 'advanced',
-    ],
-    'review' => [
-        'type' => 'default',
-        'icon' => 'fas fa-star',
-        'color' => '#ffe100',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => 'title',
-        'whitelisted_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'advanced',
-    ],
-    'header' => [
-        'type' => 'default',
-        'icon' => 'fas fa-theater-masks',
-        'color' => '#61B123',
-        'has_statistics' => true,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'],
-        'category' => 'advanced',
-    ],
-    'twitter_profile' => [
-        'type' => 'default',
-        'icon' => 'fab fa-x-twitter',
-        'color' => '#1DA1F2',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['twitter.com', 'x.com'],
-        'category' => 'embeds',
-    ],
-    'twitter_tweet' => [
-        'type' => 'default',
-        'icon' => 'fab fa-x-twitter',
-        'color' => '#1DA1F2',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['twitter.com', 'x.com'],
-        'category' => 'embeds',
-    ],
-    'twitter_video' => [
-        'type' => 'default',
-        'icon' => 'fab fa-x-twitter',
-        'color' => '#1DA1F2',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['twitter.com', 'x.com'],
-        'category' => 'embeds',
-    ],
-    'instagram_media' => [
-        'type' => 'default',
-        'icon' => 'fab fa-instagram',
-        'color' => '#F56040',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['www.instagram.com'],
-        'category' => 'embeds',
-    ],
-    'custom_html' => [
-        'type' => 'default',
-        'icon' => 'fas fa-code',
-        'color' => '#02234c',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'max_length' => 16384,
-        'category' => 'advanced',
+        'icon' => 'fas fa-hand-pointer',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'divider' => [
-        'type' => 'default',
-        'icon' => 'fas fa-grip-lines',
-        'color' => '#30a85a',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'category' => 'standard',
-    ],
-    'alert' => [
-        'type' => 'default',
-        'icon' => 'fas fa-bell',
-        'color' => '#1500ff',
-        'has_statistics' => true,
-        'themable' => false,
-        'display_dynamic_name' => 'text',
-        'category' => 'advanced',
-    ],
-    'tiktok_profile' => [
-        'type' => 'default',
-        'icon' => 'fab fa-tiktok',
-        'color' => '#FD3E3E',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['www.tiktok.com'],
-        'category' => 'embeds',
-    ],
-    'telegram' => [
-        'type' => 'default',
-        'icon' => 'fab fa-telegram',
-        'color' => '#0088cc',
-        'has_statistics' => false,
-        'themable' => false,
-        'display_dynamic_name' => false,
-        'whitelisted_hosts' => ['t.me'],
-        'category' => 'embeds',
-    ],
-    'contact_collector' => [
-        'type' => 'default',
-        'icon' => 'fas fa-address-book',
-        'color' => '#28a745',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'category' => 'advanced',
-    ],
-    'feedback_collector' => [
-        'type' => 'default',
-        'icon' => 'fas fa-comment-dots',
-        'color' => '#17a2b8',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'category' => 'advanced',
-    ],
-    'email_collector' => [
-        'type' => 'default',
-        'icon' => 'fas fa-envelope',
-        'color' => '#dc3545',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'category' => 'advanced',
-    ],
-    'phone_collector' => [
-        'type' => 'default',
-        'icon' => 'fas fa-phone',
-        'color' => '#fd7e14',
-        'has_statistics' => true,
-        'themable' => true,
-        'display_dynamic_name' => 'name',
-        'category' => 'advanced',
+        'icon' => 'fas fa-minus',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'heading' => [
-        'type' => 'default',
         'icon' => 'fas fa-heading',
-        'color' => '#6f42c1',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => 'text',
-        'category' => 'standard',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'paragraph' => [
-        'type' => 'default',
         'icon' => 'fas fa-paragraph',
-        'color' => '#495057',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => 'text',
-        'category' => 'standard',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
     'list' => [
-        'type' => 'default',
         'icon' => 'fas fa-list',
-        'color' => '#20c997',
-        'has_statistics' => false,
-        'themable' => true,
-        'display_dynamic_name' => false,
-        'category' => 'standard',
+        'color' => '#0ea5e9',
+        'category' => 'standard'
     ],
+
+    // Advanced blocks (13)
+    'faq' => [
+        'icon' => 'fas fa-question-circle',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'countdown' => [
+        'icon' => 'fas fa-clock',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'share' => [
+        'icon' => 'fas fa-share-alt',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'review' => [
+        'icon' => 'fas fa-star',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'header' => [
+        'icon' => 'fas fa-window-maximize',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'custom_html' => [
+        'icon' => 'fas fa-code',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'alert' => [
+        'icon' => 'fas fa-exclamation-triangle',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'form' => [
+        'icon' => 'fas fa-file-alt',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'contact_collector' => [
+        'icon' => 'fas fa-address-book',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'feedback_collector' => [
+        'icon' => 'fas fa-comment-dots',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'email_collector' => [
+        'icon' => 'fas fa-envelope',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'phone_collector' => [
+        'icon' => 'fas fa-phone',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+    'youtube_feed' => [
+        'icon' => 'fab fa-youtube',
+        'color' => '#6366f1',
+        'category' => 'advanced'
+    ],
+
+    // Embeds blocks (12)
+    'threads' => [
+        'icon' => 'fab fa-threads',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'youtube' => [
+        'icon' => 'fab fa-youtube',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'tiktok_video' => [
+        'icon' => 'fab fa-tiktok',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'facebook' => [
+        'icon' => 'fab fa-facebook',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'twitter_profile' => [
+        'icon' => 'fab fa-twitter',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'twitter_tweet' => [
+        'icon' => 'fab fa-twitter',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'twitter_video' => [
+        'icon' => 'fab fa-twitter',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'instagram_media' => [
+        'icon' => 'fab fa-instagram',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'tiktok_profile' => [
+        'icon' => 'fab fa-tiktok',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'telegram' => [
+        'icon' => 'fab fa-telegram',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'instagram_profile' => [
+        'icon' => 'fab fa-instagram',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ],
+    'twitter_timeline' => [
+        'icon' => 'fab fa-twitter',
+        'color' => '#d946ef',
+        'category' => 'embeds'
+    ]
 ];
-
-// Note: Map block is conditionally added based on Google Maps settings
-// This block was removed from the default list but can still be enabled via settings
-
-return array_merge(
-    $default_blocks,
-    $payment_blocks,
-);
