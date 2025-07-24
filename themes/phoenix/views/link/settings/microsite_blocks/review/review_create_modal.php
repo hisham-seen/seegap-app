@@ -33,8 +33,8 @@
 
                     <div class="form-group">
                         <label for="review_image"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('microsite_review.image') ?></label>
-                        <input id="review_image" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions']) ?>" class="form-control-file seegap-file-input" data-crop data-aspect-ratio="1" />
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
+                        <input id="review_image" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']) ?>" class="form-control-file seegap-file-input" data-crop data-aspect-ratio="1" />
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
                     </div>
 
                     <div class="form-group">

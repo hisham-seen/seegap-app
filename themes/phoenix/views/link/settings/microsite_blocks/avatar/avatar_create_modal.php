@@ -118,14 +118,14 @@
                     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->avatar_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->avatar_size_limit) ?>">
                         <label for="avatar_image"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('global.image') ?></label>
                         <div class="avatar-upload-area">
-                            <input id="avatar_image" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions']) ?>" class="form-control-file seegap-file-input" data-crop data-aspect-ratio="1" />
+                            <input id="avatar_image" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']) ?>" class="form-control-file seegap-file-input" data-crop data-aspect-ratio="1" />
                             <div class="upload-placeholder">
                                 <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
                                 <p class="text-muted mb-0">Drag & drop or click to upload</p>
                                 <small class="text-muted">Perfect for mobile viewing</small>
                             </div>
                         </div>
-                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
+                        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['avatar']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->avatar_size_limit) ?></small>
                     </div>
 
                     <!-- Mobile-Optimized Size Selection -->

@@ -37,6 +37,29 @@ class YoutubeFeedBlock extends BaseBlockHandler {
         $settings = json_encode([
             'youtube_channel_id' => $_POST['youtube_channel_id'],
             'amount' => 3,
+            'open_in_new_tab' => false,
+
+            /* Style settings */
+            'text_color' => '#ffffff',
+            'text_alignment' => 'center',
+            'background_color' => '#007bff',
+
+            /* Border settings */
+            'border_width' => 0,
+            'border_color' => '#000000',
+            'border_radius' => 'rounded',
+            'border_style' => 'solid',
+
+            /* Border shadow settings */
+            'border_shadow_offset_x' => 0,
+            'border_shadow_offset_y' => 0,
+            'border_shadow_blur' => 0,
+            'border_shadow_spread' => 0,
+            'border_shadow_color' => '#000000',
+
+            /* Animation settings */
+            'animation' => false,
+            'animation_runs' => 'repeat-1',
 
             /* Display settings */
             'display_continents' => [],
@@ -71,6 +94,30 @@ class YoutubeFeedBlock extends BaseBlockHandler {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['youtube_channel_id'] = mb_substr(query_clean($_POST['youtube_channel_id']), 0, 64);
         $_POST['amount'] = in_array($_POST['amount'], range(1, 10)) ? (int) $_POST['amount'] : 3;
+        $_POST['open_in_new_tab'] = (bool) isset($_POST['open_in_new_tab']);
+
+        /* Style settings */
+        $_POST['text_color'] = !preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['text_color']) ? '#000000' : $_POST['text_color'];
+        $_POST['text_alignment'] = in_array($_POST['text_alignment'], ['center', 'left', 'right', 'justify']) ? $_POST['text_alignment'] : 'center';
+        $_POST['background_color'] = !preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
+        
+        /* Border settings */
+        $_POST['border_width'] = in_array($_POST['border_width'], range(0, 5)) ? (int) $_POST['border_width'] : 0;
+        $_POST['border_color'] = !preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['border_color']) ? '#000000' : $_POST['border_color'];
+        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? $_POST['border_radius'] : 'rounded';
+        $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'outset', 'inset']) ? $_POST['border_style'] : 'solid';
+        
+        /* Border shadow settings */
+        $_POST['border_shadow_offset_x'] = in_array($_POST['border_shadow_offset_x'], range(-20, 20)) ? (int) $_POST['border_shadow_offset_x'] : 0;
+        $_POST['border_shadow_offset_y'] = in_array($_POST['border_shadow_offset_y'], range(-20, 20)) ? (int) $_POST['border_shadow_offset_y'] : 0;
+        $_POST['border_shadow_blur'] = in_array($_POST['border_shadow_blur'], range(0, 20)) ? (int) $_POST['border_shadow_blur'] : 0;
+        $_POST['border_shadow_spread'] = in_array($_POST['border_shadow_spread'], range(0, 10)) ? (int) $_POST['border_shadow_spread'] : 0;
+        $_POST['border_shadow_color'] = !preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['border_shadow_color']) ? '#000000' : $_POST['border_shadow_color'];
+        
+        /* Animation settings */
+        $animations = require APP_PATH . 'includes/microsite_animations.php';
+        $_POST['animation'] = in_array($_POST['animation'], array_merge(['false'], $animations)) ? $_POST['animation'] : false;
+        $_POST['animation_runs'] = in_array($_POST['animation_runs'], ['repeat-1', 'repeat-2', 'repeat-3', 'infinite']) ? $_POST['animation_runs'] : 'repeat-1';
 
         /* Display settings */
         $this->process_display_settings();
@@ -93,6 +140,29 @@ class YoutubeFeedBlock extends BaseBlockHandler {
         $settings = json_encode([
             'youtube_channel_id' => $_POST['youtube_channel_id'],
             'amount' => $_POST['amount'],
+            'open_in_new_tab' => $_POST['open_in_new_tab'],
+
+            /* Style settings */
+            'text_color' => $_POST['text_color'],
+            'text_alignment' => $_POST['text_alignment'],
+            'background_color' => $_POST['background_color'],
+
+            /* Border settings */
+            'border_width' => $_POST['border_width'],
+            'border_color' => $_POST['border_color'],
+            'border_radius' => $_POST['border_radius'],
+            'border_style' => $_POST['border_style'],
+
+            /* Border shadow settings */
+            'border_shadow_offset_x' => $_POST['border_shadow_offset_x'],
+            'border_shadow_offset_y' => $_POST['border_shadow_offset_y'],
+            'border_shadow_blur' => $_POST['border_shadow_blur'],
+            'border_shadow_spread' => $_POST['border_shadow_spread'],
+            'border_shadow_color' => $_POST['border_shadow_color'],
+
+            /* Animation settings */
+            'animation' => $_POST['animation'],
+            'animation_runs' => $_POST['animation_runs'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

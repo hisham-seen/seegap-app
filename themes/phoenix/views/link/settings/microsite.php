@@ -168,7 +168,7 @@
             <div class="microsite-preview">
                 <div class="microsite-preview-iframe-container">
                     <div id="microsite_preview_iframe_loading" class="microsite-preview-iframe-loading d-none"><div class="spinner-border bg-primary" role="status"></div></div>
-                    <iframe id="microsite_preview_iframe" class="microsite-preview-iframe" src="<?= SITE_URL . 'l/link?link_id=' . $data->link->link_id . '&preview=' . md5($data->link->user_id) ?>"></iframe>
+                    <iframe id="microsite_preview_iframe" class="microsite-preview-iframe" src="<?= SITE_URL . $data->link->url . '?preview=' . md5($data->link->user_id) ?>"></iframe>
                 </div>
             </div>
         </div>

@@ -26,6 +26,51 @@ $microsite_socials = require APP_PATH . 'includes/microsite_socials.php';
 
 // Check if socials data exists and is not empty
 $has_socials = isset($data->link->settings->socials) && !empty((array)$data->link->settings->socials);
+
+// Debug: If no socials data found, check if it's stored differently
+if (!$has_socials) {
+    // Sometimes the data might be stored directly in settings
+    if (isset($data->link->settings) && is_object($data->link->settings)) {
+        foreach ($data->link->settings as $key => $value) {
+            if (isset($microsite_socials[$key]) && !empty(trim($value))) {
+                $has_socials = true;
+                // Create socials array if it doesn't exist
+                if (!isset($data->link->settings->socials)) {
+                    $data->link->settings->socials = new stdClass();
+                }
+                $data->link->settings->socials->$key = $value;
+            }
+        }
+    }
+}
+
+// Additional debug: Check if data is stored as array instead of object
+if (!$has_socials && isset($data->link->settings) && is_array($data->link->settings)) {
+    foreach ($data->link->settings as $key => $value) {
+        if (isset($microsite_socials[$key]) && !empty(trim($value))) {
+            $has_socials = true;
+            // Create socials array if it doesn't exist
+            if (!isset($data->link->settings['socials'])) {
+                $data->link->settings['socials'] = [];
+            }
+            $data->link->settings['socials'][$key] = $value;
+        }
+    }
+    // Convert to object for consistency
+    if ($has_socials && is_array($data->link->settings)) {
+        $data->link->settings = (object) $data->link->settings;
+        if (isset($data->link->settings->socials) && is_array($data->link->settings->socials)) {
+            $data->link->settings->socials = (object) $data->link->settings->socials;
+        }
+    }
+}
+
+// Final fallback: Show debug info in development
+if (!$has_socials && defined('DEVELOPMENT') && DEVELOPMENT) {
+    // This will help us see what data structure we're actually getting
+    error_log('Social block debug - Link settings: ' . print_r($data->link->settings, true));
+    error_log('Social block debug - Available microsite socials: ' . print_r(array_keys($microsite_socials), true));
+}
 ?>
 
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
@@ -40,6 +85,11 @@ $has_socials = isset($data->link->settings->socials) && !empty((array)$data->lin
                     </div>
                 <?php endif ?>
             <?php endforeach ?>
+        </div>
+    <?php else: ?>
+        <!-- Minimalistic block-style empty state -->
+        <div class="text-center py-4 px-3" style="border: 1px solid #e9ecef; border-radius: 4px; background-color: #f8f9fa;">
+            <small class="text-muted">No social links configured</small>
         </div>
     <?php endif ?>
 </div>

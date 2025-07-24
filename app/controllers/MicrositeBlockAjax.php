@@ -112,7 +112,7 @@ class MicrositeBlockAjax extends Controller {
                     $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
                     break;
 
-                case 'header':
+                case 'cover':
                     $microsite_block->settings->avatar = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');
                     $microsite_block->settings->background = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->background, 'backgrounds/', 'backgrounds/', 'json_error');
                     break;
@@ -270,7 +270,7 @@ class MicrositeBlockAjax extends Controller {
             'avatar' => 'AvatarBlock',
             'facebook' => 'FacebookBlock',
             'telegram' => 'TelegramBlock',
-            'header' => 'HeaderBlock',
+            'cover' => 'CoverBlock',
             'image_grid' => 'ImageGridBlock',
             'review' => 'ReviewBlock',
             'cta' => 'CtaBlock',

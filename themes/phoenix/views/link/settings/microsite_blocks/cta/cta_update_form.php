@@ -11,10 +11,10 @@
     <div class="form-group">
         <label for="<?= 'cta_type_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-comments fa-sm text-muted mr-1"></i> <?= l('global.type') ?></label>
         <select id="<?= 'cta_type_' . $row->microsite_block_id ?>" name="type" class="custom-select">
-            <option value="email" <?= $row->settings->type == 'email' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_email') ?></option>
-            <option value="call" <?= $row->settings->type == 'call' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_call') ?></option>
-            <option value="sms" <?= $row->settings->type == 'sms' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_sms') ?></option>
-            <option value="facetime" <?= $row->settings->type == 'facetime' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_facetime') ?></option>
+            <option value="email" <?= ($row->settings->type ?? 'email') == 'email' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_email') ?></option>
+            <option value="call" <?= ($row->settings->type ?? 'email') == 'call' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_call') ?></option>
+            <option value="sms" <?= ($row->settings->type ?? 'email') == 'sms' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_sms') ?></option>
+            <option value="facetime" <?= ($row->settings->type ?? 'email') == 'facetime' ? 'selected="selected"' : null ?>><?= l('microsite_cta.type_facetime') ?></option>
         </select>
     </div>
 
@@ -25,12 +25,12 @@
             <span data-cta-type="sms" class="d-none"><i class="fas fa-fw fa-sms fa-sm text-muted mr-1"></i> <?= l('microsite_cta.value_sms') ?></span>
             <span data-cta-type="facetime" class="d-none"><i class="fas fa-fw fa-headset fa-sm text-muted mr-1"></i> <?= l('microsite_cta.value_facetime') ?></span>
         </label>
-        <input id="<?= 'cta_value_' . $row->microsite_block_id ?>" type="text" class="form-control" name="value" value="<?= $row->settings->value ?>" maxlength="320" required="required" />
+        <input id="<?= 'cta_value_' . $row->microsite_block_id ?>" type="text" class="form-control" name="value" value="<?= $row->settings->value ?? '' ?>" maxlength="320" required="required" />
     </div>
 
     <div class="form-group">
         <label for="<?= 'cta_name_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_link.name') ?></label>
-        <input id="<?= 'cta_name_' . $row->microsite_block_id ?>" type="text" name="name" class="form-control" value="<?= $row->settings->name ?>" maxlength="128" required="required" />
+        <input id="<?= 'cta_name_' . $row->microsite_block_id ?>" type="text" name="name" class="form-control" value="<?= $row->settings->name ?? '' ?>" maxlength="128" required="required" />
     </div>
 
     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->thumbnail_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->thumbnail_image_size_limit) ?>">

@@ -69,9 +69,10 @@
                             }
 
                             /* Check if the user has permissions to use the link */
-                            if(!($data->user->plan_settings->enabled_microsite_blocks->{$row->type} ?? null) && $row->type !== 'text') {
-                                continue;
-                            }
+                            // Permission check removed - all microsite blocks are now available to all users
+                            // if(!($data->user->plan_settings->enabled_microsite_blocks->{$row->type} ?? null) && $row->type !== 'text' && $row->type !== 'cover') {
+                            //     continue;
+                            // }
 
                             /* Check if there are any extra display rules */
                             if($continent_code && count($row->settings->display_continents ?? []) && !in_array($continent_code, $row->settings->display_continents ?? [])) {

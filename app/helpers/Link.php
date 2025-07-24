@@ -127,6 +127,7 @@ class Link {
 
         $data = [];
 
+
         $microsite_blocks = require APP_PATH . 'includes/enabled_microsite_blocks.php';
 
         if(!array_key_exists($link->type, $microsite_blocks)) {
@@ -244,7 +245,14 @@ class Link {
 
                 break;
 
-            case 'header':
+            case 'cover':
+
+                /* Ensure settings are properly decoded */
+                if(is_string($link->settings)) {
+                    $link->settings = json_decode($link->settings);
+                } elseif(is_null($link->settings)) {
+                    $link->settings = new \stdClass();
+                }
 
                 /* UTM Parameters */
                 $link->utm_query = null;
@@ -361,7 +369,10 @@ class Link {
 
         }
 
-        if(!isset($view_path)) return null;
+        if(!isset($view_path)) {
+            error_log('get_microsite_link returning null - no view_path set for type: ' . $link->type);
+            return null;
+        }
 
         /* Prepare the view */
         $data = array_merge($data, [
@@ -370,7 +381,9 @@ class Link {
             'microsite'   => $microsite,
         ]);
 
-        return include_view($view_path, $data);
+        $result = include_view($view_path, $data);
+
+        return $result;
 
     }
 }

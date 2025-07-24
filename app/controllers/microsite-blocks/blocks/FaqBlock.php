@@ -74,14 +74,14 @@ class FaqBlock extends BaseBlockHandler {
 
         /* FAQ items */
         $items = [];
-        if(isset($_POST['item_question']) && isset($_POST['item_answer'])) {
-            foreach($_POST['item_question'] as $key => $value) {
+        if(isset($_POST['item_title']) && isset($_POST['item_content'])) {
+            foreach($_POST['item_title'] as $key => $value) {
                 if(empty(trim($value))) continue;
                 if($key >= 20) continue;
 
                 $items[] = [
-                    'question' => mb_substr(input_clean($value), 0, 256),
-                    'answer' => mb_substr(input_clean($_POST['item_answer'][$key]), 0, 2048),
+                    'title' => mb_substr(input_clean($value), 0, 256),
+                    'content' => mb_substr(input_clean($_POST['item_content'][$key]), 0, 2048),
                 ];
             }
         }

@@ -23,7 +23,7 @@
 
                     <div class="form-group">
                         <label for="youtube_feed_channel_id"><i class="fab fa-fw fa-youtube fa-sm text-muted mr-1"></i> <?= l('microsite_youtube_feed.channel_id') ?></label>
-                        <input id="youtube_feed_channel_id" type="text" class="form-control" name="channel_id" maxlength="128" required="required" />
+                        <input id="youtube_feed_channel_id" type="text" class="form-control" name="youtube_channel_id" maxlength="128" required="required" />
                     </div>
 
                     <div class="text-center mt-4">

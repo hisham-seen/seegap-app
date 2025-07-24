@@ -9,21 +9,23 @@
     <div class="notification-container"></div>
 
     <div id="<?= 'faq_items_' . $row->microsite_block_id ?>" data-microsite-block-id="<?= $row->microsite_block_id ?>">
-        <?php foreach($row->settings->items as $key => $item): ?>
-            <div class="mb-4">
-                <div class="form-group">
-                    <label for="<?= 'item_title_' . $key . '_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_faq.title') ?></label>
-                    <input id="<?= 'item_title_' . $key . '_' . $row->microsite_block_id ?>" type="text" name="item_title[<?= $key ?>]" class="form-control" value="<?= $item->title ?>" required="required" />
-                </div>
+        <?php if(isset($row->settings->items) && !empty($row->settings->items)): ?>
+            <?php foreach($row->settings->items as $key => $item): ?>
+                <div class="mb-4">
+                    <div class="form-group">
+                        <label for="<?= 'item_title_' . $key . '_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_faq.title') ?></label>
+                        <input id="<?= 'item_title_' . $key . '_' . $row->microsite_block_id ?>" type="text" name="item_title[<?= $key ?>]" class="form-control" value="<?= $item->title ?? '' ?>" required="required" />
+                    </div>
 
-                <div class="form-group">
-                    <label for="<?= 'item_content_' . $key . '_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('microsite_faq.content') ?></label>
-                    <textarea id="<?= 'item_content_' . $key . '_' . $row->microsite_block_id ?>" name="item_content[<?= $key ?>]" class="form-control" required="required"><?= $item->content ?></textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="<?= 'item_content_' . $key . '_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('microsite_faq.content') ?></label>
+                        <textarea id="<?= 'item_content_' . $key . '_' . $row->microsite_block_id ?>" name="item_content[<?= $key ?>]" class="form-control" required="required"><?= $item->content ?? '' ?></textarea>
+                    </div>
 
-                <button type="button" data-remove="item" class="btn btn-sm btn-block btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('global.delete') ?></button>
-            </div>
-        <?php endforeach ?>
+                    <button type="button" data-remove="item" class="btn btn-sm btn-block btn-outline-danger"><i class="fas fa-fw fa-times"></i> <?= l('global.delete') ?></button>
+                </div>
+            <?php endforeach ?>
+        <?php endif ?>
     </div>
 
     <div class="mb-3">

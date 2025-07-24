@@ -10,12 +10,12 @@
 
     <div class="form-group">
         <label for="<?= 'review_title_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_review.title') ?></label>
-        <input id="<?= 'review_title_' . $row->microsite_block_id ?>" type="text" name="title" class="form-control" value="<?= $row->settings->title ?>" maxlength="128" />
+        <input id="<?= 'review_title_' . $row->microsite_block_id ?>" type="text" name="title" class="form-control" value="<?= $row->settings->title ?? '' ?>" maxlength="128" />
     </div>
 
     <div class="form-group">
         <label for="<?= 'review_description_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('microsite_link.description') ?></label>
-        <textarea id="<?= 'review_description_' . $row->microsite_block_id ?>" name="description" class="form-control" maxlength="1024"><?= $row->settings->description ?></textarea>
+        <textarea id="<?= 'review_description_' . $row->microsite_block_id ?>" name="description" class="form-control" maxlength="1024"><?= $row->settings->description ?? '' ?></textarea>
     </div>
 
     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->image_size_limit) ?>">
@@ -24,27 +24,27 @@
             'id'=> 'review_image_' . $row->microsite_block_id,
             'uploads_file_key' => 'block_images',
             'file_key' => 'image',
-            'already_existing_image' => $row->settings->image,
+            'already_existing_image' => $row->settings->image ?? null,
             'image_container' => 'image',
-            'accept' => \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions']),
+            'accept' => \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'] ?? ["jpg", "jpeg", "png", "gif", "webp", "svg"]),
             'input_data' => 'data-crop data-aspect-ratio="1"'
         ]) ?>
-        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
+        <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'] ?? ["jpg", "jpeg", "png", "gif", "webp", "svg"])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
     </div>
 
     <div class="form-group">
         <label for="<?= 'review_author_name_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-user fa-sm text-muted mr-1"></i> <?= l('microsite_review.author_name') ?></label>
-        <input id="<?= 'review_author_name_' . $row->microsite_block_id ?>" type="text" name="author_name" class="form-control" value="<?= $row->settings->author_name ?>" maxlength="128" required="required" />
+        <input id="<?= 'review_author_name_' . $row->microsite_block_id ?>" type="text" name="author_name" class="form-control" value="<?= $row->settings->author_name ?? '' ?>" maxlength="128" required="required" />
     </div>
 
     <div class="form-group">
         <label for="<?= 'review_author_description_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-user-tag fa-sm text-muted mr-1"></i> <?= l('microsite_review.author_description') ?></label>
-        <input id="<?= 'review_author_description_' . $row->microsite_block_id ?>" type="text" name="author_description" class="form-control" value="<?= $row->settings->author_description ?>" maxlength="128" />
+        <input id="<?= 'review_author_description_' . $row->microsite_block_id ?>" type="text" name="author_description" class="form-control" value="<?= $row->settings->author_description ?? '' ?>" maxlength="128" />
     </div>
 
     <div class="form-group">
         <label for="<?= 'review_stars_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-star fa-sm text-muted mr-1"></i> <?= l('microsite_review.stars') ?></label>
-        <input id="<?= 'review_stars_' . $row->microsite_block_id ?>" type="number" min="1" max="5" name="stars" class="form-control" value="<?= $row->settings->stars ?>" required="required" />
+        <input id="<?= 'review_stars_' . $row->microsite_block_id ?>" type="number" min="1" max="5" name="stars" class="form-control" value="<?= $row->settings->stars ?? 5 ?>" required="required" />
     </div>
 
     <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#<?= 'button_settings_container_' . $row->microsite_block_id ?>" aria-expanded="false" aria-controls="<?= 'button_settings_container_' . $row->microsite_block_id ?>">
@@ -54,37 +54,37 @@
     <div class="collapse" id="<?= 'button_settings_container_' . $row->microsite_block_id ?>">
         <div class="form-group">
             <label for="<?= 'review_title_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_review.title_color') ?></label>
-            <input id="<?= 'review_title_color_' . $row->microsite_block_id ?>" type="hidden" name="title_color" class="form-control" value="<?= $row->settings->title_color ?>" required="required" />
+            <input id="<?= 'review_title_color_' . $row->microsite_block_id ?>" type="hidden" name="title_color" class="form-control" value="<?= $row->settings->title_color ?? '#333333' ?>" required="required" />
             <div class="title_color_pickr"></div>
         </div>
 
         <div class="form-group">
             <label for="<?= 'review_description_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_link.description_color') ?></label>
-            <input id="<?= 'review_description_color_' . $row->microsite_block_id ?>" type="hidden" name="description_color" class="form-control" value="<?= $row->settings->description_color ?>" required="required" />
+            <input id="<?= 'review_description_color_' . $row->microsite_block_id ?>" type="hidden" name="description_color" class="form-control" value="<?= $row->settings->description_color ?? '#666666' ?>" required="required" />
             <div class="description_color_pickr"></div>
         </div>
 
         <div class="form-group">
             <label for="<?= 'review_author_name_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_review.author_name_color') ?></label>
-            <input id="<?= 'review_author_name_color_' . $row->microsite_block_id ?>" type="hidden" name="author_name_color" class="form-control" value="<?= $row->settings->author_name_color ?>" required="required" />
+            <input id="<?= 'review_author_name_color_' . $row->microsite_block_id ?>" type="hidden" name="author_name_color" class="form-control" value="<?= $row->settings->author_name_color ?? '#333333' ?>" required="required" />
             <div class="author_name_color_pickr"></div>
         </div>
 
         <div class="form-group">
             <label for="<?= 'review_author_description_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_review.author_description_color') ?></label>
-            <input id="<?= 'review_author_description_color_' . $row->microsite_block_id ?>" type="hidden" name="author_description_color" class="form-control" value="<?= $row->settings->author_description_color ?>" required="required" />
+            <input id="<?= 'review_author_description_color_' . $row->microsite_block_id ?>" type="hidden" name="author_description_color" class="form-control" value="<?= $row->settings->author_description_color ?? '#666666' ?>" required="required" />
             <div class="author_description_color_pickr"></div>
         </div>
 
         <div class="form-group">
             <label for="<?= 'review_stars_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_review.stars_color') ?></label>
-            <input id="<?= 'review_stars_color_' . $row->microsite_block_id ?>" type="hidden" name="stars_color" class="form-control" value="<?= $row->settings->stars_color ?>" required="required" />
+            <input id="<?= 'review_stars_color_' . $row->microsite_block_id ?>" type="hidden" name="stars_color" class="form-control" value="<?= $row->settings->stars_color ?? '#ffc107' ?>" required="required" />
             <div class="stars_color_pickr"></div>
         </div>
 
         <div class="form-group">
             <label for="<?= 'review_background_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.background_color') ?></label>
-            <input id="<?= 'review_background_color_' . $row->microsite_block_id ?>" type="hidden" name="background_color" class="form-control" value="<?= $row->settings->background_color ?>" required="required" />
+            <input id="<?= 'review_background_color_' . $row->microsite_block_id ?>" type="hidden" name="background_color" class="form-control" value="<?= $row->settings->background_color ?? '#ffffff' ?>" required="required" />
             <div class="background_color_pickr"></div>
         </div>
 
@@ -109,12 +109,12 @@
         <div class="collapse" id="<?= 'border_container_' . $row->microsite_block_id ?>">
             <div class="form-group" data-range-counter data-range-counter-suffix="px">
                 <label for="<?= 'block_border_width_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-style fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_width') ?></label>
-                <input id="<?= 'block_border_width_' . $row->microsite_block_id ?>" type="range" min="0" max="5" class="form-control-range" name="border_width" value="<?= $row->settings->border_width ?>" required="required" />
+                <input id="<?= 'block_border_width_' . $row->microsite_block_id ?>" type="range" min="0" max="5" class="form-control-range" name="border_width" value="<?= $row->settings->border_width ?? '1' ?>" required="required" />
             </div>
 
             <div class="form-group">
                 <label for="<?= 'block_border_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_color') ?></label>
-                <input id="<?= 'block_border_color_' . $row->microsite_block_id ?>" type="hidden" name="border_color" class="form-control" value="<?= $row->settings->border_color ?>" required="required" />
+                <input id="<?= 'block_border_color_' . $row->microsite_block_id ?>" type="hidden" name="border_color" class="form-control" value="<?= $row->settings->border_color ?? '#dee2e6' ?>" required="required" />
                 <div class="border_color_pickr"></div>
             </div>
 
@@ -164,33 +164,239 @@
         <div class="collapse" id="<?= 'border_shadow_container_' . $row->microsite_block_id ?>">
             <div class="form-group" data-range-counter data-range-counter-suffix="px">
                 <label for="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-h fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_offset_x') ?></label>
-                <input id="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_x" value="<?= $row->settings->border_shadow_offset_x ?>" required="required" />
+                <input id="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_x" value="<?= $row->settings->border_shadow_offset_x ?? '0' ?>" required="required" />
             </div>
 
             <div class="form-group" data-range-counter data-range-counter-suffix="px">
                 <label for="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-v fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_offset_y') ?></label>
-                <input id="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_y" value="<?= $row->settings->border_shadow_offset_y ?>" required="required" />
+                <input id="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_y" value="<?= $row->settings->border_shadow_offset_y ?? '0' ?>" required="required" />
             </div>
 
             <div class="form-group" data-range-counter data-range-counter-suffix="px">
                 <label for="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_blur') ?></label>
-                <input id="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>" type="range" min="0" max="20" class="form-control-range" name="border_shadow_blur" value="<?= $row->settings->border_shadow_blur ?>" required="required" />
+                <input id="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>" type="range" min="0" max="20" class="form-control-range" name="border_shadow_blur" value="<?= $row->settings->border_shadow_blur ?? '0' ?>" required="required" />
             </div>
 
             <div class="form-group" data-range-counter data-range-counter-suffix="px">
                 <label for="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-all fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_spread') ?></label>
-                <input id="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>" type="range" min="0" max="10" class="form-control-range" name="border_shadow_spread" value="<?= $row->settings->border_shadow_spread ?>" required="required" />
+                <input id="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>" type="range" min="0" max="10" class="form-control-range" name="border_shadow_spread" value="<?= $row->settings->border_shadow_spread ?? '0' ?>" required="required" />
             </div>
 
             <div class="form-group">
                 <label for="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_color') ?></label>
-                <input id="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>" type="hidden" name="border_shadow_color" class="form-control" value="<?= $row->settings->border_shadow_color ?>" required="required" />
+                <input id="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>" type="hidden" name="border_shadow_color" class="form-control" value="<?= $row->settings->border_shadow_color ?? '#00000010' ?>" required="required" />
                 <div class="border_shadow_color_pickr"></div>
             </div>
         </div>
     </div>
     <?php include THEME_PATH . 'views/partials/display_settings.php'; ?>
-<div class="mt-4">
+    <div class="mt-4">
         <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.update') ?></button>
     </div>
 </form>
+
+<script>
+'use strict';
+
+document.addEventListener('DOMContentLoaded', function() {
+    let title_color_pickr = Pickr.create({
+        el: '.title_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="title_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    title_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="title_color"]').value = color.toHEXA().toString();
+        title_color_pickr.hide();
+    });
+
+    let description_color_pickr = Pickr.create({
+        el: '.description_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="description_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    description_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="description_color"]').value = color.toHEXA().toString();
+        description_color_pickr.hide();
+    });
+
+    let author_name_color_pickr = Pickr.create({
+        el: '.author_name_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="author_name_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    author_name_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="author_name_color"]').value = color.toHEXA().toString();
+        author_name_color_pickr.hide();
+    });
+
+    let author_description_color_pickr = Pickr.create({
+        el: '.author_description_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="author_description_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    author_description_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="author_description_color"]').value = color.toHEXA().toString();
+        author_description_color_pickr.hide();
+    });
+
+    let stars_color_pickr = Pickr.create({
+        el: '.stars_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="stars_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    stars_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="stars_color"]').value = color.toHEXA().toString();
+        stars_color_pickr.hide();
+    });
+
+    let background_color_pickr = Pickr.create({
+        el: '.background_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="background_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    background_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="background_color"]').value = color.toHEXA().toString();
+        background_color_pickr.hide();
+    });
+
+    let border_color_pickr = Pickr.create({
+        el: '.border_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="border_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    border_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="border_color"]').value = color.toHEXA().toString();
+        border_color_pickr.hide();
+    });
+
+    let border_shadow_color_pickr = Pickr.create({
+        el: '.border_shadow_color_pickr',
+        theme: 'classic',
+        default: document.querySelector('[name="border_shadow_color"]').value,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                rgba: true,
+                hsla: true,
+                hsva: true,
+                cmyk: true,
+                input: true,
+                clear: true,
+                save: true
+            }
+        }
+    });
+    border_shadow_color_pickr.on('save', (color, instance) => {
+        document.querySelector('[name="border_shadow_color"]').value = color.toHEXA().toString();
+        border_shadow_color_pickr.hide();
+    });
+});
+</script>

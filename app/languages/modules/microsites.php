@@ -622,4 +622,5 @@ return [
     'microsite_share.header' => 'Add social sharing',
     'microsite_youtube_feed.header' => 'Add YouTube feed',
     'microsite_youtube_feed.channel_id' => 'Channel ID',
+    'microsite_youtube_feed.amount' => 'Number of videos',
 ];

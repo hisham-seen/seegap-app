@@ -1,208 +1,302 @@
 <?php
 /*
- * Copyright (c) 2025 SeeGap Ltd. (https://seegap.com/)
- *
- * This software is licensed to SeeGap Ltd..
- * Licensed software, not for unauthorized distribution or use.
- *
+ * Microsite blocks configuration
+ * This file defines all available microsite blocks with their properties
+ * Only includes blocks that have corresponding modal files
  */
 
-defined('SEEGAP') || die();
+if(!defined("SEEGAP")) {
+    exit("Direct access is not allowed.");
+}
 
 return [
-    // Standard blocks (12)
-    'link' => [
-        'icon' => 'fas fa-link',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
+    /* Standard blocks */
+    "text" => [
+        "icon" => "fa fa-paragraph",
+        "color" => "#28a745",
+        "category" => "standard",
+        "display_dynamic_name" => "text",
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'text' => [
-        'icon' => 'fas fa-font',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
+    "image" => [
+        "icon" => "fa fa-image",
+        "color" => "#007bff",
+        "category" => "standard",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    'avatar' => [
-        'icon' => 'fas fa-user-circle',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
+    "link" => [
+        "icon" => "fa fa-link",
+        "color" => "#6f42c1",
+        "category" => "standard",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_thumbnail_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    'image' => [
-        'icon' => 'fas fa-image',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
+    "divider" => [
+        "icon" => "fa fa-minus",
+        "color" => "#6c757d",
+        "category" => "standard",
+        "display_dynamic_name" => null,
+        "has_statistics" => false,
+        "type" => "default"
     ],
-    'socials' => [
-        'icon' => 'fas fa-users',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
+    "avatar" => [
+        "icon" => "fa fa-user-circle",
+        "color" => "#17a2b8",
+        "category" => "standard",
+        "display_dynamic_name" => null,
+        "has_statistics" => false,
+        "type" => "default",
+        "whitelisted_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    'image_slider' => [
-        'icon' => 'fas fa-images',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
-    ],
-    'image_grid' => [
-        'icon' => 'fas fa-th',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
-    ],
-    'big_link' => [
-        'icon' => 'fas fa-external-link-alt',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
-    ],
-    'cta' => [
-        'icon' => 'fas fa-hand-pointer',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
-    ],
-    'divider' => [
-        'icon' => 'fas fa-minus',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
-    ],
-    'heading' => [
-        'icon' => 'fas fa-heading',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
-    ],
-    'paragraph' => [
-        'icon' => 'fas fa-paragraph',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
-    ],
-    'list' => [
-        'icon' => 'fas fa-list',
-        'color' => '#0ea5e9',
-        'category' => 'standard'
+    "socials" => [
+        "icon" => "fa fa-share-alt",
+        "color" => "#e83e8c",
+        "category" => "standard",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default",
+        "themable" => true
     ],
 
-    // Advanced blocks (13)
-    'faq' => [
-        'icon' => 'fas fa-question-circle',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    /* Advanced blocks */
+    "big_link" => [
+        "icon" => "fa fa-external-link-alt",
+        "color" => "#6f42c1",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_thumbnail_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    'countdown' => [
-        'icon' => 'fas fa-clock',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "contact_collector" => [
+        "icon" => "fa fa-address-book",
+        "color" => "#17a2b8",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'share' => [
-        'icon' => 'fas fa-share-alt',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "email_collector" => [
+        "icon" => "fa fa-at",
+        "color" => "#dc3545",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'review' => [
-        'icon' => 'fas fa-star',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "phone_collector" => [
+        "icon" => "fa fa-mobile-alt",
+        "color" => "#28a745",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'header' => [
-        'icon' => 'fas fa-window-maximize',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "feedback_collector" => [
+        "icon" => "fa fa-comment-dots",
+        "color" => "#17a2b8",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'custom_html' => [
-        'icon' => 'fas fa-code',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "countdown" => [
+        "icon" => "fa fa-clock",
+        "color" => "#ffc107",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => false,
+        "type" => "default"
     ],
-    'alert' => [
-        'icon' => 'fas fa-exclamation-triangle',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "cta" => [
+        "icon" => "fa fa-hand-pointer",
+        "color" => "#dc3545",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_thumbnail_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    'form' => [
-        'icon' => 'fas fa-file-alt',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "share" => [
+        "icon" => "fa fa-share",
+        "color" => "#20c997",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_thumbnail_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    'contact_collector' => [
-        'icon' => 'fas fa-address-book',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "faq" => [
+        "icon" => "fa fa-question-circle",
+        "color" => "#17a2b8",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => false,
+        "type" => "default"
     ],
-    'feedback_collector' => [
-        'icon' => 'fas fa-comment-dots',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "list" => [
+        "icon" => "fa fa-list",
+        "color" => "#28a745",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => false,
+        "type" => "default"
     ],
-    'email_collector' => [
-        'icon' => 'fas fa-envelope',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "review" => [
+        "icon" => "fa fa-star",
+        "color" => "#ffc107",
+        "category" => "advanced",
+        "display_dynamic_name" => "title",
+        "has_statistics" => false,
+        "type" => "default",
+        "whitelisted_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    'phone_collector' => [
-        'icon' => 'fas fa-phone',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "alert" => [
+        "icon" => "fa fa-exclamation-triangle",
+        "color" => "#ffc107",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => false,
+        "type" => "default"
     ],
-    'youtube_feed' => [
-        'icon' => 'fab fa-youtube',
-        'color' => '#6366f1',
-        'category' => 'advanced'
+    "custom_html" => [
+        "icon" => "fa fa-code",
+        "color" => "#6c757d",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => false,
+        "type" => "default",
+        "max_length" => 10000
+    ],
+    "form" => [
+        "icon" => "fa fa-envelope",
+        "color" => "#dc3545",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default"
+    ],
+    "cover" => [
+        "icon" => "fa fa-play-circle",
+        "color" => "#ff0000",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
+    ],
+    "image_grid" => [
+        "icon" => "fa fa-th",
+        "color" => "#007bff",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
+    ],
+    "image_slider" => [
+        "icon" => "fa fa-images",
+        "color" => "#007bff",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default",
+        "whitelisted_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
+    ],
+    "youtube_feed" => [
+        "icon" => "fab fa-youtube",
+        "color" => "#ff0000",
+        "category" => "advanced",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default"
     ],
 
-    // Embeds blocks (12)
-    'threads' => [
-        'icon' => 'fab fa-threads',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    /* Social Media blocks */
+    "youtube" => [
+        "icon" => "fab fa-youtube",
+        "color" => "#ff0000",
+        "category" => "embeds",
+        "display_dynamic_name" => "name",
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'youtube' => [
-        'icon' => 'fab fa-youtube',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "instagram_media" => [
+        "icon" => "fab fa-instagram",
+        "color" => "#e4405f",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'tiktok_video' => [
-        'icon' => 'fab fa-tiktok',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "twitter_tweet" => [
+        "icon" => "fab fa-twitter",
+        "color" => "#1da1f2",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'facebook' => [
-        'icon' => 'fab fa-facebook',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "twitter_profile" => [
+        "icon" => "fab fa-twitter",
+        "color" => "#1da1f2",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'twitter_profile' => [
-        'icon' => 'fab fa-twitter',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "twitter_video" => [
+        "icon" => "fab fa-twitter",
+        "color" => "#1da1f2",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'twitter_tweet' => [
-        'icon' => 'fab fa-twitter',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "facebook" => [
+        "icon" => "fab fa-facebook",
+        "color" => "#1877f2",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'twitter_video' => [
-        'icon' => 'fab fa-twitter',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "tiktok_profile" => [
+        "icon" => "fab fa-tiktok",
+        "color" => "#000000",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'instagram_media' => [
-        'icon' => 'fab fa-instagram',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "tiktok_video" => [
+        "icon" => "fab fa-tiktok",
+        "color" => "#000000",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'tiktok_profile' => [
-        'icon' => 'fab fa-tiktok',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "threads" => [
+        "icon" => "fa fa-at",
+        "color" => "#000000",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ],
-    'telegram' => [
-        'icon' => 'fab fa-telegram',
-        'color' => '#d946ef',
-        'category' => 'embeds'
-    ],
-    'instagram_profile' => [
-        'icon' => 'fab fa-instagram',
-        'color' => '#d946ef',
-        'category' => 'embeds'
-    ],
-    'twitter_timeline' => [
-        'icon' => 'fab fa-twitter',
-        'color' => '#d946ef',
-        'category' => 'embeds'
+    "telegram" => [
+        "icon" => "fab fa-telegram",
+        "color" => "#0088cc",
+        "category" => "embeds",
+        "display_dynamic_name" => null,
+        "has_statistics" => true,
+        "type" => "default"
     ]
 ];

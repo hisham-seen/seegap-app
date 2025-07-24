@@ -15,7 +15,7 @@
 
     <div class="form-group">
         <label for="<?= 'share_name_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_link.name') ?></label>
-        <input id="<?= 'share_name_' . $row->microsite_block_id ?>" type="text" name="name" class="form-control" value="<?= $row->settings->name ?>" maxlength="128" required="required" />
+        <input id="<?= 'share_name_' . $row->microsite_block_id ?>" type="text" name="name" class="form-control" value="<?= $row->settings->name ?? '' ?>" maxlength="128" required="required" />
     </div>
 
     <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->thumbnail_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->thumbnail_image_size_limit) ?>">
@@ -24,7 +24,7 @@
             'id'=> 'share_image_' . $row->microsite_block_id,
             'uploads_file_key' => 'block_thumbnail_images',
             'file_key' => 'image',
-            'already_existing_image' => $row->settings->image,
+            'already_existing_image' => $row->settings->image ?? null,
             'image_container' => 'image',
             'accept' => \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['share']['whitelisted_thumbnail_image_extensions']),
         ]) ?>
@@ -33,13 +33,13 @@
 
     <div class="form-group">
         <label for="<?= 'share_icon_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-icons fa-sm text-muted mr-1"></i> <?= l('global.icon') ?></label>
-        <input id="<?= 'share_icon_' . $row->microsite_block_id ?>" type="text" name="icon" class="form-control" value="<?= $row->settings->icon ?>" placeholder="<?= l('global.icon_placeholder') ?>" />
+        <input id="<?= 'share_icon_' . $row->microsite_block_id ?>" type="text" name="icon" class="form-control" value="<?= $row->settings->icon ?? '' ?>" placeholder="<?= l('global.icon_placeholder') ?>" />
         <small class="form-text text-muted"><?= l('global.icon_help') ?></small>
     </div>
 
     <div class="form-group">
         <label for="<?= 'share_text_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_link.text_color') ?></label>
-        <input id="<?= 'share_text_color_' . $row->microsite_block_id ?>" type="hidden" name="text_color" class="form-control" value="<?= $row->settings->text_color ?>" required="required" />
+        <input id="<?= 'share_text_color_' . $row->microsite_block_id ?>" type="hidden" name="text_color" class="form-control" value="<?= $row->settings->text_color ?? '#ffffff' ?>" required="required" />
         <div class="text_color_pickr"></div>
     </div>
 
@@ -59,16 +59,16 @@
 
     <div class="form-group">
         <label for="<?= 'share_background_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.background_color') ?></label>
-        <input id="<?= 'share_background_color_' . $row->microsite_block_id ?>" type="hidden" name="background_color" class="form-control" value="<?= $row->settings->background_color ?>" required="required" />
+        <input id="<?= 'share_background_color_' . $row->microsite_block_id ?>" type="hidden" name="background_color" class="form-control" value="<?= $row->settings->background_color ?? '#007bff' ?>" required="required" />
         <div class="background_color_pickr"></div>
     </div>
 
     <div class="form-group">
         <label for="<?= 'share_animation_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-film fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation') ?></label>
         <select id="<?= 'share_animation_' . $row->microsite_block_id ?>" name="animation" class="custom-select">
-            <option value="false" <?= !$row->settings->animation ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
+            <option value="false" <?= !($row->settings->animation ?? false) ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
             <?php foreach(require APP_PATH . 'includes/microsite_animations.php' as $animation): ?>
-                <option value="<?= $animation ?>" <?= $row->settings->animation == $animation ? 'selected="selected"' : null ?>><?= $animation ?></option>
+                <option value="<?= $animation ?>" <?= ($row->settings->animation ?? false) == $animation ? 'selected="selected"' : null ?>><?= $animation ?></option>
             <?php endforeach ?>
         </select>
     </div>
@@ -76,10 +76,10 @@
     <div class="form-group" data-animation="<?= implode(',', require APP_PATH . 'includes/microsite_animations.php') ?>">
         <label for="<?= 'share_animation_runs_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-play-circle fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation_runs') ?></label>
         <select id="<?= 'share_animation_runs_' . $row->microsite_block_id ?>" name="animation_runs" class="custom-select">
-            <option value="repeat-1" <?= $row->settings->animation_runs == 'repeat-1' ? 'selected="selected"' : null ?>>1</option>
-            <option value="repeat-2" <?= $row->settings->animation_runs == 'repeat-2' ? 'selected="selected"' : null ?>>2</option>
-            <option value="repeat-3" <?= $row->settings->animation_runs == 'repeat-3' ? 'selected="selected"' : null ?>>3</option>
-            <option value="infinite" <?= $row->settings->animation_runs == 'infinite' ? 'selected="selected"' : null ?>><?= l('microsite_link.animation_runs_infinite') ?></option>
+            <option value="repeat-1" <?= ($row->settings->animation_runs ?? 'repeat-1') == 'repeat-1' ? 'selected="selected"' : null ?>>1</option>
+            <option value="repeat-2" <?= ($row->settings->animation_runs ?? 'repeat-1') == 'repeat-2' ? 'selected="selected"' : null ?>>2</option>
+            <option value="repeat-3" <?= ($row->settings->animation_runs ?? 'repeat-1') == 'repeat-3' ? 'selected="selected"' : null ?>>3</option>
+            <option value="infinite" <?= ($row->settings->animation_runs ?? 'repeat-1') == 'infinite' ? 'selected="selected"' : null ?>><?= l('microsite_link.animation_runs_infinite') ?></option>
         </select>
     </div>
 
@@ -90,12 +90,12 @@
     <div class="collapse" id="<?= 'border_container_' . $row->microsite_block_id ?>">
         <div class="form-group" data-range-counter data-range-counter-suffix="px">
             <label for="<?= 'block_border_width_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-style fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_width') ?></label>
-            <input id="<?= 'block_border_width_' . $row->microsite_block_id ?>" type="range" min="0" max="5" class="form-control-range" name="border_width" value="<?= $row->settings->border_width ?>" required="required" />
+            <input id="<?= 'block_border_width_' . $row->microsite_block_id ?>" type="range" min="0" max="5" class="form-control-range" name="border_width" value="<?= $row->settings->border_width ?? '0' ?>" required="required" />
         </div>
 
         <div class="form-group">
             <label for="<?= 'block_border_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_color') ?></label>
-            <input id="<?= 'block_border_color_' . $row->microsite_block_id ?>" type="hidden" name="border_color" class="form-control" value="<?= $row->settings->border_color ?>" required="required" />
+            <input id="<?= 'block_border_color_' . $row->microsite_block_id ?>" type="hidden" name="border_color" class="form-control" value="<?= $row->settings->border_color ?? '#007bff' ?>" required="required" />
             <div class="border_color_pickr"></div>
         </div>
 
@@ -145,27 +145,27 @@
     <div class="collapse" id="<?= 'border_shadow_container_' . $row->microsite_block_id ?>">
         <div class="form-group" data-range-counter data-range-counter-suffix="px">
             <label for="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-h fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_offset_x') ?></label>
-            <input id="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_x" value="<?= $row->settings->border_shadow_offset_x ?>" required="required" />
+            <input id="<?= 'block_border_shadow_offset_x_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_x" value="<?= $row->settings->border_shadow_offset_x ?? '0' ?>" required="required" />
         </div>
 
         <div class="form-group" data-range-counter data-range-counter-suffix="px">
             <label for="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt-v fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_offset_y') ?></label>
-            <input id="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_y" value="<?= $row->settings->border_shadow_offset_y ?>" required="required" />
+            <input id="<?= 'block_border_shadow_offset_y_' . $row->microsite_block_id ?>" type="range" min="-20" max="20" class="form-control-range" name="border_shadow_offset_y" value="<?= $row->settings->border_shadow_offset_y ?? '0' ?>" required="required" />
         </div>
 
         <div class="form-group" data-range-counter data-range-counter-suffix="px">
             <label for="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-arrows-alt fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_blur') ?></label>
-            <input id="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>" type="range" min="0" max="20" class="form-control-range" name="border_shadow_blur" value="<?= $row->settings->border_shadow_blur ?>" required="required" />
+            <input id="<?= 'block_border_shadow_blur_' . $row->microsite_block_id ?>" type="range" min="0" max="20" class="form-control-range" name="border_shadow_blur" value="<?= $row->settings->border_shadow_blur ?? '0' ?>" required="required" />
         </div>
 
         <div class="form-group" data-range-counter data-range-counter-suffix="px">
             <label for="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-border-all fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_spread') ?></label>
-            <input id="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>" type="range" min="0" max="10" class="form-control-range" name="border_shadow_spread" value="<?= $row->settings->border_shadow_spread ?>" required="required" />
+            <input id="<?= 'block_border_shadow_spread_' . $row->microsite_block_id ?>" type="range" min="0" max="10" class="form-control-range" name="border_shadow_spread" value="<?= $row->settings->border_shadow_spread ?? '0' ?>" required="required" />
         </div>
 
         <div class="form-group">
             <label for="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('microsite_link.border_shadow_color') ?></label>
-            <input id="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>" type="hidden" name="border_shadow_color" class="form-control" value="<?= $row->settings->border_shadow_color ?>" required="required" />
+            <input id="<?= 'block_border_shadow_color_' . $row->microsite_block_id ?>" type="hidden" name="border_shadow_color" class="form-control" value="<?= $row->settings->border_shadow_color ?? '#00000010' ?>" required="required" />
             <div class="border_shadow_color_pickr"></div>
         </div>
     </div>

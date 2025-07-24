@@ -9,8 +9,8 @@
     <div class="notification-container"></div>
 
     <div class="form-group">
-        <label for="<?= 'youtube_feed_channel_id_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_youtube_feed.channel_id') ?></label>
-        <input id="<?= 'youtube_feed_channel_id_' . $row->microsite_block_id ?>" type="text" class="form-control" name="channel_id" value="<?= $row->settings->channel_id ?>" maxlength="128" required="required" />
+        <label for="<?= 'youtube_feed_channel_id_' . $row->microsite_block_id ?>"><i class="fab fa-fw fa-youtube fa-sm text-muted mr-1"></i> <?= l('microsite_youtube_feed.channel_id') ?></label>
+        <input id="<?= 'youtube_feed_channel_id_' . $row->microsite_block_id ?>" type="text" class="form-control" name="youtube_channel_id" value="<?= $row->settings->youtube_channel_id ?>" maxlength="128" required="required" />
     </div>
 
     <div class="form-group">

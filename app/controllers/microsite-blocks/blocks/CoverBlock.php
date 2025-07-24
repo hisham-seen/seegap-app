@@ -15,52 +15,58 @@ use SeeGap\Response;
 defined('SEEGAP') || die();
 
 /**
- * Review Block Handler
+ * Cover Block Handler
  * 
- * Handles the creation and updating of review microsite blocks.
+ * Handles the creation and updating of cover microsite blocks.
  */
-class ReviewBlock extends BaseBlockHandler {
+class CoverBlock extends BaseBlockHandler {
     
     public function getSupportedTypes() {
-        return ['review'];
+        return ['cover'];
     }
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
-        $_POST['title'] = mb_substr(input_clean($_POST['title'] ?? ''), 0, 128);
-        $_POST['description'] = mb_substr(input_clean($_POST['description'] ?? ''), 0, 1024);
-        $_POST['author_name'] = mb_substr(query_clean($_POST['author_name'] ?? ''), 0, 128);
-        $_POST['author_description'] = mb_substr(query_clean($_POST['author_description'] ?? ''), 0, 128);
-        $_POST['stars'] = in_array($_POST['stars'] ?? 5, [1, 2, 3, 4, 5]) ? (int) $_POST['stars'] : 5;
+        $_POST['name'] = mb_substr(input_clean($_POST['name'] ?? ''), 0, 128);
+        $_POST['background_type'] = in_array($_POST['background_type'] ?? 'image', ['image', 'video']) ? query_clean($_POST['background_type']) : 'image';
+        $_POST['video_url'] = mb_substr(input_clean($_POST['video_url'] ?? ''), 0, 2048);
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
         }
 
-        $type = 'review';
+        $type = 'cover';
+
+        /* Background image upload */
+        $db_background = $this->handle_file_upload('', 'background', 'background_remove', ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'], 'backgrounds/', settings()->links->background_size_limit);
+
+        /* Avatar image upload */
+        $db_avatar = $this->handle_file_upload('', 'avatar', 'avatar_remove', ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'], 'avatars/', settings()->links->avatar_size_limit);
+
         $settings = json_encode([
-            'title' => $_POST['title'],
-            'description' => $_POST['description'],
-            'author_name' => $_POST['author_name'],
-            'author_description' => $_POST['author_description'],
-            'stars' => $_POST['stars'],
-            'image' => '',
-            'title_color' => '#333333',
-            'description_color' => '#666666',
-            'author_name_color' => '#333333',
-            'author_description_color' => '#666666',
-            'stars_color' => '#ffc107',
-            'background_color' => '#ffffff',
-            'text_alignment' => 'center',
+            'name' => $_POST['name'],
+            'background_type' => $_POST['background_type'],
+            'background' => $db_background,
+            'video_url' => $_POST['video_url'],
+            'avatar' => $db_avatar,
+            'avatar_size' => 100,
+            'background_alt' => '',
+            'avatar_alt' => '',
+            'object_fit' => 'cover',
             'border_radius' => 'rounded',
-            'border_width' => 1,
+            'border_width' => 0,
             'border_style' => 'solid',
-            'border_color' => '#dee2e6',
+            'border_color' => '#ffffff',
             'border_shadow_offset_x' => 0,
             'border_shadow_offset_y' => 0,
             'border_shadow_blur' => 0,
             'border_shadow_spread' => 0,
             'border_shadow_color' => '#00000010',
+            'video_controls' => 0,
+            'video_autoplay' => 1,
+            'video_loop' => 1,
+            'video_muted' => 1,
+            'open_in_new_tab' => false,
 
             /* Display settings */
             'display_continents' => [],
@@ -79,7 +85,7 @@ class ReviewBlock extends BaseBlockHandler {
             'user_id' => $this->user->user_id,
             'link_id' => $_POST['link_id'],
             'type' => $type,
-            'location_url' => null,
+            'location_url' => $_POST['location_url'] ?? null,
             'settings' => $settings,
             'order' => settings()->links->microsites_new_blocks_position == 'top' ? -$this->total_microsite_blocks : $this->total_microsite_blocks,
             'datetime' => get_date(),
@@ -93,27 +99,27 @@ class ReviewBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['title'] = mb_substr(input_clean($_POST['title'] ?? ''), 0, 128);
-        $_POST['description'] = mb_substr(input_clean($_POST['description'] ?? ''), 0, 1024);
-        $_POST['author_name'] = mb_substr(query_clean($_POST['author_name'] ?? ''), 0, 128);
-        $_POST['author_description'] = mb_substr(query_clean($_POST['author_description'] ?? ''), 0, 128);
-        $_POST['stars'] = in_array($_POST['stars'] ?? 5, [1, 2, 3, 4, 5]) ? (int) $_POST['stars'] : 5;
-        $_POST['title_color'] = !verify_hex_color($_POST['title_color'] ?? '') ? '#333333' : $_POST['title_color'];
-        $_POST['description_color'] = !verify_hex_color($_POST['description_color'] ?? '') ? '#666666' : $_POST['description_color'];
-        $_POST['author_name_color'] = !verify_hex_color($_POST['author_name_color'] ?? '') ? '#333333' : $_POST['author_name_color'];
-        $_POST['author_description_color'] = !verify_hex_color($_POST['author_description_color'] ?? '') ? '#666666' : $_POST['author_description_color'];
-        $_POST['stars_color'] = !verify_hex_color($_POST['stars_color'] ?? '') ? '#ffc107' : $_POST['stars_color'];
-        $_POST['background_color'] = !verify_hex_color($_POST['background_color'] ?? '') ? '#ffffff' : $_POST['background_color'];
-        $_POST['text_alignment'] = in_array($_POST['text_alignment'] ?? 'center', ['center', 'left', 'right', 'justify']) ? query_clean($_POST['text_alignment']) : 'center';
+        $_POST['name'] = mb_substr(input_clean($_POST['name'] ?? ''), 0, 128);
+        $_POST['background_type'] = in_array($_POST['background_type'] ?? 'image', ['image', 'video']) ? query_clean($_POST['background_type']) : 'image';
+        $_POST['video_url'] = mb_substr(input_clean($_POST['video_url'] ?? ''), 0, 2048);
+        $_POST['avatar_size'] = in_array($_POST['avatar_size'] ?? 100, range(50, 200)) ? (int) $_POST['avatar_size'] : 100;
+        $_POST['background_alt'] = mb_substr(input_clean($_POST['background_alt'] ?? ''), 0, 256);
+        $_POST['avatar_alt'] = mb_substr(input_clean($_POST['avatar_alt'] ?? ''), 0, 256);
+        $_POST['object_fit'] = in_array($_POST['object_fit'] ?? 'cover', ['cover', 'contain', 'fill']) ? query_clean($_POST['object_fit']) : 'cover';
         $_POST['border_radius'] = in_array($_POST['border_radius'] ?? 'rounded', ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
-        $_POST['border_width'] = in_array($_POST['border_width'] ?? 1, [0, 1, 2, 3, 4, 5]) ? (int) $_POST['border_width'] : 1;
+        $_POST['border_width'] = in_array($_POST['border_width'] ?? 0, [0, 1, 2, 3, 4, 5]) ? (int) $_POST['border_width'] : 0;
         $_POST['border_style'] = in_array($_POST['border_style'] ?? 'solid', ['solid', 'dashed', 'double', 'inset', 'outset']) ? query_clean($_POST['border_style']) : 'solid';
-        $_POST['border_color'] = !verify_hex_color($_POST['border_color'] ?? '') ? '#dee2e6' : $_POST['border_color'];
+        $_POST['border_color'] = !verify_hex_color($_POST['border_color'] ?? '') ? '#ffffff' : $_POST['border_color'];
         $_POST['border_shadow_offset_x'] = in_array($_POST['border_shadow_offset_x'] ?? 0, range(-20, 20)) ? (int) $_POST['border_shadow_offset_x'] : 0;
         $_POST['border_shadow_offset_y'] = in_array($_POST['border_shadow_offset_y'] ?? 0, range(-20, 20)) ? (int) $_POST['border_shadow_offset_y'] : 0;
         $_POST['border_shadow_blur'] = in_array($_POST['border_shadow_blur'] ?? 0, range(0, 20)) ? (int) $_POST['border_shadow_blur'] : 0;
         $_POST['border_shadow_spread'] = in_array($_POST['border_shadow_spread'] ?? 0, range(0, 10)) ? (int) $_POST['border_shadow_spread'] : 0;
         $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color'] ?? '') ? '#00000010' : $_POST['border_shadow_color'];
+        $_POST['video_controls'] = (int) ($_POST['video_controls'] ?? 0);
+        $_POST['video_autoplay'] = (int) ($_POST['video_autoplay'] ?? 1);
+        $_POST['video_loop'] = (int) ($_POST['video_loop'] ?? 1);
+        $_POST['video_muted'] = (int) ($_POST['video_muted'] ?? 1);
+        $_POST['open_in_new_tab'] = (bool) ($_POST['open_in_new_tab'] ?? false);
 
         /* Display settings */
         $this->process_display_settings();
@@ -124,7 +130,7 @@ class ReviewBlock extends BaseBlockHandler {
         $microsite_block->settings = json_decode($microsite_block->settings ?? '');
 
         /* Check for any errors */
-        $required_fields = ['author_name'];
+        $required_fields = ['name'];
 
         /* Check for any errors */
         foreach($required_fields as $field) {
@@ -134,25 +140,25 @@ class ReviewBlock extends BaseBlockHandler {
             }
         }
 
-        /* Image upload */
-        $db_image = $this->handle_image_upload($microsite_block->settings->image ?? '', 'block_images/', settings()->links->image_size_limit);
+        /* Background image upload */
+        $db_background = $this->handle_file_upload($microsite_block->settings->background ?? '', 'background', 'background_remove', ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'], 'backgrounds/', settings()->links->background_size_limit);
 
-        $image_url = $db_image ? \SeeGap\Uploads::get_full_url('block_images') . $db_image : null;
+        /* Avatar image upload */
+        $db_avatar = $this->handle_file_upload($microsite_block->settings->avatar ?? '', 'avatar', 'avatar_remove', ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif'], 'avatars/', settings()->links->avatar_size_limit);
+
+        $background_url = $db_background ? \SeeGap\Uploads::get_full_url('backgrounds') . $db_background : null;
+        $avatar_url = $db_avatar ? \SeeGap\Uploads::get_full_url('avatars') . $db_avatar : null;
 
         $settings = json_encode([
-            'title' => $_POST['title'],
-            'description' => $_POST['description'],
-            'author_name' => $_POST['author_name'],
-            'author_description' => $_POST['author_description'],
-            'stars' => $_POST['stars'],
-            'image' => $db_image,
-            'title_color' => $_POST['title_color'],
-            'description_color' => $_POST['description_color'],
-            'author_name_color' => $_POST['author_name_color'],
-            'author_description_color' => $_POST['author_description_color'],
-            'stars_color' => $_POST['stars_color'],
-            'background_color' => $_POST['background_color'],
-            'text_alignment' => $_POST['text_alignment'],
+            'name' => $_POST['name'],
+            'background_type' => $_POST['background_type'],
+            'background' => $db_background,
+            'video_url' => $_POST['video_url'],
+            'avatar' => $db_avatar,
+            'avatar_size' => $_POST['avatar_size'],
+            'background_alt' => $_POST['background_alt'],
+            'avatar_alt' => $_POST['avatar_alt'],
+            'object_fit' => $_POST['object_fit'],
             'border_radius' => $_POST['border_radius'],
             'border_width' => $_POST['border_width'],
             'border_style' => $_POST['border_style'],
@@ -162,6 +168,11 @@ class ReviewBlock extends BaseBlockHandler {
             'border_shadow_blur' => $_POST['border_shadow_blur'],
             'border_shadow_spread' => $_POST['border_shadow_spread'],
             'border_shadow_color' => $_POST['border_shadow_color'],
+            'video_controls' => $_POST['video_controls'],
+            'video_autoplay' => $_POST['video_autoplay'],
+            'video_loop' => $_POST['video_loop'],
+            'video_muted' => $_POST['video_muted'],
+            'open_in_new_tab' => $_POST['open_in_new_tab'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],
@@ -175,6 +186,7 @@ class ReviewBlock extends BaseBlockHandler {
 
         /* Database query */
         db()->where('microsite_block_id', $_POST['microsite_block_id'])->update('microsites_blocks', [
+            'location_url' => $_POST['location_url'] ?? null,
             'settings' => $settings,
             'start_date' => $_POST['start_date'],
             'end_date' => $_POST['end_date'],
@@ -184,7 +196,7 @@ class ReviewBlock extends BaseBlockHandler {
         /* Clear the cache */
         cache()->deleteItem('microsite_blocks?link_id=' . $microsite_block->link_id);
 
-        Response::json(l('global.success_message.update2'), 'success', ['images' => ['image' => $image_url]]);
+        Response::json(l('global.success_message.update2'), 'success', ['images' => ['background' => $background_url, 'avatar' => $avatar_url]]);
     }
     
     public function validate($type, $data = []) {
