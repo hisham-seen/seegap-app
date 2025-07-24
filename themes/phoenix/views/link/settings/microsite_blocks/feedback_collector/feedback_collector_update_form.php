@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add question button
     document.getElementById('add_question_' + microsite_block_id).addEventListener('click', function() {
-        addNewQuestion(microsite_block_id);
+        addNewFeedbackQuestion(microsite_block_id);
     });
     
     // Initialize existing questions
@@ -495,14 +495,23 @@ document.addEventListener('DOMContentLoaded', function() {
     imageDisplaySelect.addEventListener('change', updateImageDisplayOptions);
 });
 
-function addNewQuestion(microsite_block_id) {
+function addNewFeedbackQuestion(microsite_block_id) {
     const questionsContainer = document.getElementById('questions_accordion_' + microsite_block_id);
+    
+    // Check if container exists
+    if (!questionsContainer) {
+        console.error('Questions container not found:', 'questions_accordion_' + microsite_block_id);
+        return;
+    }
+    
     const questionCount = questionsContainer.querySelectorAll('.question-item').length;
     
     // Create new question item
     const questionItem = document.createElement('div');
     questionItem.className = 'card question-item';
-    questionItem.innerHTML = `
+    
+    // Use template literals with proper escaping for PHP content
+    const questionHtml = `
         <div class="card-header d-flex justify-content-between align-items-center" id="question_heading_${microsite_block_id}_${questionCount}">
             <button class="btn btn-link p-0 text-left flex-grow-1 question-toggle" type="button" data-toggle="collapse" data-target="#question_collapse_${microsite_block_id}_${questionCount}" aria-expanded="true" aria-controls="question_collapse_${microsite_block_id}_${questionCount}">
                 <strong>Question ${questionCount + 1}:</strong> <span class="question-preview">New Question</span>
@@ -522,28 +531,28 @@ function addNewQuestion(microsite_block_id) {
         <div id="question_collapse_${microsite_block_id}_${questionCount}" class="collapse show" aria-labelledby="question_heading_${microsite_block_id}_${questionCount}" data-parent="#questions_accordion_${microsite_block_id}">
             <div class="card-body">
                 <div class="form-group">
-                    <label><?= l('microsite_feedback_collector.question_type') ?></label>
+                    <label>Question Type</label>
                     <select class="form-control question-type" name="question_type[]">
-                        <option value="text"><?= l('microsite_feedback_collector.question_type_text') ?></option>
-                        <option value="textarea"><?= l('microsite_feedback_collector.question_type_textarea') ?></option>
-                        <option value="rating_star"><?= l('microsite_feedback_collector.question_type_rating_star') ?></option>
-                        <option value="rating_number"><?= l('microsite_feedback_collector.question_type_rating_number') ?></option>
-                        <option value="rating_emoji"><?= l('microsite_feedback_collector.question_type_rating_emoji') ?></option>
-                        <option value="checkbox"><?= l('microsite_feedback_collector.question_type_checkbox') ?></option>
-                        <option value="radio"><?= l('microsite_feedback_collector.question_type_radio') ?></option>
-                        <option value="dropdown"><?= l('microsite_feedback_collector.question_type_dropdown') ?></option>
+                        <option value="text">Text Input</option>
+                        <option value="textarea">Textarea</option>
+                        <option value="rating_star">Star Rating</option>
+                        <option value="rating_number">Number Rating</option>
+                        <option value="rating_emoji">Emoji Rating</option>
+                        <option value="checkbox">Checkbox</option>
+                        <option value="radio">Radio Button</option>
+                        <option value="dropdown">Dropdown</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label><?= l('microsite_feedback_collector.question_text') ?></label>
-                    <input type="text" class="form-control question-text" name="question_text[]" placeholder="<?= l('microsite_feedback_collector.question_text_placeholder') ?>">
+                    <label>Question Text</label>
+                    <input type="text" class="form-control question-text" name="question_text[]" placeholder="Enter your question...">
                 </div>
                 
                 <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input type="checkbox" class="custom-control-input question-required" id="question_required_${microsite_block_id}_${questionCount}" name="question_required[]" value="1">
-                        <label class="custom-control-label" for="question_required_${microsite_block_id}_${questionCount}"><?= l('microsite_feedback_collector.question_required') ?></label>
+                        <label class="custom-control-label" for="question_required_${microsite_block_id}_${questionCount}">Required</label>
                     </div>
                 </div>
                 
@@ -554,37 +563,51 @@ function addNewQuestion(microsite_block_id) {
         </div>
     `;
     
+    questionItem.innerHTML = questionHtml;
     questionsContainer.appendChild(questionItem);
     
     // Add event listeners
     const questionType = questionItem.querySelector('.question-type');
-    questionType.addEventListener('change', function() {
-        updateQuestionOptions(questionItem);
-    });
+    if (questionType) {
+        questionType.addEventListener('change', function() {
+            updateQuestionOptions(questionItem);
+        });
+    }
     
     const questionText = questionItem.querySelector('.question-text');
-    questionText.addEventListener('input', function() {
-        updateQuestionPreview(questionItem);
-    });
+    if (questionText) {
+        questionText.addEventListener('input', function() {
+            updateQuestionPreview(questionItem);
+        });
+    }
     
     const removeButton = questionItem.querySelector('.remove-question');
-    removeButton.addEventListener('click', function() {
-        questionItem.remove();
-        updateQuestionNumbers(microsite_block_id);
-    });
+    if (removeButton) {
+        removeButton.addEventListener('click', function() {
+            questionItem.remove();
+            updateQuestionNumbers(microsite_block_id);
+        });
+    }
     
     const moveUpButton = questionItem.querySelector('.move-up');
-    moveUpButton.addEventListener('click', function() {
-        moveQuestionUp(questionItem, microsite_block_id);
-    });
+    if (moveUpButton) {
+        moveUpButton.addEventListener('click', function() {
+            moveQuestionUp(questionItem, microsite_block_id);
+        });
+    }
     
     const moveDownButton = questionItem.querySelector('.move-down');
-    moveDownButton.addEventListener('click', function() {
-        moveQuestionDown(questionItem, microsite_block_id);
-    });
+    if (moveDownButton) {
+        moveDownButton.addEventListener('click', function() {
+            moveQuestionDown(questionItem, microsite_block_id);
+        });
+    }
     
     // Initialize options based on default type
     updateQuestionOptions(questionItem);
+    
+    // Update question numbers
+    updateQuestionNumbers(microsite_block_id);
 }
 
 function updateQuestionOptions(questionItem) {

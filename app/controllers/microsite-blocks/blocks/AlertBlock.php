@@ -35,8 +35,13 @@ class AlertBlock extends BaseBlockHandler {
 
         $type = 'alert';
         $settings = json_encode([
+            'name' => $_POST['text'],
             'text' => $_POST['text'],
             'alert_type' => 'info',
+            'icon' => '',
+            'open_in_new_tab' => false,
+            'display_close_button' => true,
+            'alert_pause_after_closed' => 0,
             'text_color' => '#ffffff',
             'background_color' => '#007bff',
             'border_radius' => 'rounded',
@@ -75,8 +80,13 @@ class AlertBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
+        $_POST['name'] = mb_substr(input_clean($_POST['name'] ?? ''), 0, 128);
         $_POST['text'] = mb_substr(input_clean($_POST['text']), 0, 512);
         $_POST['alert_type'] = in_array($_POST['alert_type'], ['info', 'success', 'warning', 'error']) ? query_clean($_POST['alert_type']) : 'info';
+        $_POST['icon'] = mb_substr(input_clean($_POST['icon'] ?? ''), 0, 64);
+        $_POST['open_in_new_tab'] = (bool) ($_POST['open_in_new_tab'] ?? false);
+        $_POST['display_close_button'] = (bool) ($_POST['display_close_button'] ?? true);
+        $_POST['alert_pause_after_closed'] = (int) ($_POST['alert_pause_after_closed'] ?? 0);
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
         $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#007bff' : $_POST['background_color'];
         $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
@@ -103,8 +113,13 @@ class AlertBlock extends BaseBlockHandler {
         }
 
         $settings = json_encode([
+            'name' => $_POST['name'] ?: $_POST['text'],
             'text' => $_POST['text'],
             'alert_type' => $_POST['alert_type'],
+            'icon' => $_POST['icon'],
+            'open_in_new_tab' => $_POST['open_in_new_tab'],
+            'display_close_button' => $_POST['display_close_button'],
+            'alert_pause_after_closed' => $_POST['alert_pause_after_closed'],
             'text_color' => $_POST['text_color'],
             'background_color' => $_POST['background_color'],
             'border_radius' => $_POST['border_radius'],

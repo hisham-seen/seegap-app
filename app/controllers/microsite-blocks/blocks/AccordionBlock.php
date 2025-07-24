@@ -15,14 +15,14 @@ use SeeGap\Response;
 defined('SEEGAP') || die();
 
 /**
- * List Block Handler
+ * Accordion Block Handler
  * 
- * Handles the creation and updating of list microsite blocks.
+ * Handles the creation and updating of Accordion microsite blocks.
  */
-class ListBlock extends BaseBlockHandler {
+class AccordionBlock extends BaseBlockHandler {
     
     public function getSupportedTypes() {
-        return ['list'];
+        return ['accordion'];
     }
     
     public function create($type) {
@@ -32,13 +32,28 @@ class ListBlock extends BaseBlockHandler {
             die();
         }
 
-        $type = 'list';
+        /* Accordion items */
+        $items = [];
+        if(isset($_POST['item_title']) && isset($_POST['item_content'])) {
+            foreach($_POST['item_title'] as $key => $value) {
+                if(empty(trim($value))) continue;
+                if($key >= 20) continue;
+
+                $items[] = [
+                    'title' => mb_substr(input_clean($value), 0, 256),
+                    'content' => mb_substr(input_clean($_POST['item_content'][$key]), 0, 2048),
+                ];
+            }
+        }
+
+        $type = 'accordion';
         $settings = json_encode([
-            'list_items' => [],
-            'list_type' => 'unordered',
+            'items' => $items,
             'text_color' => '#ffffff',
-            'text_alignment' => 'left',
-            'background_color' => '#000000',
+            'background_color' => '#00000000',
+
+            /* Default styling settings */
+            'text_alignment' => 'center',
             'border_width' => 0,
             'border_color' => '#000000',
             'border_radius' => 'rounded',
@@ -48,8 +63,6 @@ class ListBlock extends BaseBlockHandler {
             'border_shadow_blur' => 0,
             'border_shadow_spread' => 0,
             'border_shadow_color' => '#000000',
-            'margin_items_y' => 2,
-            'margin_items_x' => 1,
 
             /* Display settings */
             'display_continents' => [],
@@ -82,36 +95,20 @@ class ListBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['list_type'] = in_array($_POST['list_type'], ['ordered', 'unordered']) ? query_clean($_POST['list_type']) : 'unordered';
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
-        $_POST['text_alignment'] = in_array($_POST['text_alignment'], ['center', 'left', 'right', 'justify']) ? query_clean($_POST['text_alignment']) : 'left';
+        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#00000000' : $_POST['background_color'];
 
-        /* Background and styling settings */
-        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#000000' : $_POST['background_color'];
-        $_POST['border_width'] = isset($_POST['border_width']) ? (int) $_POST['border_width'] : 0;
-        $_POST['border_color'] = !verify_hex_color($_POST['border_color']) ? '#000000' : $_POST['border_color'];
-        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
-        $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'outset', 'inset']) ? query_clean($_POST['border_style']) : 'solid';
-        
-        /* Border shadow settings */
-        $_POST['border_shadow_offset_x'] = isset($_POST['border_shadow_offset_x']) ? (int) $_POST['border_shadow_offset_x'] : 0;
-        $_POST['border_shadow_offset_y'] = isset($_POST['border_shadow_offset_y']) ? (int) $_POST['border_shadow_offset_y'] : 0;
-        $_POST['border_shadow_blur'] = isset($_POST['border_shadow_blur']) ? (int) $_POST['border_shadow_blur'] : 0;
-        $_POST['border_shadow_spread'] = isset($_POST['border_shadow_spread']) ? (int) $_POST['border_shadow_spread'] : 0;
-        $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#000000' : $_POST['border_shadow_color'];
-        
-        /* Margin settings */
-        $_POST['margin_items_y'] = isset($_POST['margin_items_y']) ? (int) $_POST['margin_items_y'] : 2;
-        $_POST['margin_items_x'] = isset($_POST['margin_items_x']) ? (int) $_POST['margin_items_x'] : 1;
+        /* Accordion items */
+        $items = [];
+        if(isset($_POST['item_title']) && isset($_POST['item_content'])) {
+            foreach($_POST['item_title'] as $key => $value) {
+                if(empty(trim($value))) continue;
+                if($key >= 20) continue;
 
-        /* List items */
-        $list_items = [];
-        if(isset($_POST['list_items'])) {
-            foreach($_POST['list_items'] as $key => $list_item) {
-                if(empty(trim($list_item))) continue;
-                if($key >= 100) continue;
-
-                $list_items[] = mb_substr(input_clean($list_item), 0, 256);
+                $items[] = [
+                    'title' => mb_substr(input_clean($value), 0, 256),
+                    'content' => mb_substr(input_clean($_POST['item_content'][$key]), 0, 2048),
+                ];
             }
         }
 
@@ -122,23 +119,25 @@ class ListBlock extends BaseBlockHandler {
             die();
         }
 
+        /* Get existing settings to preserve fields not in the form */
+        $existing_settings = json_decode($microsite_block->settings ?? '{}');
+
         $settings = json_encode([
-            'list_items' => $list_items,
-            'list_type' => $_POST['list_type'],
+            'items' => $items,
             'text_color' => $_POST['text_color'],
-            'text_alignment' => $_POST['text_alignment'],
             'background_color' => $_POST['background_color'],
-            'border_width' => $_POST['border_width'],
-            'border_color' => $_POST['border_color'],
-            'border_radius' => $_POST['border_radius'],
-            'border_style' => $_POST['border_style'],
-            'border_shadow_offset_x' => $_POST['border_shadow_offset_x'],
-            'border_shadow_offset_y' => $_POST['border_shadow_offset_y'],
-            'border_shadow_blur' => $_POST['border_shadow_blur'],
-            'border_shadow_spread' => $_POST['border_shadow_spread'],
-            'border_shadow_color' => $_POST['border_shadow_color'],
-            'margin_items_y' => $_POST['margin_items_y'],
-            'margin_items_x' => $_POST['margin_items_x'],
+
+            /* Preserve existing styling settings */
+            'text_alignment' => $existing_settings->text_alignment ?? 'center',
+            'border_width' => $existing_settings->border_width ?? 0,
+            'border_color' => $existing_settings->border_color ?? '#000000',
+            'border_radius' => $existing_settings->border_radius ?? 'rounded',
+            'border_style' => $existing_settings->border_style ?? 'solid',
+            'border_shadow_offset_x' => $existing_settings->border_shadow_offset_x ?? 0,
+            'border_shadow_offset_y' => $existing_settings->border_shadow_offset_y ?? 0,
+            'border_shadow_blur' => $existing_settings->border_shadow_blur ?? 0,
+            'border_shadow_spread' => $existing_settings->border_shadow_spread ?? 0,
+            'border_shadow_color' => $existing_settings->border_shadow_color ?? '#000000',
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

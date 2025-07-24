@@ -74,37 +74,14 @@ return [
         "type" => "default",
         "whitelisted_thumbnail_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    "contact_collector" => [
-        "icon" => "fa fa-address-book",
-        "color" => "#17a2b8",
-        "category" => "advanced",
-        "display_dynamic_name" => "name",
-        "has_statistics" => true,
-        "type" => "default"
-    ],
-    "email_collector" => [
-        "icon" => "fa fa-at",
-        "color" => "#dc3545",
-        "category" => "advanced",
-        "display_dynamic_name" => "name",
-        "has_statistics" => true,
-        "type" => "default"
-    ],
-    "phone_collector" => [
-        "icon" => "fa fa-mobile-alt",
-        "color" => "#28a745",
-        "category" => "advanced",
-        "display_dynamic_name" => "name",
-        "has_statistics" => true,
-        "type" => "default"
-    ],
     "feedback_collector" => [
         "icon" => "fa fa-comment-dots",
         "color" => "#17a2b8",
         "category" => "advanced",
         "display_dynamic_name" => "name",
         "has_statistics" => true,
-        "type" => "default"
+        "type" => "default",
+        "whitelisted_thumbnail_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
     "countdown" => [
         "icon" => "fa fa-clock",
@@ -132,17 +109,9 @@ return [
         "type" => "default",
         "whitelisted_thumbnail_image_extensions" => ["jpg", "jpeg", "png", "gif", "webp", "svg"]
     ],
-    "faq" => [
-        "icon" => "fa fa-question-circle",
+    "accordion" => [
+        "icon" => "fa fa-list-ul",
         "color" => "#17a2b8",
-        "category" => "advanced",
-        "display_dynamic_name" => "name",
-        "has_statistics" => false,
-        "type" => "default"
-    ],
-    "list" => [
-        "icon" => "fa fa-list",
-        "color" => "#28a745",
         "category" => "advanced",
         "display_dynamic_name" => "name",
         "has_statistics" => false,
