@@ -1605,7 +1605,7 @@ class Router {
 
         /* Check if the current link accessed is actually the original url or not (multi domain use) */
         $original_url_host = parse_url(url(), PHP_URL_HOST);
-        $request_url_host = input_clean($_SERVER['HTTP_HOST']);
+        $request_url_host = input_clean($_SERVER['HTTP_HOST'] ?? '');
 
         if(!empty($request_url_host) && $original_url_host != $request_url_host) {
             if(function_exists('idn_to_utf8')) {
@@ -1766,9 +1766,14 @@ class Router {
 
         /* Save the current controller */
         if(!isset(self::$routes[self::$path][self::$controller_key])) {
-            /* Not found controller */
-            self::$path = '';
-            self::$controller_key = 'not-found';
+            /* For admin path, default to index if no specific controller is found and params are empty */
+            if(self::$path == 'admin' && empty(self::$params)) {
+                self::$controller_key = 'index';
+            } else {
+                /* Not found controller */
+                self::$path = '';
+                self::$controller_key = 'not-found';
+            }
         }
         self::$controller = self::$routes[self::$path][self::$controller_key]['controller'];
 

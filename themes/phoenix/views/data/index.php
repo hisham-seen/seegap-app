@@ -65,13 +65,13 @@
 
                         <form action="" method="get" role="form">
                             <div class="form-group px-4">
-                                <label for="type" class="small">
+                                <label for="form_type" class="small">
                                     <?= l('global.type') ?>
                                 </label>
-                                <select name="type" id="type" class="custom-select custom-select-sm">
+                                <select name="form_type" id="form_type" class="custom-select custom-select-sm">
                                     <option value=""><?= l('global.all') ?></option>
-                                    <?php foreach(['email_collector', 'phone_collector', 'contact_collector', 'feedback_collector'] as $value): ?>
-                                        <option value="<?= $value ?>" <?= isset($data->filters->filters['type']) && $data->filters->filters['type'] == $value ? 'selected="selected"' : null ?>><?= l('link.microsite.blocks.' . $value) ?></option>
+                                    <?php foreach(['custom', 'email', 'phone', 'contact', 'feedback_collector'] as $value): ?>
+                                        <option value="<?= $value ?>" <?= isset($data->filters->filters['form_type']) && $data->filters->filters['form_type'] == $value ? 'selected="selected"' : null ?>><?= ucfirst($value) ?> Form</option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -94,8 +94,8 @@
                             <div class="form-group px-4">
                                 <label for="filters_order_by" class="small"><?= l('global.filters.order_by') ?></label>
                                 <select name="order_by" id="filters_order_by" class="custom-select custom-select-sm">
-                                    <option value="datum_id" <?= $data->filters->order_by == 'datum_id' ? 'selected="selected"' : null ?>><?= l('global.id') ?></option>
-                                    <option value="datetime" <?= $data->filters->order_by == 'datetime' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_datetime') ?></option>
+                                    <option value="form_submission_id" <?= $data->filters->order_by == 'form_submission_id' ? 'selected="selected"' : null ?>><?= l('global.id') ?></option>
+                                    <option value="submitted_at" <?= $data->filters->order_by == 'submitted_at' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_datetime') ?></option>
                                 </select>
                             </div>
 

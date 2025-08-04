@@ -34,10 +34,15 @@ class DividerBlock extends BaseBlockHandler {
 
         $type = 'divider';
         $settings = json_encode([
-            'margin_top' => 20,
-            'margin_bottom' => 20,
-            'background_color' => '#ffffff',
             'icon' => '',
+            'show_icon' => false,
+            'icon_size' => 20,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'divider_thickness' => 1,
+            'divider_style' => 'solid',
+            'divider_width' => 100,
+            'divider_color' => '#e9ecef',
 
             /* Display settings */
             'display_continents' => [],
@@ -70,10 +75,15 @@ class DividerBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['margin_top'] = in_array($_POST['margin_top'], range(0, 200)) ? (int) $_POST['margin_top'] : 20;
-        $_POST['margin_bottom'] = in_array($_POST['margin_bottom'], range(0, 200)) ? (int) $_POST['margin_bottom'] : 20;
-        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
+        $_POST['margin_top'] = in_array($_POST['margin_top'], range(0, 7)) ? (int) $_POST['margin_top'] : 0;
+        $_POST['margin_bottom'] = in_array($_POST['margin_bottom'], range(0, 7)) ? (int) $_POST['margin_bottom'] : 0;
         $_POST['icon'] = query_clean($_POST['icon']);
+        $_POST['show_icon'] = isset($_POST['show_icon']) ? true : false;
+        $_POST['icon_size'] = in_array($_POST['icon_size'], range(12, 48)) ? (int) $_POST['icon_size'] : 20;
+        $_POST['divider_thickness'] = in_array($_POST['divider_thickness'], range(1, 10)) ? (int) $_POST['divider_thickness'] : 1;
+        $_POST['divider_style'] = in_array($_POST['divider_style'], ['solid', 'dashed', 'dotted']) ? $_POST['divider_style'] : 'solid';
+        $_POST['divider_width'] = in_array($_POST['divider_width'], range(10, 100, 5)) ? (int) $_POST['divider_width'] : 100;
+        $_POST['divider_color'] = !verify_hex_color($_POST['divider_color']) ? '#e9ecef' : $_POST['divider_color'];
 
         /* Display settings */
         $this->process_display_settings();
@@ -83,10 +93,15 @@ class DividerBlock extends BaseBlockHandler {
         }
 
         $settings = json_encode([
+            'icon' => $_POST['icon'],
+            'show_icon' => $_POST['show_icon'],
+            'icon_size' => $_POST['icon_size'],
             'margin_top' => $_POST['margin_top'],
             'margin_bottom' => $_POST['margin_bottom'],
-            'background_color' => $_POST['background_color'],
-            'icon' => $_POST['icon'],
+            'divider_thickness' => $_POST['divider_thickness'],
+            'divider_style' => $_POST['divider_style'],
+            'divider_width' => $_POST['divider_width'],
+            'divider_color' => $_POST['divider_color'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

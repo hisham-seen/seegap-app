@@ -755,24 +755,6 @@ class AdminSettings extends Controller {
         }
     }
 
-    public function facebook() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-
-            $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'app_id' => $_POST['app_id'],
-                'app_secret' => $_POST['app_secret'],
-            ]);
-
-            $this->update_settings('facebook', $value);
-        }
-    }
 
     public function google() {
         $this->process();

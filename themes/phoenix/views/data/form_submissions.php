@@ -83,8 +83,8 @@
                             <div class="form-group px-4">
                                 <label for="filters_order_by" class="small"><?= l('global.filters.order_by') ?></label>
                                 <select name="order_by" id="filters_order_by" class="custom-select custom-select-sm">
-                                    <option value="datum_id" <?= $data->filters->order_by == 'datum_id' ? 'selected="selected"' : null ?>><?= l('global.id') ?></option>
-                                    <option value="datetime" <?= $data->filters->order_by == 'datetime' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_datetime') ?></option>
+                                    <option value="form_submission_id" <?= $data->filters->order_by == 'form_submission_id' ? 'selected="selected"' : null ?>><?= l('global.id') ?></option>
+                                    <option value="submitted_at" <?= $data->filters->order_by == 'submitted_at' ? 'selected="selected"' : null ?>><?= l('global.filters.order_by_datetime') ?></option>
                                 </select>
                             </div>
 
@@ -158,6 +158,28 @@
             <input type="hidden" name="original_request" value="<?= base64_encode(\SeeGap\Router::$original_request) ?>" />
             <input type="hidden" name="original_request_query" value="<?= base64_encode(\SeeGap\Router::$original_request_query) ?>" />
 
+            <?php
+            // Collect all unique questions from all submissions to create dynamic columns
+            $all_questions = [];
+            foreach($data->form['submissions'] as $submission) {
+                if(is_array($submission->responses)) {
+                    foreach($submission->responses as $response) {
+                        $question = $response['question'] ?? 'Question';
+                        if(!in_array($question, $all_questions)) {
+                            $all_questions[] = $question;
+                        }
+                    }
+                } elseif(is_object($submission->responses)) {
+                    foreach($submission->responses as $key => $value) {
+                        $question = ucfirst($key);
+                        if(!in_array($question, $all_questions)) {
+                            $all_questions[] = $question;
+                        }
+                    }
+                }
+            }
+            ?>
+
             <div class="table-responsive table-custom-container">
                 <table class="table table-custom">
                     <thead>
@@ -168,59 +190,109 @@
                                 <label class="custom-control-label" for="bulk_select_all"></label>
                             </div>
                         </th>
-                        <th><?= l('data.submission_details') ?></th>
+                        <th><?= l('global.id') ?></th>
+                        <th><?= l('global.type') ?></th>
+                        <?php foreach($all_questions as $question): ?>
+                            <th class="text-truncate" style="max-width: 200px;" data-toggle="tooltip" title="<?= htmlspecialchars($question) ?>">
+                                <?= htmlspecialchars($question) ?>
+                            </th>
+                        <?php endforeach; ?>
                         <th><?= l('global.datetime') ?></th>
-                        <th></th>
+                        <th><?= l('global.location') ?></th>
+                        <th><?= l('global.actions') ?></th>
                     </tr>
                     </thead>
                     <tbody>
 
                     <?php foreach($data->form['submissions'] as $row): ?>
+                        <?php
+                        // Create a mapping of questions to answers for this submission
+                        $question_answers = [];
+                        if(is_array($row->responses)) {
+                            foreach($row->responses as $response) {
+                                $question = $response['question'] ?? 'Question';
+                                $question_answers[$question] = $response['response'] ?? 'No response';
+                            }
+                        } elseif(is_object($row->responses)) {
+                            foreach($row->responses as $key => $value) {
+                                $question = ucfirst($key);
+                                $question_answers[$question] = $value;
+                            }
+                        }
+                        ?>
                         <tr>
                             <td data-bulk-table class="d-none">
                                 <div class="custom-control custom-checkbox">
-                                    <input id="selected_datum_id_<?= $row->datum_id ?>" type="checkbox" class="custom-control-input" name="selected[]" value="<?= $row->datum_id ?>" />
-                                    <label class="custom-control-label" for="selected_datum_id_<?= $row->datum_id ?>"></label>
+                                    <input id="selected_form_submission_id_<?= $row->form_submission_id ?>" type="checkbox" class="custom-control-input" name="selected[]" value="<?= $row->form_submission_id ?>" />
+                                    <label class="custom-control-label" for="selected_form_submission_id_<?= $row->form_submission_id ?>"></label>
                                 </div>
                             </td>
 
-                            <td>
-                                <div class="d-flex flex-column small">
-                                    <?php 
-                                    // Display form name if available
-                                    if(isset($row->data->form_name)): ?>
-                                        <div class="mb-2"><span class="font-weight-bold text-primary">Form:</span> <?= $row->data->form_name ?></div>
-                                    <?php endif; ?>
-                                    
-                                    <?php foreach($row->data as $key => $value): ?>
-                                        <?php if(is_array($value) || is_object($value)): ?>
-                                            <?php if($key === 'answers' && is_array($value)): ?>
-                                                <?php foreach($value as $answer): ?>
-                                                    <div>
-                                                        <span class="font-weight-bold"><?= $answer->question ?>:</span> 
-                                                        <?= is_array($answer->answer) ? implode(', ', $answer->answer) : $answer->answer ?>
-                                                    </div>
-                                                <?php endforeach ?>
-                                            <?php else: ?>
-                                                <div><span class="font-weight-bold"><?= $key ?>:</span> <?= json_encode($value) ?></div>
-                                            <?php endif ?>
-                                        <?php elseif($key !== 'form_name'): ?>
-                                            <div><span class="font-weight-bold"><?= $key ?>:</span> <?= $value ?></div>
-                                        <?php endif ?>
-                                    <?php endforeach ?>
-                                </div>
+                            <td class="text-nowrap">
+                                <span class="badge badge-light">
+                                    #<?= $row->form_submission_id ?>
+                                </span>
                             </td>
+
+                            <td class="text-nowrap">
+                                <?php if(!empty($row->form_type)): ?>
+                                    <span class="badge badge-secondary">
+                                        <i class="fas fa-fw fa-sm fa-form mr-1"></i>
+                                        <?= ucfirst($row->form_type) ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="badge badge-light">
+                                        <i class="fas fa-fw fa-sm fa-form mr-1"></i>
+                                        Form
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+
+                            <?php foreach($all_questions as $question): ?>
+                                <td class="text-truncate" style="max-width: 200px;">
+                                    <?php if(isset($question_answers[$question])): ?>
+                                        <span data-toggle="tooltip" title="<?= htmlspecialchars($question_answers[$question]) ?>">
+                                            <?= htmlspecialchars($question_answers[$question]) ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-muted">-</span>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endforeach; ?>
 
                             <td class="text-nowrap text-muted">
-                                <span data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->datetime, 2) . '<br /><small>' . \SeeGap\Date::get($row->datetime, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->datetime) . ')</small>') ?>">
+                                <span data-toggle="tooltip" data-html="true" title="<?= sprintf(l('global.datetime_tooltip'), '<br />' . \SeeGap\Date::get($row->submitted_at, 2) . '<br /><small>' . \SeeGap\Date::get($row->submitted_at, 3) . '</small>' . '<br /><small>(' . \SeeGap\Date::get_timeago($row->submitted_at) . ')</small>') ?>">
                                     <i class="fas fa-fw fa-calendar text-muted mr-1"></i>
-                                    <?= \SeeGap\Date::get($row->datetime, 1) ?>
+                                    <?= \SeeGap\Date::get($row->submitted_at, 1) ?>
                                 </span>
+                            </td>
+
+                            <td class="text-nowrap">
+                                <?php if(!empty($row->ip)): ?>
+                                    <div class="d-flex flex-column">
+                                        <span class="badge badge-light" data-toggle="tooltip" title="IP Address">
+                                            <i class="fas fa-fw fa-sm fa-globe mr-1"></i>
+                                            <?= htmlspecialchars($row->ip) ?>
+                                        </span>
+                                        <?php if(!empty($row->country) || !empty($row->city)): ?>
+                                            <small class="text-muted mt-1">
+                                                <i class="fas fa-fw fa-map-marker-alt mr-1"></i>
+                                                <?= !empty($row->city) ? htmlspecialchars($row->city) : '' ?>
+                                                <?= !empty($row->country) ? (!empty($row->city) ? ', ' : '') . htmlspecialchars($row->country) : '' ?>
+                                            </small>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php else: ?>
+                                    <span class="text-muted">
+                                        <i class="fas fa-fw fa-question-circle mr-1"></i>
+                                        Unknown
+                                    </span>
+                                <?php endif; ?>
                             </td>
 
                             <td>
                                 <div class="d-flex justify-content-end">
-                                    <?= include_view(THEME_PATH . 'views/data/datum_dropdown_button.php', ['id' => $row->datum_id]) ?>
+                                    <?= include_view(THEME_PATH . 'views/data/datum_dropdown_button.php', ['id' => $row->form_submission_id]) ?>
                                 </div>
                             </td>
                         </tr>

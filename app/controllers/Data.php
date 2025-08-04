@@ -27,15 +27,19 @@ class Data extends Controller {
         $microsite_block_id = isset($_GET['microsite_block_id']) ? (int) $_GET['microsite_block_id'] : null;
         
         /* Prepare the filtering system */
-        $filters = (new \SeeGap\Filters(['microsite_block_id', 'link_id', 'project_id', 'user_id', 'type', 'is_enabled'], [], ['datum_id', 'datetime']));
-        $filters->set_default_order_by($this->user->preferences->data_default_order_by ?? 'datetime', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
+        $filters = (new \SeeGap\Filters(['microsite_block_id', 'link_id', 'project_id', 'user_id', 'form_type'], [], ['form_submission_id', 'submitted_at']));
+        $filters->set_default_order_by($this->user->preferences->data_default_order_by ?? 'submitted_at', $this->user->preferences->default_order_type ?? settings()->main->default_order_type);
         $filters->set_default_results_per_page($this->user->preferences->default_results_per_page ?? settings()->main->default_results_per_page);
+
+        /* Ensure form_submissions table exists */
+        $this->ensure_form_submissions_table();
 
         /* First, get all microsite blocks to get their names */
         $microsite_blocks_result = database()->query("
-            SELECT `microsite_block_id`, `settings`, `type` 
-            FROM `microsites_blocks` 
-            WHERE `user_id` = {$this->user->user_id}
+            SELECT mb.`microsite_block_id`, mb.`settings`, mb.`type`, mb.`link_id`, l.`user_id`
+            FROM `microsites_blocks` mb
+            LEFT JOIN `links` l ON mb.`link_id` = l.`link_id`
+            WHERE l.`user_id` = {$this->user->user_id} AND mb.`type` = 'form'
         ");
         
         $microsite_blocks = [];
@@ -57,15 +61,29 @@ class Data extends Controller {
             $filters->filters['microsite_block_id'] = $microsite_block_id;
             
             /* Prepare the paginator */
-            $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} AND `microsite_block_id` = {$microsite_block_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
+            $total_rows = database()->query("
+                SELECT COUNT(*) AS `total` 
+                FROM `form_submissions` fs
+                LEFT JOIN `links` l ON fs.`link_id` = l.`link_id`
+                WHERE l.`user_id` = {$this->user->user_id} AND fs.`microsite_block_id` = {$microsite_block_id}
+            ")->fetch_object()->total ?? 0;
             $paginator = (new \SeeGap\Paginator($total_rows, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?microsite_block_id=' . $microsite_block_id . '&' . $filters->get_get() . '&page=%d')));
             
             /* Get the submissions for this form */
             $submissions = [];
-            $data_result = database()->query("SELECT * FROM `data` WHERE `user_id` = {$this->user->user_id} AND `microsite_block_id` = {$microsite_block_id} {$filters->get_sql_where()} {$filters->get_sql_order_by()} {$paginator->get_sql_limit()}");
+            $order_by = in_array($filters->order_by, ['form_submission_id', 'submitted_at']) ? $filters->order_by : 'submitted_at';
+            $data_result = database()->query("
+                SELECT fs.*, l.`project_id`
+                FROM `form_submissions` fs
+                LEFT JOIN `links` l ON fs.`link_id` = l.`link_id`
+                WHERE l.`user_id` = {$this->user->user_id} AND fs.`microsite_block_id` = {$microsite_block_id}
+                ORDER BY fs.`{$order_by}` {$filters->order_type}
+                {$paginator->get_sql_limit()}
+            ");
             
             while($row = $data_result->fetch_object()) {
-                $row->data = json_decode($row->data);
+                $row->responses = json_decode($row->responses);
+                $row->metadata = json_decode($row->metadata ?? '{}');
                 $submissions[] = $row;
             }
             
@@ -83,23 +101,24 @@ class Data extends Controller {
             $export_submissions = [];
             foreach($submissions as $submission) {
                 $export_submission = [
-                    'datum_id' => $submission->datum_id,
+                    'form_submission_id' => $submission->form_submission_id,
                     'link_id' => $submission->link_id,
-                    'user_id' => $submission->user_id,
-                    'project_id' => $submission->project_id,
-                    'type' => $submission->type,
-                    'datetime' => $submission->datetime,
-                    'data' => json_encode($submission->data)
+                    'project_id' => $submission->project_id ?? null,
+                    'form_type' => $submission->form_type,
+                    'responses' => json_encode($submission->responses),
+                    'metadata' => json_encode($submission->metadata),
+                    'ip' => $submission->ip,
+                    'submitted_at' => $submission->submitted_at
                 ];
                 $export_submissions[] = $export_submission;
             }
             
             if(isset($_GET['export']) && $_GET['export'] == 'csv') {
-                process_export_csv($export_submissions, 'include', ['datum_id', 'link_id', 'user_id', 'project_id', 'type', 'data', 'datetime'], sprintf(l('data.title') . ' - ' . $form['form_name']));
+                process_export_csv($export_submissions, 'include', ['form_submission_id', 'link_id', 'project_id', 'form_type', 'responses', 'metadata', 'ip', 'submitted_at'], sprintf(l('data.title') . ' - ' . $form['form_name']));
             }
             
             if(isset($_GET['export']) && $_GET['export'] == 'json') {
-                process_export_json($export_submissions, 'include', ['datum_id', 'link_id', 'user_id', 'project_id', 'type', 'data', 'datetime'], sprintf(l('data.title') . ' - ' . $form['form_name']));
+                process_export_json($export_submissions, 'include', ['form_submission_id', 'link_id', 'project_id', 'form_type', 'responses', 'metadata', 'ip', 'submitted_at'], sprintf(l('data.title') . ' - ' . $form['form_name']));
             }
             
             /* Prepare the pagination view */
@@ -123,45 +142,45 @@ class Data extends Controller {
         }
         /* Main data view showing all forms */
         else {
-            /* Prepare the paginator for forms */
-            $total_forms = database()->query("SELECT COUNT(DISTINCT `microsite_block_id`) AS `total` FROM `data` WHERE `user_id` = {$this->user->user_id} {$filters->get_sql_where()}")->fetch_object()->total ?? 0;
-            $paginator = (new \SeeGap\Paginator($total_forms, $filters->get_results_per_page(), $_GET['page'] ?? 1, url('data?' . $filters->get_get() . '&page=%d')));
+            /* Debug: Log some information */
+            error_log("Data Controller Debug - User ID: {$this->user->user_id}");
+            error_log("Data Controller Debug - Microsite blocks found: " . count($microsite_blocks));
             
-            /* Get distinct microsite_block_ids with their latest submission and count */
-            $forms = [];
-            
-            // Make sure we have a valid order_by field
-            $order_by = in_array($filters->order_by, ['datum_id', 'datetime']) ? $filters->order_by : 'datetime';
-            
-            // Get all data entries for this user
+            /* Get all form submissions for this user */
             $data_result = database()->query("
                 SELECT 
-                    d.`microsite_block_id`, 
-                    d.`type`, 
-                    d.`link_id`, 
-                    d.`project_id`,
-                    d.`datum_id`,
-                    d.`datetime`
+                    fs.`microsite_block_id`, 
+                    fs.`form_type`, 
+                    fs.`link_id`, 
+                    l.`project_id`,
+                    fs.`form_submission_id`,
+                    fs.`submitted_at`
                 FROM 
-                    `data` d
+                    `form_submissions` fs
+                LEFT JOIN `links` l ON fs.`link_id` = l.`link_id`
                 WHERE 
-                    d.`user_id` = {$this->user->user_id} 
-                    {$filters->get_sql_where('d')}
+                    l.`user_id` = {$this->user->user_id}
                 ORDER BY 
-                    {$order_by} {$filters->order_type}
+                    fs.`submitted_at` DESC
             ");
+            
+            error_log("Data Controller Debug - Form submissions found: " . $data_result->num_rows);
             
             // Process the data to group by form
             $form_data = [];
             $form_submissions_count = [];
             $form_last_submission = [];
             
-            if($data_result) {
+            if($data_result && $data_result->num_rows > 0) {
                 while($row = $data_result->fetch_object()) {
+                    error_log("Data Controller Debug - Processing submission: Block {$row->microsite_block_id}");
+                    
                     // Get form name from microsite blocks
                     $form_name = isset($microsite_blocks[$row->microsite_block_id]) ? 
                         $microsite_blocks[$row->microsite_block_id]->settings->name ?? 'Unknown Form' : 
                         'Unknown Form';
+                    
+                    error_log("Data Controller Debug - Form name: {$form_name}");
                     
                     // Create a unique key for the form
                     $form_key = strtolower(trim($form_name));
@@ -170,7 +189,7 @@ class Data extends Controller {
                     if(!isset($form_data[$form_key])) {
                         $form_data[$form_key] = [
                             'microsite_block_id' => $row->microsite_block_id,
-                            'type' => $row->type,
+                            'type' => 'form',
                             'link_id' => $row->link_id,
                             'project_id' => $row->project_id,
                             'form_name' => $form_name,
@@ -190,13 +209,16 @@ class Data extends Controller {
                     $form_submissions_count[$form_key]++;
                     
                     // Track the latest submission
-                    if(!isset($form_last_submission[$form_key]) || strtotime($row->datetime) > strtotime($form_last_submission[$form_key])) {
-                        $form_last_submission[$form_key] = $row->datetime;
+                    if(!isset($form_last_submission[$form_key]) || strtotime($row->submitted_at) > strtotime($form_last_submission[$form_key])) {
+                        $form_last_submission[$form_key] = $row->submitted_at;
                     }
                 }
             }
             
+            error_log("Data Controller Debug - Form data groups: " . count($form_data));
+            
             // Create the forms array for display
+            $forms = [];
             foreach($form_data as $form_key => $data) {
                 $forms[] = (object) [
                     'microsite_block_id' => $data['microsite_block_id'],
@@ -301,8 +323,18 @@ class Data extends Controller {
                         redirect('data');
                     }
 
-                    foreach($_POST['selected'] as $datum_id) {
-                        db()->where('user_id', $this->user->user_id)->where('datum_id', $datum_id)->delete('data');
+                    foreach($_POST['selected'] as $form_submission_id) {
+                        // Verify the submission belongs to the user before deleting
+                        $submission = database()->query("
+                            SELECT fs.form_submission_id 
+                            FROM form_submissions fs
+                            LEFT JOIN links l ON fs.link_id = l.link_id
+                            WHERE fs.form_submission_id = {$form_submission_id} AND l.user_id = {$this->user->user_id}
+                        ")->fetch_object();
+                        
+                        if($submission) {
+                            db()->where('form_submission_id', $form_submission_id)->delete('form_submissions');
+                        }
                     }
 
                     break;
@@ -330,7 +362,7 @@ class Data extends Controller {
             redirect('data');
         }
 
-        $datum_id = (int) query_clean($_POST['datum_id']);
+        $form_submission_id = (int) query_clean($_POST['form_submission_id']);
 
         //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
@@ -338,14 +370,20 @@ class Data extends Controller {
             Alerts::add_error(l('global.error_message.invalid_csrf_token'));
         }
 
-        if(!$datum = db()->where('datum_id', $datum_id)->where('user_id', $this->user->user_id)->getOne('data', ['datum_id'])) {
+        // Verify the submission belongs to the user
+        if(!$submission = database()->query("
+            SELECT fs.form_submission_id 
+            FROM form_submissions fs
+            LEFT JOIN links l ON fs.link_id = l.link_id
+            WHERE fs.form_submission_id = {$form_submission_id} AND l.user_id = {$this->user->user_id}
+        ")->fetch_object()) {
             redirect('data');
         }
 
         if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
             /* Delete the resource */
-            db()->where('datum_id', $datum_id)->delete('data');
+            db()->where('form_submission_id', $form_submission_id)->delete('form_submissions');
 
             /* Set a nice success message */
             Alerts::add_success(l('global.success_message.delete2'));
@@ -354,5 +392,30 @@ class Data extends Controller {
         }
 
         redirect('data');
+    }
+
+    private function ensure_form_submissions_table() {
+        // Check if table exists, if not create it
+        $table_exists = database()->query("SHOW TABLES LIKE 'form_submissions'")->num_rows > 0;
+        
+        if(!$table_exists) {
+            database()->query("
+                CREATE TABLE `form_submissions` (
+                    `form_submission_id` int(11) NOT NULL AUTO_INCREMENT,
+                    `microsite_block_id` int(11) NOT NULL,
+                    `link_id` int(11) NOT NULL,
+                    `form_type` varchar(32) NOT NULL DEFAULT 'custom',
+                    `responses` longtext,
+                    `metadata` longtext,
+                    `ip` varchar(64) DEFAULT NULL,
+                    `user_agent` text,
+                    `submitted_at` datetime NOT NULL,
+                    PRIMARY KEY (`form_submission_id`),
+                    KEY `microsite_block_id` (`microsite_block_id`),
+                    KEY `link_id` (`link_id`),
+                    KEY `submitted_at` (`submitted_at`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ");
+        }
     }
 }

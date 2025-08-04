@@ -109,13 +109,6 @@ class AdminMicrositeThemeUpdate extends Controller {
                         'border_radius' => $_POST['microsite_block_socials_border_radius'],
                     ],
 
-                    'microsite_block_paragraph' => [
-                        'text_color' => $_POST['microsite_block_paragraph_text_color'],
-                    ],
-
-                    'microsite_block_heading' => [
-                        'text_color' => $_POST['microsite_block_heading_text_color'],
-                    ],
                 ]);
 
                 /* Database query */

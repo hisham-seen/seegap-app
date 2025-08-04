@@ -78,6 +78,9 @@ function currency() {
 }
 
 function cache($adapter = 'adapter') {
+    if(!\SeeGap\Cache::${$adapter}) {
+        \SeeGap\Cache::initialize();
+    }
     return \SeeGap\Cache::${$adapter};
 }
 

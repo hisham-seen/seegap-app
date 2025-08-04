@@ -1,69 +1,121 @@
 <?php defined('SEEGAP') || die() ?>
 
+<?php
+/* Generate all styles based on settings - simplified for WYSIWYG content */
+$all_styles = [];
+$animation_class = '';
+
+// Get text settings
+$text_settings = $data->link->settings;
+
+// Handle background color
+if (isset($text_settings->background_color) && $text_settings->background_color !== '#00000000') {
+    $all_styles[] = 'background-color: ' . $text_settings->background_color;
+}
+
+// Handle text color
+if (isset($text_settings->text_color)) {
+    $all_styles[] = 'color: ' . $text_settings->text_color;
+}
+
+// Handle border
+if (isset($text_settings->border_width) && $text_settings->border_width > 0) {
+    $border_width = $text_settings->border_width;
+    $border_color = $text_settings->border_color ?? '#ffffff';
+    $border_style = $text_settings->border_style ?? 'solid';
+    $all_styles[] = 'border: ' . $border_width . 'px ' . $border_style . ' ' . $border_color;
+}
+
+// Handle border radius
+if (isset($text_settings->border_radius)) {
+    if (is_numeric($text_settings->border_radius)) {
+        // New system: use pixel value
+        if ($text_settings->border_radius > 0) {
+            $all_styles[] = 'border-radius: ' . $text_settings->border_radius . 'px';
+        }
+    } else {
+        // Old system: convert string to pixels for backward compatibility
+        switch ($text_settings->border_radius) {
+            case 'straight':
+                $all_styles[] = 'border-radius: 0';
+                break;
+            case 'round':
+                $all_styles[] = 'border-radius: 25px';
+                break;
+            case 'rounded':
+                $all_styles[] = 'border-radius: 4px';
+                break;
+            case 'rounded-sm':
+                $all_styles[] = 'border-radius: 2px';
+                break;
+            case 'rounded-lg':
+                $all_styles[] = 'border-radius: 8px';
+                break;
+            case 'rounded-xl':
+                $all_styles[] = 'border-radius: 12px';
+                break;
+            case 'rounded-2xl':
+                $all_styles[] = 'border-radius: 16px';
+                break;
+            case 'rounded-3xl':
+                $all_styles[] = 'border-radius: 24px';
+                break;
+            case 'rounded-full':
+                $all_styles[] = 'border-radius: 50px';
+                break;
+        }
+    }
+}
+
+// Handle shadow
+if (isset($text_settings->border_shadow_blur) && $text_settings->border_shadow_blur > 0) {
+    $shadow_x = $text_settings->border_shadow_offset_x ?? 0;
+    $shadow_y = $text_settings->border_shadow_offset_y ?? 0;
+    $shadow_blur = $text_settings->border_shadow_blur ?? 0;
+    $shadow_spread = $text_settings->border_shadow_spread ?? 0;
+    $shadow_color = $text_settings->border_shadow_color ?? '#00000010';
+    $all_styles[] = 'box-shadow: ' . $shadow_x . 'px ' . $shadow_y . 'px ' . $shadow_blur . 'px ' . $shadow_spread . 'px ' . $shadow_color;
+}
+
+// Handle animation
+if (isset($text_settings->animation) && $text_settings->animation && $text_settings->animation !== 'false') {
+    $animation_class = 'animate__animated animate__' . $text_settings->animation;
+    if (isset($text_settings->animation_runs) && $text_settings->animation_runs !== 'repeat-1') {
+        $animation_class .= ' animate__' . $text_settings->animation_runs;
+    }
+    if (isset($text_settings->animation_delay) && $text_settings->animation_delay > 0) {
+        $delay_class = 'animate__delay-' . ($text_settings->animation_delay / 1000) . 's';
+        $animation_class .= ' ' . $delay_class;
+    }
+}
+
+// Add text alignment
+$all_styles[] = 'text-align: ' . ($text_settings->text_alignment ?? 'center');
+
+$style_attribute = !empty($all_styles) ? 'style="' . implode('; ', $all_styles) . ';"' : '';
+
+// Determine if we need card styling (has background, border, or shadow)
+$has_styling = (
+    (isset($text_settings->background_color) && $text_settings->background_color !== '#00000000') ||
+    (isset($text_settings->border_width) && $text_settings->border_width > 0) ||
+    (isset($text_settings->border_shadow_blur) && $text_settings->border_shadow_blur > 0)
+);
+?>
+
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
     
-    <?php if($data->link->settings->text_type == 'heading'): ?>
-        <!-- Heading Type -->
-        <<?= $data->link->settings->heading_type ?> class="<?= $data->link->settings->heading_type ?> m-0 text-break" style="color: <?= $data->link->settings->text_color ?>; text-align: <?= ($data->link->settings->text_alignment ?? 'center') ?>;" data-text data-text-color data-text-alignment>
-        <?php if($data->microsite->is_verified && ($data->link->settings->verified_location ?? '') == 'left'): ?>
-            <small class="link-verified-small" data-toggle="tooltip" title="<?= sprintf(l('link.microsite.verified_help'), settings()->main->title) ?>">
-                <span class="fa-stack">
-                    <i class="fa-solid fa-certificate fa-stack-2x"></i>
-                    <i class="fas fa-check fa-stack-1x fa-inverse"></i>
-                </span>
-            </small>
-        <?php endif ?>
-            <?= $data->link->settings->text ?>
-        <?php if($data->microsite->is_verified && ($data->link->settings->verified_location ?? '') == 'right'): ?>
-            <small class="link-verified-small" data-toggle="tooltip" title="<?= sprintf(l('link.microsite.verified_help'), settings()->main->title) ?>">
-                <span class="fa-stack">
-                    <i class="fa-solid fa-certificate fa-stack-2x"></i>
-                    <i class="fas fa-check fa-stack-1x fa-inverse"></i>
-                </span>
-            </small>
-        <?php endif ?>
-        </<?= $data->link->settings->heading_type ?>>
-        
-    <?php elseif($data->link->settings->text_type == 'paragraph'): ?>
-        <!-- Paragraph Type -->
-        <div class="card <?= 'link-btn-' . ($data->link->settings->border_radius ?? 'rounded') ?>" style="<?= 'border-width: ' . ($data->link->settings->border_width ?? '1') . 'px;' . 'border-color: ' . ($data->link->settings->border_color ?? 'transparent') . ';' . 'border-style: ' . ($data->link->settings->border_style ?? 'solid') . ';' . 'background: ' . ($data->link->settings->background_color ?? 'transparent') . ';' . 'box-shadow: ' . ($data->link->settings->border_shadow_offset_x ?? '0') . 'px ' . ($data->link->settings->border_shadow_offset_y ?? '0') . 'px ' . ($data->link->settings->border_shadow_blur ?? '0') . 'px ' . ($data->link->settings->border_shadow_spread ?? '0') . 'px ' . ($data->link->settings->border_shadow_color ?? '#00000010') ?>" data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-background-color>
-            <div class="<?= ($data->link->settings->border_width ?? 0) == 0 && in_array($data->link->settings->background_color ?? 'transparent', ['#00000000', '#FFFFFF00']) && in_array($data->link->settings->border_shadow_color ?? '#00000010', ['#00000000', '#FFFFFF00']) ? null : 'card-body' ?> text-break" style="color: <?= $data->link->settings->text_color ?? '#000000' ?>; text-align: <?= ($data->link->settings->text_alignment ?? 'center') ?>;" data-text data-text-color data-text-alignment>
-                <?= nl2br($data->link->settings->text) ?>
+    <?php if ($has_styling): ?>
+        <!-- Text block with styling (card wrapper) -->
+        <div class="card <?= $animation_class ?>" <?= $style_attribute ?> data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-background-color>
+            <div class="card-body text-break" data-text data-text-color data-text-alignment>
+                <?= $data->link->settings->content ?? '' ?>
             </div>
         </div>
-        
-    <?php elseif($data->link->settings->text_type == 'list'): ?>
-        <!-- List Type -->
-        <div class="card <?= 'link-btn-' . ($data->link->settings->border_radius ?? 'rounded') ?>" style="<?= 'border-width: ' . ($data->link->settings->border_width ?? '0') . 'px;' . 'border-color: ' . ($data->link->settings->border_color ?? '#000000') . ';' . 'border-style: ' . ($data->link->settings->border_style ?? 'solid') . ';' . 'background: ' . ($data->link->settings->background_color ?? '#000000') . ';' . 'box-shadow: ' . ($data->link->settings->border_shadow_offset_x ?? '0') . 'px ' . ($data->link->settings->border_shadow_offset_y ?? '0') . 'px ' . ($data->link->settings->border_shadow_blur ?? '0') . 'px ' . ($data->link->settings->border_shadow_spread ?? '0') . 'px ' . ($data->link->settings->border_shadow_color ?? '#00000010') . ';' ?>">
-            <div class="card-body" style="<?= 'color: ' . ($data->link->settings->text_color ?? '#ffffff') . ';' . 'text-align: ' . ($data->link->settings->text_alignment ?? 'left') . ';' ?>">
-                <?php if(!empty($data->link->settings->list_items) && is_array($data->link->settings->list_items)): ?>
-                    <?php if(($data->link->settings->list_type ?? 'unordered') == 'ordered'): ?>
-                        <ol class="mb-0" style="<?= 'margin-top: ' . ($data->link->settings->margin_items_y ?? 2) . 'rem;' . 'margin-bottom: ' . ($data->link->settings->margin_items_y ?? 2) . 'rem;' ?>">
-                            <?php foreach($data->link->settings->list_items as $item): ?>
-                                <?php if(!empty(trim($item))): ?>
-                                    <li class="<?= 'my-' . ($data->link->settings->margin_items_y ?? 2) ?>" style="<?= 'margin-left: ' . ($data->link->settings->margin_items_x ?? 1) . 'rem;' ?>">
-                                        <?= htmlspecialchars($item) ?>
-                                    </li>
-                                <?php endif ?>
-                            <?php endforeach ?>
-                        </ol>
-                    <?php else: ?>
-                        <ul class="mb-0" style="<?= 'margin-top: ' . ($data->link->settings->margin_items_y ?? 2) . 'rem;' . 'margin-bottom: ' . ($data->link->settings->margin_items_y ?? 2) . 'rem;' ?>">
-                            <?php foreach($data->link->settings->list_items as $item): ?>
-                                <?php if(!empty(trim($item))): ?>
-                                    <li class="<?= 'my-' . ($data->link->settings->margin_items_y ?? 2) ?>" style="<?= 'margin-left: ' . ($data->link->settings->margin_items_x ?? 1) . 'rem;' ?>">
-                                        <?= htmlspecialchars($item) ?>
-                                    </li>
-                                <?php endif ?>
-                            <?php endforeach ?>
-                        </ul>
-                    <?php endif ?>
-                <?php else: ?>
-                    <p class="text-muted mb-0"><?= l('microsite_text.no_items') ?></p>
-                <?php endif ?>
-            </div>
+    <?php else: ?>
+        <!-- Text block without styling (direct content) -->
+        <div class="text-break <?= $animation_class ?>" <?= $style_attribute ?> data-text data-text-color data-text-alignment>
+            <?= $data->link->settings->content ?? '' ?>
         </div>
-        
     <?php endif ?>
     
 </div>

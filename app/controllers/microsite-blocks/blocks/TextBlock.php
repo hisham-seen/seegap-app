@@ -26,9 +26,33 @@ class TextBlock extends BaseBlockHandler {
         return ['text'];
     }
     
+    /**
+     * Sanitize HTML content while preserving WYSIWYG formatting
+     * Allows safe HTML tags that Quill editor generates
+     */
+    private function sanitizeWysiwygContent($content) {
+        // Remove dangerous attributes and scripts first
+        $content = preg_replace('/on\w+="[^"]*"/i', '', $content); // Remove onclick, onload, etc.
+        $content = preg_replace('/javascript:/i', '', $content); // Remove javascript: URLs
+        $content = preg_replace('/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/mi', '', $content); // Remove script tags
+        
+        // Allow these HTML tags that Quill uses (preserve all attributes for formatting)
+        $allowed_tags = [
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's',
+            'ol', 'ul', 'li',
+            'a', 'span', 'div',
+            'blockquote'
+        ];
+        
+        // Use strip_tags to allow only safe tags while preserving all attributes
+        $content = strip_tags($content, '<' . implode('><', $allowed_tags) . '>');
+        
+        return $content;
+    }
+    
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
-        $_POST['text_type'] = in_array($_POST['text_type'], ['heading', 'paragraph', 'list']) ? query_clean($_POST['text_type']) : 'paragraph';
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -36,11 +60,28 @@ class TextBlock extends BaseBlockHandler {
 
         $type = 'text';
         
-        // Base settings for all text types
+        // Simplified settings for text block with WYSIWYG content
         $settings = [
-            'text_type' => $_POST['text_type'],
+            'content' => isset($_POST['content']) ? $this->sanitizeWysiwygContent($_POST['content']) : '',
             'text_color' => '#ffffff',
             'text_alignment' => 'center',
+            
+            /* Animation settings */
+            'animation' => false,
+            'animation_runs' => 'repeat-1',
+            'animation_delay' => 0,
+            
+            /* Styling defaults (transparent/minimal) */
+            'background_color' => '#00000000', // Transparent
+            'border_width' => 0, // No border
+            'border_color' => '#ffffff',
+            'border_radius' => 4, // 4px default radius
+            'border_style' => 'solid',
+            'border_shadow_offset_x' => 0, // No shadow
+            'border_shadow_offset_y' => 0,
+            'border_shadow_blur' => 0,
+            'border_shadow_spread' => 0,
+            'border_shadow_color' => '#00000000', // Transparent shadow
             
             /* Display settings */
             'display_continents' => [],
@@ -51,61 +92,6 @@ class TextBlock extends BaseBlockHandler {
             'display_operating_systems' => [],
             'display_browsers' => [],
         ];
-
-        // Type-specific settings
-        switch($_POST['text_type']) {
-            case 'heading':
-                $settings['text'] = isset($_POST['text']) ? mb_substr(query_clean($_POST['text']), 0, 256) : '';
-                $settings['heading_type'] = in_array($_POST['heading_type'] ?? 'h1', ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']) ? query_clean($_POST['heading_type']) : 'h1';
-                $settings['verified_location'] = '';
-                break;
-                
-            case 'paragraph':
-                $settings['text'] = isset($_POST['text']) ? mb_substr(input_clean($_POST['text']), 0, 2048) : '';
-                $settings['background_color'] = '#00000000';
-                $settings['border_radius'] = 'rounded';
-                $settings['border_shadow_offset_x'] = 0;
-                $settings['border_shadow_offset_y'] = 0;
-                $settings['border_shadow_blur'] = 20;
-                $settings['border_shadow_spread'] = 0;
-                $settings['border_shadow_color'] = '#00000010';
-                $settings['border_width'] = 0;
-                $settings['border_style'] = 'solid';
-                $settings['border_color'] = '#ffffff';
-                break;
-                
-            case 'list':
-                $settings['list_type'] = in_array($_POST['list_type'] ?? 'unordered', ['ordered', 'unordered']) ? query_clean($_POST['list_type']) : 'unordered';
-                $settings['text_alignment'] = 'left';
-                $settings['background_color'] = '#00000000';
-                $settings['border_width'] = 0;
-                $settings['border_color'] = '#ffffff';
-                $settings['border_radius'] = 'rounded';
-                $settings['border_style'] = 'solid';
-                $settings['border_shadow_offset_x'] = 0;
-                $settings['border_shadow_offset_y'] = 0;
-                $settings['border_shadow_blur'] = 0;
-                $settings['border_shadow_spread'] = 0;
-                $settings['border_shadow_color'] = '#00000010';
-                $settings['margin_items_y'] = 2;
-                $settings['margin_items_x'] = 1;
-                
-                // Process list items for create
-                $list_items = [];
-                if(isset($_POST['list_items'])) {
-                    foreach($_POST['list_items'] as $key => $list_item) {
-                        if(empty(trim($list_item))) continue;
-                        if($key >= 100) continue;
-                        $list_items[] = mb_substr(input_clean($list_item), 0, 256);
-                    }
-                }
-                // Ensure at least one empty item for new lists
-                if(empty($list_items)) {
-                    $list_items = [''];
-                }
-                $settings['list_items'] = $list_items;
-                break;
-        }
 
         $settings = json_encode($settings);
         $settings = $this->process_microsite_theme_id_settings($link, $settings, $type);
@@ -129,7 +115,6 @@ class TextBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['text_type'] = in_array($_POST['text_type'], ['heading', 'paragraph', 'list']) ? query_clean($_POST['text_type']) : 'paragraph';
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
         $_POST['text_alignment'] = in_array($_POST['text_alignment'], ['center', 'justify', 'left', 'right']) ? query_clean($_POST['text_alignment']) : 'center';
 
@@ -140,11 +125,28 @@ class TextBlock extends BaseBlockHandler {
             die();
         }
 
-        // Base settings for all text types
+        // Simplified settings for text block with WYSIWYG content
         $settings = [
-            'text_type' => $_POST['text_type'],
+            'content' => isset($_POST['content']) ? $this->sanitizeWysiwygContent($_POST['content']) : '',
             'text_color' => $_POST['text_color'],
             'text_alignment' => $_POST['text_alignment'],
+            
+            /* Animation settings */
+            'animation' => isset($_POST['animation']) && $_POST['animation'] !== 'false' ? query_clean($_POST['animation']) : false,
+            'animation_runs' => in_array($_POST['animation_runs'] ?? 'repeat-1', ['repeat-1', 'repeat-2', 'repeat-3', 'infinite']) ? query_clean($_POST['animation_runs']) : 'repeat-1',
+            'animation_delay' => isset($_POST['animation_delay']) ? (int) $_POST['animation_delay'] : 0,
+            
+            /* Background, border, and shadow settings */
+            'background_color' => !verify_hex_color($_POST['background_color']) ? '#00000000' : $_POST['background_color'],
+            'border_width' => in_array($_POST['border_width'], range(0, 20)) ? (int) $_POST['border_width'] : 0,
+            'border_color' => !verify_hex_color($_POST['border_color']) ? '#ffffff' : $_POST['border_color'],
+            'border_radius' => (is_numeric($_POST['border_radius']) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 4,
+            'border_style' => in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'inset', 'outset']) ? query_clean($_POST['border_style']) : 'solid',
+            'border_shadow_offset_x' => in_array($_POST['border_shadow_offset_x'], range(-50, 50)) ? (int) $_POST['border_shadow_offset_x'] : 0,
+            'border_shadow_offset_y' => in_array($_POST['border_shadow_offset_y'], range(-50, 50)) ? (int) $_POST['border_shadow_offset_y'] : 0,
+            'border_shadow_blur' => in_array($_POST['border_shadow_blur'], range(0, 50)) ? (int) $_POST['border_shadow_blur'] : 0,
+            'border_shadow_spread' => in_array($_POST['border_shadow_spread'], range(0, 20)) ? (int) $_POST['border_shadow_spread'] : 0,
+            'border_shadow_color' => !verify_hex_color($_POST['border_shadow_color']) ? '#00000000' : $_POST['border_shadow_color'],
             
             /* Display settings */
             'display_continents' => $_POST['display_continents'],
@@ -156,56 +158,6 @@ class TextBlock extends BaseBlockHandler {
             'display_browsers' => $_POST['display_browsers'],
         ];
 
-        // Type-specific settings
-        switch($_POST['text_type']) {
-            case 'heading':
-                $settings['text'] = mb_substr(query_clean($_POST['text']), 0, 256);
-                $settings['heading_type'] = in_array($_POST['heading_type'], ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']) ? query_clean($_POST['heading_type']) : 'h1';
-                $settings['verified_location'] = isset($_POST['verified_location']) && in_array($_POST['verified_location'], ['', 'left', 'right']) ? query_clean($_POST['verified_location']) : '';
-                break;
-                
-            case 'paragraph':
-                $settings['text'] = mb_substr(input_clean($_POST['text']), 0, 2048);
-                $settings['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
-                $settings['border_width'] = in_array($_POST['border_width'], [0, 1, 2, 3, 4, 5]) ? (int) $_POST['border_width'] : 0;
-                $settings['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'inset', 'outset']) ? query_clean($_POST['border_style']) : 'solid';
-                $settings['border_color'] = !verify_hex_color($_POST['border_color']) ? '#000000' : $_POST['border_color'];
-                $settings['border_shadow_offset_x'] = in_array($_POST['border_shadow_offset_x'], range(-20, 20)) ? (int) $_POST['border_shadow_offset_x'] : 0;
-                $settings['border_shadow_offset_y'] = in_array($_POST['border_shadow_offset_y'], range(-20, 20)) ? (int) $_POST['border_shadow_offset_y'] : 0;
-                $settings['border_shadow_blur'] = in_array($_POST['border_shadow_blur'], range(0, 20)) ? (int) $_POST['border_shadow_blur'] : 0;
-                $settings['border_shadow_spread'] = in_array($_POST['border_shadow_spread'], range(0, 10)) ? (int) $_POST['border_shadow_spread'] : 0;
-                $settings['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#00000000' : $_POST['border_shadow_color'];
-                $settings['background_color'] = !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
-                break;
-                
-            case 'list':
-                $settings['list_type'] = in_array($_POST['list_type'], ['ordered', 'unordered']) ? query_clean($_POST['list_type']) : 'unordered';
-                $settings['background_color'] = !verify_hex_color($_POST['background_color']) ? '#000000' : $_POST['background_color'];
-                $settings['border_width'] = isset($_POST['border_width']) ? (int) $_POST['border_width'] : 0;
-                $settings['border_color'] = !verify_hex_color($_POST['border_color']) ? '#000000' : $_POST['border_color'];
-                $settings['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
-                $settings['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'outset', 'inset']) ? query_clean($_POST['border_style']) : 'solid';
-                $settings['border_shadow_offset_x'] = isset($_POST['border_shadow_offset_x']) ? (int) $_POST['border_shadow_offset_x'] : 0;
-                $settings['border_shadow_offset_y'] = isset($_POST['border_shadow_offset_y']) ? (int) $_POST['border_shadow_offset_y'] : 0;
-                $settings['border_shadow_blur'] = isset($_POST['border_shadow_blur']) ? (int) $_POST['border_shadow_blur'] : 0;
-                $settings['border_shadow_spread'] = isset($_POST['border_shadow_spread']) ? (int) $_POST['border_shadow_spread'] : 0;
-                $settings['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#000000' : $_POST['border_shadow_color'];
-                $settings['margin_items_y'] = isset($_POST['margin_items_y']) ? (int) $_POST['margin_items_y'] : 2;
-                $settings['margin_items_x'] = isset($_POST['margin_items_x']) ? (int) $_POST['margin_items_x'] : 1;
-
-                // Process list items
-                $list_items = [];
-                if(isset($_POST['list_items'])) {
-                    foreach($_POST['list_items'] as $key => $list_item) {
-                        if(empty(trim($list_item))) continue;
-                        if($key >= 100) continue;
-                        $list_items[] = mb_substr(input_clean($list_item), 0, 256);
-                    }
-                }
-                $settings['list_items'] = $list_items;
-                break;
-        }
-
         /* Database query */
         db()->where('microsite_block_id', $_POST['microsite_block_id'])->update('microsites_blocks', [
             'settings' => json_encode($settings),
@@ -216,7 +168,7 @@ class TextBlock extends BaseBlockHandler {
 
         /* Clear the cache */
         cache()->deleteItem('microsite_blocks?link_id=' . $microsite_block->link_id);
-
+        
         Response::json(l('global.success_message.update2'), 'success');
     }
     

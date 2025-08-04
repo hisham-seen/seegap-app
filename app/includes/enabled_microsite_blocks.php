@@ -9,5 +9,6 @@
 
 defined('SEEGAP') || die();
 
-// Return all blocks without any filtering - all blocks are now available to all users
-return require APP_PATH . 'includes/microsite_blocks.php';
+// Return the enabled microsite blocks
+$microsite_blocks = require APP_PATH . 'includes/microsite_blocks.php';
+return $microsite_blocks;

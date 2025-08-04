@@ -311,27 +311,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#microsite_block_paragraph_container" aria-expanded="false" aria-controls="microsite_block_paragraph_container">
-                <i class="fas fa-fw fa-paragraph fa-sm mr-1"></i> <?= l('admin_microsites_themes.microsite_block_paragraph') ?>
-            </button>
 
-            <div class="collapse" id="microsite_block_paragraph_container">
-                <div class="form-group">
-                    <label for="microsite_block_paragraph_text_color"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_link.text_color') ?></label>
-                    <input id="microsite_block_paragraph_text_color" type="hidden" name="microsite_block_paragraph_text_color" class="form-control" value="<?= $data->microsite_theme->settings->microsite_block_paragraph->text_color ?>" required="required" data-color-picker />
-                </div>
-            </div>
-
-            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#microsite_block_heading_container" aria-expanded="false" aria-controls="microsite_block_heading_container">
-                <i class="fas fa-fw fa-heading fa-sm mr-1"></i> <?= l('admin_microsites_themes.microsite_block_heading') ?>
-            </button>
-
-            <div class="collapse" id="microsite_block_heading_container">
-                <div class="form-group">
-                    <label for="microsite_block_heading_text_color"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('microsite_link.text_color') ?></label>
-                    <input id="microsite_block_heading_text_color" type="hidden" name="microsite_block_heading_text_color" class="form-control" value="<?= $data->microsite_theme->settings->microsite_block_heading->text_color ?>" required="required" data-color-picker />
-                </div>
-            </div>
 
             <button type="submit" name="submit" class="btn btn-lg btn-block btn-primary mt-4"><?= l('global.update') ?></button>
         </form>

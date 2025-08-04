@@ -1,570 +1,836 @@
 <?php defined('SEEGAP') || die() ?>
 
 <?php
-/* Check for display rules */
-if(!$data->microsite_block->is_display_enabled) {
-    return;
+/* Generate all styles based on settings - following Image Block pattern exactly */
+$all_styles = [];
+$animation_class = '';
+
+// Get form settings
+$form_settings = $data->link->settings;
+
+// Handle background color
+if (isset($form_settings->background_color) && $form_settings->background_color !== '#00000000') {
+    $all_styles[] = 'background-color: ' . $form_settings->background_color;
+} else {
+    $all_styles[] = 'background-color: #0000001A';
 }
 
-/* Prepare variables */
-$microsite_block = $data->microsite_block;
-$settings = $microsite_block->settings;
-$form_type = $settings->form_type ?? 'email';
+// Handle text color
+if (isset($form_settings->text_color)) {
+    $all_styles[] = 'color: ' . $form_settings->text_color;
+}
 
-/* Generate unique form ID */
-$form_id = 'form_' . $microsite_block->microsite_block_id;
+// Handle border - following exact image block pattern
+if (isset($form_settings->border_width) && $form_settings->border_width > 0) {
+    $border_width = $form_settings->border_width;
+    $border_color = $form_settings->border_color ?? '#ffffff';
+    $border_style = $form_settings->border_style ?? 'solid';
+    $all_styles[] = 'border: ' . $border_width . 'px ' . $border_style . ' ' . $border_color;
+}
 
-/* Prepare CSS classes */
-$css_classes = [
-    'microsite-block',
-    'microsite-block-form',
-    'microsite-block-form-' . $form_type,
-    $settings->border_radius ?? 'rounded',
-];
-
-if($settings->animation ?? false) {
-    $css_classes[] = 'animate__animated';
-    $css_classes[] = 'animate__' . $settings->animation;
-    if($settings->animation_runs ?? 'repeat-1' != 'repeat-1') {
-        $css_classes[] = 'animate__' . $settings->animation_runs;
+// Handle border radius - following exact image block pattern
+if (isset($form_settings->border_radius)) {
+    switch ($form_settings->border_radius) {
+        case 'straight':
+            $all_styles[] = 'border-radius: 0';
+            break;
+        case 'round':
+            $all_styles[] = 'border-radius: 50px';
+            break;
+        case 'rounded':
+            $all_styles[] = 'border-radius: 0.25rem';
+            break;
+        case 'rounded-sm':
+            $all_styles[] = 'border-radius: 0.125rem';
+            break;
+        case 'rounded-lg':
+            $all_styles[] = 'border-radius: 0.5rem';
+            break;
+        case 'rounded-xl':
+            $all_styles[] = 'border-radius: 0.75rem';
+            break;
+        case 'rounded-2xl':
+            $all_styles[] = 'border-radius: 1rem';
+            break;
+        case 'rounded-3xl':
+            $all_styles[] = 'border-radius: 1.5rem';
+            break;
+        case 'rounded-full':
+            $all_styles[] = 'border-radius: 9999px';
+            break;
     }
 }
 
-/* Prepare inline styles */
-$inline_styles = [];
-$inline_styles[] = 'color: ' . ($settings->text_color ?? '#000000');
-$inline_styles[] = 'background-color: ' . ($settings->background_color ?? '#ffffff');
-$inline_styles[] = 'text-align: ' . ($settings->text_alignment ?? 'center');
-
-if(isset($settings->border_width) && $settings->border_width > 0) {
-    $inline_styles[] = 'border: ' . $settings->border_width . 'px ' . ($settings->border_style ?? 'solid') . ' ' . ($settings->border_color ?? '#000000');
+// Handle shadow - following exact image block pattern
+if (isset($form_settings->border_shadow_blur) && $form_settings->border_shadow_blur > 0) {
+    $shadow_x = $form_settings->border_shadow_offset_x ?? 0;
+    $shadow_y = $form_settings->border_shadow_offset_y ?? 0;
+    $shadow_blur = $form_settings->border_shadow_blur ?? 0;
+    $shadow_spread = $form_settings->border_shadow_spread ?? 0;
+    $shadow_color = $form_settings->border_shadow_color ?? '#00000010';
+    $all_styles[] = 'box-shadow: ' . $shadow_x . 'px ' . $shadow_y . 'px ' . $shadow_blur . 'px ' . $shadow_spread . 'px ' . $shadow_color;
 }
 
-if(isset($settings->border_shadow_blur) && $settings->border_shadow_blur > 0) {
-    $shadow_x = $settings->border_shadow_offset_x ?? 0;
-    $shadow_y = $settings->border_shadow_offset_y ?? 0;
-    $shadow_blur = $settings->border_shadow_blur ?? 0;
-    $shadow_spread = $settings->border_shadow_spread ?? 0;
-    $shadow_color = $settings->border_shadow_color ?? '#000000';
-    $inline_styles[] = 'box-shadow: ' . $shadow_x . 'px ' . $shadow_y . 'px ' . $shadow_blur . 'px ' . $shadow_spread . 'px ' . $shadow_color;
+// Handle animation - following exact image block pattern
+if (isset($form_settings->animation) && $form_settings->animation && $form_settings->animation !== 'false') {
+    $animation_class = 'animate__animated animate__' . $form_settings->animation;
+    if (isset($form_settings->animation_runs) && $form_settings->animation_runs !== 'repeat-1') {
+        $animation_class .= ' animate__' . $form_settings->animation_runs;
+    }
+    if (isset($form_settings->animation_delay) && $form_settings->animation_delay > 0) {
+        $delay_class = 'animate__delay-' . ($form_settings->animation_delay / 1000) . 's';
+        $animation_class .= ' ' . $delay_class;
+    }
 }
 
-$style_attribute = 'style="' . implode('; ', $inline_styles) . '"';
+// Create style attributes - separate for button and inline form
+$button_styles = $all_styles; // Button gets all styles except padding
+$inline_styles = array_merge($all_styles, ['padding: 1.5rem']); // Inline form gets padding too
+
+$button_style_attribute = !empty($button_styles) ? 'style="' . implode('; ', $button_styles) . ';"' : '';
+$inline_style_attribute = !empty($inline_styles) ? 'style="' . implode('; ', $inline_styles) . ';"' : '';
+$form_id = 'form_' . $data->link->microsite_block_id;
+$questions = $form_settings->questions ?? [];
 ?>
 
-<div class="<?= implode(' ', $css_classes) ?>" <?= $style_attribute ?> data-microsite-block-id="<?= $microsite_block->microsite_block_id ?>">
+<div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?> text-<?= $data->link->settings->text_alignment ?? 'center' ?>">
     
-    <?php if(!empty($settings->image) || !empty($settings->icon)): ?>
-        <div class="microsite-block-form-media mb-3">
-            <?php if(!empty($settings->image)): ?>
-                <img src="<?= \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $settings->image ?>" class="img-fluid" alt="<?= $settings->name ?>" loading="lazy" />
-            <?php elseif(!empty($settings->icon)): ?>
-                <i class="<?= $settings->icon ?> fa-2x mb-2"></i>
+    <?php if(($form_settings->display_mode ?? 'inline') == 'button'): ?>
+        <!-- Button mode - show button that opens modal -->
+        <button type="button" class="btn btn-block btn-primary link-btn <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?> <?= 'link-btn-' . ($form_settings->border_radius ?? 'rounded') ?> <?= $animation_class ?>" 
+                <?= $button_style_attribute ?>
+                data-toggle="modal" data-target="#<?= $form_id ?>_modal">
+            
+            <?php if($form_settings->image ?? false): ?>
+                <div class="link-btn-image-wrapper <?= 'link-btn-' . ($form_settings->border_radius ?? 'rounded') ?>" style="margin-bottom: 8px;">
+                    <img src="<?= \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $form_settings->image ?>" class="link-btn-image" loading="lazy" style="max-height: 32px; width: auto;" />
+                </div>
             <?php endif ?>
+
+            <?php if($form_settings->icon ?? false): ?>
+                <i class="<?= $form_settings->icon ?> mr-1"></i>
+            <?php endif ?>
+
+            <span><?= $form_settings->button_text ?? l('global.submit') ?></span>
+        </button>
+
+    <?php else: ?>
+        <!-- Inline mode - show form directly -->
+        <div class="microsite-form-block <?= $animation_class ?>" <?= $inline_style_attribute ?>>
+            
+            <?php if($form_settings->image ?? false): ?>
+                <div class="text-center mb-3">
+                    <img src="<?= \SeeGap\Uploads::get_full_url('block_thumbnail_images') . $form_settings->image ?>" class="img-fluid" loading="lazy" style="max-height: 100px; width: auto;" />
+                </div>
+            <?php endif ?>
+
+            <?php if($form_settings->form_heading ?? false): ?>
+                <h4 class="mb-3"><?= $form_settings->form_heading ?></h4>
+            <?php endif ?>
+
+            <?php if($form_settings->form_text ?? false): ?>
+                <p class="mb-4"><?= nl2br($form_settings->form_text) ?></p>
+            <?php endif ?>
+
+            <!-- Form Content for Inline -->
+            <form id="<?= $form_id ?>" class="microsite-form" data-microsite-block-id="<?= $data->link->microsite_block_id ?>">
+                <div class="form-messages"></div>
+                
+                <?php if(!empty($questions)): ?>
+                    <?php foreach($questions as $index => $question): ?>
+                        <div class="form-group mb-3">
+                            <label for="question_<?= $index ?>" class="form-label">
+                                <?= $question->question ?>
+                                <?php if($question->required ?? false): ?>
+                                    <span class="text-danger">*</span>
+                                <?php endif ?>
+                            </label>
+                            <?php if(!empty($question->description)): ?>
+                                <small class="form-text text-muted mb-2"><?= nl2br(htmlspecialchars($question->description)) ?></small>
+                            <?php endif ?>
+                            
+                            <?php switch($question->type ?? 'text'):
+                                case 'text':
+                                case 'email':
+                                case 'phone': ?>
+                                    <input type="<?= $question->type ?>" 
+                                           id="question_<?= $index ?>" 
+                                           name="question_<?= $index ?>" 
+                                           class="form-control" 
+                                           <?= ($question->required ?? false) ? 'required' : '' ?>>
+                                    <?php break; ?>
+                                
+                                <?php case 'textarea': ?>
+                                    <textarea id="question_<?= $index ?>" 
+                                              name="question_<?= $index ?>" 
+                                              class="form-control" 
+                                              rows="3" 
+                                              <?= ($question->required ?? false) ? 'required' : '' ?>></textarea>
+                                    <?php break; ?>
+                                
+                                <?php case 'checkbox': ?>
+                                    <?php if(isset($question->options->choices) && is_array($question->options->choices)): ?>
+                                        <?php foreach($question->options->choices as $choice_index => $choice): ?>
+                                            <div class="form-check">
+                                                <input type="checkbox" 
+                                                       id="question_<?= $index ?>_<?= $choice_index ?>" 
+                                                       name="question_<?= $index ?>[]" 
+                                                       value="<?= htmlspecialchars($choice) ?>" 
+                                                       class="form-check-input">
+                                                <label for="question_<?= $index ?>_<?= $choice_index ?>" class="form-check-label">
+                                                    <?= htmlspecialchars($choice) ?>
+                                                </label>
+                                            </div>
+                                        <?php endforeach ?>
+                                    <?php endif ?>
+                                    <?php break; ?>
+                                
+                                <?php case 'radio': ?>
+                                    <?php if(isset($question->options->choices) && is_array($question->options->choices)): ?>
+                                        <?php foreach($question->options->choices as $choice_index => $choice): ?>
+                                            <div class="form-check">
+                                                <input type="radio" 
+                                                       id="question_<?= $index ?>_<?= $choice_index ?>" 
+                                                       name="question_<?= $index ?>" 
+                                                       value="<?= htmlspecialchars($choice) ?>" 
+                                                       class="form-check-input" 
+                                                       <?= ($question->required ?? false) ? 'required' : '' ?>>
+                                                <label for="question_<?= $index ?>_<?= $choice_index ?>" class="form-check-label">
+                                                    <?= htmlspecialchars($choice) ?>
+                                                </label>
+                                            </div>
+                                        <?php endforeach ?>
+                                    <?php endif ?>
+                                    <?php break; ?>
+                                
+                                <?php case 'dropdown': ?>
+                                    <select id="question_<?= $index ?>" 
+                                            name="question_<?= $index ?>" 
+                                            class="form-control" 
+                                            <?= ($question->required ?? false) ? 'required' : '' ?>>
+                                        <option value="">Select an option...</option>
+                                        <?php if(isset($question->options->choices) && is_array($question->options->choices)): ?>
+                                            <?php foreach($question->options->choices as $choice): ?>
+                                                <option value="<?= htmlspecialchars($choice) ?>"><?= htmlspecialchars($choice) ?></option>
+                                            <?php endforeach ?>
+                                        <?php endif ?>
+                                    </select>
+                                    <?php break; ?>
+                                
+                                <?php case 'rating_star': ?>
+                                    <div class="rating-stars" data-max-rating="<?= $question->options->max_rating ?? 5 ?>">
+                                        <?php for($i = 1; $i <= ($question->options->max_rating ?? 5); $i++): ?>
+                                            <span class="rating-star" data-rating="<?= $i ?>">★</span>
+                                        <?php endfor ?>
+                                        <input type="hidden" id="question_<?= $index ?>" name="question_<?= $index ?>" <?= ($question->required ?? false) ? 'required' : '' ?>>
+                                    </div>
+                                    <?php break; ?>
+                                
+                                <?php case 'rating_number': ?>
+                                    <div class="rating-numbers" data-max-rating="<?= $question->options->max_rating ?? 5 ?>">
+                                        <?php for($i = 1; $i <= ($question->options->max_rating ?? 5); $i++): ?>
+                                            <button type="button" class="btn btn-outline-primary rating-number" data-rating="<?= $i ?>"><?= $i ?></button>
+                                        <?php endfor ?>
+                                        <input type="hidden" id="question_<?= $index ?>" name="question_<?= $index ?>" <?= ($question->required ?? false) ? 'required' : '' ?>>
+                                    </div>
+                                    <?php break; ?>
+                                
+                                <?php case 'rating_emoji': ?>
+                                    <div class="rating-emojis">
+                                        <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="1">😞</button>
+                                        <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="2">😐</button>
+                                        <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="3">🙂</button>
+                                        <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="4">😊</button>
+                                        <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="5">😍</button>
+                                        <input type="hidden" id="question_<?= $index ?>" name="question_<?= $index ?>" <?= ($question->required ?? false) ? 'required' : '' ?>>
+                                    </div>
+                                    <?php break; ?>
+                                    
+                            <?php endswitch ?>
+                        </div>
+                    <?php endforeach ?>
+                <?php endif ?>
+                
+                <?php if($form_settings->show_agreement ?? false): ?>
+                    <div class="form-group form-check mb-3">
+                        <input type="checkbox" id="agreement_<?= $data->link->microsite_block_id ?>" name="agreement" class="form-check-input" required>
+                        <label for="agreement_<?= $data->link->microsite_block_id ?>" class="form-check-label">
+                            <?php if($form_settings->agreement_url ?? false): ?>
+                                <a href="<?= $form_settings->agreement_url ?>" target="_blank"><?= $form_settings->agreement_text ?? 'I agree to the terms and conditions' ?></a>
+                            <?php else: ?>
+                                <?= $form_settings->agreement_text ?? 'I agree to the terms and conditions' ?>
+                            <?php endif ?>
+                            <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                <?php endif ?>
+                
+                <?php if($form_settings->gdpr_consent_required ?? false): ?>
+                    <div class="form-group form-check mb-3">
+                        <input type="checkbox" id="gdpr_consent_<?= $data->link->microsite_block_id ?>" name="gdpr_consent" class="form-check-input" required>
+                        <label for="gdpr_consent_<?= $data->link->microsite_block_id ?>" class="form-check-label">
+                            I consent to the processing of my personal data <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                <?php endif ?>
+                
+                <input type="hidden" name="request_type" value="submit_form">
+                <input type="hidden" name="microsite_block_id" value="<?= $data->link->microsite_block_id ?>">
+                <input type="hidden" name="form_type" value="custom">
+                
+                <button type="submit" class="btn btn-primary btn-block" style="background-color: <?= $form_settings->background_color ?? '#007bff' ?>; border-color: <?= $form_settings->background_color ?? '#007bff' ?>;">
+                    <span class="submit-text"><?= $form_settings->button_text ?? l('global.submit') ?></span>
+                    <span class="submit-loader d-none">
+                        <i class="fas fa-spinner fa-spin"></i> <?= l('global.please_wait') ?>
+                    </span>
+                </button>
+            </form>
         </div>
     <?php endif ?>
-
-    <?php if($form_type == 'custom' && (!empty($settings->form_heading) || !empty($settings->form_text))): ?>
-        <div class="microsite-block-form-header mb-4">
-            <?php if(!empty($settings->form_heading)): ?>
-                <h3 class="microsite-block-form-heading"><?= $settings->form_heading ?></h3>
-            <?php endif ?>
-            <?php if(!empty($settings->form_text)): ?>
-                <p class="microsite-block-form-text"><?= nl2br($settings->form_text) ?></p>
-            <?php endif ?>
-        </div>
-    <?php endif ?>
-
-    <form id="<?= $form_id ?>" class="microsite-block-form-container" data-form-type="<?= $form_type ?>" data-microsite-block-id="<?= $microsite_block->microsite_block_id ?>">
-        
-        <?php if($form_type == 'email'): ?>
-            <!-- Email Collection Form -->
-            <div class="form-group">
-                <input type="email" name="email" class="form-control" placeholder="<?= $settings->email_placeholder ?? l('microsite_email_collector.email_placeholder_default') ?>" required />
-            </div>
-            <div class="form-group">
-                <input type="text" name="name" class="form-control" placeholder="<?= $settings->name_placeholder ?? l('microsite_email_collector.name_placeholder_default') ?>" />
-            </div>
-
-        <?php elseif($form_type == 'phone'): ?>
-            <!-- Phone Collection Form -->
-            <div class="form-group">
-                <input type="tel" name="phone" class="form-control" placeholder="<?= $settings->phone_placeholder ?? l('microsite_phone_collector.phone_placeholder_default') ?>" required />
-            </div>
-            <div class="form-group">
-                <input type="text" name="name" class="form-control" placeholder="<?= $settings->name_placeholder ?? l('microsite_phone_collector.name_placeholder_default') ?>" />
-            </div>
-
-        <?php elseif($form_type == 'contact'): ?>
-            <!-- Contact Form -->
-            <div class="form-group">
-                <input type="email" name="email" class="form-control" placeholder="<?= $settings->email_placeholder ?? l('microsite_contact_collector.email_placeholder_default') ?>" required />
-            </div>
-            <div class="form-group">
-                <input type="text" name="name" class="form-control" placeholder="<?= $settings->name_placeholder ?? l('microsite_contact_collector.name_placeholder_default') ?>" />
-            </div>
-            <div class="form-group">
-                <textarea name="message" class="form-control" rows="4" placeholder="<?= $settings->message_placeholder ?? l('microsite_contact_collector.message_placeholder_default') ?>" required></textarea>
-            </div>
-
-        <?php elseif($form_type == 'custom' && isset($settings->questions) && is_array($settings->questions)): ?>
-            <!-- Custom Form Questions -->
-            <?php foreach($settings->questions as $index => $question): ?>
-                <div class="form-group" data-question-index="<?= $index ?>">
-                    <label class="form-label"><?= $question->question ?><?= $question->required ? ' *' : '' ?></label>
-                    
-                    <?php if($question->type == 'text'): ?>
-                        <input type="text" name="question_<?= $index ?>" class="form-control" <?= $question->required ? 'required' : '' ?> />
-                    
-                    <?php elseif($question->type == 'textarea'): ?>
-                        <textarea name="question_<?= $index ?>" class="form-control" rows="3" <?= $question->required ? 'required' : '' ?>></textarea>
-                    
-                    <?php elseif($question->type == 'email'): ?>
-                        <input type="email" name="question_<?= $index ?>" class="form-control" <?= $question->required ? 'required' : '' ?> />
-                    
-                    <?php elseif($question->type == 'phone'): ?>
-                        <input type="tel" name="question_<?= $index ?>" class="form-control" <?= $question->required ? 'required' : '' ?> />
-                    
-                    <?php elseif($question->type == 'rating_star'): ?>
-                        <div class="rating-stars" data-max-rating="<?= $question->options->max_rating ?? 5 ?>">
-                            <?php for($i = 1; $i <= ($question->options->max_rating ?? 5); $i++): ?>
-                                <span class="rating-star" data-rating="<?= $i ?>">
-                                    <i class="far fa-star"></i>
-                                </span>
-                            <?php endfor ?>
-                            <input type="hidden" name="question_<?= $index ?>" <?= $question->required ? 'required' : '' ?> />
-                        </div>
-                    
-                    <?php elseif($question->type == 'rating_number'): ?>
-                        <div class="rating-numbers" data-max-rating="<?= $question->options->max_rating ?? 5 ?>">
-                            <?php for($i = 1; $i <= ($question->options->max_rating ?? 5); $i++): ?>
-                                <button type="button" class="btn btn-outline-primary rating-number" data-rating="<?= $i ?>"><?= $i ?></button>
-                            <?php endfor ?>
-                            <input type="hidden" name="question_<?= $index ?>" <?= $question->required ? 'required' : '' ?> />
-                        </div>
-                    
-                    <?php elseif($question->type == 'rating_emoji'): ?>
-                        <div class="rating-emojis">
-                            <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="1">😞</button>
-                            <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="2">😐</button>
-                            <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="3">🙂</button>
-                            <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="4">😊</button>
-                            <button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="5">😍</button>
-                            <input type="hidden" name="question_<?= $index ?>" <?= $question->required ? 'required' : '' ?> />
-                        </div>
-                    
-                    <?php elseif($question->type == 'checkbox' && isset($question->options->choices)): ?>
-                        <?php foreach($question->options->choices as $choice_index => $choice): ?>
-                            <div class="form-check">
-                                <input type="checkbox" name="question_<?= $index ?>[]" value="<?= $choice ?>" id="question_<?= $index ?>_<?= $choice_index ?>" class="form-check-input" />
-                                <label class="form-check-label" for="question_<?= $index ?>_<?= $choice_index ?>"><?= $choice ?></label>
-                            </div>
-                        <?php endforeach ?>
-                    
-                    <?php elseif($question->type == 'radio' && isset($question->options->choices)): ?>
-                        <?php foreach($question->options->choices as $choice_index => $choice): ?>
-                            <div class="form-check">
-                                <input type="radio" name="question_<?= $index ?>" value="<?= $choice ?>" id="question_<?= $index ?>_<?= $choice_index ?>" class="form-check-input" <?= $question->required ? 'required' : '' ?> />
-                                <label class="form-check-label" for="question_<?= $index ?>_<?= $choice_index ?>"><?= $choice ?></label>
-                            </div>
-                        <?php endforeach ?>
-                    
-                    <?php elseif($question->type == 'dropdown' && isset($question->options->choices)): ?>
-                        <select name="question_<?= $index ?>" class="form-control" <?= $question->required ? 'required' : '' ?>>
-                            <option value=""><?= l('global.choose') ?></option>
-                            <?php foreach($question->options->choices as $choice): ?>
-                                <option value="<?= $choice ?>"><?= $choice ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    
-                    <?php endif ?>
-                </div>
-            <?php endforeach ?>
-        <?php endif ?>
-
-        <?php if($settings->show_agreement ?? false): ?>
-            <div class="form-group">
-                <div class="form-check">
-                    <input type="checkbox" id="agreement_<?= $microsite_block->microsite_block_id ?>" class="form-check-input" required />
-                    <label class="form-check-label" for="agreement_<?= $microsite_block->microsite_block_id ?>">
-                        <?php if(!empty($settings->agreement_url)): ?>
-                            <a href="<?= $settings->agreement_url ?>" target="_blank" rel="noopener"><?= $settings->agreement_text ?></a>
-                        <?php else: ?>
-                            <?= $settings->agreement_text ?>
-                        <?php endif ?>
-                    </label>
-                </div>
-            </div>
-        <?php endif ?>
-
-        <div class="form-group mb-0">
-            <button type="submit" class="btn btn-primary btn-block">
-                <?= $settings->button_text ?? l('global.submit') ?>
-            </button>
-        </div>
-
-        <div class="form-response mt-3" style="display: none;"></div>
-    </form>
 </div>
 
 <style>
-/* Form Block Specific Styles */
-.microsite-block-form {
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.microsite-block-form .form-control {
-    margin-bottom: 1rem;
-    border-radius: 0.375rem;
-    border: 1px solid #ced4da;
-    padding: 0.75rem;
-}
-
-.microsite-block-form .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.microsite-block-form .btn {
-    border-radius: 0.375rem;
-    padding: 0.75rem 1.5rem;
-    font-weight: 500;
-}
-
-/* Rating Styles */
-.rating-stars {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.rating-star {
+.microsite-form .rating-stars .rating-star {
+    font-size: 2rem;
+    color: #ddd;
     cursor: pointer;
-    font-size: 1.5rem;
-    color: #ffc107;
-    transition: all 0.2s ease;
+    margin-right: 0.25rem;
+    transition: color 0.2s;
 }
 
-.rating-star:hover,
-.rating-star.active {
-    transform: scale(1.1);
-}
-
-.rating-star.active i {
+.microsite-form .rating-stars .rating-star:hover,
+.microsite-form .rating-stars .rating-star.active {
     color: #ffc107;
 }
 
-.rating-star i {
-    color: #e9ecef;
+.microsite-form .rating-numbers .rating-number {
+    margin-right: 0.25rem;
+    min-width: 40px;
 }
 
-.rating-numbers {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
-
-.rating-number {
-    min-width: 3rem;
-    border-radius: 50%;
-}
-
-.rating-number.active {
+.microsite-form .rating-numbers .rating-number.active {
     background-color: #007bff;
     border-color: #007bff;
     color: white;
 }
 
-.rating-emojis {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
-
-.rating-emoji {
+.microsite-form .rating-emojis .rating-emoji {
+    margin-right: 0.25rem;
     font-size: 1.5rem;
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.rating-emoji.active {
+.microsite-form .rating-emojis .rating-emoji.active {
     background-color: #007bff;
     border-color: #007bff;
     color: white;
 }
 
-/* Form Check Styles */
-.microsite-block-form .form-check {
-    margin-bottom: 0.5rem;
+.form-messages {
+    margin-bottom: 1rem;
 }
 
-.microsite-block-form .form-check-label {
-    margin-left: 0.5rem;
-}
-
-/* Response Styles */
-.form-response.success {
-    color: #28a745;
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-}
-
-.form-response.error {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-}
-
-/* Media Styles */
-.microsite-block-form-media {
-    text-align: center;
-}
-
-.microsite-block-form-media img {
-    max-height: 100px;
-    width: auto;
-    border-radius: 0.375rem;
-}
-
-/* Header Styles */
-.microsite-block-form-header {
-    text-align: center;
-}
-
-.microsite-block-form-heading {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.microsite-block-form-text {
-    font-size: 1rem;
-    opacity: 0.8;
+.form-messages .alert {
     margin-bottom: 0;
+}
+
+/* Fix modal z-index issues */
+.modal {
+    z-index: 9999 !important;
+}
+
+.modal-backdrop {
+    z-index: 9998 !important;
+}
+
+.modal-dialog {
+    z-index: 10000 !important;
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('<?= $form_id ?>');
-    if (!form) return;
-
-    // Rating interactions
-    setupRatingInteractions(form);
+    // Create and manage form modals dynamically
+    function createFormModal(formId, formSettings, questions, micrositeBlockId) {
+        // Check if modal already exists
+        if (document.getElementById(formId + '_modal')) {
+            return;
+        }
+        
+        // Create modal HTML
+        const modalHtml = `
+            <div class="modal fade" id="${formId}_modal" tabindex="-1" role="dialog" style="z-index: 99999 !important;">
+                <div class="modal-dialog" role="document" style="z-index: 100000 !important;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${formSettings.form_heading || formSettings.name || 'Form'}</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="${formId}_modal_form" class="microsite-form" data-microsite-block-id="${micrositeBlockId}">
+                                <div class="form-messages"></div>
+                                ${generateQuestionsHtml(questions)}
+                                ${generateAgreementHtml(formSettings, micrositeBlockId)}
+                                ${generateGdprHtml(formSettings, micrositeBlockId)}
+                                <input type="hidden" name="request_type" value="submit_form">
+                                <input type="hidden" name="microsite_block_id" value="${micrositeBlockId}">
+                                <input type="hidden" name="form_type" value="custom">
+                                <button type="submit" class="btn btn-primary btn-block" style="background-color: ${formSettings.background_color || '#007bff'}; border-color: ${formSettings.background_color || '#007bff'};">
+                                    <span class="submit-text">${formSettings.button_text || 'Submit'}</span>
+                                    <span class="submit-loader d-none">
+                                        <i class="fas fa-spinner fa-spin"></i> Please wait...
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Append modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        // Initialize form handlers for the new modal
+        initializeFormHandlers(document.getElementById(formId + '_modal_form'));
+    }
     
-    // Form submission
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        submitForm(form);
-    });
-
-    function setupRatingInteractions(form) {
-        // Star ratings
-        form.querySelectorAll('.rating-stars').forEach(container => {
-            const stars = container.querySelectorAll('.rating-star');
-            const hiddenInput = container.querySelector('input[type="hidden"]');
+    function generateQuestionsHtml(questions) {
+        if (!questions || questions.length === 0) return '';
+        
+        let html = '';
+        questions.forEach((question, index) => {
+            html += `<div class="form-group mb-3">`;
+            html += `<label for="modal_question_${index}" class="form-label">`;
+            html += question.question;
+            if (question.required) html += '<span class="text-danger">*</span>';
+            html += '</label>';
             
-            stars.forEach((star, index) => {
-                star.addEventListener('click', function() {
-                    const rating = parseInt(this.dataset.rating);
-                    hiddenInput.value = rating;
+            if (question.description) {
+                html += `<small class="form-text text-muted mb-2">${question.description.replace(/\n/g, '<br>')}</small>`;
+            }
+            
+            switch (question.type) {
+                case 'text':
+                case 'email':
+                case 'phone':
+                    html += `<input type="${question.type}" id="modal_question_${index}" name="question_${index}" class="form-control" ${question.required ? 'required' : ''}>`;
+                    break;
+                case 'textarea':
+                    html += `<textarea id="modal_question_${index}" name="question_${index}" class="form-control" rows="3" ${question.required ? 'required' : ''}></textarea>`;
+                    break;
+                case 'checkbox':
+                    if (question.options && question.options.choices) {
+                        question.options.choices.forEach((choice, choiceIndex) => {
+                            html += `<div class="form-check">`;
+                            html += `<input type="checkbox" id="modal_question_${index}_${choiceIndex}" name="question_${index}[]" value="${choice}" class="form-check-input">`;
+                            html += `<label for="modal_question_${index}_${choiceIndex}" class="form-check-label">${choice}</label>`;
+                            html += `</div>`;
+                        });
+                    }
+                    break;
+                case 'radio':
+                    if (question.options && question.options.choices) {
+                        question.options.choices.forEach((choice, choiceIndex) => {
+                            html += `<div class="form-check">`;
+                            html += `<input type="radio" id="modal_question_${index}_${choiceIndex}" name="question_${index}" value="${choice}" class="form-check-input" ${question.required ? 'required' : ''}>`;
+                            html += `<label for="modal_question_${index}_${choiceIndex}" class="form-check-label">${choice}</label>`;
+                            html += `</div>`;
+                        });
+                    }
+                    break;
+                case 'dropdown':
+                    html += `<select id="modal_question_${index}" name="question_${index}" class="form-control" ${question.required ? 'required' : ''}>`;
+                    html += '<option value="">Select an option...</option>';
+                    if (question.options && question.options.choices) {
+                        question.options.choices.forEach(choice => {
+                            html += `<option value="${choice}">${choice}</option>`;
+                        });
+                    }
+                    html += '</select>';
+                    break;
+                case 'rating_star':
+                    const maxRating = question.options?.max_rating || 5;
+                    html += `<div class="rating-stars" data-max-rating="${maxRating}">`;
+                    for (let i = 1; i <= maxRating; i++) {
+                        html += `<span class="rating-star" data-rating="${i}">★</span>`;
+                    }
+                    html += `<input type="hidden" id="modal_question_${index}" name="question_${index}" ${question.required ? 'required' : ''}>`;
+                    html += '</div>';
+                    break;
+                case 'rating_number':
+                    const maxRatingNum = question.options?.max_rating || 5;
+                    html += `<div class="rating-numbers" data-max-rating="${maxRatingNum}">`;
+                    for (let i = 1; i <= maxRatingNum; i++) {
+                        html += `<button type="button" class="btn btn-outline-primary rating-number" data-rating="${i}">${i}</button>`;
+                    }
+                    html += `<input type="hidden" id="modal_question_${index}" name="question_${index}" ${question.required ? 'required' : ''}>`;
+                    html += '</div>';
+                    break;
+                case 'rating_emoji':
+                    html += '<div class="rating-emojis">';
+                    const emojis = ['😞', '😐', '🙂', '😊', '😍'];
+                    emojis.forEach((emoji, emojiIndex) => {
+                        html += `<button type="button" class="btn btn-outline-secondary rating-emoji" data-rating="${emojiIndex + 1}">${emoji}</button>`;
+                    });
+                    html += `<input type="hidden" id="modal_question_${index}" name="question_${index}" ${question.required ? 'required' : ''}>`;
+                    html += '</div>';
+                    break;
+            }
+            html += '</div>';
+        });
+        return html;
+    }
+    
+    function generateAgreementHtml(formSettings, micrositeBlockId) {
+        if (!formSettings.show_agreement) return '';
+        
+        let html = '<div class="form-group form-check mb-3">';
+        html += `<input type="checkbox" id="modal_agreement_${micrositeBlockId}" name="agreement" class="form-check-input" required>`;
+        html += `<label for="modal_agreement_${micrositeBlockId}" class="form-check-label">`;
+        
+        if (formSettings.agreement_url) {
+            html += `<a href="${formSettings.agreement_url}" target="_blank">${formSettings.agreement_text || 'I agree to the terms and conditions'}</a>`;
+        } else {
+            html += formSettings.agreement_text || 'I agree to the terms and conditions';
+        }
+        
+        html += '<span class="text-danger">*</span>';
+        html += '</label></div>';
+        return html;
+    }
+    
+    function generateGdprHtml(formSettings, micrositeBlockId) {
+        if (!formSettings.gdpr_consent_required) return '';
+        
+        let html = '<div class="form-group form-check mb-3">';
+        html += `<input type="checkbox" id="modal_gdpr_consent_${micrositeBlockId}" name="gdpr_consent" class="form-check-input" required>`;
+        html += `<label for="modal_gdpr_consent_${micrositeBlockId}" class="form-check-label">`;
+        html += 'I consent to the processing of my personal data <span class="text-danger">*</span>';
+        html += '</label></div>';
+        return html;
+    }
+    
+    // Handle modal button clicks
+    document.querySelectorAll('[data-toggle="modal"][data-target*="_modal"]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetModal = this.getAttribute('data-target').substring(1); // Remove #
+            const formId = targetModal.replace('_modal', '');
+            const blockElement = this.closest('[data-microsite-block-id]');
+            const micrositeBlockId = blockElement.getAttribute('data-microsite-block-id');
+            
+            // Get form settings from PHP (we'll need to pass this data)
+            const formSettings = <?= json_encode($form_settings) ?>;
+            const questions = <?= json_encode($questions) ?>;
+            
+            // Create modal if it doesn't exist
+            createFormModal(formId, formSettings, questions, micrositeBlockId);
+            
+            // Show modal
+            $('#' + targetModal).modal('show');
+        });
+    });
+    
+    function initializeFormHandlers(form) {
+        if (!form) return;
+        
+        // Initialize rating interactions for this form
+        initializeRatingHandlers(form);
+        
+        // Handle form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = form.querySelector('button[type="submit"]');
+            const submitText = submitButton.querySelector('.submit-text');
+            const submitLoader = submitButton.querySelector('.submit-loader');
+            const messagesContainer = form.querySelector('.form-messages');
+            
+            // Show loading state
+            submitButton.disabled = true;
+            submitText.classList.add('d-none');
+            submitLoader.classList.remove('d-none');
+            
+            // Clear previous messages
+            messagesContainer.innerHTML = '';
+            
+            // Prepare form data
+            const formData = new FormData(form);
+            
+            // Submit form
+            fetch('<?= url('microsite-block-ajax') ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    messagesContainer.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+                    form.reset();
                     
-                    stars.forEach((s, i) => {
+                    // Reset rating inputs
+                    form.querySelectorAll('.rating-stars .rating-star, .rating-numbers .rating-number, .rating-emojis .rating-emoji').forEach(function(el) {
+                        el.classList.remove('active');
+                    });
+                    form.querySelectorAll('.rating-stars input, .rating-numbers input, .rating-emojis input').forEach(function(input) {
+                        input.value = '';
+                    });
+                    
+                    // Redirect if thank you URL is provided
+                    if (data.details && data.details.thank_you_url) {
+                        setTimeout(function() {
+                            window.location.href = data.details.thank_you_url;
+                        }, 2000);
+                    }
+                    
+                    // Close modal if in modal mode
+                    const modal = form.closest('.modal');
+                    if (modal) {
+                        $(modal).modal('hide');
+                    }
+                } else {
+                    messagesContainer.innerHTML = '<div class="alert alert-danger">' + (data.message || 'An error occurred. Please try again.') + '</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                messagesContainer.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again.</div>';
+            })
+            .finally(() => {
+                // Reset button state
+                submitButton.disabled = false;
+                submitText.classList.remove('d-none');
+                submitLoader.classList.add('d-none');
+            });
+        });
+    }
+    
+    function initializeRatingHandlers(container) {
+        // Handle star ratings
+        container.querySelectorAll('.rating-stars').forEach(function(ratingContainer) {
+            const stars = ratingContainer.querySelectorAll('.rating-star');
+            const input = ratingContainer.querySelector('input[type="hidden"]');
+            
+            stars.forEach(function(star, index) {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(star.dataset.rating);
+                    input.value = rating;
+                    
+                    stars.forEach(function(s, i) {
                         if (i < rating) {
                             s.classList.add('active');
-                            s.querySelector('i').className = 'fas fa-star';
                         } else {
                             s.classList.remove('active');
-                            s.querySelector('i').className = 'far fa-star';
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseover', function() {
+                    const rating = parseInt(star.dataset.rating);
+                    stars.forEach(function(s, i) {
+                        if (i < rating) {
+                            s.style.color = '#ffc107';
+                        } else {
+                            s.style.color = '#ddd';
                         }
                     });
                 });
             });
-        });
-
-        // Number ratings
-        form.querySelectorAll('.rating-numbers').forEach(container => {
-            const buttons = container.querySelectorAll('.rating-number');
-            const hiddenInput = container.querySelector('input[type="hidden"]');
             
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const rating = parseInt(this.dataset.rating);
-                    hiddenInput.value = rating;
-                    
-                    buttons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
+            ratingContainer.addEventListener('mouseleave', function() {
+                const currentRating = parseInt(input.value) || 0;
+                stars.forEach(function(s, i) {
+                    if (i < currentRating) {
+                        s.style.color = '#ffc107';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
                 });
             });
         });
-
-        // Emoji ratings
-        form.querySelectorAll('.rating-emojis').forEach(container => {
-            const buttons = container.querySelectorAll('.rating-emoji');
-            const hiddenInput = container.querySelector('input[type="hidden"]');
-            
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const rating = parseInt(this.dataset.rating);
-                    hiddenInput.value = rating;
-                    
-                    buttons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
+        
+        // Handle number ratings
+        container.querySelectorAll('.rating-numbers .rating-number').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const ratingContainer = button.closest('.rating-numbers');
+                const input = ratingContainer.querySelector('input[type="hidden"]');
+                const rating = parseInt(button.dataset.rating);
+                
+                input.value = rating;
+                
+                ratingContainer.querySelectorAll('.rating-number').forEach(function(btn) {
+                    btn.classList.remove('active');
                 });
+                button.classList.add('active');
+            });
+        });
+        
+        // Handle emoji ratings
+        container.querySelectorAll('.rating-emojis .rating-emoji').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const ratingContainer = button.closest('.rating-emojis');
+                const input = ratingContainer.querySelector('input[type="hidden"]');
+                const rating = parseInt(button.dataset.rating);
+                
+                input.value = rating;
+                
+                ratingContainer.querySelectorAll('.rating-emoji').forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
             });
         });
     }
-
-    function submitForm(form) {
-        const formData = new FormData(form);
-        const responseContainer = form.querySelector('.form-response');
+    
+    // Initialize existing inline forms
+    document.querySelectorAll('.microsite-form').forEach(function(form) {
+        initializeFormHandlers(form);
+    });
+    // Handle rating interactions
+    document.querySelectorAll('.rating-stars').forEach(function(container) {
+        const stars = container.querySelectorAll('.rating-star');
+        const input = container.querySelector('input[type="hidden"]');
         
-        // Add metadata if enabled
-        const metadata = collectMetadata();
-        for (const [key, value] of Object.entries(metadata)) {
-            formData.append('metadata_' + key, value);
-        }
-        
-        // Add form identification
-        formData.append('microsite_block_id', form.dataset.micrositeBlockId);
-        formData.append('form_type', form.dataset.formType);
-        formData.append('action', 'submit_form');
-        
-        // Show loading state
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalText = submitButton.textContent;
-        submitButton.disabled = true;
-        submitButton.textContent = '<?= l('global.loading') ?>';
-        
-        fetch('<?= url('l/microsite-block-ajax') ?>', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                responseContainer.className = 'form-response success';
-                responseContainer.textContent = '<?= $settings->success_text ?? l('global.success_message.basic') ?>';
-                responseContainer.style.display = 'block';
+        stars.forEach(function(star, index) {
+            star.addEventListener('click', function() {
+                const rating = parseInt(star.dataset.rating);
+                input.value = rating;
                 
-                // Reset form
-                form.reset();
-                form.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
-                form.querySelectorAll('input[type="hidden"]').forEach(input => input.value = '');
-                
-                // Redirect if thank you URL is set
-                <?php if(!empty($settings->thank_you_url)): ?>
-                setTimeout(() => {
-                    window.location.href = '<?= $settings->thank_you_url ?>';
-                }, 2000);
-                <?php endif ?>
-            } else {
-                responseContainer.className = 'form-response error';
-                responseContainer.textContent = data.message || '<?= l('global.error_message.basic') ?>';
-                responseContainer.style.display = 'block';
-            }
-        })
-        .catch(error => {
-            responseContainer.className = 'form-response error';
-            responseContainer.textContent = '<?= l('global.error_message.basic') ?>';
-            responseContainer.style.display = 'block';
-        })
-        .finally(() => {
-            submitButton.disabled = false;
-            submitButton.textContent = originalText;
+                stars.forEach(function(s, i) {
+                    if (i < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseover', function() {
+                const rating = parseInt(star.dataset.rating);
+                stars.forEach(function(s, i) {
+                    if (i < rating) {
+                        s.style.color = '#ffc107';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
         });
-    }
-
-    function collectMetadata() {
-        const metadata = {};
         
-        // Basic metadata (always collected)
-        metadata.submission_timestamp = new Date().toISOString();
-        metadata.form_id = '<?= $form_id ?>';
-        metadata.session_id = getSessionId();
-        metadata.javascript_enabled = true;
-        metadata.cookies_enabled = navigator.cookieEnabled;
-        
-        // Additional metadata based on settings
-        <?php if(isset($settings->metadata_capture)): ?>
-            <?php foreach($settings->metadata_capture as $field => $enabled): ?>
-                <?php if($enabled): ?>
-                    <?php if($field == 'country_alpha3' || $field == 'region_code' || $field == 'city_alpha3'): ?>
-                        // Geographic data would be collected server-side
-                    <?php elseif($field == 'browser_name'): ?>
-                        metadata.browser_name = getBrowserName();
-                    <?php elseif($field == 'browser_version'): ?>
-                        metadata.browser_version = getBrowserVersion();
-                    <?php elseif($field == 'os_name'): ?>
-                        metadata.os_name = getOSName();
-                    <?php elseif($field == 'device_type'): ?>
-                        metadata.device_type = getDeviceType();
-                    <?php elseif($field == 'screen_resolution'): ?>
-                        metadata.screen_resolution = screen.width + 'x' + screen.height;
-                    <?php elseif($field == 'language'): ?>
-                        metadata.language = navigator.language;
-                    <?php elseif($field == 'referrer_domain'): ?>
-                        metadata.referrer_domain = document.referrer ? new URL(document.referrer).hostname : '';
-                    <?php elseif($field == 'time_on_page'): ?>
-                        metadata.time_on_page = Math.floor((Date.now() - performance.timing.navigationStart) / 1000);
-                    <?php endif ?>
-                <?php endif ?>
-            <?php endforeach ?>
-        <?php endif ?>
-        
-        return metadata;
-    }
-
-    // Helper functions for metadata collection
-    function getSessionId() {
-        let sessionId = sessionStorage.getItem('microsite_session_id');
-        if (!sessionId) {
-            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            sessionStorage.setItem('microsite_session_id', sessionId);
-        }
-        return sessionId;
-    }
-
-    function getBrowserName() {
-        const userAgent = navigator.userAgent;
-        if (userAgent.includes('Chrome')) return 'Chrome';
-        if (userAgent.includes('Firefox')) return 'Firefox';
-        if (userAgent.includes('Safari')) return 'Safari';
-        if (userAgent.includes('Edge')) return 'Edge';
-        return 'Unknown';
-    }
-
-    function getBrowserVersion() {
-        const userAgent = navigator.userAgent;
-        const match = userAgent.match(/(Chrome|Firefox|Safari|Edge)\/(\d+)/);
-        return match ? match[2] : 'Unknown';
-    }
-
-    function getOSName() {
-        const userAgent = navigator.userAgent;
-        if (userAgent.includes('Windows')) return 'Windows';
-        if (userAgent.includes('Mac')) return 'macOS';
-        if (userAgent.includes('Linux')) return 'Linux';
-        if (userAgent.includes('Android')) return 'Android';
-        if (userAgent.includes('iOS')) return 'iOS';
-        return 'Unknown';
-    }
-
-    function getDeviceType() {
-        if (/Mobi|Android/i.test(navigator.userAgent)) return 'mobile';
-        if (/Tablet|iPad/i.test(navigator.userAgent)) return 'tablet';
-        return 'desktop';
-    }
+        container.addEventListener('mouseleave', function() {
+            const currentRating = parseInt(input.value) || 0;
+            stars.forEach(function(s, i) {
+                if (i < currentRating) {
+                    s.style.color = '#ffc107';
+                } else {
+                    s.style.color = '#ddd';
+                }
+            });
+        });
+    });
+    
+    // Handle number ratings
+    document.querySelectorAll('.rating-numbers .rating-number').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const container = button.closest('.rating-numbers');
+            const input = container.querySelector('input[type="hidden"]');
+            const rating = parseInt(button.dataset.rating);
+            
+            input.value = rating;
+            
+            container.querySelectorAll('.rating-number').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+        });
+    });
+    
+    // Handle emoji ratings
+    document.querySelectorAll('.rating-emojis .rating-emoji').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const container = button.closest('.rating-emojis');
+            const input = container.querySelector('input[type="hidden"]');
+            const rating = parseInt(button.dataset.rating);
+            
+            input.value = rating;
+            
+            container.querySelectorAll('.rating-emoji').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+        });
+    });
+    
+    // Handle form submission
+    document.querySelectorAll('.microsite-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = form.querySelector('button[type="submit"]');
+            const submitText = submitButton.querySelector('.submit-text');
+            const submitLoader = submitButton.querySelector('.submit-loader');
+            const messagesContainer = form.querySelector('.form-messages');
+            
+            // Show loading state
+            submitButton.disabled = true;
+            submitText.classList.add('d-none');
+            submitLoader.classList.remove('d-none');
+            
+            // Clear previous messages
+            messagesContainer.innerHTML = '';
+            
+            // Prepare form data
+            const formData = new FormData(form);
+            
+            // Submit form
+            fetch('<?= url('microsite-block-ajax') ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    messagesContainer.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+                    form.reset();
+                    
+                    // Reset rating inputs
+                    form.querySelectorAll('.rating-stars .rating-star, .rating-numbers .rating-number, .rating-emojis .rating-emoji').forEach(function(el) {
+                        el.classList.remove('active');
+                    });
+                    form.querySelectorAll('.rating-stars input, .rating-numbers input, .rating-emojis input').forEach(function(input) {
+                        input.value = '';
+                    });
+                    
+                    // Redirect if thank you URL is provided
+                    if (data.details && data.details.thank_you_url) {
+                        setTimeout(function() {
+                            window.location.href = data.details.thank_you_url;
+                        }, 2000);
+                    }
+                    
+                    // Close modal if in modal mode
+                    const modal = form.closest('.modal');
+                    if (modal) {
+                        $(modal).modal('hide');
+                    }
+                } else {
+                    messagesContainer.innerHTML = '<div class="alert alert-danger">' + (data.message || 'An error occurred. Please try again.') + '</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                messagesContainer.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again.</div>';
+            })
+            .finally(() => {
+                // Reset button state
+                submitButton.disabled = false;
+                submitText.classList.remove('d-none');
+                submitLoader.classList.add('d-none');
+            });
+        });
+    });
 });
 </script>

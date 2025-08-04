@@ -1580,6 +1580,71 @@
 
                 case 'review':
                     extra_updating_and_potentially_color_inputs = ['title', 'description', 'author_name', 'author_description', 'stars'];
+                    
+                    // Handle multiple reviews preview updates
+                    $(update_form_content).find('.review-author-input').off('change.block-' + microsite_block_id).on('change.block-' + microsite_block_id + ' paste.block-' + microsite_block_id + ' keyup.block-' + microsite_block_id, function() {
+                        // Update the header title in the accordion
+                        let wrapper = $(this).closest('.review-item-wrapper');
+                        let titleSpan = wrapper.find('.review-item-title');
+                        if (titleSpan.length) {
+                            titleSpan.text($(this).val() || 'New Review');
+                        }
+                        
+                        // Refresh the preview iframe to show updated reviews
+                        setTimeout(() => {
+                            window.refresh_microsite_preview();
+                        }, 500);
+                    });
+                    
+                    // Handle star rating changes
+                    $(update_form_content).find('.star-input').off('click.block-' + microsite_block_id).on('click.block-' + microsite_block_id, function() {
+                        let rating = parseInt($(this).attr('data-rating'));
+                        let container = $(this).closest('.star-rating-input');
+                        let hiddenInput = container.find('input[type="hidden"]');
+                        let stars = container.find('.star-input');
+                        
+                        // Update hidden input
+                        hiddenInput.val(rating);
+                        
+                        // Update star display
+                        stars.each(function(i) {
+                            if (i < rating) {
+                                $(this).addClass('active');
+                            } else {
+                                $(this).removeClass('active');
+                            }
+                        });
+                        
+                        // Update header stars
+                        let wrapper = $(this).closest('.review-item-wrapper');
+                        let headerStars = wrapper.find('.review-item-header .ml-2');
+                        if (headerStars.length) {
+                            headerStars.empty();
+                            for (let i = 0; i < 5; i++) {
+                                let star = $('<i>').addClass('fas fa-star').css('font-size', '0.75rem');
+                                if (i < rating) {
+                                    star.addClass('text-warning');
+                                } else {
+                                    star.addClass('text-muted');
+                                }
+                                headerStars.append(star);
+                            }
+                        }
+                        
+                        // Refresh the preview iframe
+                        setTimeout(() => {
+                            window.refresh_microsite_preview();
+                        }, 500);
+                    });
+                    
+                    // Handle slider behavior changes
+                    $(update_form_content).find('input[name="slider_mode"], input[name="auto_play"], input[name="slide_duration"], input[name="show_navigation"], input[name="show_indicators"], input[name="transition_effect"]').off('change.block-' + microsite_block_id).on('change.block-' + microsite_block_id, function() {
+                        // Refresh the preview iframe to show updated slider behavior
+                        setTimeout(() => {
+                            window.refresh_microsite_preview();
+                        }, 500);
+                    });
+                    
                     break;
 
                 case 'external_item':

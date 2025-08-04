@@ -25,3 +25,38 @@ if(LOGGING) {
 }
 
 ini_set('html_errors', 0);
+
+/**
+ * Custom debug logging function
+ * 
+ * @param string $type The type/category of the log entry
+ * @param mixed $data The data to log (array, string, object, etc.)
+ */
+function debug_log($type, $data = null) {
+    if (!defined('LOGGING') || !LOGGING) {
+        return;
+    }
+    
+    $log_file = UPLOADS_PATH . 'logs/' . date('Y-m-d') . '.log';
+    
+    // Ensure the logs directory exists
+    $log_dir = dirname($log_file);
+    if (!is_dir($log_dir)) {
+        mkdir($log_dir, 0755, true);
+    }
+    
+    // Format the log entry
+    $timestamp = date('Y-m-d H:i:s');
+    $log_entry = "[{$timestamp}] {$type}: ";
+    
+    if (is_array($data) || is_object($data)) {
+        $log_entry .= json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    } else {
+        $log_entry .= (string) $data;
+    }
+    
+    $log_entry .= PHP_EOL;
+    
+    // Write to log file
+    file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
+}

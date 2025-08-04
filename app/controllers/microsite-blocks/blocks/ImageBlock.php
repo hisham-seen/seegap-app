@@ -28,8 +28,12 @@ class ImageBlock extends BaseBlockHandler {
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
         $_POST['location_url'] = get_url($_POST['location_url']);
-        $_POST['image_height'] = in_array($_POST['image_height'] ?? 'auto', ['auto', 'small', 'medium', 'large', 'custom']) ? $_POST['image_height'] : 'auto';
-        $_POST['image_height_custom'] = $_POST['image_height'] == 'custom' ? (int) max(50, min(1000, (int) ($_POST['image_height_custom'] ?? 200))) : null;
+        
+        // Process new flexible sizing fields
+        $_POST['image_height'] = !empty($_POST['image_height']) ? (float) $_POST['image_height'] : null;
+        $_POST['image_height_unit'] = in_array($_POST['image_height_unit'] ?? 'px', ['px', 'em', 'rem', '%', 'vw', 'vh']) ? $_POST['image_height_unit'] : 'px';
+        $_POST['image_width'] = !empty($_POST['image_width']) ? (float) $_POST['image_width'] : null;
+        $_POST['image_width_unit'] = in_array($_POST['image_width_unit'] ?? 'px', ['px', 'em', 'rem', '%', 'vw', 'vh']) ? $_POST['image_width_unit'] : 'px';
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -45,8 +49,35 @@ class ImageBlock extends BaseBlockHandler {
             'image' => $db_image,
             'image_alt' => null,
             'open_in_new_tab' => false,
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
             'image_height' => $_POST['image_height'],
-            'image_height_custom' => $_POST['image_height_custom'],
+            'image_height_unit' => $_POST['image_height_unit'],
+            'image_width' => $_POST['image_width'],
+            'image_width_unit' => $_POST['image_width_unit'],
+            
+            /* Style settings */
+            'background_color' => $_POST['background_color'] ?? '#00000000',
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#ffffff',
+            'border_radius' => (is_numeric($_POST['border_radius'] ?? 4) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 4,
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#00000010',
+            'animation' => $_POST['animation'] ?? false,
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            'animation_delay' => (int) ($_POST['animation_delay'] ?? 0),
+
+            /* Verified badge settings */
+            'verified_badge' => [
+                'enabled' => (int) isset($_POST['verified_badge_enabled']),
+                'style' => $_POST['verified_badge_style'] ?? 'checkmark',
+                'position' => $_POST['verified_badge_position'] ?? 'bottom_right',
+                'size' => $_POST['verified_badge_size'] ?? 'medium',
+                'color' => $_POST['verified_badge_color'] ?? '#1da1f2'
+            ],
 
             /* Display settings */
             'display_continents' => [],
@@ -82,8 +113,12 @@ class ImageBlock extends BaseBlockHandler {
         $_POST['location_url'] = get_url($_POST['location_url']);
         $_POST['image_alt'] = mb_substr(query_clean($_POST['image_alt']), 0, 100);
         $_POST['open_in_new_tab'] = (int) isset($_POST['open_in_new_tab']);
-        $_POST['image_height'] = in_array($_POST['image_height'], ['auto', 'small', 'medium', 'large', 'custom']) ? $_POST['image_height'] : 'auto';
-        $_POST['image_height_custom'] = $_POST['image_height'] == 'custom' ? (int) max(50, min(1000, (int) $_POST['image_height_custom'])) : null;
+        
+        // Process new flexible sizing fields
+        $_POST['image_height'] = !empty($_POST['image_height']) ? (float) $_POST['image_height'] : null;
+        $_POST['image_height_unit'] = in_array($_POST['image_height_unit'] ?? 'px', ['px', 'em', 'rem', '%', 'vw', 'vh']) ? $_POST['image_height_unit'] : 'px';
+        $_POST['image_width'] = !empty($_POST['image_width']) ? (float) $_POST['image_width'] : null;
+        $_POST['image_width_unit'] = in_array($_POST['image_width_unit'] ?? 'px', ['px', 'em', 'rem', '%', 'vw', 'vh']) ? $_POST['image_width_unit'] : 'px';
 
         /* Display settings */
         $this->process_display_settings();
@@ -104,8 +139,35 @@ class ImageBlock extends BaseBlockHandler {
             'image' => $db_image,
             'image_alt' => $_POST['image_alt'],
             'open_in_new_tab' => $_POST['open_in_new_tab'],
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
             'image_height' => $_POST['image_height'],
-            'image_height_custom' => $_POST['image_height_custom'],
+            'image_height_unit' => $_POST['image_height_unit'],
+            'image_width' => $_POST['image_width'],
+            'image_width_unit' => $_POST['image_width_unit'],
+            
+            /* Style settings */
+            'background_color' => $_POST['background_color'] ?? '#00000000',
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#ffffff',
+            'border_radius' => (is_numeric($_POST['border_radius']) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 4,
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#00000010',
+            'animation' => $_POST['animation'] ?? false,
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            'animation_delay' => (int) ($_POST['animation_delay'] ?? 0),
+
+            /* Verified badge settings */
+            'verified_badge' => [
+                'enabled' => (int) isset($_POST['verified_badge_enabled']),
+                'style' => $_POST['verified_badge_style'] ?? 'checkmark',
+                'position' => $_POST['verified_badge_position'] ?? 'bottom_right',
+                'size' => $_POST['verified_badge_size'] ?? 'medium',
+                'color' => $_POST['verified_badge_color'] ?? '#1da1f2'
+            ],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

@@ -6,13 +6,13 @@
     </button>
 
     <div class="dropdown-menu dropdown-menu-right">
-        <a href="#" data-toggle="modal" data-target="#datum_delete_modal" data-datum-id="<?= $data->id ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-trash-alt mr-2"></i> <?= l('global.delete') ?></a>
+        <a href="#" data-toggle="modal" data-target="#form_submission_delete_modal" data-form-submission-id="<?= $data->id ?>" class="dropdown-item"><i class="fas fa-fw fa-sm fa-trash-alt mr-2"></i> <?= l('global.delete') ?></a>
     </div>
 </div>
 
 <?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/universal_delete_modal_form.php', [
-    'name' => 'datum',
-    'resource_id' => 'datum_id',
+    'name' => 'form_submission',
+    'resource_id' => 'form_submission_id',
     'has_dynamic_resource_name' => false,
     'path' => 'data/delete'
-]), 'modals', 'datum_delete_modal'); ?>
+]), 'modals', 'form_submission_delete_modal'); ?>

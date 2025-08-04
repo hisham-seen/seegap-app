@@ -88,7 +88,18 @@ document.querySelectorAll('[data-file-image-input-wrapper]').forEach(element => 
                 }
             };
 
-            reader.readAsDataURL(input.files[0]);
+            reader.onerror = () => {
+                showToast('error', 'Error reading file. Please try again.');
+                input.value = '';
+            };
+
+            try {
+                reader.readAsDataURL(input.files[0]);
+            } catch (error) {
+                console.error('FileReader error:', error);
+                showToast('error', 'Error processing file. Please try again.');
+                input.value = '';
+            }
         }
 
         /* Remove image preview / fallback to original */
@@ -236,6 +247,263 @@ document.querySelectorAll('[type="submit"][name="submit"]:not([data-is-ajax])').
     });
 });
 
+/* Global submission tracker to prevent duplicate submissions */
+window.activeSubmissions = window.activeSubmissions || new Map();
+
+/* AJAX form submission handler */
+const initializeAjaxForms = () => {
+    document.querySelectorAll('form:not([data-ajax-handler-attached])').forEach(form => {
+        // Skip forms that have their own dedicated handlers
+        const formName = form.getAttribute('name');
+        if (formName === 'microsite_block_delete_modal') {
+            return;
+        }
+        
+        // Skip microsite settings forms but allow microsite block forms
+        if (form.closest('.modal')) {
+            const modal = form.closest('.modal');
+            const isBlockForm = form.querySelector('[name="block_type"]') || form.querySelector('[name="microsite_block_id"]');
+            
+            if (!isBlockForm && (
+                modal.id.includes('microsite') ||
+                modal.id.includes('_update_form') ||
+                modal.id.startsWith('create_microsite_')
+            )) {
+                return;
+            }
+        }
+        
+        // Mark as processed
+        form.setAttribute('data-ajax-handler-attached', 'true');
+        
+        form.addEventListener('submit', event => {
+            const submitButton = form.querySelector('[type="submit"][data-is-ajax]');
+            
+            if (!submitButton) {
+                return; // Not an AJAX form, let it submit normally
+            }
+            
+            // Prevent default submission
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            
+            // Generate unique form identifier
+            const formId = form.getAttribute('name') || form.id || 'form_' + Math.random().toString(36).substr(2, 9);
+            const uniqueFormId = formId + '_' + (form.closest('.modal')?.id || 'main');
+            
+            // Check if already submitting with more aggressive checks
+            if (window.activeSubmissions.has(uniqueFormId) || 
+                submitButton.disabled || 
+                submitButton.hasAttribute('data-submitting') ||
+                form.hasAttribute('data-form-submitting')) {
+                console.log('Form submission blocked - already in progress');
+                return false;
+            }
+            
+            // Mark as submitting with multiple flags
+            window.activeSubmissions.set(uniqueFormId, Date.now());
+            submitButton.disabled = true;
+            submitButton.classList.add('disabled');
+            submitButton.setAttribute('data-submitting', 'true');
+            form.setAttribute('data-form-submitting', 'true');
+        
+        /* Pause the submit button */
+        pause_submit_button(submitButton);
+        
+        /* Ensure all range inputs have their values properly set before capturing form data */
+        form.querySelectorAll('input[type="range"]').forEach(rangeInput => {
+            rangeInput.setAttribute('value', rangeInput.value);
+        });
+        
+        /* Get form data immediately */
+        const formData = new FormData(form);
+        
+        /* Determine the endpoint based on form type */
+        let endpoint = form.getAttribute('action');
+        
+        if (!endpoint) {
+            /* Check if this is a microsite block form */
+            if (formData.get('request_type') && (formData.get('block_type') || formData.get('microsite_block_id'))) {
+                endpoint = url + 'microsite-block-ajax';
+            } else {
+                /* For regular forms, use the current page */
+                endpoint = window.location.pathname;
+            }
+        }
+        
+        /* Make sure we have the base URL for relative paths */
+        if (endpoint && !endpoint.startsWith('http') && !endpoint.startsWith(url)) {
+            endpoint = url + endpoint.replace(/^\/+/, '');
+        }
+        
+        /* Make AJAX request immediately */
+        fetch(endpoint, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            /* Check if response is JSON */
+            const contentType = response.headers.get('content-type');
+            
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                /* If not JSON, check if it's a successful save that redirected to verification page */
+                return response.text().then(text => {
+                    /* Try to extract meaningful message from HTML */
+                    let message = 'Server returned an unexpected response';
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+                    
+                    /* Look for various message elements */
+                    const messageElement = doc.querySelector('.alert-danger, .alert-warning, .alert-info, .error, .alert, .message, .notification');
+                    if (messageElement) {
+                        message = messageElement.textContent.trim();
+                    } else {
+                        /* If no specific message element, try to get text from body */
+                        const bodyText = doc.body ? doc.body.textContent.trim() : '';
+                        if (bodyText && bodyText.length > 0 && bodyText.length < 200) {
+                            message = bodyText;
+                        }
+                    }
+                    
+                    /* Check if this looks like a verification message (successful save but needs verification) */
+                    if (message.toLowerCase().includes('contact us') && message.toLowerCase().includes('verified')) {
+                        return {
+                            status: 'success',
+                            message: 'Microsite saved successfully! ' + message
+                        };
+                    }
+                    
+                    /* Otherwise treat as error */
+                    return {
+                        status: 'error',
+                        message: message
+                    };
+                });
+            }
+        })
+        .then(data => {
+            /* Enable the submit button */
+            enable_submit_button(submitButton);
+            submitButton.disabled = false;
+            submitButton.classList.remove('disabled');
+            submitButton.removeAttribute('data-submitting');
+            form.removeAttribute('data-form-submitting');
+            
+            /* Clear global submission tracker */
+            window.activeSubmissions.delete(uniqueFormId);
+            
+            if (data.status === 'success') {
+                /* Show success message */
+                if (data.message) {
+                    showToast('success', data.message);
+                }
+                
+                /* Close modal if form is in a modal */
+                const modal = form.closest('.modal');
+                if (modal && typeof $ === 'function') {
+                    setTimeout(() => {
+                        $(modal).modal('hide');
+                    }, 1000); // Small delay to show success message
+                }
+                
+                /* Refresh microsite preview if the function exists */
+                if (typeof window.refresh_microsite_preview === 'function') {
+                    // Add a small delay to ensure server has processed the changes
+                    setTimeout(() => {
+                        window.refresh_microsite_preview();
+                    }, 500);
+                }
+                
+                /* Refresh blocks panel to show the new block */
+                setTimeout(() => {
+                    // Try to reload the current page to refresh the blocks list
+                    if (window.location.href.includes('?tab=blocks')) {
+                        // If we're on the blocks tab, reload the page
+                        window.location.reload();
+                    } else {
+                        // If not on blocks tab, redirect to blocks tab
+                        const currentUrl = new URL(window.location.href);
+                        currentUrl.searchParams.set('tab', 'blocks');
+                        window.location.href = currentUrl.toString();
+                    }
+                }, 1500); // Wait a bit longer to ensure modal closes first
+                
+                /* Handle redirect if provided */
+                if (data.url) {
+                    setTimeout(() => {
+                        redirect(data.url);
+                    }, 1000);
+                }
+            } else if (data.status === 'error') {
+                /* Show error messages */
+                if (data.message) {
+                    if (Array.isArray(data.message)) {
+                        data.message.forEach(msg => showToast('error', msg));
+                    } else {
+                        showToast('error', data.message);
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('AJAX Error:', error);
+            enable_submit_button(submitButton);
+            submitButton.disabled = false;
+            submitButton.classList.remove('disabled');
+            submitButton.removeAttribute('data-submitting');
+            form.removeAttribute('data-form-submitting');
+            
+            /* Clear global submission tracker */
+            window.activeSubmissions.delete(uniqueFormId);
+            
+            showToast('error', 'An error occurred while saving. Please try again.');
+        });
+        
+        return false;
+    });
+});
+};
+
+// Initialize AJAX forms on page load
+initializeAjaxForms();
+
+// Re-initialize AJAX forms when new content is loaded (e.g., via AJAX or modal opening)
+const formObserver = new MutationObserver((mutations) => {
+    let shouldReinitialize = false;
+    
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Check if the added node contains forms or is a form itself
+                    if (node.tagName === 'FORM' || node.querySelector && node.querySelector('form')) {
+                        shouldReinitialize = true;
+                    }
+                }
+            });
+        }
+    });
+    
+    if (shouldReinitialize) {
+        // Small delay to ensure DOM is fully updated
+        setTimeout(() => {
+            initializeAjaxForms();
+        }, 100);
+    }
+});
+
+// Start observing the document for form changes
+formObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
 /* Enable tooltips everywhere */
 let tooltips_initiate = () => {
     if(typeof $ == 'function') {
@@ -317,7 +585,30 @@ const display_notifications = (messages, type, selector) => {
         messages = [messages];
     }
 
-    // Show each message as a toast
+    // Check if we're in a modal with custom handlers - don't show toasts to avoid duplicates
+    if (selector && selector.closest && (
+        selector.closest('#microsite_block_delete_modal') ||
+        selector.closest('[id^="create_microsite_"]') ||
+        selector.closest('[id*="_update_form"]')
+    )) {
+        // Just display in the selector for modals with custom handlers
+        let notification_html = '';
+        messages.forEach(message => {
+            if (message.trim() !== '') {
+                const alertType = type === 'danger' ? 'danger' : (type === 'error' ? 'danger' : type);
+                notification_html += `<div class="alert alert-${alertType} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>`;
+            }
+        });
+        selector.innerHTML = notification_html;
+        return;
+    }
+
+    // Show each message as a toast for regular forms
     messages.forEach(message => {
         if (message.trim() !== '') {
             showToast(type === 'danger' ? 'error' : type, message);
@@ -394,7 +685,7 @@ const get_slug = (string, delimiter = '-', lowercase = true) => {
     string = string.trim().replaceAll('#', '').replaceAll('\\', '').replaceAll('/', '').replaceAll(':', '');
 
     if(lowercase) {
-        string.toLowerCase();
+        string = string.toLowerCase();
     }
 
     return string;
@@ -463,41 +754,93 @@ let character_counter_count = (element, target) => {
 
 let range_counter_initiate = () => {
     document.querySelectorAll('[data-range-counter]').forEach(element => {
-        let label = element.querySelector('label');
-        let label_html = label.innerHTML;
+        // Skip if already initialized
+        if (element.hasAttribute('data-range-counter-initialized')) {
+            return;
+        }
+        
+        const rangeInput = element.querySelector('input[type="range"]');
+        if (!rangeInput) return;
 
-        /* Create a span element to hold the label text */
-        let label_span = document.createElement('span');
-        label_span.innerHTML = label_html;
+        // Mark as initialized
+        element.setAttribute('data-range-counter-initialized', 'true');
 
-        /* Create small element which will display the current range input value */
-        let label_small = document.createElement('small');
-        label_small.classList.add('text-muted');
-        label_small.setAttribute('data-range-counter-wrapper', '');
+        // Create tooltip element if it doesn't exist
+        let tooltip = element.querySelector('[data-range-counter-wrapper]');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.classList.add('range-tooltip');
+            tooltip.setAttribute('data-range-counter-wrapper', '');
+            element.appendChild(tooltip);
+        }
 
-        /* Add new classes to the already existing label */
-        label.classList.add('d-flex', 'justify-content-between', 'align-items-center');
+        // Function to update tooltip position and value
+        const updateTooltip = () => {
+            const value = rangeInput.value;
+            const min = rangeInput.min || 0;
+            const max = rangeInput.max || 100;
+            const suffix = element.getAttribute('data-range-counter-suffix') ?? '';
+            
+            // Calculate percentage position
+            const percentage = ((value - min) / (max - min)) * 100;
+            
+            // Update tooltip content and position
+            tooltip.textContent = `${value}${suffix}`;
+            tooltip.style.left = `${percentage}%`;
+        };
 
-        /* Replace existing label with the new generated content */
-        label.innerHTML = ``;
-        label.appendChild(label_span);
-        label.appendChild(label_small);
-
-        /* Add the event listeners for the range input */
-        element.querySelector(`input`).addEventListener('change', event => {
-            let current_value = event.currentTarget.value;
-            let suffix = element.getAttribute('data-range-counter-suffix') ?? '';
-
-            element.querySelector('[data-range-counter-wrapper]').innerText = `${current_value}${suffix}`;
+        // Add event listeners
+        rangeInput.addEventListener('input', updateTooltip);
+        rangeInput.addEventListener('change', updateTooltip);
+        
+        // Show/hide tooltip on hover and focus
+        rangeInput.addEventListener('mouseenter', () => {
+            tooltip.style.opacity = '1';
+        });
+        
+        rangeInput.addEventListener('mouseleave', () => {
+            tooltip.style.opacity = '0';
+        });
+        
+        rangeInput.addEventListener('focus', () => {
+            tooltip.style.opacity = '1';
+        });
+        
+        rangeInput.addEventListener('blur', () => {
+            tooltip.style.opacity = '0';
         });
 
-        /* Trigger first change event */
-        let event = new Event('change');
-        element.querySelector('input').dispatchEvent(event);
+        // Initial update
+        updateTooltip();
     });
 }
 
+// Initialize range counters on page load
 range_counter_initiate();
+
+// Re-initialize range counters when new content is loaded (e.g., via AJAX)
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Check if the added node or its children have range counters
+                    if (node.hasAttribute && node.hasAttribute('data-range-counter')) {
+                        range_counter_initiate();
+                    } else if (node.querySelector && node.querySelector('[data-range-counter]')) {
+                        range_counter_initiate();
+                    }
+                }
+            });
+        }
+    });
+});
+
+// Start observing the document for changes
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
 
 let password_toggle_view_initiate = () => {
     document.querySelectorAll('[data-password-toggle-view]').forEach(element => {
@@ -572,6 +915,12 @@ function initializeBlockColorPickers(blockId) {
     const block = document.getElementById('feedback_collector_settings_container_' + blockId);
     if (!block) return;
 
+    // Check if Pickr is available
+    if (typeof Pickr === 'undefined') {
+        console.warn('Pickr color picker library is not available');
+        return;
+    }
+
     const pickrOptions = {
         comparison: false,
         components: {
@@ -595,30 +944,38 @@ function initializeBlockColorPickers(blockId) {
     const textColorPickr = block.querySelector('.text_color_pickr');
     const textColorInput = block.querySelector('input[name="text_color"]');
     if (textColorPickr && textColorInput) {
-        const pickr = Pickr.create({
-            el: textColorPickr,
-            default: textColorInput.value || '#000000',
-            ...pickrOptions
-        });
+        try {
+            const pickr = Pickr.create({
+                el: textColorPickr,
+                default: textColorInput.value || '#000000',
+                ...pickrOptions
+            });
 
-        pickr.on('change', hsva => {
-            textColorInput.value = hsva.toHEXA().toString();
-        });
+            pickr.on('change', hsva => {
+                textColorInput.value = hsva.toHEXA().toString();
+            });
+        } catch (error) {
+            console.error('Error initializing text color picker:', error);
+        }
     }
 
     // Initialize background color picker
     const bgColorPickr = block.querySelector('.background_color_pickr');
     const bgColorInput = block.querySelector('input[name="background_color"]');
     if (bgColorPickr && bgColorInput) {
-        const pickr = Pickr.create({
-            el: bgColorPickr,
-            default: bgColorInput.value || '#FFFFFF',
-            ...pickrOptions
-        });
+        try {
+            const pickr = Pickr.create({
+                el: bgColorPickr,
+                default: bgColorInput.value || '#FFFFFF',
+                ...pickrOptions
+            });
 
-        pickr.on('change', hsva => {
-            bgColorInput.value = hsva.toHEXA().toString();
-        });
+            pickr.on('change', hsva => {
+                bgColorInput.value = hsva.toHEXA().toString();
+            });
+        } catch (error) {
+            console.error('Error initializing background color picker:', error);
+        }
     }
 }
 
@@ -732,10 +1089,18 @@ document.addEventListener('show.bs.collapse', function(event) {
     if (blockContent.id && blockContent.id.startsWith('feedback_collector_settings_container_')) {
         const blockId = blockContent.id.replace('feedback_collector_settings_container_', '');
 
+        // Skip if already initialized
+        if (blockContent.hasAttribute('data-initialized')) {
+            return;
+        }
+        blockContent.setAttribute('data-initialized', 'true');
+
         // Initialize daterangepicker for schedule dates
         const startDateInput = document.getElementById(`link_start_date_${blockId}`);
         const endDateInput = document.getElementById(`link_end_date_${blockId}`);
-        if (startDateInput && endDateInput) {
+        if (startDateInput && endDateInput && !startDateInput.hasAttribute('data-daterangepicker-initialized')) {
+            startDateInput.setAttribute('data-daterangepicker-initialized', 'true');
+            endDateInput.setAttribute('data-daterangepicker-initialized', 'true');
             $(`#link_start_date_${blockId},#link_end_date_${blockId}`).daterangepicker({
                 singleDatePicker: true,
                 timePicker: true,
@@ -758,7 +1123,8 @@ document.addEventListener('show.bs.collapse', function(event) {
 
         multiSelects.forEach(selectId => {
             const select = document.getElementById(selectId);
-            if (select && typeof $ === 'function') {
+            if (select && typeof $ === 'function' && !select.hasAttribute('data-select2-initialized')) {
+                select.setAttribute('data-select2-initialized', 'true');
                 $(select).select2({
                     theme: 'bootstrap4',
                     placeholder: 'Select options'
@@ -794,33 +1160,47 @@ document.addEventListener('show.bs.collapse', function(event) {
         };
 
         // Initialize each color picker
-        for (let [key, input] of Object.entries(colorPickers)) {
-            if (input) {
-                const pickrElement = input.parentElement.querySelector(`.${key}_pickr`);
-                if (pickrElement) {
-                    const pickr = Pickr.create({
-                        el: pickrElement,
-                        default: input.value || '#000000',
-                        ...pickrOptions
-                    });
+        if (typeof Pickr !== 'undefined') {
+            for (let [key, input] of Object.entries(colorPickers)) {
+                if (input && !input.hasAttribute('data-pickr-initialized')) {
+                    input.setAttribute('data-pickr-initialized', 'true');
+                    const pickrElement = input.parentElement.querySelector(`.${key}_pickr`);
+                    if (pickrElement) {
+                        try {
+                            const pickr = Pickr.create({
+                                el: pickrElement,
+                                default: input.value || '#000000',
+                                ...pickrOptions
+                            });
 
-                    pickr.on('change', hsva => {
-                        input.value = hsva.toHEXA().toString();
-                    });
+                            pickr.on('change', hsva => {
+                                input.value = hsva.toHEXA().toString();
+                            });
+                        } catch (error) {
+                            console.error(`Error initializing ${key} color picker:`, error);
+                        }
+                    }
                 }
             }
+        } else {
+            console.warn('Pickr color picker library is not available');
         }
 
         // Initialize schedule container visibility
         const scheduleCheckbox = document.getElementById(`link_schedule_${blockId}`);
-        const scheduleContainer = scheduleCheckbox.closest('.form-group').parentElement.nextElementSibling;
+        const scheduleContainer = scheduleCheckbox?.closest('.form-group')?.parentElement?.nextElementSibling;
         
-        if (scheduleCheckbox) {
+        if (scheduleCheckbox && !scheduleCheckbox.hasAttribute('data-schedule-initialized')) {
+            scheduleCheckbox.setAttribute('data-schedule-initialized', 'true');
             scheduleCheckbox.addEventListener('change', () => {
-                scheduleContainer.style.display = scheduleCheckbox.checked ? 'block' : 'none';
+                if (scheduleContainer) {
+                    scheduleContainer.style.display = scheduleCheckbox.checked ? 'block' : 'none';
+                }
             });
             // Set initial state
-            scheduleContainer.style.display = scheduleCheckbox.checked ? 'block' : 'none';
+            if (scheduleContainer) {
+                scheduleContainer.style.display = scheduleCheckbox.checked ? 'block' : 'none';
+            }
         }
 
         // Initialize image display type handler
@@ -828,16 +1208,19 @@ document.addEventListener('show.bs.collapse', function(event) {
         const iconOptionsContainer = document.getElementById(`icon_options_${blockId}`);
         const megaButtonOptionsContainer = document.getElementById(`mega_button_options_${blockId}`);
         
-        if (imageDisplaySelect) {
+        if (imageDisplaySelect && !imageDisplaySelect.hasAttribute('data-image-display-initialized')) {
+            imageDisplaySelect.setAttribute('data-image-display-initialized', 'true');
             const updateImageDisplayOptions = () => {
                 const selectedValue = imageDisplaySelect.value;
                 
-                if (selectedValue === 'icon') {
-                    iconOptionsContainer.style.display = 'block';
-                    megaButtonOptionsContainer.style.display = 'none';
-                } else {
-                    iconOptionsContainer.style.display = 'none';
-                    megaButtonOptionsContainer.style.display = selectedValue === 'mega_button' ? 'block' : 'none';
+                if (iconOptionsContainer && megaButtonOptionsContainer) {
+                    if (selectedValue === 'icon') {
+                        iconOptionsContainer.style.display = 'block';
+                        megaButtonOptionsContainer.style.display = 'none';
+                    } else {
+                        iconOptionsContainer.style.display = 'none';
+                        megaButtonOptionsContainer.style.display = selectedValue === 'mega_button' ? 'block' : 'none';
+                    }
                 }
             };
             
@@ -848,27 +1231,34 @@ document.addEventListener('show.bs.collapse', function(event) {
 
         // Initialize the questions functionality
         const questionsContainer = document.getElementById('questions_container_' + blockId);
-        if (questionsContainer) {
+        if (questionsContainer && !questionsContainer.hasAttribute('data-questions-initialized')) {
+            questionsContainer.setAttribute('data-questions-initialized', 'true');
+            
             // Initialize existing questions
             questionsContainer.querySelectorAll('.question-item').forEach(questionItem => {
-                const questionType = questionItem.querySelector('.question-type');
-                if (questionType) {
-                    questionType.addEventListener('change', () => {
-                        const type = questionType.value;
-                        const optionsContainer = questionItem.querySelector('.question-options-container');
-                        updateQuestionOptions(questionItem, type, optionsContainer);
-                    });
-                }
+                if (!questionItem.hasAttribute('data-question-initialized')) {
+                    questionItem.setAttribute('data-question-initialized', 'true');
+                    
+                    const questionType = questionItem.querySelector('.question-type');
+                    if (questionType) {
+                        questionType.addEventListener('change', () => {
+                            const type = questionType.value;
+                            const optionsContainer = questionItem.querySelector('.question-options-container');
+                            updateQuestionOptions(questionItem, type, optionsContainer);
+                        });
+                    }
 
-                const removeButton = questionItem.querySelector('.remove-question');
-                if (removeButton) {
-                    removeButton.addEventListener('click', () => questionItem.remove());
+                    const removeButton = questionItem.querySelector('.remove-question');
+                    if (removeButton) {
+                        removeButton.addEventListener('click', () => questionItem.remove());
+                    }
                 }
             });
 
             // Add question button handler
             const addQuestionBtn = document.getElementById('add_question_' + blockId);
-            if (addQuestionBtn) {
+            if (addQuestionBtn && !addQuestionBtn.hasAttribute('data-add-question-initialized')) {
+                addQuestionBtn.setAttribute('data-add-question-initialized', 'true');
                 addQuestionBtn.addEventListener('click', () => {
                     const questionCount = questionsContainer.querySelectorAll('.question-item').length;
                     const questionItem = createQuestionItem(blockId, questionCount);
@@ -977,6 +1367,14 @@ function updateQuestionOptions(questionItem, type, optionsContainer) {
 
 /* Product specific functions */
 const ajax_call_helper = (event, controller, request_type, success_callback = () => {}) => {
+    // Prevent multiple calls
+    if (event.currentTarget.hasAttribute('data-processing')) {
+        event.preventDefault();
+        return;
+    }
+    
+    event.currentTarget.setAttribute('data-processing', 'true');
+    
     let row_id = $(event.currentTarget).data('row-id');
 
     let data = {
@@ -1007,16 +1405,23 @@ const ajax_call_helper = (event, controller, request_type, success_callback = ()
         data: data,
         dataType: 'json',
         success: (data) => {
+            event.currentTarget.removeAttribute('data-processing');
+            
             if(data.status == 'error') {
-                alert(data.message[0]);
+                showToast('error', Array.isArray(data.message) ? data.message[0] : data.message);
             }
-
             else if(data.status == 'success') {
-
+                // For delete operations, don't show any message here to avoid duplicates
+                // The success_callback will handle the appropriate response
+                console.log('Delete operation successful:', data);
                 success_callback(event, data);
-
             }
         },
+        error: (xhr, status, error) => {
+            event.currentTarget.removeAttribute('data-processing');
+            console.error('AJAX Error:', error);
+            showToast('error', 'An error occurred. Please try again.');
+        }
     });
 
     event.preventDefault();
@@ -1152,3 +1557,398 @@ window.showToast = (type, message, options = {}) => {
 window.clearToasts = () => {
     ToastManager.clear();
 };
+
+/* Universal Repeater System */
+window.UniversalRepeater = {
+    debug: true, // Enable debug logging
+    
+    log: function(message, data = null) {
+        if (!this.debug) return;
+        
+        const timestamp = new Date().toISOString();
+        const logMessage = `[${timestamp}] UniversalRepeater: ${message}`;
+        
+        if (data) {
+            console.log(logMessage, data);
+            console.log('Data details:', data);
+        } else {
+            console.log(logMessage);
+        }
+    },
+
+    // Initialize drag and drop functionality
+    initializeDragAndDrop: function(containerId) {
+        this.log('initializeDragAndDrop called', { containerId });
+        
+        const container = document.getElementById(containerId);
+        if (!container) {
+            this.log('Container not found', { containerId });
+            return;
+        }
+        
+        if (typeof Sortable === 'undefined') {
+            this.log('Sortable.js not available');
+            return;
+        }
+
+        this.log('Creating Sortable instance', { containerId });
+        new Sortable(container, {
+            handle: '.drag-handle',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            onEnd: function(evt) {
+                UniversalRepeater.log('Sortable onEnd triggered', { containerId });
+                UniversalRepeater.updateFieldNames(containerId);
+            }
+        });
+    },
+
+    // Update field names after reordering
+    updateFieldNames: function(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const items = container.querySelectorAll('[data-repeater-item]');
+        
+        items.forEach((item, index) => {
+            // Update all form fields with array names
+            const inputs = item.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                if (name && name.includes('[') && name.includes(']')) {
+                    // Replace the index in array notation
+                    const newName = name.replace(/\[\d*\]/, `[${index}]`);
+                    input.setAttribute('name', newName);
+                    
+                    // Update associated labels
+                    if (input.id) {
+                        const newId = input.id.replace(/_\d+(_|$)/, `_${index}$1`);
+                        input.id = newId;
+                        
+                        const label = item.querySelector(`label[for="${input.id}"]`);
+                        if (label) {
+                            label.setAttribute('for', newId);
+                        }
+                    }
+                }
+            });
+            
+            // Update collapse targets and IDs
+            const collapseContent = item.querySelector('.collapse');
+            const toggleButton = item.querySelector('[data-target]');
+            
+            if (collapseContent && toggleButton) {
+                const baseId = containerId.replace(/s_container_/, '-item-content-');
+                const newId = `${baseId}-${index}`;
+                collapseContent.id = newId;
+                toggleButton.setAttribute('data-target', `#${newId}`);
+            }
+        });
+    },
+
+    // Add new item
+    addItem: function(event) {
+        this.log('addItem called', { event: event.type, target: event.currentTarget });
+        
+        const button = event.currentTarget;
+        const blockId = button.getAttribute('data-microsite-block-id');
+        const itemType = button.getAttribute('data-add');
+        
+        this.log('Button attributes', { blockId, itemType });
+        
+        const containerId = `${itemType}s_container_${blockId}`;
+        const templateId = `template_${itemType}_${blockId}`;
+        
+        this.log('Looking for elements', { containerId, templateId });
+        
+        const container = document.getElementById(containerId);
+        const template = document.getElementById(templateId);
+        
+        if (!container) {
+            this.log('Container not found', { containerId });
+            console.error('Container not found:', containerId);
+            return;
+        }
+        
+        if (!template) {
+            this.log('Template not found', { templateId });
+            console.error('Template not found:', templateId);
+            return;
+        }
+        
+        this.log('Elements found successfully', { 
+            containerExists: !!container, 
+            templateExists: !!template,
+            templateContent: !!template.content
+        });
+        
+        const maxItems = parseInt(button.getAttribute('data-max-items')) || 50;
+        const currentCount = container.querySelectorAll('[data-repeater-item]').length;
+        
+        this.log('Item count check', { currentCount, maxItems });
+        
+        if (currentCount >= maxItems) {
+            this.log('Maximum items reached', { currentCount, maxItems });
+            alert(`Maximum ${maxItems} items allowed.`);
+            return;
+        }
+        
+        // Clone template
+        this.log('Cloning template');
+        const clone = template.content.cloneNode(true);
+        
+        // Update field names and IDs
+        const inputs = clone.querySelectorAll('input, select, textarea');
+        this.log('Found inputs in template', { inputCount: inputs.length });
+        
+        inputs.forEach(input => {
+            const name = input.getAttribute('name');
+            if (name && name.includes('[]')) {
+                const newName = name.replace('[]', `[${currentCount}]`);
+                input.setAttribute('name', newName);
+                this.log('Updated input name', { oldName: name, newName });
+            }
+            
+            if (input.id && input.id.includes('{index}')) {
+                const newId = input.id.replace('{index}', currentCount);
+                input.id = newId;
+                
+                const label = clone.querySelector(`label[for*="{index}"]`);
+                if (label) {
+                    label.setAttribute('for', newId);
+                }
+                this.log('Updated input ID', { newId });
+            }
+        });
+        
+        // Update collapse targets
+        const collapseContent = clone.querySelector('.collapse');
+        const toggleButton = clone.querySelector('[data-target*="{index}"]');
+        
+        if (collapseContent && toggleButton) {
+            const newId = toggleButton.getAttribute('data-target').replace('{index}', currentCount);
+            collapseContent.id = newId.substring(1); // Remove #
+            toggleButton.setAttribute('data-target', newId);
+            this.log('Updated collapse targets', { newId });
+        }
+        
+        // Append to container
+        this.log('Appending clone to container');
+        container.appendChild(clone);
+        
+        // Initialize event listeners for the new item
+        const newItem = container.lastElementChild;
+        this.log('Initializing event listeners for new item');
+        UniversalRepeater.initializeItemEventListeners(newItem, itemType);
+        
+        // Re-initialize drag and drop
+        setTimeout(() => {
+            this.log('Re-initializing drag and drop');
+            UniversalRepeater.initializeDragAndDrop(containerId);
+        }, 100);
+        
+        // Re-initialize remove buttons
+        this.log('Re-initializing remove buttons');
+        UniversalRepeater.initializeRemoveButtons(containerId);
+        
+        this.log('addItem completed successfully');
+    },
+
+    // Remove item
+    removeItem: function(event) {
+        const button = event.currentTarget;
+        const item = button.closest('[data-repeater-item]');
+        const container = item.parentNode;
+        
+        // Don't allow removing the last item
+        if (container.querySelectorAll('[data-repeater-item]').length <= 1) {
+            alert('At least one item is required.');
+            return;
+        }
+        
+        if (confirm('Are you sure you want to delete this item?')) {
+            item.remove();
+            UniversalRepeater.updateFieldNames(container.id);
+        }
+    },
+
+    // Initialize event listeners for a specific item
+    initializeItemEventListeners: function(item, itemType) {
+        // Title/text input updates
+        const titleInput = item.querySelector('.title-input, .question-text-input, .accordion-title-input');
+        if (titleInput) {
+            titleInput.addEventListener('input', function() {
+                UniversalRepeater.updateItemTitle(this);
+            });
+        }
+        
+        // Type select updates
+        const typeSelect = item.querySelector('.type-select, .question-type-select');
+        if (typeSelect) {
+            typeSelect.addEventListener('change', function() {
+                UniversalRepeater.updateItemType(this, itemType);
+            });
+        }
+        
+        // Required checkbox updates
+        const requiredCheckbox = item.querySelector('.required-input, .question-required-input');
+        if (requiredCheckbox) {
+            requiredCheckbox.addEventListener('change', function() {
+                UniversalRepeater.updateRequiredBadge(this);
+            });
+            // Initialize badge on load
+            UniversalRepeater.updateRequiredBadge(requiredCheckbox);
+        }
+    },
+
+    // Update item title in header
+    updateItemTitle: function(input) {
+        const item = input.closest('[data-repeater-item]');
+        const titleSpan = item.querySelector('.item-title, .question-item-title, .accordion-item-title');
+        if (titleSpan) {
+            titleSpan.textContent = input.value || 'New Item';
+        }
+    },
+
+    // Update item type in header
+    updateItemType: function(select, itemType) {
+        const item = select.closest('[data-repeater-item]');
+        const typeSpan = item.querySelector('.item-header small, .question-item-header small');
+        if (typeSpan) {
+            const typeName = select.options[select.selectedIndex].text;
+            typeSpan.textContent = `(${typeName})`;
+        }
+        
+        // Handle conditional fields based on item type
+        if (itemType === 'form_question') {
+            const choicesGroup = item.querySelector('.question-choices-group');
+            const ratingGroup = item.querySelector('.question-rating-group');
+            
+            if (choicesGroup) {
+                choicesGroup.style.display = ['checkbox', 'radio', 'dropdown'].includes(select.value) ? 'block' : 'none';
+            }
+            
+            if (ratingGroup) {
+                ratingGroup.style.display = ['rating_star', 'rating_number'].includes(select.value) ? 'block' : 'none';
+            }
+        }
+    },
+
+    // Update required badge in header
+    updateRequiredBadge: function(checkbox) {
+        const item = checkbox.closest('[data-repeater-item]');
+        const header = item.querySelector('.item-header .d-flex, .question-item-header .d-flex');
+        if (!header) return;
+        
+        let badge = header.querySelector('.badge');
+        
+        if (checkbox.checked) {
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'badge badge-danger badge-sm ml-1';
+                badge.textContent = 'Required';
+                header.appendChild(badge);
+            }
+        } else {
+            if (badge) {
+                badge.remove();
+            }
+        }
+    },
+
+    // Initialize remove buttons
+    initializeRemoveButtons: function(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        container.querySelectorAll('[data-remove]').forEach(button => {
+            button.removeEventListener('click', UniversalRepeater.removeItem);
+            button.addEventListener('click', UniversalRepeater.removeItem);
+        });
+    },
+
+    // Initialize all repeaters on page load
+    initialize: function() {
+        this.log('initialize called');
+        
+        // Initialize add buttons
+        const addButtons = document.querySelectorAll('[data-add]');
+        this.log('Found add buttons', { count: addButtons.length });
+        
+        addButtons.forEach((button, index) => {
+            this.log('Processing add button', { 
+                index, 
+                dataAdd: button.getAttribute('data-add'),
+                dataMicrositeBlockId: button.getAttribute('data-microsite-block-id'),
+                dataMaxItems: button.getAttribute('data-max-items')
+            });
+            
+            // Remove existing listeners to avoid duplicates
+            button.removeEventListener('click', UniversalRepeater.addItem);
+            button.addEventListener('click', UniversalRepeater.addItem);
+            this.log('Event listener attached to button', { index });
+        });
+        
+        // Initialize existing items
+        const containers = document.querySelectorAll('[id$="_container"]');
+        this.log('Found containers', { count: containers.length });
+        
+        containers.forEach(container => {
+            const containerId = container.id;
+            const itemType = containerId.split('_')[0].replace('s', ''); // Remove 's' from plural
+            
+            this.log('Processing container', { containerId, itemType });
+            
+            // Initialize drag and drop
+            UniversalRepeater.initializeDragAndDrop(containerId);
+            
+            // Initialize remove buttons
+            UniversalRepeater.initializeRemoveButtons(containerId);
+            
+            // Initialize event listeners for existing items
+            const items = container.querySelectorAll('[data-repeater-item]');
+            this.log('Found items in container', { containerId, itemCount: items.length });
+            
+            items.forEach(item => {
+                UniversalRepeater.initializeItemEventListeners(item, itemType);
+            });
+        });
+        
+        this.log('initialize completed');
+    }
+};
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+    UniversalRepeater.initialize();
+});
+
+// Re-initialize when new content is loaded
+const repeaterObserver = new MutationObserver((mutations) => {
+    let shouldReinitialize = false;
+    
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.querySelector && node.querySelector('[data-add]')) {
+                        shouldReinitialize = true;
+                    }
+                }
+            });
+        }
+    });
+    
+    if (shouldReinitialize) {
+        setTimeout(() => {
+            UniversalRepeater.initialize();
+        }, 100);
+    }
+});
+
+repeaterObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});

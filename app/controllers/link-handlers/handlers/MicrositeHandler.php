@@ -199,9 +199,6 @@ class MicrositeHandler extends BaseLinkHandler {
                         $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, \SeeGap\Uploads::get_path('block_images'), \SeeGap\Uploads::get_path('block_images'), 'json_error');
                         break;
 
-                    case 'avatar':
-                        $microsite_block->settings->image = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->image, 'avatars/', 'avatars/', 'json_error');
-                        break;
 
                     case 'header':
                         $microsite_block->settings->avatar = \SeeGap\Uploads::copy_uploaded_file($microsite_block->settings->avatar, 'avatars/', 'avatars/', 'json_error');

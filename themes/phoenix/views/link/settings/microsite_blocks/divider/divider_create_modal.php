@@ -21,15 +21,13 @@
 
                     <div class="notification-container"></div>
 
-                    <div class="form-group" data-range-counter>
-                        <label for="divider_margin_top"><?= l('microsite_divider.margin_top') ?></label>
-                        <input id="divider_margin_top" type="range" name="margin_top" min="0" max="7" step="1" class="form-control-range" />
-                    </div>
-
-                    <div class="form-group" data-range-counter>
-                        <label for="divider_margin_bottom"><?= l('microsite_divider.margin_bottom') ?></label>
-                        <input id="divider_margin_bottom" type="range" name="margin_bottom" min="0" max="7" step="1" class="form-control-range" />
-                    </div>
+                    <?php
+                    // Set up variables for the form panel
+                    $block_id = 'create';
+                    $settings = (object)[];
+                    $form_type = 'create';
+                    include THEME_PATH . 'views/partials/microsite_block_components/divider_block_form_panel.php';
+                    ?>
 
                     <div class="text-center mt-4">
                         <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.submit') ?></button>

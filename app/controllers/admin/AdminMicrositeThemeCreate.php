@@ -91,13 +91,6 @@ class AdminMicrositeThemeCreate extends Controller {
                         'border_radius' => $_POST['microsite_block_socials_border_radius'],
                     ],
 
-                    'microsite_block_paragraph' => [
-                        'text_color' => $_POST['microsite_block_paragraph_text_color'],
-                    ],
-
-                    'microsite_block_heading' => [
-                        'text_color' => $_POST['microsite_block_heading_text_color'],
-                    ],
                 ]);
 
                 /* Database query */
@@ -154,8 +147,6 @@ class AdminMicrositeThemeCreate extends Controller {
             'microsite_block_socials_background_color' => $_POST['microsite_block_socials_background_color'] ?? '#00000000',
             'microsite_block_socials_border_radius' => $_POST['microsite_block_socials_border_radius'] ?? 'rounded',
 
-            'microsite_block_paragraph_text_color' => $_POST['microsite_block_paragraph_text_color'] ?? '#000000',
-            'microsite_block_heading_text_color' => $_POST['microsite_block_heading_text_color'] ?? '#000000',
         ];
 
         /* Main View */

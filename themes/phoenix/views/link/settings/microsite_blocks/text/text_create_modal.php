@@ -1,7 +1,7 @@
 <?php defined('SEEGAP') || die() ?>
 
 <div class="modal fade" id="create_microsite_text" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md" role="document">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -21,46 +21,16 @@
 
                     <div class="notification-container"></div>
 
-                    <div class="form-group">
-                        <label for="text_type"><i class="fas fa-fw fa-text-height fa-sm text-muted mr-1"></i> <?= l('microsite_text.type') ?></label>
-                        <select id="text_type" name="text_type" class="custom-select" onchange="toggleTextTypeFields()">
-                            <option value="paragraph"><?= l('microsite_text.type_paragraph') ?></option>
-                            <option value="heading"><?= l('microsite_text.type_heading') ?></option>
-                            <option value="list"><?= l('microsite_text.type_list') ?></option>
-                        </select>
-                    </div>
+                    <?php
+                    // Use the reusable text block form panel
+                    $block_id = 'create';
+                    $settings = (object)[];
+                    $form_type = 'create';
+                    $row = (object)['microsite_block_id' => 'create', 'settings' => $settings];
+                    include THEME_PATH . 'views/partials/microsite_block_components/text_block_form_panel.php';
+                    ?>
 
-                    <!-- Heading Type Selection (only for heading) -->
-                    <div class="form-group" id="heading_type_group" style="display: none;">
-                        <label for="heading_type"><i class="fas fa-fw fa-heading fa-sm text-muted mr-1"></i> <?= l('microsite_text.heading_level') ?></label>
-                        <select id="heading_type" name="heading_type" class="custom-select">
-                            <option value="h1">H1</option>
-                            <option value="h2">H2</option>
-                            <option value="h3">H3</option>
-                            <option value="h4">H4</option>
-                            <option value="h5">H5</option>
-                            <option value="h6">H6</option>
-                        </select>
-                    </div>
-
-                    <!-- Text Content (for heading and paragraph) -->
-                    <div class="form-group" id="text_content_group">
-                        <label for="text"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('microsite_text.content') ?></label>
-                        <textarea id="text" name="text" class="form-control" rows="3" maxlength="2048"></textarea>
-                        <small class="form-text text-muted" id="text_help_paragraph"><?= l('microsite_text.content_help_paragraph') ?></small>
-                        <small class="form-text text-muted" id="text_help_heading" style="display: none;"><?= l('microsite_text.content_help_heading') ?></small>
-                    </div>
-
-                    <!-- List Type Selection (only for list) -->
-                    <div class="form-group" id="list_type_group" style="display: none;">
-                        <label for="list_type"><i class="fas fa-fw fa-list fa-sm text-muted mr-1"></i> <?= l('microsite_text.list_type') ?></label>
-                        <select id="list_type" name="list_type" class="custom-select">
-                            <option value="unordered"><?= l('microsite_text.list_unordered') ?></option>
-                            <option value="ordered"><?= l('microsite_text.list_ordered') ?></option>
-                        </select>
-                    </div>
-
-                    <div class="text-center mt-4">
+                    <div class="mt-4">
                         <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.submit') ?></button>
                     </div>
                 </form>
@@ -71,40 +41,25 @@
 </div>
 
 <script>
-function toggleTextTypeFields() {
-    const textType = document.getElementById('text_type').value;
-    const headingTypeGroup = document.getElementById('heading_type_group');
-    const textContentGroup = document.getElementById('text_content_group');
-    const listTypeGroup = document.getElementById('list_type_group');
-    const textHelpParagraph = document.getElementById('text_help_paragraph');
-    const textHelpHeading = document.getElementById('text_help_heading');
-    const textField = document.getElementById('text');
-
-    // Hide all conditional fields first
-    headingTypeGroup.style.display = 'none';
-    listTypeGroup.style.display = 'none';
-    textHelpParagraph.style.display = 'none';
-    textHelpHeading.style.display = 'none';
-
-    if (textType === 'heading') {
-        headingTypeGroup.style.display = 'block';
-        textContentGroup.style.display = 'block';
-        textHelpHeading.style.display = 'block';
-        textField.maxLength = 256;
-        textField.rows = 2;
-    } else if (textType === 'paragraph') {
-        textContentGroup.style.display = 'block';
-        textHelpParagraph.style.display = 'block';
-        textField.maxLength = 2048;
-        textField.rows = 4;
-    } else if (textType === 'list') {
-        textContentGroup.style.display = 'none';
-        listTypeGroup.style.display = 'block';
-    }
-}
-
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    toggleTextTypeFields();
+    const modal = document.getElementById('create_microsite_text');
+    
+    if (modal) {
+        modal.addEventListener('shown.bs.modal', function() {
+            const form = modal.querySelector('form[name="create_microsite_text"]');
+            
+            if (form && !form.hasAttribute('data-text-handler-added')) {
+                form.addEventListener('submit', function(e) {
+                    // Sync all WYSIWYG editors before form submission
+                    if (typeof syncTextQuillEditors === 'function') {
+                        syncTextQuillEditors();
+                    }
+                });
+                
+                // Mark as handled to prevent duplicate listeners
+                form.setAttribute('data-text-handler-added', 'true');
+            }
+        });
+    }
 });
 </script>

@@ -27,6 +27,10 @@ class AccordionBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
+        $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#333333' : $_POST['text_color'];
+        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
+        $_POST['border_color'] = !verify_hex_color($_POST['border_color']) ? '#ffffff' : $_POST['border_color'];
+        $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#00000010' : $_POST['border_shadow_color'];
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -41,7 +45,8 @@ class AccordionBlock extends BaseBlockHandler {
 
                 $items[] = [
                     'title' => mb_substr(input_clean($value), 0, 256),
-                    'content' => mb_substr(input_clean($_POST['item_content'][$key]), 0, 2048),
+                    'content' => $_POST['item_content'][$key], // Keep HTML content from WYSIWYG
+                    'open_default' => isset($_POST['item_open_default'][$key]) ? true : false,
                 ];
             }
         }
@@ -49,20 +54,35 @@ class AccordionBlock extends BaseBlockHandler {
         $type = 'accordion';
         $settings = json_encode([
             'items' => $items,
-            'text_color' => '#ffffff',
-            'background_color' => '#00000000',
-
-            /* Default styling settings */
-            'text_alignment' => 'center',
-            'border_width' => 0,
-            'border_color' => '#000000',
-            'border_radius' => 'rounded',
-            'border_style' => 'solid',
-            'border_shadow_offset_x' => 0,
-            'border_shadow_offset_y' => 0,
-            'border_shadow_blur' => 0,
-            'border_shadow_spread' => 0,
-            'border_shadow_color' => '#000000',
+            
+            /* Accordion behavior */
+            'accordion_mode' => $_POST['accordion_mode'] ?? 'single',
+            'default_state' => $_POST['default_state'] ?? 'first_open',
+            
+            /* Text styling */
+            'text_color' => $_POST['text_color'],
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
+            
+            /* Background */
+            'background_color' => $_POST['background_color'],
+            
+            /* Border */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'],
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Shadow */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'],
+            
+            /* Animation */
+            'animation' => $_POST['animation'] ?? false,
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            'animation_delay' => (int) ($_POST['animation_delay'] ?? 0),
 
             /* Display settings */
             'display_continents' => [],
@@ -95,8 +115,10 @@ class AccordionBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#ffffff' : $_POST['text_color'];
-        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#00000000' : $_POST['background_color'];
+        $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#333333' : $_POST['text_color'];
+        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
+        $_POST['border_color'] = !verify_hex_color($_POST['border_color']) ? '#ffffff' : $_POST['border_color'];
+        $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#00000010' : $_POST['border_shadow_color'];
 
         /* Accordion items */
         $items = [];
@@ -107,7 +129,8 @@ class AccordionBlock extends BaseBlockHandler {
 
                 $items[] = [
                     'title' => mb_substr(input_clean($value), 0, 256),
-                    'content' => mb_substr(input_clean($_POST['item_content'][$key]), 0, 2048),
+                    'content' => $_POST['item_content'][$key], // Keep HTML content from WYSIWYG
+                    'open_default' => isset($_POST['item_open_default'][$key]) ? true : false,
                 ];
             }
         }
@@ -119,25 +142,37 @@ class AccordionBlock extends BaseBlockHandler {
             die();
         }
 
-        /* Get existing settings to preserve fields not in the form */
-        $existing_settings = json_decode($microsite_block->settings ?? '{}');
-
         $settings = json_encode([
             'items' => $items,
+            
+            /* Accordion behavior */
+            'accordion_mode' => $_POST['accordion_mode'] ?? 'single',
+            'default_state' => $_POST['default_state'] ?? 'first_open',
+            
+            /* Text styling */
             'text_color' => $_POST['text_color'],
+            'text_alignment' => $_POST['text_alignment'] ?? 'center',
+            
+            /* Background */
             'background_color' => $_POST['background_color'],
-
-            /* Preserve existing styling settings */
-            'text_alignment' => $existing_settings->text_alignment ?? 'center',
-            'border_width' => $existing_settings->border_width ?? 0,
-            'border_color' => $existing_settings->border_color ?? '#000000',
-            'border_radius' => $existing_settings->border_radius ?? 'rounded',
-            'border_style' => $existing_settings->border_style ?? 'solid',
-            'border_shadow_offset_x' => $existing_settings->border_shadow_offset_x ?? 0,
-            'border_shadow_offset_y' => $existing_settings->border_shadow_offset_y ?? 0,
-            'border_shadow_blur' => $existing_settings->border_shadow_blur ?? 0,
-            'border_shadow_spread' => $existing_settings->border_shadow_spread ?? 0,
-            'border_shadow_color' => $existing_settings->border_shadow_color ?? '#000000',
+            
+            /* Border */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'],
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Shadow */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'],
+            
+            /* Animation */
+            'animation' => $_POST['animation'] ?? false,
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            'animation_delay' => (int) ($_POST['animation_delay'] ?? 0),
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

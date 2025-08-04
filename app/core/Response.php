@@ -16,6 +16,9 @@ class Response {
     public static function json($message, $status = 'success', $details = []) {
         if(!is_array($message) && $message) $message = [$message];
 
+        /* Set the correct JSON content type header */
+        header('Content-Type: application/json');
+
         echo json_encode(
             [
                 'message' 	=> $message,

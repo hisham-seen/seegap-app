@@ -278,7 +278,7 @@ class AdminBroadcastCreate extends Controller {
             'content' => $_POST['content'] ?? json_encode([
                     'blocks' => [
                         [
-                            'type' => 'paragraph',
+                            'type' => 'text',
                             'data' => [
                                 'text' => l('admin_broadcast_create.content_placeholder')
                             ]

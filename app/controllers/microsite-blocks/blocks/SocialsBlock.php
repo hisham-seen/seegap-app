@@ -27,18 +27,62 @@ class SocialsBlock extends BaseBlockHandler {
     
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
+        $_POST['color'] = !verify_hex_color($_POST['color'] ?? '') ? '#333333' : $_POST['color'];
+        $_POST['background_color'] = !empty($_POST['background_color']) && verify_hex_color($_POST['background_color']) ? $_POST['background_color'] : '#FFFFFF00';
+        $_POST['border_radius'] = (is_numeric($_POST['border_radius']) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 4;
+        $_POST['size'] = (int) ($_POST['size'] ?? 24);
+        $_POST['size'] = ($_POST['size'] >= 10 && $_POST['size'] <= 60) ? $_POST['size'] : 24;
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
         }
 
+        /* Socials - store as associative array with platform keys */
+        $socials = new \stdClass();
+        if(isset($_POST['socials'])) {
+            foreach($_POST['socials'] as $key => $social) {
+                if(empty(trim($social))) continue;
+                
+                // Store with platform key for proper access in view
+                $socials->{$key} = mb_substr(trim($social), 0, 1024);
+            }
+        }
+
         $type = 'socials';
         $settings = json_encode([
-            'color' => '#ffffff',
-            'background_color' => '#FFFFFF00',
-            'border_radius' => 'rounded',
-            'size' => 'l',
-            'socials' => new \stdClass(),
+            'color' => $_POST['color'],
+            'background_color' => $_POST['background_color'],
+            'border_radius' => $_POST['border_radius'],
+            'size' => $_POST['size'],
+            'socials' => $socials,
+
+            /* Border settings */
+            'border_width' => 0,
+            'border_style' => 'solid',
+            'border_color' => '#000000',
+
+            /* Shadow settings */
+            'shadow_offset_x' => 0,
+            'shadow_offset_y' => 0,
+            'shadow_blur' => 0,
+            'shadow_spread' => 0,
+            'shadow_color' => '#000000',
+            'shadow_inset' => false,
+
+            /* Spacing settings */
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'padding_top' => 0,
+            'padding_bottom' => 0,
+            'padding_left' => 0,
+            'padding_right' => 0,
+            'internal_padding' => 0,
+            'element_spacing' => 0,
+            'content_margin' => 0,
+            'block_gap' => 0,
+            'section_spacing' => 0,
 
             /* Display settings */
             'display_continents' => [],
@@ -71,10 +115,39 @@ class SocialsBlock extends BaseBlockHandler {
     
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
-        $_POST['color'] = !verify_hex_color($_POST['color']) ? '#ffffff' : $_POST['color'];
+        $_POST['color'] = !verify_hex_color($_POST['color']) ? '#333333' : $_POST['color'];
         $_POST['background_color'] = !empty($_POST['background_color']) && verify_hex_color($_POST['background_color']) ? $_POST['background_color'] : '#FFFFFF00';
-        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? $_POST['border_radius'] : 'rounded';
-        $_POST['size'] = in_array($_POST['size'], ['s', 'm', 'l', 'xl']) ? $_POST['size'] : 'l';
+        $_POST['border_radius'] = (is_numeric($_POST['border_radius']) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 4;
+        $_POST['size'] = (int) $_POST['size'];
+        $_POST['size'] = ($_POST['size'] >= 10 && $_POST['size'] <= 60) ? $_POST['size'] : 24;
+
+        /* Border settings */
+        $_POST['border_width'] = isset($_POST['border_width']) ? (int) $_POST['border_width'] : 0;
+        $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'dotted']) ? $_POST['border_style'] : 'solid';
+        $_POST['border_color'] = !empty($_POST['border_color']) && verify_hex_color($_POST['border_color']) ? $_POST['border_color'] : '#000000';
+
+        /* Shadow settings */
+        $_POST['shadow_offset_x'] = isset($_POST['shadow_offset_x']) ? (int) $_POST['shadow_offset_x'] : 0;
+        $_POST['shadow_offset_y'] = isset($_POST['shadow_offset_y']) ? (int) $_POST['shadow_offset_y'] : 0;
+        $_POST['shadow_blur'] = isset($_POST['shadow_blur']) ? (int) $_POST['shadow_blur'] : 0;
+        $_POST['shadow_spread'] = isset($_POST['shadow_spread']) ? (int) $_POST['shadow_spread'] : 0;
+        $_POST['shadow_color'] = !empty($_POST['shadow_color']) && verify_hex_color($_POST['shadow_color']) ? $_POST['shadow_color'] : '#000000';
+        $_POST['shadow_inset'] = isset($_POST['shadow_inset']) ? (bool) $_POST['shadow_inset'] : false;
+
+        /* Spacing settings */
+        $_POST['margin_top'] = isset($_POST['margin_top']) ? max(0, min(10, (int) $_POST['margin_top'])) : 0;
+        $_POST['margin_bottom'] = isset($_POST['margin_bottom']) ? max(0, min(10, (int) $_POST['margin_bottom'])) : 0;
+        $_POST['margin_left'] = isset($_POST['margin_left']) ? max(0, min(10, (int) $_POST['margin_left'])) : 0;
+        $_POST['margin_right'] = isset($_POST['margin_right']) ? max(0, min(10, (int) $_POST['margin_right'])) : 0;
+        $_POST['padding_top'] = isset($_POST['padding_top']) ? max(0, min(10, (int) $_POST['padding_top'])) : 0;
+        $_POST['padding_bottom'] = isset($_POST['padding_bottom']) ? max(0, min(10, (int) $_POST['padding_bottom'])) : 0;
+        $_POST['padding_left'] = isset($_POST['padding_left']) ? max(0, min(10, (int) $_POST['padding_left'])) : 0;
+        $_POST['padding_right'] = isset($_POST['padding_right']) ? max(0, min(10, (int) $_POST['padding_right'])) : 0;
+        $_POST['internal_padding'] = isset($_POST['internal_padding']) ? max(0, min(10, (int) $_POST['internal_padding'])) : 0;
+        $_POST['element_spacing'] = isset($_POST['element_spacing']) ? max(0, min(10, (int) $_POST['element_spacing'])) : 0;
+        $_POST['content_margin'] = isset($_POST['content_margin']) ? max(0, min(10, (int) $_POST['content_margin'])) : 0;
+        $_POST['block_gap'] = isset($_POST['block_gap']) ? max(0, min(10, (int) $_POST['block_gap'])) : 0;
+        $_POST['section_spacing'] = isset($_POST['section_spacing']) ? max(0, min(10, (int) $_POST['section_spacing'])) : 0;
 
         /* Socials - store as associative array with platform keys */
         $socials = new \stdClass();
@@ -101,6 +174,34 @@ class SocialsBlock extends BaseBlockHandler {
             'border_radius' => $_POST['border_radius'],
             'size' => $_POST['size'],
             'socials' => $socials,
+
+            /* Border settings */
+            'border_width' => $_POST['border_width'],
+            'border_style' => $_POST['border_style'],
+            'border_color' => $_POST['border_color'],
+
+            /* Shadow settings */
+            'shadow_offset_x' => $_POST['shadow_offset_x'],
+            'shadow_offset_y' => $_POST['shadow_offset_y'],
+            'shadow_blur' => $_POST['shadow_blur'],
+            'shadow_spread' => $_POST['shadow_spread'],
+            'shadow_color' => $_POST['shadow_color'],
+            'shadow_inset' => $_POST['shadow_inset'],
+
+            /* Spacing settings */
+            'margin_top' => $_POST['margin_top'],
+            'margin_bottom' => $_POST['margin_bottom'],
+            'margin_left' => $_POST['margin_left'],
+            'margin_right' => $_POST['margin_right'],
+            'padding_top' => $_POST['padding_top'],
+            'padding_bottom' => $_POST['padding_bottom'],
+            'padding_left' => $_POST['padding_left'],
+            'padding_right' => $_POST['padding_right'],
+            'internal_padding' => $_POST['internal_padding'],
+            'element_spacing' => $_POST['element_spacing'],
+            'content_margin' => $_POST['content_margin'],
+            'block_gap' => $_POST['block_gap'],
+            'section_spacing' => $_POST['section_spacing'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

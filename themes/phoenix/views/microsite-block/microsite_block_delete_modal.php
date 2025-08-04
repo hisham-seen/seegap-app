@@ -25,7 +25,7 @@
                     <div class="notification-container"></div>
 
                     <div class="mt-4">
-                        <button type="submit" name="submit" class="btn btn-lg btn-block btn-danger" data-is-ajax><?= l('global.delete') ?></button>
+                        <button type="submit" name="submit" class="btn btn-lg btn-block btn-danger"><?= l('global.delete') ?></button>
                     </div>
                 </form>
             </div>
@@ -67,7 +67,10 @@
                     /* Clear input values */
                     $(event.currentTarget).find('input[name="microsite_block_id"]').val('');
 
-                    display_notifications(data.message, 'success', notification_container);
+                    /* Show success toast instead of modal notification */
+                    if (data.message) {
+                        showToast('success', Array.isArray(data.message) ? data.message[0] : data.message);
+                    }
 
                     setTimeout(() => {
                         /* Hide modal */
@@ -80,7 +83,9 @@
                         notification_container.innerHTML = '';
 
                         /* Refresh iframe */
-                        refresh_microsite_preview();
+                        if (typeof refresh_microsite_preview === 'function') {
+                            refresh_microsite_preview();
+                        }
                     }, 750);
                 }
             },

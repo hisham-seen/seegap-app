@@ -28,8 +28,8 @@ class IndividualBlocksHandler extends BaseBlockHandler {
      */
     public function getSupportedTypes() {
         return [
-            'link', 'heading', 'big_link', 'paragraph', 'markdown', 'avatar', 'header',
-            'socials', 'email_collector', 'custom_html', 'image', 'image_grid', 'divider',
+            'link', 'heading', 'big_link', 'paragraph', 'markdown', 'header',
+            'socials', 'email_collector', 'image', 'image_grid', 'divider',
             'list', 'alert', 'faq', 'timeline', 'review', 'image_slider', 'countdown',
             'cta', 'external_item', 'share', 'coupon', 'youtube_feed', 'paypal',
             'phone_collector', 'contact_collector', 'feedback_collector', 'donation',

@@ -131,7 +131,16 @@ class Link {
         $microsite_blocks = require APP_PATH . 'includes/enabled_microsite_blocks.php';
 
         if(!array_key_exists($link->type, $microsite_blocks)) {
-            return null;
+            // Use deprecated block fallback for unidentified blocks
+            $view_path = THEME_PATH . 'views/l/microsite_blocks/deprecated_block.php';
+            
+            $data = [
+                'link'      => $link,
+                'user'      => $user,
+                'microsite' => $microsite,
+            ];
+            
+            return include_view($view_path, $data);
         }
 
         /* Apply theme if needed */
@@ -162,6 +171,7 @@ class Link {
             case 'email_collector':
             case 'contact_collector':
             case 'feedback_collector':
+            case 'form':
             case 'cta':
             case 'share':
             case 'youtube_feed':
@@ -362,6 +372,8 @@ class Link {
             case 'facebook':
             case 'countdown':
             case 'review':
+            case 'social_media_embed':
+            case 'accordion':
 
                 $view_path = THEME_PATH . 'views/l/microsite_blocks/' . $link->type . '.php';
 
@@ -370,8 +382,9 @@ class Link {
         }
 
         if(!isset($view_path)) {
-            error_log('get_microsite_link returning null - no view_path set for type: ' . $link->type);
-            return null;
+            // Use deprecated block fallback for blocks with missing view files
+            error_log('get_microsite_link using deprecated fallback - no view_path set for type: ' . $link->type);
+            $view_path = THEME_PATH . 'views/l/microsite_blocks/deprecated_block.php';
         }
 
         /* Prepare the view */
