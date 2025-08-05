@@ -71,7 +71,7 @@ PRIMARY KEY (`code_id`)
 -- SEPARATOR --
 
 INSERT INTO `users` (`user_id`, `email`, `password`, `api_key`, `referral_key`, `name`, `type`, `status`, `plan_id`, `plan_expiration_date`, `plan_settings`, `datetime`, `ip`, `last_activity`, `preferences`)
-VALUES (1,'admin','$2y$10$uFNO0pQKEHSFcus1zSFlveiPCB3EvG9ZlES7XKgJFTAl5JbRGFCWy', md5(rand()), md5(rand()), 'SeeGap',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"microsites_templates":[],"microsites_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"password":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"microsite_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"microsites_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"gs1_links_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_microsite_blocks":{"link":true,"text":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"soundcloud":true,"spotify":true,"twitch":true,"vimeo":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"form":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"pinterest_profile":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"external_item":true,"coupon":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"donation":true,"product":true,"service":true,"social_media_embed":true,"accordion":true,"cover":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_microsite":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}');
+VALUES (1,'admin','$2y$10$uFNO0pQKEHSFcus1zSFlveiPCB3EvG9ZlES7XKgJFTAl5JbRGFCWy', md5(rand()), md5(rand()), 'SeeGap',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"microsites_templates":[],"microsites_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"password":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"microsite_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"microsites_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"gs1_links_limit":-1,"products_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_microsite_blocks":{"link":true,"text":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"soundcloud":true,"spotify":true,"twitch":true,"vimeo":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"form":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"pinterest_profile":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"external_item":true,"coupon":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"donation":true,"product":true,"service":true,"social_media_embed":true,"accordion":true,"cover":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_microsite":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}');
 
 -- SEPARATOR --
 
@@ -271,6 +271,7 @@ VALUES
 ('links', '{"available_microsite_blocks":{"link":true,"text":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"soundcloud":true,"spotify":true,"twitch":true,"vimeo":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"form":true,"map":true,"applemusic":true,"tidal":true,"anchor":true,"pinterest_profile":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"big_link":true,"faq":true,"typeform":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"external_item":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"markdown":true,"donation":true,"product":true,"service":true,"social_media_embed":true,"accordion":true,"cover":true},"example_url":"","random_url_length":5,"branding":"Powered by Seegap","shortener_is_enabled":1,"microsites_is_enabled":1,"microsites_templates_is_enabled":1,"microsites_themes_is_enabled":"on","microsites_new_blocks_position":"bottom","microsites_default_active_tab":"settings","default_microsite_theme_id":null,"default_microsite_template_id":null,"files_is_enabled":1,"events_is_enabled":1,"static_is_enabled":1,"pixels_is_enabled":1,"splash_page_is_enabled":1,"splash_page_auto_redirect":1,"splash_page_link_unlock_seconds":3,"directory_is_enabled":1,"directory_access":"everyone","directory_display":"all","domains_is_enabled":1,"additional_domains_is_enabled":1,"main_domain_is_enabled":1,"domains_custom_main_ip":"","blacklisted_domains":[],"blacklisted_keywords":[],"google_safe_browsing_is_enabled":0,"google_safe_browsing_api_key":"","google_static_maps_is_enabled":0,"google_static_maps_api_key":"","avatar_size_limit":2,"background_size_limit":2,"favicon_size_limit":2,"seo_image_size_limit":2,"thumbnail_image_size_limit":2,"image_size_limit":2,"audio_size_limit":2,"video_size_limit":2,"file_size_limit":2,"product_file_size_limit":2,"static_size_limit":2,"whitelisted_image_extensions":["jpg","jpeg","png","gif","webp","svg"],"whitelisted_audio_extensions":["mp3","wav","ogg","m4a"],"whitelisted_video_extensions":["mp4","webm","ogg","avi","mov"],"whitelisted_file_extensions":["pdf","doc","docx","txt","zip","rar"]}'),
 ('codes', '{"qr_codes_is_enabled":1,"logo_size_limit":1,"background_size_limit":1,"available_qr_codes":{"text":true,"url":true,"phone":true,"sms":true,"email":true,"whatsapp":true,"facetime":true,"location":true,"wifi":true,"event":true,"vcard":true,"crypto":true,"paypal":true,"upi":true,"epc":true,"pix":true},"qr_codes_branding_logo":"","qr_codes_default_image":""}'),
 ('gs1_links', '{"gs1_links_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_target_url":false,"default_target_url":"","domains_is_enabled":true,"projects_is_enabled":true,"pixels_is_enabled":true,"analytics_is_enabled":true,"auto_generate_qr_codes":false,"branding":"","random_gtin_length":"14","blacklisted_gtins":[],"allowed_gtin_prefixes":[]}'),
+('products', '{"products_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_product_name":true,"require_brand_name":false,"auto_generate_gs1_links":false,"auto_generate_qr_codes":false,"projects_is_enabled":true,"image_size_limit":5,"max_images_per_product":10,"allowed_categories":[],"required_fields":["product_name","gtin"],"export_formats":["csv","json"],"bulk_import_is_enabled":true,"analytics_is_enabled":true}'),
 ('license', '{\"license\":\"BYPASSED-LICENSE\",\"type\":\"SPECIAL\"}'),
 ('product_info', '{\"version\":\"56.0.0\", \"code\":\"5600\"}'),
 ('support', '{\"key\":\"BYPASSED-SUPPORT\",\"expiry_datetime\":\"2099-12-31 23:59:59\"}');
@@ -653,4 +654,47 @@ CREATE TABLE `form_submissions` (
   KEY `submitted_at` (`submitted_at`),
   CONSTRAINT `form_submissions_ibfk_1` FOREIGN KEY (`microsite_block_id`) REFERENCES `microsites_blocks` (`microsite_block_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `form_submissions_ibfk_2` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SEPARATOR --
+
+CREATE TABLE `products` (
+  `product_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `gtin` varchar(14) NOT NULL,
+  `brand_name` varchar(128) DEFAULT NULL,
+  `product_name` varchar(256) NOT NULL,
+  `product_description` text,
+  `category` varchar(128) DEFAULT NULL,
+  `subcategory` varchar(128) DEFAULT NULL,
+  `manufacturer` varchar(256) DEFAULT NULL,
+  `country_of_origin` varchar(64) DEFAULT NULL,
+  `net_weight` varchar(64) DEFAULT NULL,
+  `dimensions` varchar(128) DEFAULT NULL,
+  `ingredients` text,
+  `nutritional_info` text,
+  `allergen_info` text,
+  `certifications` text,
+  `product_images` text,
+  `packaging_info` text,
+  `storage_instructions` text,
+  `usage_instructions` text,
+  `target_url` varchar(2048) DEFAULT NULL,
+  `gs1_link_id` int DEFAULT NULL,
+  `settings` text,
+  `is_enabled` tinyint NOT NULL DEFAULT '1',
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`product_id`),
+  UNIQUE KEY `gtin_user` (`gtin`, `user_id`),
+  KEY `user_id` (`user_id`),
+  KEY `project_id` (`project_id`),
+  KEY `gtin` (`gtin`),
+  KEY `gs1_link_id` (`gs1_link_id`),
+  KEY `brand_name` (`brand_name`),
+  KEY `category` (`category`),
+  CONSTRAINT `products_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `products_projects_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `products_gs1_links_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

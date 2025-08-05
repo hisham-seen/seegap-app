@@ -24,6 +24,7 @@ app/languages/modules/
 ├── index.php          # Homepage and public pages
 ├── contact.php        # Contact forms
 ├── pages.php          # Static pages
+├── products.php       # Product management (FMCG)
 └── [language]/        # Language-specific overrides
     ├── core.php
     ├── date.php

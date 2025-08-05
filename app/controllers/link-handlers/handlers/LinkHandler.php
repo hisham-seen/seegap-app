@@ -26,7 +26,15 @@ class LinkHandler extends BaseLinkHandler {
     }
     
     public function create($type) {
+        debug_log('LINK_HANDLER_CREATE_START', [
+            'type' => $type,
+            'user_id' => $this->user->user_id,
+            'post_data' => $_POST,
+            'shortener_enabled' => settings()->links->shortener_is_enabled ?? 'not_set'
+        ]);
+
         if(!settings()->links->shortener_is_enabled) {
+            debug_log('LINK_HANDLER_CREATE_ERROR', 'Shortener is not enabled');
             Response::json(l('global.error_message.basic'), 'error');
         }
 
@@ -35,28 +43,61 @@ class LinkHandler extends BaseLinkHandler {
         $_POST['sensitive_content'] = (int) isset($_POST['sensitive_content']);
         $type = 'link';
 
+        debug_log('LINK_HANDLER_POST_PROCESSING', [
+            'processed_location_url' => $_POST['location_url'],
+            'processed_url' => $_POST['url'],
+            'custom_url_allowed' => $this->user->plan_settings->custom_url ?? false
+        ]);
+
         $this->process_common_post_data();
 
         /* Check if custom domain is set */
         $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
 
+        debug_log('LINK_HANDLER_DOMAIN_CHECK', [
+            'domain_id' => $domain_id,
+            'posted_domain_id' => $_POST['domain_id'] ?? 'not_set'
+        ]);
+
         if(empty($_POST['location_url'])) {
+            debug_log('LINK_HANDLER_CREATE_ERROR', 'Empty location_url');
             Response::json(l('global.error_message.empty_fields'), 'error');
         }
+
+        debug_log('LINK_HANDLER_VALIDATION_START', [
+            'url_to_check' => $_POST['url'],
+            'location_url_to_check' => $_POST['location_url']
+        ]);
 
         $this->check_url($_POST['url']);
         $this->check_location_url($_POST['location_url']);
 
+        debug_log('LINK_HANDLER_VALIDATION_PASSED', 'URL validation completed successfully');
+
         /* Make sure that the user didn't exceed the limit */
         $user_total_links = database()->query("SELECT COUNT(*) AS `total` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'link'")->fetch_object()->total;
+        
+        debug_log('LINK_HANDLER_LIMIT_CHECK', [
+            'user_total_links' => $user_total_links,
+            'links_limit' => $this->user->plan_settings->links_limit ?? 'not_set'
+        ]);
+
         if($this->user->plan_settings->links_limit != -1 && $user_total_links >= $this->user->plan_settings->links_limit) {
+            debug_log('LINK_HANDLER_CREATE_ERROR', 'Plan limit exceeded');
             Response::json(l('global.info_message.plan_feature_limit'), 'error');
         }
 
         /* Check for duplicate url if needed */
         $this->check_duplicate_url($_POST['url'], $domain_id);
 
+        debug_log('LINK_HANDLER_DUPLICATE_CHECK_PASSED', 'No duplicate URL found');
+
         $url = $_POST['url'] ?: $this->generate_random_url($domain_id);
+
+        debug_log('LINK_HANDLER_URL_GENERATED', [
+            'final_url' => $url,
+            'was_custom' => !empty($_POST['url'])
+        ]);
 
         /* App linking processing */
         $app_linking = [
@@ -85,7 +126,7 @@ class LinkHandler extends BaseLinkHandler {
             }
         }
 
-        $settings = json_encode([
+        $settings_array = [
             'http_status_code' => 301,
             'clicks_limit' => null,
             'expiration_url' => null,
@@ -106,10 +147,17 @@ class LinkHandler extends BaseLinkHandler {
                 'medium' => null,
                 'campaign' => null,
             ]
+        ];
+
+        $settings = json_encode($settings_array);
+
+        debug_log('LINK_HANDLER_SETTINGS_PREPARED', [
+            'settings_array' => $settings_array,
+            'settings_json' => $settings,
+            'app_linking' => $app_linking
         ]);
 
-        /* Insert to database */
-        $link_id = db()->insert('links', [
+        $insert_data = [
             'user_id' => $this->user->user_id,
             'domain_id' => $domain_id,
             'type' => $type,
@@ -117,12 +165,47 @@ class LinkHandler extends BaseLinkHandler {
             'location_url' => $_POST['location_url'],
             'settings' => $settings,
             'datetime' => get_date(),
+        ];
+
+        debug_log('LINK_HANDLER_DATABASE_INSERT_START', [
+            'insert_data' => $insert_data
         ]);
 
-        /* Clear the cache */
-        $this->clear_link_cache($link_id, $type, $this->user->user_id);
+        try {
+            /* Insert to database */
+            $link_id = db()->insert('links', $insert_data);
 
-        Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
+            debug_log('LINK_HANDLER_DATABASE_INSERT_SUCCESS', [
+                'link_id' => $link_id,
+                'insert_successful' => !empty($link_id)
+            ]);
+
+            if (!$link_id) {
+                debug_log('LINK_HANDLER_DATABASE_INSERT_FAILED', 'Database insert returned empty link_id');
+                Response::json('Database error: Failed to create link', 'error');
+            }
+
+            /* Clear the cache */
+            $this->clear_link_cache($link_id, $type, $this->user->user_id);
+
+            debug_log('LINK_HANDLER_CREATE_SUCCESS', [
+                'link_id' => $link_id,
+                'final_url' => $url,
+                'response_url' => url('link/' . $link_id)
+            ]);
+
+            Response::json(l('global.success_message.create2'), 'success', ['url' => url('link/' . $link_id)]);
+
+        } catch (\Exception $e) {
+            debug_log('LINK_HANDLER_DATABASE_EXCEPTION', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'insert_data' => $insert_data
+            ]);
+            Response::json('Database error: ' . $e->getMessage(), 'error');
+        }
     }
     
     public function update($type) {

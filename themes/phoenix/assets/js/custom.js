@@ -326,6 +326,9 @@ const initializeAjaxForms = () => {
             /* Check if this is a microsite block form */
             if (formData.get('request_type') && (formData.get('block_type') || formData.get('microsite_block_id'))) {
                 endpoint = url + 'microsite-block-ajax';
+            } else if (formData.get('request_type') && formData.get('type')) {
+                /* For link creation/update forms */
+                endpoint = url + 'link-ajax';
             } else {
                 /* For regular forms, use the current page */
                 endpoint = window.location.pathname;

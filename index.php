@@ -39,4 +39,15 @@ if (isset($_POST['client_debug']) && $_POST['client_debug'] === '1') {
     exit;
 }
 
+// Debug log all requests to see what's happening
+if (function_exists('debug_log')) {
+    debug_log('INDEX_REQUEST', [
+        'request_uri' => $_SERVER['REQUEST_URI'] ?? 'unknown',
+        'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+        'post_data' => $_POST,
+        'get_data' => $_GET,
+        'timestamp' => date('Y-m-d H:i:s')
+    ]);
+}
+
 $App = new SeeGap\App();

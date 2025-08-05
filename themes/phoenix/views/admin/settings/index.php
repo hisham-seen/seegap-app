@@ -17,6 +17,8 @@
                 
                 <option value="<?= url('admin/settings/gs1_links') ?>" class="nav-link" <?= $data->method == 'gs1_links' ? 'selected="selected"' : null ?>>📊 <?= l('admin_settings.gs1_links.tab') ?></option>
                 
+                <option value="<?= url('admin/settings/products') ?>" class="nav-link" <?= $data->method == 'products' ? 'selected="selected"' : null ?>>📦 <?= l('admin_settings.products.tab') ?></option>
+                
                 <option value="<?= url('admin/settings/codes') ?>" class="nav-link" <?= $data->method == 'codes' ? 'selected="selected"' : null ?>>💻 <?= l('admin_settings.codes.tab') ?></option>
                 <?php if(\SeeGap\Plugin::is_active('email-signatures')): ?>
                     <option value="<?= url('admin/settings/signatures') ?>" class="nav-link" <?= $data->method == 'signatures' ? 'selected="selected"' : null ?>>✍️ <?= l('admin_settings.signatures.tab') ?></option>
@@ -76,6 +78,8 @@
                     <a class="nav-link <?= $data->method == 'links' ? 'active' : null ?>" href="<?= url('admin/settings/links') ?>"><i class="fas fa-fw fa-sm fa-link mr-2"></i> <?= l('admin_settings.links.tab') ?></a>
                     
                     <a class="nav-link <?= $data->method == 'gs1_links' ? 'active' : null ?>" href="<?= url('admin/settings/gs1_links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('admin_settings.gs1_links.tab') ?></a>
+                    
+                    <a class="nav-link <?= $data->method == 'products' ? 'active' : null ?>" href="<?= url('admin/settings/products') ?>"><i class="fas fa-fw fa-sm fa-box mr-2"></i> <?= l('admin_settings.products.tab') ?></a>
                     
                     <a class="nav-link <?= $data->method == 'codes' ? 'active' : null ?>" href="<?= url('admin/settings/codes') ?>"><i class="fas fa-fw fa-sm fa-qrcode mr-2"></i> <?= l('admin_settings.codes.tab') ?></a>
                     <?php if(\SeeGap\Plugin::is_active('email-signatures')): ?>

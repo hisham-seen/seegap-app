@@ -87,6 +87,9 @@ class Gs1LinkManager extends Controller {
         $splash_pages = (new \SeeGap\Models\SplashPages())->get_splash_pages_by_user_id($this->user->user_id);
 
         if(!empty($_POST)) {
+            // Debug: Log the incoming POST data
+            error_log('[GS1 Link Manager] POST data received - Mode: ' . $mode . ', User ID: ' . $this->user->user_id . ', GTIN: ' . ($_POST['gtin'] ?? 'not_set') . ', Target URL: ' . ($_POST['target_url'] ?? 'not_set'));
+
             $_POST['gtin'] = input_clean($_POST['gtin']);
             $_POST['target_url'] = input_clean($_POST['target_url']);
             $_POST['title'] = input_clean($_POST['title'] ?? '', 256);
@@ -101,6 +104,9 @@ class Gs1LinkManager extends Controller {
                     return array_key_exists($pixel_id, $pixels);
                 })
             );
+
+            // Debug: Log cleaned data
+            error_log('[GS1 Link Manager] Cleaned data - GTIN: ' . $_POST['gtin'] . ', Target URL: ' . $_POST['target_url'] . ', Domain ID: ' . $_POST['domain_id'] . ', Project ID: ' . ($_POST['project_id'] ?? 'null'));
 
             /* Process advanced settings */
             $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
@@ -240,90 +246,118 @@ class Gs1LinkManager extends Controller {
 
             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
-                /* Prepare settings */
-                $settings = [
-                    'seo' => [
-                        'title' => $_POST['title'] ?? '',
-                        'meta_description' => $_POST['description'] ?? '',
-                    ],
-                    'utm' => [
-                        'source' => $_POST['utm_source'] ?? '',
-                        'medium' => $_POST['utm_medium'] ?? '',
-                        'campaign' => $_POST['utm_campaign'] ?? '',
-                    ],
-                    'schedule' => $_POST['schedule'],
-                    'start_date' => $_POST['start_date'],
-                    'end_date' => $_POST['end_date'],
-                    'clicks_limit' => $_POST['clicks_limit'],
-                    'expiration_url' => $_POST['expiration_url'],
-                    'targeting_type' => $_POST['targeting_type'],
-                    'targeting_' . $_POST['targeting_type'] => $targeting,
-                    'cloaking_is_enabled' => $_POST['cloaking_is_enabled'],
-                    'cloaking_title' => $_POST['cloaking_title'],
-                    'cloaking_meta_description' => $_POST['cloaking_meta_description'],
-                    'cloaking_custom_js' => $_POST['cloaking_custom_js'],
-                    'splash_page_id' => $_POST['splash_page_id'],
-                    'forward_query_parameters_is_enabled' => $_POST['forward_query_parameters_is_enabled'],
-                ];
+                // Debug: Log validation passed
+                error_log('[GS1 Link Manager] Validation passed - Mode: ' . $mode . ', User ID: ' . $this->user->user_id . ', GTIN: ' . $_POST['gtin']);
 
-                if($mode === 'create') {
-                    /* Create the GS1 link */
-                    $gs1_link_id = $gs1_link_model->create_gs1_link([
-                        'user_id' => $this->user->user_id,
-                        'project_id' => $_POST['project_id'],
-                        'domain_id' => $_POST['domain_id'],
-                        'gtin' => $_POST['gtin'],
-                        'target_url' => $_POST['target_url'],
-                        'title' => $_POST['title'],
-                        'description' => $_POST['description'],
-                        'settings' => $settings,
-                        'pixels_ids' => $_POST['pixels_ids'],
-                        'is_enabled' => $_POST['is_enabled'],
-                    ]);
+                try {
+                    /* Prepare settings */
+                    $settings = [
+                        'seo' => [
+                            'title' => $_POST['title'] ?? '',
+                            'meta_description' => $_POST['description'] ?? '',
+                        ],
+                        'utm' => [
+                            'source' => $_POST['utm_source'] ?? '',
+                            'medium' => $_POST['utm_medium'] ?? '',
+                            'campaign' => $_POST['utm_campaign'] ?? '',
+                        ],
+                        'schedule' => $_POST['schedule'],
+                        'start_date' => $_POST['start_date'],
+                        'end_date' => $_POST['end_date'],
+                        'clicks_limit' => $_POST['clicks_limit'],
+                        'expiration_url' => $_POST['expiration_url'],
+                        'targeting_type' => $_POST['targeting_type'],
+                        'targeting_' . $_POST['targeting_type'] => $targeting,
+                        'cloaking_is_enabled' => $_POST['cloaking_is_enabled'],
+                        'cloaking_title' => $_POST['cloaking_title'],
+                        'cloaking_meta_description' => $_POST['cloaking_meta_description'],
+                        'cloaking_custom_js' => $_POST['cloaking_custom_js'],
+                        'splash_page_id' => $_POST['splash_page_id'],
+                        'forward_query_parameters_is_enabled' => $_POST['forward_query_parameters_is_enabled'],
+                    ];
 
-                    if($gs1_link_id) {
-                        /* Auto-generate QR code if enabled in admin settings */
-                        if(settings()->gs1_links->auto_generate_qr_codes) {
-                            $this->auto_generate_qr_code($gs1_link_id, $_POST['gtin'], $_POST['domain_id']);
+                    // Debug: Log prepared settings
+                    error_log('[GS1 Link Manager] Settings prepared - Targeting count: ' . count($targeting));
+
+                    if($mode === 'create') {
+                        $create_data = [
+                            'user_id' => $this->user->user_id,
+                            'project_id' => $_POST['project_id'],
+                            'domain_id' => $_POST['domain_id'],
+                            'gtin' => $_POST['gtin'],
+                            'target_url' => $_POST['target_url'],
+                            'title' => $_POST['title'],
+                            'description' => $_POST['description'],
+                            'settings' => $settings,
+                            'pixels_ids' => $_POST['pixels_ids'],
+                            'is_enabled' => $_POST['is_enabled'],
+                        ];
+
+                        // Debug: Log create data
+                        error_log('[GS1 Link Manager] Attempting create - Pixels count: ' . count($_POST['pixels_ids']));
+
+                        /* Create the GS1 link */
+                        $gs1_link_id = $gs1_link_model->create_gs1_link($create_data);
+
+                        // Debug: Log create result
+                        error_log('[GS1 Link Manager] Create result - GS1 Link ID: ' . ($gs1_link_id ?: 'failed') . ', Success: ' . ($gs1_link_id ? 'true' : 'false'));
+
+                        if($gs1_link_id) {
+                            /* Auto-generate QR code if enabled in admin settings */
+                            if(settings()->gs1_links->auto_generate_qr_codes) {
+                                $qr_result = $this->auto_generate_qr_code($gs1_link_id, $_POST['gtin'], $_POST['domain_id']);
+                                error_log('[GS1 Link Manager] QR code generation - QR Code ID: ' . ($qr_result ?: 'failed') . ', Auto-generate enabled: true');
+                            }
+                            
+                            /* Set a nice success message */
+                            Alerts::add_success(sprintf(l('global.success_message.create1'), '<strong>' . $_POST['gtin'] . '</strong>'));
+
+                            /* Clear the cache */
+                            cache()->deleteItem('gs1_links_total?user_id=' . $this->user->user_id);
+
+                            error_log('[GS1 Link Manager] Create success, redirecting - GS1 Link ID: ' . $gs1_link_id . ', Redirect URL: gs1-link-manager/edit/' . $gs1_link_id);
+
+                            redirect('gs1-link-manager/edit/' . $gs1_link_id);
+                        } else {
+                            error_log('[GS1 Link Manager] Create failed - Error: create_gs1_link returned false, Last DB error: ' . (database()->getLastError() ?: 'none'));
+                            Alerts::add_error(l('global.error_message.create'));
                         }
-                        
-                        /* Set a nice success message */
-                        Alerts::add_success(sprintf(l('global.success_message.create1'), '<strong>' . $_POST['gtin'] . '</strong>'));
-
-                        /* Clear the cache */
-                        cache()->deleteItem('gs1_links_total?user_id=' . $this->user->user_id);
-
-                        redirect('gs1-link-manager/edit/' . $gs1_link_id);
                     } else {
-                        Alerts::add_error(l('global.error_message.create'));
+                        /* Update the GS1 link */
+                        $updated = $gs1_link_model->update_gs1_link($gs1_link->gs1_link_id, [
+                            'gtin' => $_POST['gtin'],
+                            'target_url' => $_POST['target_url'],
+                            'title' => $_POST['title'],
+                            'description' => $_POST['description'],
+                            'project_id' => $_POST['project_id'],
+                            'domain_id' => $_POST['domain_id'],
+                            'is_enabled' => $_POST['is_enabled'],
+                            'settings' => $settings,
+                            'pixels_ids' => $_POST['pixels_ids'],
+                        ], $this->user->user_id);
+
+                        if($updated) {
+                            /* Set a nice success message */
+                            Alerts::add_success(l('global.success_message.update2'));
+
+                            /* Clear the cache */
+                            cache()->deleteItem('gs1_links_total?user_id=' . $this->user->user_id);
+
+                            /* Refresh the page */
+                            redirect('gs1-link-manager/edit/' . $gs1_link->gs1_link_id);
+                        } else {
+                            Alerts::add_error(l('global.error_message.update'));
+                        }
                     }
-                } else {
-                    /* Update the GS1 link */
-                    $updated = $gs1_link_model->update_gs1_link($gs1_link->gs1_link_id, [
-                        'gtin' => $_POST['gtin'],
-                        'target_url' => $_POST['target_url'],
-                        'title' => $_POST['title'],
-                        'description' => $_POST['description'],
-                        'project_id' => $_POST['project_id'],
-                        'domain_id' => $_POST['domain_id'],
-                        'is_enabled' => $_POST['is_enabled'],
-                        'settings' => $settings,
-                        'pixels_ids' => $_POST['pixels_ids'],
-                    ], $this->user->user_id);
-
-                    if($updated) {
-                        /* Set a nice success message */
-                        Alerts::add_success(l('global.success_message.update2'));
-
-                        /* Clear the cache */
-                        cache()->deleteItem('gs1_links_total?user_id=' . $this->user->user_id);
-
-                        /* Refresh the page */
-                        redirect('gs1-link-manager/edit/' . $gs1_link->gs1_link_id);
-                    } else {
-                        Alerts::add_error(l('global.error_message.update'));
-                    }
+                } catch (\Exception $e) {
+                    // Debug: Log any exceptions
+                    error_log('[GS1 Link Manager] Exception caught - Mode: ' . $mode . ', Message: ' . $e->getMessage() . ', File: ' . $e->getFile() . ', Line: ' . $e->getLine());
+                    
+                    Alerts::add_error('An unexpected error occurred: ' . $e->getMessage());
                 }
+            } else {
+                // Debug: Log validation errors
+                error_log('[GS1 Link Manager] Validation failed - Mode: ' . $mode . ', Field errors: ' . count(Alerts::$field_errors ?? []) . ', General errors: ' . count(Alerts::$errors ?? []));
             }
         }
 

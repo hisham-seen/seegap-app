@@ -84,6 +84,12 @@
                     </li>
                 <?php endif ?>
 
+                <?php if(settings()->products->products_is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Products', 'ProductCreate', 'ProductUpdate']) ? 'active' : null ?>">
+                        <a href="<?= url('products') ?>"><i class="fas fa-fw fa-sm fa-box mr-2"></i> <?= l('products.menu') ?></a>
+                    </li>
+                <?php endif ?>
+
                 <?php if(\SeeGap\Plugin::is_active('aix')): ?>
                     <div class="divider-wrapper">
                         <div class="divider"></div>

@@ -29,7 +29,7 @@
         <?php endif ?>
     </h1>
 
-    <div class="row gs1-link-<?= $data->mode ?>">
+    <div class="row gs1-link-<?= $data->mode ?> link-settings">
         <!-- Left Column - Settings -->
         <div class="col-12 col-lg-4">
             <div class="card mb-3">
@@ -46,178 +46,158 @@
                     <form action="" method="post" role="form" id="gs1_link_form">
                         <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
-                        <div class="form-group">
-                            <label for="gtin"><i class="fas fa-fw fa-sm fa-barcode text-muted mr-1"></i> <?= l('gs1_links.input.gtin') ?></label>
-                            <input type="text" id="gtin" name="gtin" class="form-control <?= \SeeGap\Alerts::has_field_errors('gtin') ? 'is-invalid' : null ?>" value="<?= $data->values['gtin'] ?>" maxlength="14" placeholder="<?= l('gs1_links.input.gtin_placeholder') ?>" required="required" />
-                            <small class="form-text text-muted"><?= l('gs1_links.input.gtin_help') ?></small>
-                            <?= \SeeGap\Alerts::output_field_error('gtin') ?>
-                        </div>
+                        <div class="notification-container"></div>
 
-                        <div class="form-group">
-                            <label for="target_url"><i class="fas fa-fw fa-sm fa-link text-muted mr-1"></i> <?= l('gs1_links.input.target_url') ?></label>
-                            <input type="url" id="target_url" name="target_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('target_url') ? 'is-invalid' : null ?>" value="<?= $data->values['target_url'] ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" required="required" />
-                            <?= \SeeGap\Alerts::output_field_error('target_url') ?>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="domain_id"><i class="fas fa-fw fa-bolt fa-sm text-muted mr-1"></i> <?= l('link.settings.domain') ?></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <?php if(count($data->domains)): ?>
-                                        <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                            <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
-                                                <option value="" <?= $data->values['domain_id'] ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
-                                            <?php endif ?>
-
-                                            <?php foreach($data->domains as $row): ?>
-                                                <option value="<?= $row->domain_id ?>" <?= $data->values['domain_id'] && $data->values['domain_id'] == $row->domain_id ? 'selected="selected"' : null ?>  data-full-url="<?= $row->url ?>" data-type="<?= $row->type ?>"><?= remove_url_protocol_from_url($row->url) ?></option>
-                                            <?php endforeach ?>
-                                        </select>
-                                    <?php else: ?>
-                                        <span class="input-group-text"><?= remove_url_protocol_from_url(SITE_URL) ?></span>
-                                    <?php endif ?>
-                                </div>
-
-                                <input
-                                        id="gtin_display"
-                                        type="text"
-                                        class="form-control"
-                                        readonly="readonly"
-                                        <?php if($data->mode === 'create'): ?>
-                                            placeholder="01/<?= l('gs1_links.input.gtin_placeholder') ?>"
-                                        <?php else: ?>
-                                            value="01/<?= $data->gs1_link->gtin ?>"
-                                        <?php endif ?>
-                                />
+                        <!-- Tab Navigation - Matching Link Settings Style -->
+                        <div class="microsite-block-tabs">
+                            <div class="nav nav-pills nav-fill nav-minimal mb-4" id="gs1-settings-tab" role="tablist">
+                                <a class="nav-item nav-link active" 
+                                   id="gs1-general-tab" 
+                                   data-toggle="pill" 
+                                   href="#gs1-general" 
+                                   role="tab" 
+                                   aria-controls="gs1-general" 
+                                   aria-selected="true"
+                                   data-toggle="tooltip" 
+                                   title="<?= l('link.settings.general_tab') ?? 'General' ?>">
+                                    <i class="fas fa-cog"></i>
+                                </a>
+                                <a class="nav-item nav-link" 
+                                   id="gs1-targeting-tab" 
+                                   data-toggle="pill" 
+                                   href="#gs1-targeting" 
+                                   role="tab" 
+                                   aria-controls="gs1-targeting" 
+                                   aria-selected="false"
+                                   data-toggle="tooltip" 
+                                   title="<?= l('link.settings.targeting_tab') ?? 'Targeting' ?>">
+                                    <i class="fas fa-bullseye"></i>
+                                </a>
+                                <a class="nav-item nav-link" 
+                                   id="gs1-tracking-tab" 
+                                   data-toggle="pill" 
+                                   href="#gs1-tracking" 
+                                   role="tab" 
+                                   aria-controls="gs1-tracking" 
+                                   aria-selected="false"
+                                   data-toggle="tooltip" 
+                                   title="<?= l('link.settings.tracking_tab') ?? 'Tracking' ?>">
+                                    <i class="fas fa-chart-line"></i>
+                                </a>
+                                <a class="nav-item nav-link" 
+                                   id="gs1-security-tab" 
+                                   data-toggle="pill" 
+                                   href="#gs1-security" 
+                                   role="tab" 
+                                   aria-controls="gs1-security" 
+                                   aria-selected="false"
+                                   data-toggle="tooltip" 
+                                   title="<?= l('link.settings.security_tab') ?? 'Security' ?>">
+                                    <i class="fas fa-shield-alt"></i>
+                                </a>
+                                <a class="nav-item nav-link" 
+                                   id="gs1-seo-tab" 
+                                   data-toggle="pill" 
+                                   href="#gs1-seo" 
+                                   role="tab" 
+                                   aria-controls="gs1-seo" 
+                                   aria-selected="false"
+                                   data-toggle="tooltip" 
+                                   title="<?= l('link.settings.seo_tab') ?? 'SEO' ?>">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                                <a class="nav-item nav-link" 
+                                   id="gs1-advanced-tab" 
+                                   data-toggle="pill" 
+                                   href="#gs1-advanced" 
+                                   role="tab" 
+                                   aria-controls="gs1-advanced" 
+                                   aria-selected="false"
+                                   data-toggle="tooltip" 
+                                   title="<?= l('link.settings.advanced_tab') ?? 'Advanced' ?>">
+                                    <i class="fas fa-user-tie"></i>
+                                </a>
                             </div>
-                            <small class="form-text text-muted"><?= l('gs1_links.input.gtin_url_help') ?></small>
                         </div>
 
-                        <div class="form-group custom-control custom-switch">
-                            <input id="is_enabled" name="is_enabled" type="checkbox" class="custom-control-input" <?= $data->values['is_enabled'] ? 'checked="checked"' : null?>>
-                            <label class="custom-control-label" for="is_enabled"><?= l('link.settings.is_enabled') ?></label>
-                        </div>
-
-                        <?php if(settings()->links->pixels_is_enabled && settings()->gs1_links->pixels_is_enabled): ?>
-                            <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#pixels_container" aria-expanded="false" aria-controls="pixels_container">
-                                <i class="fas fa-fw fa-adjust fa-sm mr-1"></i> <?= l('link.settings.pixels_header') ?>
-                            </button>
-
-                            <div class="collapse" id="pixels_container">
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="gs1-settings-tabContent">
+                            
+                            <!-- General Tab -->
+                            <div class="tab-pane fade show active" id="gs1-general" role="tabpanel" aria-labelledby="gs1-general-tab">
                                 <div class="form-group">
-                                    <div class="d-flex flex-column flex-xl-row justify-content-between">
-                                        <label><i class="fas fa-fw fa-sm fa-adjust text-muted mr-1"></i> <?= l('link.settings.pixels_ids') ?></label>
-                                        <a href="<?= url('pixel-create') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('pixels.create') ?></a>
-                                    </div>
-                                    <div class="row">
-                                        <?php $available_pixels = require APP_PATH . 'includes/pixels.php'; ?>
-                                        <?php foreach($data->pixels as $pixel): ?>
-                                            <div class="col-12 col-lg-6">
-                                                <div class="custom-control custom-checkbox my-2">
-                                                    <input id="pixel_id_<?= $pixel->pixel_id ?>" name="pixels_ids[]" value="<?= $pixel->pixel_id ?>" type="checkbox" class="custom-control-input" <?= in_array($pixel->pixel_id, $data->values['pixels_ids'] ?? []) ? 'checked="checked"' : null ?>>
-                                                    <label class="custom-control-label d-flex align-items-center" for="pixel_id_<?= $pixel->pixel_id ?>">
-                                                        <span class="text-truncate" title="<?= $pixel->name ?>"><?= $pixel->name ?></span>
-                                                        <small class="badge badge-light ml-1" data-toggle="tooltip" title="<?= $available_pixels[$pixel->type]['name'] ?>">
-                                                            <i class="<?= $available_pixels[$pixel->type]['icon'] ?> fa-fw fa-sm" style="color: <?= $available_pixels[$pixel->type]['color'] ?>"></i>
-                                                        </small>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        <?php endforeach ?>
-                                    </div>
+                                    <label for="gtin"><i class="fas fa-fw fa-sm fa-barcode text-muted mr-1"></i> <?= l('gs1_links.input.gtin') ?></label>
+                                    <input type="text" id="gtin" name="gtin" class="form-control <?= \SeeGap\Alerts::has_field_errors('gtin') ? 'is-invalid' : null ?>" value="<?= $data->values['gtin'] ?>" maxlength="14" placeholder="<?= l('gs1_links.input.gtin_placeholder') ?>" required="required" />
+                                    <small class="form-text text-muted"><?= l('gs1_links.input.gtin_help') ?></small>
+                                    <?= \SeeGap\Alerts::output_field_error('gtin') ?>
                                 </div>
-                            </div>
-                        <?php endif ?>
 
-                        <button class="btn btn-block btn-gray-200 my-4 <?= \SeeGap\Alerts::has_field_errors(['expiration_url']) ? 'border-danger' : null ?>" type="button" data-toggle="collapse" data-target="#temporary_url_container" aria-expanded="false" aria-controls="temporary_url_container">
-                            <i class="fas fa-fw fa-clock fa-sm mr-1"></i> <?= l('link.settings.temporary_url_header') ?>
-                        </button>
+                                <div class="form-group">
+                                    <label for="target_url"><i class="fas fa-fw fa-sm fa-link text-muted mr-1"></i> <?= l('gs1_links.input.target_url') ?></label>
+                                    <input type="url" id="target_url" name="target_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('target_url') ? 'is-invalid' : null ?>" value="<?= $data->values['target_url'] ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" required="required" />
+                                    <?= \SeeGap\Alerts::output_field_error('target_url') ?>
+                                </div>
 
-                        <div class="collapse" id="temporary_url_container">
-                            <div class="form-group custom-control custom-switch">
-                                <input
-                                        id="schedule"
-                                        name="schedule"
-                                        type="checkbox"
-                                        class="custom-control-input"
-                                    <?= $data->values['schedule'] && !empty($data->values['start_date']) && !empty($data->values['end_date']) ? 'checked="checked"' : null ?>
-                                >
-                                <label class="custom-control-label" for="schedule"><?= l('link.settings.schedule') ?></label>
-                                <small class="form-text text-muted"><?= l('link.settings.schedule_help') ?></small>
-                            </div>
+                                <div class="form-group">
+                                    <label for="domain_id"><i class="fas fa-fw fa-bolt fa-sm text-muted mr-1"></i> <?= l('link.settings.domain') ?></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <?php if(count($data->domains)): ?>
+                                                <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
+                                                    <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
+                                                        <option value="" <?= $data->values['domain_id'] ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
+                                                    <?php endif ?>
 
-                            <div id="schedule_container" style="display: none;">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label><i class="fas fa-fw fa-hourglass-start fa-sm text-muted mr-1"></i> <?= l('link.settings.start_date') ?></label>
-                                            <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    name="start_date"
-                                                    value="<?= \SeeGap\Date::get($data->values['start_date'], 1) ?>"
-                                                    placeholder="<?= l('link.settings.start_date') ?>"
-                                                    autocomplete="off"
-                                                    data-daterangepicker
-                                            />
+                                                    <?php foreach($data->domains as $row): ?>
+                                                        <option value="<?= $row->domain_id ?>" <?= $data->values['domain_id'] && $data->values['domain_id'] == $row->domain_id ? 'selected="selected"' : null ?>  data-full-url="<?= $row->url ?>" data-type="<?= $row->type ?>"><?= remove_url_protocol_from_url($row->url) ?></option>
+                                                    <?php endforeach ?>
+                                                </select>
+                                            <?php else: ?>
+                                                <span class="input-group-text"><?= remove_url_protocol_from_url(SITE_URL) ?></span>
+                                            <?php endif ?>
                                         </div>
-                                    </div>
 
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.end_date') ?></label>
-                                            <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    name="end_date"
-                                                    value="<?= \SeeGap\Date::get($data->values['end_date'], 1) ?>"
-                                                    placeholder="<?= l('link.settings.end_date') ?>"
-                                                    autocomplete="off"
-                                                    data-daterangepicker
-                                            />
-                                        </div>
+                                        <input
+                                                id="gtin_display"
+                                                type="text"
+                                                class="form-control"
+                                                readonly="readonly"
+                                                <?php if($data->mode === 'create'): ?>
+                                                    placeholder="01/<?= l('gs1_links.input.gtin_placeholder') ?>"
+                                                <?php else: ?>
+                                                    value="01/<?= $data->gs1_link->gtin ?>"
+                                                <?php endif ?>
+                                        />
                                     </div>
+                                    <small class="form-text text-muted"><?= l('gs1_links.input.gtin_url_help') ?></small>
+                                </div>
+
+                                <div class="form-group custom-control custom-switch">
+                                    <input id="is_enabled" name="is_enabled" type="checkbox" class="custom-control-input" <?= $data->values['is_enabled'] ? 'checked="checked"' : null?>>
+                                    <label class="custom-control-label" for="is_enabled"><?= l('link.settings.is_enabled') ?></label>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="clicks_limit"><i class="fas fa-fw fa-mouse fa-sm text-muted mr-1"></i> <?= l('link.settings.clicks_limit') ?></label>
-                                <input id="clicks_limit" type="number" class="form-control" name="clicks_limit" value="<?= $data->values['clicks_limit'] ?>" />
-                                <small class="form-text text-muted"><?= l('link.settings.clicks_limit_help') ?></small>
-                            </div>
+                            <!-- Targeting Tab -->
+                            <div class="tab-pane fade" id="gs1-targeting" role="tabpanel" aria-labelledby="gs1-targeting-tab">
+                                <div <?= $this->user->plan_settings->targeting_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
+                                    <div class="<?= $this->user->plan_settings->targeting_is_enabled ? null : 'container-disabled' ?>">
+                                        <div class="form-group">
+                                            <label for="targeting_type"><i class="fas fa-fw fa-bullseye fa-sm text-muted mr-1"></i> <?= l('link.settings.targeting_type') ?></label>
+                                            <select id="targeting_type" name="targeting_type" class="custom-select">
+                                                <option value="false" <?= $data->values['targeting_type'] == 'false' ? 'selected="selected"' : null?>>😊 <?= l('global.none') ?></option>
+                                                <option value="continent_code" <?= $data->values['targeting_type'] == 'continent_code' ? 'selected="selected"' : null?>>🌍 <?= l('global.continent') ?></option>
+                                                <option value="country_code" <?= $data->values['targeting_type'] == 'country_code' ? 'selected="selected"' : null?>>🇨🇺 <?= l('global.country') ?></option>
+                                                <option value="city_name" <?= $data->values['targeting_type'] == 'city_name' ? 'selected="selected"' : null?>>🏙️ <?= l('global.city') ?></option>
+                                                <option value="device_type" <?= $data->values['targeting_type'] == 'device_type' ? 'selected="selected"' : null?>>📱 <?= l('link.settings.targeting_type_device_type') ?></option>
+                                                <option value="os_name" <?= $data->values['targeting_type'] == 'os_name' ? 'selected="selected"' : null?>>💻 <?= l('link.settings.targeting_type_os_name') ?></option>
+                                                <option value="browser_name" <?= $data->values['targeting_type'] == 'browser_name' ? 'selected="selected"' : null?>>🌐 <?= l('link.settings.targeting_type_browser_name') ?></option>
+                                                <option value="browser_language" <?= $data->values['targeting_type'] == 'browser_language' ? 'selected="selected"' : null?>>🗣️ <?= l('link.settings.targeting_type_browser_language') ?></option>
+                                                <option value="rotation" <?= $data->values['targeting_type'] == 'rotation' ? 'selected="selected"' : null?>>🔄 <?= l('link.settings.targeting_type_rotation') ?></option>
+                                            </select>
+                                        </div>
 
-                            <div class="form-group">
-                                <label for="expiration_url"><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.expiration_url') ?></label>
-                                <input id="expiration_url" type="url" class="form-control <?= \SeeGap\Alerts::has_field_errors('expiration_url') ? 'is-invalid' : null ?>" name="expiration_url" value="<?= $data->values['expiration_url'] ?>" maxlength="2048" />
-                                <?= \SeeGap\Alerts::output_field_error('expiration_url') ?>
-                                <small class="form-text text-muted"><?= l('link.settings.expiration_url_help') ?></small>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-block btn-gray-200 my-4 <?= \SeeGap\Alerts::has_field_errors(['targeting_*']) ? 'border-danger' : null ?>" type="button" data-toggle="collapse" data-target="#targeting_container" aria-expanded="false" aria-controls="targeting_container">
-                            <i class="fas fa-fw fa-bullseye fa-sm mr-1"></i> <?= l('link.settings.targeting_header') ?>
-                        </button>
-
-                        <div class="collapse" id="targeting_container">
-                            <div <?= $this->user->plan_settings->targeting_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                <div class="<?= $this->user->plan_settings->targeting_is_enabled ? null : 'container-disabled' ?>">
-
-                                    <div class="form-group">
-                                        <label for="targeting_type"><i class="fas fa-fw fa-bullseye fa-sm text-muted mr-1"></i> <?= l('link.settings.targeting_type') ?></label>
-                                        <select id="targeting_type" name="targeting_type" class="custom-select">
-                                            <option value="false" <?= $data->values['targeting_type'] == 'false' ? 'selected="selected"' : null?>>😊 <?= l('global.none') ?></option>
-                                            <option value="continent_code" <?= $data->values['targeting_type'] == 'continent_code' ? 'selected="selected"' : null?>>🌍 <?= l('global.continent') ?></option>
-                                            <option value="country_code" <?= $data->values['targeting_type'] == 'country_code' ? 'selected="selected"' : null?>>🇨🇺 <?= l('global.country') ?></option>
-                                            <option value="city_name" <?= $data->values['targeting_type'] == 'city_name' ? 'selected="selected"' : null?>>🏙️ <?= l('global.city') ?></option>
-                                            <option value="device_type" <?= $data->values['targeting_type'] == 'device_type' ? 'selected="selected"' : null?>>📱 <?= l('link.settings.targeting_type_device_type') ?></option>
-                                            <option value="os_name" <?= $data->values['targeting_type'] == 'os_name' ? 'selected="selected"' : null?>>💻 <?= l('link.settings.targeting_type_os_name') ?></option>
-                                            <option value="browser_name" <?= $data->values['targeting_type'] == 'browser_name' ? 'selected="selected"' : null?>>🌐 <?= l('link.settings.targeting_type_browser_name') ?></option>
-                                            <option value="browser_language" <?= $data->values['targeting_type'] == 'browser_language' ? 'selected="selected"' : null?>>🗣️ <?= l('link.settings.targeting_type_browser_language') ?></option>
-                                            <option value="rotation" <?= $data->values['targeting_type'] == 'rotation' ? 'selected="selected"' : null?>>🔄 <?= l('link.settings.targeting_type_rotation') ?></option>
-                                        </select>
-                                    </div>
-
-                                    <div data-targeting-type="false" class="d-none"></div>
+                                        <div data-targeting-type="false" class="d-none"></div>
 
                                     <div data-targeting-type="continent_code" class="d-none">
                                         <p class="small text-muted"><?= l('link.settings.targeting_type_continent_code_help') ?></p>
@@ -480,13 +460,38 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#utm_container" aria-expanded="false" aria-controls="utm_container">
-                            <i class="fas fa-fw fa-keyboard fa-sm mr-1"></i> <?= l('link.settings.utm_header') ?>
-                        </button>
+                        <!-- Tracking Tab -->
+                        <div class="tab-pane fade" id="gs1-tracking" role="tabpanel" aria-labelledby="gs1-tracking-tab">
+                            <?php if(settings()->links->pixels_is_enabled && settings()->gs1_links->pixels_is_enabled): ?>
+                                <div class="form-group">
+                                    <div class="d-flex flex-column flex-xl-row justify-content-between">
+                                        <label><i class="fas fa-fw fa-sm fa-adjust text-muted mr-1"></i> <?= l('link.settings.pixels_ids') ?></label>
+                                        <a href="<?= url('pixel-create') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('pixels.create') ?></a>
+                                    </div>
+                                    <div class="row">
+                                        <?php $available_pixels = require APP_PATH . 'includes/pixels.php'; ?>
+                                        <?php foreach($data->pixels as $pixel): ?>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="custom-control custom-checkbox my-2">
+                                                    <input id="pixel_id_<?= $pixel->pixel_id ?>" name="pixels_ids[]" value="<?= $pixel->pixel_id ?>" type="checkbox" class="custom-control-input" <?= in_array($pixel->pixel_id, $data->values['pixels_ids'] ?? []) ? 'checked="checked"' : null ?>>
+                                                    <label class="custom-control-label d-flex align-items-center" for="pixel_id_<?= $pixel->pixel_id ?>">
+                                                        <span class="text-truncate" title="<?= $pixel->name ?>"><?= $pixel->name ?></span>
+                                                        <small class="badge badge-light ml-1" data-toggle="tooltip" title="<?= $available_pixels[$pixel->type]['name'] ?>">
+                                                            <i class="<?= $available_pixels[$pixel->type]['icon'] ?> fa-fw fa-sm" style="color: <?= $available_pixels[$pixel->type]['color'] ?>"></i>
+                                                        </small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <?php endforeach ?>
+                                    </div>
+                                </div>
+                            <?php endif ?>
 
-                        <div class="collapse" id="utm_container">
+                            <!-- UTM Parameters -->
                             <div <?= $this->user->plan_settings->utm ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
                                 <div class="<?= $this->user->plan_settings->utm ? null : 'container-disabled' ?>">
+                                    <h6 class="mt-4 mb-3"><i class="fas fa-fw fa-keyboard fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_header') ?></h6>
+                                    
                                     <div class="form-group">
                                         <label for="utm_source"><i class="fas fa-fw fa-sitemap fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_source') ?></label>
                                         <input id="utm_source" type="text" class="form-control" name="utm_source" value="<?= $data->values['utm_source'] ?? '' ?>" maxlength="128" placeholder="<?= l('link.settings.utm_source_placeholder') ?>" />
@@ -511,11 +516,70 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#cloaking_container" aria-expanded="false" aria-controls="cloaking_container">
-                            <i class="fas fa-fw fa-eye fa-sm mr-1"></i> <?= l('link.settings.cloaking_header') ?>
-                        </button>
+                        <!-- Security Tab -->
+                        <div class="tab-pane fade" id="gs1-security" role="tabpanel" aria-labelledby="gs1-security-tab">
+                            <div class="form-group custom-control custom-switch">
+                                <input
+                                        id="schedule"
+                                        name="schedule"
+                                        type="checkbox"
+                                        class="custom-control-input"
+                                    <?= $data->values['schedule'] && !empty($data->values['start_date']) && !empty($data->values['end_date']) ? 'checked="checked"' : null ?>
+                                >
+                                <label class="custom-control-label" for="schedule"><?= l('link.settings.schedule') ?></label>
+                                <small class="form-text text-muted"><?= l('link.settings.schedule_help') ?></small>
+                            </div>
 
-                        <div class="collapse" id="cloaking_container">
+                            <div id="schedule_container" style="display: none;">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label><i class="fas fa-fw fa-hourglass-start fa-sm text-muted mr-1"></i> <?= l('link.settings.start_date') ?></label>
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="start_date"
+                                                    value="<?= \SeeGap\Date::get($data->values['start_date'], 1) ?>"
+                                                    placeholder="<?= l('link.settings.start_date') ?>"
+                                                    autocomplete="off"
+                                                    data-daterangepicker
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.end_date') ?></label>
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="end_date"
+                                                    value="<?= \SeeGap\Date::get($data->values['end_date'], 1) ?>"
+                                                    placeholder="<?= l('link.settings.end_date') ?>"
+                                                    autocomplete="off"
+                                                    data-daterangepicker
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="clicks_limit"><i class="fas fa-fw fa-mouse fa-sm text-muted mr-1"></i> <?= l('link.settings.clicks_limit') ?></label>
+                                <input id="clicks_limit" type="number" class="form-control" name="clicks_limit" value="<?= $data->values['clicks_limit'] ?>" />
+                                <small class="form-text text-muted"><?= l('link.settings.clicks_limit_help') ?></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="expiration_url"><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.expiration_url') ?></label>
+                                <input id="expiration_url" type="url" class="form-control <?= \SeeGap\Alerts::has_field_errors('expiration_url') ? 'is-invalid' : null ?>" name="expiration_url" value="<?= $data->values['expiration_url'] ?>" maxlength="2048" />
+                                <?= \SeeGap\Alerts::output_field_error('expiration_url') ?>
+                                <small class="form-text text-muted"><?= l('link.settings.expiration_url_help') ?></small>
+                            </div>
+                        </div>
+
+                        <!-- SEO Tab -->
+                        <div class="tab-pane fade" id="gs1-seo" role="tabpanel" aria-labelledby="gs1-seo-tab">
                             <div <?= $this->user->plan_settings->cloaking_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
                                 <div class="<?= $this->user->plan_settings->cloaking_is_enabled ? null : 'container-disabled' ?>">
                                     <div class="form-group custom-control custom-switch">
@@ -569,11 +633,8 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-block btn-gray-200 my-4" type="button" data-toggle="collapse" data-target="#advanced_container" aria-expanded="false" aria-controls="advanced_container">
-                            <i class="fas fa-fw fa-user-tie fa-sm mr-1"></i> <?= l('link.settings.advanced_header') ?>
-                        </button>
-
-                        <div class="collapse" id="advanced_container">
+                        <!-- Advanced Tab -->
+                        <div class="tab-pane fade" id="gs1-advanced" role="tabpanel" aria-labelledby="gs1-advanced-tab">
                             <?php if(isset(settings()->links->projects_is_enabled) && settings()->links->projects_is_enabled && settings()->gs1_links->projects_is_enabled): ?>
                                 <div class="form-group">
                                     <div class="d-flex flex-column flex-xl-row justify-content-between">
@@ -622,14 +683,16 @@
                             </div>
                         </div>
 
-                        <button type="submit" name="submit" class="btn btn-block btn-primary mt-4">
-                            <?php if($data->mode === 'create'): ?>
-                                <?= l('global.create') ?>
-                            <?php else: ?>
-                                <?= l('global.update') ?>
-                            <?php endif ?>
-                        </button>
-                    </form>
+                    </div>
+
+                    <button type="submit" name="submit" class="btn btn-block btn-primary mt-4">
+                        <?php if($data->mode === 'create'): ?>
+                            <?= l('global.create') ?>
+                        <?php else: ?>
+                            <?= l('global.update') ?>
+                        <?php endif ?>
+                    </button>
+                </form>
                 </div>
             </div>
         </div>
@@ -1197,3 +1260,131 @@
 <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 
 <?php include_view(THEME_PATH . 'views/partials/js_cropper.php') ?>
+
+<style>
+.microsite-block-tabs .nav-minimal {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 4px;
+    background-color: #f8f9fa;
+}
+
+.microsite-block-tabs .nav-minimal .nav-link {
+    border: none;
+    border-radius: 6px;
+    padding: 5px;
+    margin: 0 1px;
+    color: #6c757d;
+    background: transparent;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 30px;
+    min-width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.microsite-block-tabs .nav-minimal .nav-link:hover {
+    background-color: #e9ecef;
+    color: #495057;
+    transform: translateY(-1px);
+}
+
+.microsite-block-tabs .nav-minimal .nav-link.active {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
+}
+
+.microsite-block-tabs .nav-minimal .nav-link.active:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.microsite-block-tabs .nav-minimal .nav-link i {
+    font-size: 0.9rem;
+}
+
+.gs1-flow-visualization .flow-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.gs1-flow-visualization .flow-icon {
+    margin-right: 1rem;
+    min-width: 50px;
+    text-align: center;
+}
+
+.gs1-flow-visualization .flow-content {
+    flex: 1;
+}
+
+.gs1-flow-visualization .flow-arrow {
+    text-align: center;
+    margin: 0.5rem 0;
+}
+
+.mobile-preview {
+    width: 100%;
+    max-width: 200px;
+}
+
+.mobile-frame {
+    border: 3px solid #333;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #333;
+    position: relative;
+}
+
+.mobile-frame::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: #666;
+    border-radius: 2px;
+    z-index: 1;
+}
+
+.mobile-screen {
+    background: #fff;
+    min-height: 300px;
+    position: relative;
+}
+
+.mobile-content {
+    padding: 20px 10px 10px;
+}
+
+.preview-url-display {
+    font-size: 0.75rem;
+    word-break: break-all;
+}
+
+@media (max-width: 768px) {
+    .microsite-block-tabs .nav-minimal .nav-link {
+        padding: 6px;
+        min-height: 32px;
+        min-width: 32px;
+    }
+    
+    .microsite-block-tabs .nav-minimal .nav-link i {
+        font-size: 0.8rem !important;
+    }
+    
+    .mobile-preview {
+        max-width: 150px;
+    }
+    
+    .mobile-content {
+        padding: 15px 8px 8px;
+    }
+}
+</style>

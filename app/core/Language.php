@@ -248,7 +248,8 @@ class Language {
             'data',
             'reports',
             'splash-pages',
-            'gs1-links'
+            'gs1-links',
+            'products'
         ];
 
         $all_content = [];

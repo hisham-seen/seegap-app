@@ -219,11 +219,6 @@
                                                 <small class="d-inline-block text-truncate text-muted">
                                                     <?= remove_url_protocol_from_url($row->settings->url) ?>
                                                 </small>
-
-                                                <?php if($row->link_id): ?>
-                                                    <a href="<?= url('link/' . $row->link_id) ?>" class="btn btn-sm btn-link" data-toggle="tooltip" title="<?= l('global.update') ?>"><i class="fas fa-fw fa-pencil-alt"></i></a>
-                                                    <a href="<?= url('link/' . $row->link_id . '/statistics') ?>" class="btn btn-sm btn-link" data-toggle="tooltip" title="<?= l('link.statistics.pageviews') ?>"><i class="fas fa-fw fa-chart-bar"></i></a>
-                                                <?php endif ?>
                                             </div>
                                         <?php endif ?>
                                     </div>
@@ -271,6 +266,16 @@
                                     <a href="<?= url('qr-code-manager/edit/' . $row->qr_code_id) ?>" class="text-primary mr-3" data-toggle="tooltip" title="<?= l('global.edit') ?>">
                                         <i class="fas fa-fw fa-pencil-alt"></i>
                                     </a>
+
+                                    <?php if($row->type == 'url' && $row->link_id): ?>
+                                        <a href="<?= url('link/' . $row->link_id) ?>" class="text-primary mr-3" data-toggle="tooltip" title="<?= l('global.update') ?>">
+                                            <i class="fas fa-fw fa-link"></i>
+                                        </a>
+
+                                        <a href="<?= url('link/' . $row->link_id . '/statistics') ?>" class="text-info mr-3" data-toggle="tooltip" title="<?= l('link.statistics.link') ?>">
+                                            <i class="fas fa-fw fa-chart-bar"></i>
+                                        </a>
+                                    <?php endif ?>
 
                                     <div class="dropdown mr-3">
                                         <a href="#" class="text-secondary dropdown-toggle-simple" title="<?= l('global.download') ?>" data-toggle="dropdown" aria-expanded="false" data-tooltip data-tooltip-hide-on-click>

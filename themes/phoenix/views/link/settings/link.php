@@ -1,1052 +1,907 @@
 <?php defined('SEEGAP') || die() ?>
 
-<?php ob_start() ?>
+<div class="row link-settings">
+    <!-- Left Column - Settings -->
+    <div class="col-12 col-lg-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="mb-3 d-flex align-items-center">
+                    <i class="fas fa-fw fa-cog fa-sm text-muted mr-1"></i> 
+                    <?= l('link.settings.header') ?>
+                </h6>
 
-<div class="card col-4">
-    <div class="card-body">
+                <form name="update_link" action="" method="post" role="form" enctype="multipart/form-data">
+                    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
+                    <input type="hidden" name="request_type" value="update" />
+                    <input type="hidden" name="type" value="link" />
+                    <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
 
-        <form name="update_link" action="" method="post" role="form" enctype="multipart/form-data">
-            <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
-            <input type="hidden" name="request_type" value="update" />
-            <input type="hidden" name="type" value="link" />
-            <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
+                    <div class="notification-container"></div>
 
-            <div class="notification-container"></div>
-
-            <div class="form-group">
-                <label for="location_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('link.settings.location_url') ?></label>
-                <input id="location_url" type="text" class="form-control" name="location_url" value="<?= $data->link->location_url ?>" maxlength="2048" required="required" placeholder="<?= l('global.url_placeholder') ?>" />
-            </div>
-
-            <div class="form-group">
-                <label for="url"><i class="fas fa-fw fa-bolt fa-sm text-muted mr-1"></i> <?= l('link.settings.url') ?></label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <?php if(count($data->domains)): ?>
-                            <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
-                                    <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
-                                <?php endif ?>
-
-                                <?php foreach($data->domains as $row): ?>
-                                    <option value="<?= $row->domain_id ?>" <?= $data->link->domain && $row->domain_id == $data->link->domain->domain_id ? 'selected="selected"' : null ?>  data-full-url="<?= $row->url ?>" data-type="<?= $row->type ?>"><?= remove_url_protocol_from_url($row->url) ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        <?php else: ?>
-                            <span class="input-group-text"><?= remove_url_protocol_from_url(SITE_URL) ?></span>
-                        <?php endif ?>
-                    </div>
-
-                    <input
-                            id="url"
-                            type="text"
-                            class="form-control"
-                            name="url"
-                            placeholder="<?= l('global.url_slug_placeholder') ?>"
-                            value="<?= $data->link->url ?>"
-                            maxlength="<?= $this->user->plan_settings->url_maximum_characters ?? 64 ?>"
-                            onchange="update_this_value(this, get_slug)"
-                            onkeyup="update_this_value(this, get_slug)"
-                        <?= !$this->user->plan_settings->custom_url ? 'readonly="readonly"' : null ?>
-                        <?= $this->user->plan_settings->custom_url ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>
-                    />
-                </div>
-                <small class="form-text text-muted"><?= l('link.settings.url_help') ?></small>
-            </div>
-
-            <?php if(count($data->domains)): ?>
-                <div id="is_main_link_wrapper" class="form-group custom-control custom-switch">
-                    <input id="is_main_link" name="is_main_link" type="checkbox" class="custom-control-input" <?= $data->link->domain_id && $data->domains[$data->link->domain_id]->link_id == $data->link->link_id ? 'checked="checked"' : null ?>>
-                    <label class="custom-control-label" for="is_main_link"><?= l('link.settings.is_main_link') ?></label>
-                    <small class="form-text text-muted"><?= l('link.settings.is_main_link_help') ?></small>
-                </div>
-            <?php endif ?>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#app_linking_container" aria-expanded="false" aria-controls="app_linking_container">
-                <i class="fas fa-fw fa-mobile-button fa-sm mr-1"></i> <?= l('link.settings.app_linking_header') ?>
-            </button>
-
-            <div class="collapse" id="app_linking_container">
-                <div <?= $this->user->plan_settings->app_linking_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="<?= $this->user->plan_settings->app_linking_is_enabled ? null : 'container-disabled' ?>">
-                        <div class="form-group custom-control custom-switch">
-                            <input
-                                    id="app_linking_is_enabled"
-                                    name="app_linking_is_enabled"
-                                    type="checkbox"
-                                    class="custom-control-input"
-                                <?= $data->link->settings->app_linking_is_enabled ? 'checked="checked"' : null ?>
-                                <?= $this->user->plan_settings->app_linking_is_enabled ? null : 'disabled="disabled"' ?>
-                            >
-                            <label class="custom-control-label" for="app_linking_is_enabled"><i class="fas fa-fw fa-mobile-screen-button fa-sm text-muted mr-1"></i> <?= l('link.settings.app_linking_is_enabled') ?></label>
-                            <small class="form-text text-muted"><?= l('link.settings.app_linking_is_enabled_help') ?></small>
+                    <!-- Tab Navigation - Matching Microsite Block Style -->
+                    <div class="microsite-block-tabs">
+                        <div class="nav nav-pills nav-fill nav-minimal mb-4" id="link-settings-tab" role="tablist">
+                            <a class="nav-item nav-link active" 
+                               id="link-general-tab" 
+                               data-toggle="pill" 
+                               href="#link-general" 
+                               role="tab" 
+                               aria-controls="link-general" 
+                               aria-selected="true"
+                               data-toggle="tooltip" 
+                               title="<?= l('link.settings.general_tab') ?? 'General' ?>">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                            <a class="nav-item nav-link" 
+                               id="link-targeting-tab" 
+                               data-toggle="pill" 
+                               href="#link-targeting" 
+                               role="tab" 
+                               aria-controls="link-targeting" 
+                               aria-selected="false"
+                               data-toggle="tooltip" 
+                               title="<?= l('link.settings.targeting_tab') ?? 'Targeting' ?>">
+                                <i class="fas fa-bullseye"></i>
+                            </a>
+                            <a class="nav-item nav-link" 
+                               id="link-tracking-tab" 
+                               data-toggle="pill" 
+                               href="#link-tracking" 
+                               role="tab" 
+                               aria-controls="link-tracking" 
+                               aria-selected="false"
+                               data-toggle="tooltip" 
+                               title="<?= l('link.settings.tracking_tab') ?? 'Tracking' ?>">
+                                <i class="fas fa-chart-line"></i>
+                            </a>
+                            <a class="nav-item nav-link" 
+                               id="link-security-tab" 
+                               data-toggle="pill" 
+                               href="#link-security" 
+                               role="tab" 
+                               aria-controls="link-security" 
+                               aria-selected="false"
+                               data-toggle="tooltip" 
+                               title="<?= l('link.settings.security_tab') ?? 'Security' ?>">
+                                <i class="fas fa-shield-alt"></i>
+                            </a>
+                            <a class="nav-item nav-link" 
+                               id="link-seo-tab" 
+                               data-toggle="pill" 
+                               href="#link-seo" 
+                               role="tab" 
+                               aria-controls="link-seo" 
+                               aria-selected="false"
+                               data-toggle="tooltip" 
+                               title="<?= l('link.settings.seo_tab') ?? 'SEO' ?>">
+                                <i class="fas fa-search"></i>
+                            </a>
+                            <a class="nav-item nav-link" 
+                               id="link-advanced-tab" 
+                               data-toggle="pill" 
+                               href="#link-advanced" 
+                               role="tab" 
+                               aria-controls="link-advanced" 
+                               aria-selected="false"
+                               data-toggle="tooltip" 
+                               title="<?= l('link.settings.advanced_tab') ?? 'Advanced' ?>">
+                                <i class="fas fa-user-tie"></i>
+                            </a>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="h6"><?= l('link.settings.app_linking_supported_os') ?></div>
-                    <div class="row">
-                        <div class="col-12 col-lg-6 mb-2 mb-lg-0">
-                            <small class="badge badge-light mr-1">
-                                <i class="fab fa-apple fa-fw fa-sm"></i>
-                            </small>
-
-                            Apple
-                        </div>
-
-                        <div class="col-12 col-lg-6 mb-2 mb-lg-0">
-                            <small class="badge badge-light mr-1">
-                                <i class="fab fa-android fa-fw fa-sm"></i>
-                            </small>
-
-                            Android
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="h6"><?= l('link.settings.app_linking_supported_apps') ?></div>
-                    <small class="form-text text-muted mb-3"><?= l('link.settings.app_linking_supported_apps_help') ?></small>
-
-                    <div id="app_linking_supported_apps" class="row">
-                        <?php
-                        $supported_apps = require APP_PATH . 'includes/app_linking.php';
-                        ?>
-                        <?php foreach($supported_apps as $app_key => $app): ?>
-                            <?php
-                            $tooltip_title = '<div class=\'p-3 text-left\'><p class=\'my-1\'>' . implode('</p> <p class=\'my-1\'>', array_map(function($key) {
-                                    return $key;
-                                }, $app['display_formats'])) . '</p></div>';
-                            ?>
-
-                            <div id="<?= $app_key ?>" class="col-12 col-lg-6 mb-2">
-                                <small class="badge badge-light mr-1" data-toggle="tooltip" data-html="true" title="<?= $tooltip_title ?>">
-                                    <i class="<?= $app['icon'] ?> fa-fw fa-sm" style="color: <?= $app['color'] ?>"></i>
-                                </small>
-
-                                <?= $app['name'] ?>
-
-                                <small class="badge badge-success ml-1 <?= $data->link->settings->app_linking->app == $app_key ? null : 'd-none' ?>" data-app-linking-matched="<?= $app_key ?>">
-                                    <i class="fas fa-check fa-fw fa-sm"></i> <?= l('link.settings.app_linking_supported_apps.matched') ?>
-                                </small>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-
-                <div id="app_linking_supported_apps_no_match" class="alert alert-info <?= $data->link->settings->app_linking->app ? 'd-none' : null ?>"><?= l('link.settings.app_linking_supported_apps.no_match') ?></div>
-            </div>
-
-            <?php if(settings()->links->pixels_is_enabled): ?>
-                <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#pixels_container" aria-expanded="false" aria-controls="pixels_container">
-                    <i class="fas fa-fw fa-adjust fa-sm mr-1"></i> <?= l('link.settings.pixels_header') ?>
-                </button>
-
-                <div class="collapse" id="pixels_container">
-                    <div class="form-group">
-                        <div class="d-flex flex-column flex-xl-row justify-content-between">
-                            <label><i class="fas fa-fw fa-sm fa-adjust text-muted mr-1"></i> <?= l('link.settings.pixels_ids') ?></label>
-                            <a href="<?= url('pixels') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('pixels.create') ?></a>
-                        </div>
-
-                        <div class="row">
-                            <?php $available_pixels = require APP_PATH . 'includes/pixels.php'; ?>
-                            <?php foreach($data->pixels as $pixel): ?>
-                                <div class="col-12 col-lg-6">
-                                    <div class="custom-control custom-checkbox my-2">
-                                        <input id="pixel_id_<?= $pixel->pixel_id ?>" name="pixels_ids[]" value="<?= $pixel->pixel_id ?>" type="checkbox" class="custom-control-input" <?= in_array($pixel->pixel_id, $data->link->pixels_ids) ? 'checked="checked"' : null ?>>
-                                        <label class="custom-control-label d-flex align-items-center" for="pixel_id_<?= $pixel->pixel_id ?>">
-                                            <span class="text-truncate" title="<?= $pixel->name ?>"><?= $pixel->name ?></span>
-                                            <small class="badge badge-light ml-1" data-toggle="tooltip" title="<?= $available_pixels[$pixel->type]['name'] ?>">
-                                                <i class="<?= $available_pixels[$pixel->type]['icon'] ?> fa-fw fa-sm" style="color: <?= $available_pixels[$pixel->type]['color'] ?>"></i>
-                                            </small>
-                                        </label>
-                                    </div>
-                                </div>
-                            <?php endforeach ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endif ?>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#temporary_url_container" aria-expanded="false" aria-controls="temporary_url_container">
-                <i class="fas fa-fw fa-clock fa-sm mr-1"></i> <?= l('link.settings.temporary_url_header') ?>
-            </button>
-
-            <div class="collapse" id="temporary_url_container">
-                <div <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="<?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'container-disabled' ?>">
-                        <div class="form-group custom-control custom-switch">
-                            <input
-                                    id="schedule"
-                                    name="schedule"
-                                    type="checkbox"
-                                    class="custom-control-input"
-                                <?= $data->link->settings->schedule && !empty($data->link->start_date) && !empty($data->link->end_date) ? 'checked="checked"' : null ?>
-                                <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'disabled="disabled"' ?>
-                            >
-                            <label class="custom-control-label" for="schedule"><?= l('link.settings.schedule') ?></label>
-                            <small class="form-text text-muted"><?= l('link.settings.schedule_help') ?></small>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="schedule_container" style="display: none;">
-                    <div <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                        <div class="<?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'container-disabled' ?>">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label><i class="fas fa-fw fa-hourglass-start fa-sm text-muted mr-1"></i> <?= l('link.settings.start_date') ?></label>
-                                        <input
-                                                type="text"
-                                                class="form-control"
-                                                name="start_date"
-                                                value="<?= \SeeGap\Date::get($data->link->start_date, 1) ?>"
-                                                placeholder="<?= l('link.settings.start_date') ?>"
-                                                autocomplete="off"
-                                                data-daterangepicker
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.end_date') ?></label>
-                                        <input
-                                                type="text"
-                                                class="form-control"
-                                                name="end_date"
-                                                value="<?= \SeeGap\Date::get($data->link->end_date, 1) ?>"
-                                                placeholder="<?= l('link.settings.end_date') ?>"
-                                                autocomplete="off"
-                                                data-daterangepicker
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="form-group <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'container-disabled' ?>">
-                        <label for="clicks_limit"><i class="fas fa-fw fa-mouse fa-sm text-muted mr-1"></i> <?= l('link.settings.clicks_limit') ?></label>
-                        <input id="clicks_limit" type="number" class="form-control" name="clicks_limit" value="<?= $data->link->settings->clicks_limit ?>" />
-                        <small class="form-text text-muted"><?= l('link.settings.clicks_limit_help') ?></small>
-                    </div>
-                </div>
-
-                <div <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="form-group <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'container-disabled' ?>">
-                        <label for="expiration_url"><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.expiration_url') ?></label>
-                        <input id="expiration_url" type="url" class="form-control" name="expiration_url" value="<?= $data->link->settings->expiration_url ?>" maxlength="2048" />
-                        <small class="form-text text-muted"><?= l('link.settings.expiration_url_help') ?></small>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#utm_container" aria-expanded="false" aria-controls="utm_container">
-                <i class="fas fa-fw fa-keyboard fa-sm mr-1"></i> <?= l('link.settings.utm_header') ?>
-            </button>
-
-            <div class="collapse" id="utm_container">
-                <div <?= $this->user->plan_settings->utm ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="<?= $this->user->plan_settings->utm ? null : 'container-disabled' ?>">
-                        <div class="form-group">
-                            <label for="utm_source"><i class="fas fa-fw fa-sitemap fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_source') ?></label>
-                            <input id="utm_source" type="text" class="form-control" name="utm_source" value="<?= $data->link->settings->utm->source ?? '' ?>" maxlength="128" placeholder="<?= l('link.settings.utm_source_placeholder') ?>" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="utm_medium"><i class="fas fa-fw fa-inbox fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_medium') ?></label>
-                            <input id="utm_medium" type="text" class="form-control" name="utm_medium" value="<?= $data->link->settings->utm->medium ?? '' ?>" maxlength="128" placeholder="<?= l('link.settings.utm_medium_placeholder') ?>" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="utm_campaign"><i class="fas fa-fw fa-bullhorn fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_campaign') ?></label>
-                            <input id="utm_campaign" type="text" class="form-control" name="utm_campaign" value="<?= $data->link->settings->utm->campaign ?? '' ?>" placeholder="<?= l('link.settings.utm_campaign_placeholder') ?>" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="utm_preview"><i class="fas fa-fw fa-eye fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_preview') ?></label>
-                            <input id="utm_preview" type="text" class="form-control-plaintext" name="utm_preview" readonly="readonly" />
-                            <small class="form-text text-muted"><?= l('link.settings.utm_preview_help') ?></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#protection_container" aria-expanded="false" aria-controls="protection_container">
-                <i class="fas fa-fw fa-user-shield fa-sm mr-1"></i> <?= l('link.settings.protection_header') ?>
-            </button>
-
-            <div class="collapse" id="protection_container">
-                <div <?= $this->user->plan_settings->password ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="<?= $this->user->plan_settings->password ? null : 'container-disabled' ?>">
-                        <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
-                            <label for="qweasdzxc"><i class="fas fa-fw fa-key fa-sm text-muted mr-1"></i> <?= l('global.password') ?></label>
-                            <input id="qweasdzxc" type="password" class="form-control" name="qweasdzxc" value="<?= $data->link->settings->password ?>" autocomplete="new-password" <?= !$this->user->plan_settings->password ? 'disabled="disabled"': null ?> />
-                            <small class="form-text text-muted"><?= l('link.settings.password_help') ?></small>
-                        </div>
-                    </div>
-                </div>
-
-                <div <?= $this->user->plan_settings->sensitive_content ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="<?= $this->user->plan_settings->sensitive_content ? null : 'container-disabled' ?>">
-                        <div class="form-group custom-control custom-switch">
-                            <input
-                                    type="checkbox"
-                                    class="custom-control-input"
-                                    id="sensitive_content"
-                                    name="sensitive_content"
-                                <?= !$this->user->plan_settings->sensitive_content ? 'disabled="disabled"': null ?>
-                                <?= $data->link->settings->sensitive_content ? 'checked="checked"' : null ?>
-                            >
-                            <label class="custom-control-label" for="sensitive_content"><?= l('link.settings.sensitive_content') ?></label>
-                            <small class="form-text text-muted"><?= l('link.settings.sensitive_content_help') ?></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#targeting_container" aria-expanded="false" aria-controls="targeting_container">
-                <i class="fas fa-fw fa-bullseye fa-sm mr-1"></i> <?= l('link.settings.targeting_header') ?>
-            </button>
-
-            <div class="collapse" id="targeting_container">
-                <div <?= $this->user->plan_settings->targeting_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="<?= $this->user->plan_settings->targeting_is_enabled ? null : 'container-disabled' ?>">
-                        <div class="form-group">
-                            <label for="targeting_type"><i class="fas fa-fw fa-bullseye fa-sm text-muted mr-1"></i> <?= l('link.settings.targeting_type') ?></label>
-                            <select id="targeting_type" name="targeting_type" class="custom-select">
-                                <option value="false" <?= $data->link->settings->targeting_type == 'false' ? 'selected="selected"' : null?>>😊 <?= l('global.none') ?></option>
-                                <option value="continent_code" <?= $data->link->settings->targeting_type == 'continent_code' ? 'selected="selected"' : null?>>🌍 <?= l('global.continent') ?></option>
-                                <option value="country_code" <?= $data->link->settings->targeting_type == 'country_code' ? 'selected="selected"' : null?>>🇨🇺 <?= l('global.country') ?></option>
-                                <option value="city_name" <?= $data->link->settings->targeting_type == 'city_name' ? 'selected="selected"' : null?>>🏙️ <?= l('global.city') ?></option>
-                                <option value="device_type" <?= $data->link->settings->targeting_type == 'device_type' ? 'selected="selected"' : null?>>📱 <?= l('link.settings.targeting_type_device_type') ?></option>
-                                <option value="os_name" <?= $data->link->settings->targeting_type == 'os_name' ? 'selected="selected"' : null?>>💻 <?= l('link.settings.targeting_type_os_name') ?></option>
-                                <option value="browser_name" <?= $data->link->settings->targeting_type == 'browser_name' ? 'selected="selected"' : null?>>🌐 <?= l('link.settings.targeting_type_browser_name') ?></option>
-                                <option value="browser_language" <?= $data->link->settings->targeting_type == 'browser_language' ? 'selected="selected"' : null?>>🗣️ <?= l('link.settings.targeting_type_browser_language') ?></option>
-                                <option value="rotation" <?= $data->link->settings->targeting_type == 'rotation' ? 'selected="selected"' : null?>>🔄 <?= l('link.settings.targeting_type_rotation') ?></option>
-                            </select>
-                        </div>
-
-                        <div data-targeting-type="false" class="d-none"></div>
-
-                        <div data-targeting-type="continent_code" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_continent_code_help') ?></p>
-
-                            <div data-targeting-list="continent_code">
-                                <?php if(isset($data->link->settings->targeting_continent_code) && !empty($data->link->settings->targeting_continent_code)): ?>
-                                    <?php foreach($data->link->settings->targeting_continent_code as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <select name="targeting_continent_code_key[<?= $key ?>]" class="custom-select">
-                                                    <?php foreach(get_continents_array() as $continent_code => $continent_name): ?>
-                                                        <option value="<?= $continent_code ?>" <?= $targeting->key == $continent_code ? 'selected="selected"' : null ?>><?= $continent_name ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_continent_code_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_continent_code_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                <?= \SeeGap\Alerts::output_field_error('targeting_continent_code_value[' . $key . ']') ?>
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="continent_code" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div data-targeting-type="country_code" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_country_code_help') ?></p>
-
-                            <div data-targeting-list="country_code">
-                                <?php if(isset($data->link->settings->targeting_country_code) && !empty($data->link->settings->targeting_country_code)): ?>
-                                    <?php foreach($data->link->settings->targeting_country_code as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <select name="targeting_country_code_key[<?= $key ?>]" class="custom-select">
-                                                    <?php foreach(get_countries_array() as $country => $country_name): ?>
-                                                        <option value="<?= $country ?>" <?= $targeting->key == $country ? 'selected="selected"' : null ?>><?= $country_name ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_country_code_value[<?= $key ?>]" class="form-control" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="country_code" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div data-targeting-type="city_name" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_city_name_help') ?></p>
-
-                            <div data-targeting-list="city_name">
-                                <?php if(isset($data->link->settings->targeting_city_name) && !empty($data->link->settings->targeting_city_name)): ?>
-                                    <?php foreach($data->link->settings->targeting_city_name as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <input type="text" name="targeting_city_name_key[<?= $key ?>]" class="form-control" value="<?= $targeting->key ?>" placeholder="<?= l('link.settings.targeting_type_city_name_placeholder') ?>" maxlength="128" />
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_city_name_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_city_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                <?= \SeeGap\Alerts::output_field_error('targeting_city_name_value[' . $key . ']') ?>
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="city_name" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div data-targeting-type="device_type" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_device_type_help') ?></p>
-
-                            <div data-targeting-list="device_type">
-                                <?php if(isset($data->link->settings->targeting_device_type) && !empty($data->link->settings->targeting_device_type)): ?>
-                                    <?php foreach($data->link->settings->targeting_device_type as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <select name="targeting_device_type_key[<?= $key ?>]" class="custom-select">
-                                                    <?php foreach(['desktop', 'tablet', 'mobile'] as $device_type): ?>
-                                                        <option value="<?= $device_type ?>" <?= $targeting->key == $device_type ? 'selected="selected"' : null ?>><?= l('global.device.' . $device_type) ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_device_type_value[<?= $key ?>]" class="form-control" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="device_type" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div data-targeting-type="os_name" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_os_name_help') ?></p>
-
-                            <div data-targeting-list="os_name">
-                                <?php if(isset($data->link->settings->targeting_os_name) && !empty($data->link->settings->targeting_os_name)): ?>
-                                    <?php foreach($data->link->settings->targeting_os_name as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <select name="targeting_os_name_key[<?= $key ?>]" class="custom-select">
-                                                    <?php foreach(['iOS', 'Android', 'Windows', 'OS X', 'Linux', 'Ubuntu', 'Chrome OS'] as $os_name): ?>
-                                                        <option value="<?= $os_name ?>" <?= $targeting->key == $os_name ? 'selected="selected"' : null ?>><?= $os_name ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_os_name_value[<?= $key ?>]" class="form-control" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="os_name" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div data-targeting-type="browser_name" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_browser_name_help') ?></p>
-
-                            <div data-targeting-list="browser_name">
-                                <?php if(isset($data->link->settings->targeting_browser_name) && !empty($data->link->settings->targeting_browser_name)): ?>
-                                    <?php foreach($data->link->settings->targeting_browser_name as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <select name="targeting_browser_name_key[<?= $key ?>]" class="custom-select">
-                                                    <?php foreach(['Chrome', 'Firefox', 'Safari', 'Edge', 'Opera', 'Samsung Internet'] as $browser_name): ?>
-                                                        <option value="<?= $browser_name ?>" <?= $targeting->key == $browser_name ? 'selected="selected"' : null ?>><?= $browser_name ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_browser_name_value[<?= $key ?>]" class="form-control <?= \SeeGap\Alerts::has_field_errors('targeting_browser_name_value[' . $key . ']') ? 'is-invalid' : null ?>" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                                <?= \SeeGap\Alerts::output_field_error('targeting_browser_name_value[' . $key . ']') ?>
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="browser_name" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div data-targeting-type="browser_language" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_browser_language_help') ?></p>
-
-                            <div data-targeting-list="browser_language">
-                                <?php if(isset($data->link->settings->targeting_browser_language) && !empty($data->link->settings->targeting_browser_language)): ?>
-                                    <?php foreach($data->link->settings->targeting_browser_language as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <select name="targeting_browser_language_key[<?= $key ?>]" class="custom-select">
-                                                    <?php foreach(get_locale_languages_array() as $locale => $language): ?>
-                                                        <option value="<?= $locale ?>" <?= $targeting->key == $locale ? 'selected="selected"' : null ?>><?= $language ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_browser_language_value[<?= $key ?>]" class="form-control" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="browser_language" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div data-targeting-type="rotation" class="d-none">
-                            <p class="small text-muted"><?= l('link.settings.targeting_type_rotation_help') ?></p>
-
-                            <div data-targeting-list="rotation">
-                                <?php if(isset($data->link->settings->targeting_rotation) && !empty($data->link->settings->targeting_rotation)): ?>
-                                    <?php foreach($data->link->settings->targeting_rotation as $key => $targeting): ?>
-                                        <div class="form-row">
-                                            <div class="form-group col-lg-5">
-                                                <input type="number" min="0" max="100" name="targeting_rotation_key[<?= $key ?>]" class="form-control" value="<?= $targeting->key ?? 1 ?>" placeholder="<?= l('link.settings.targeting_type_percentage') ?>" required="required" />
-                                            </div>
-
-                                            <div class="form-group col-lg-5">
-                                                <input type="url" name="targeting_rotation_value[<?= $key ?>]" class="form-control" value="<?= $targeting->value ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                            </div>
-
-                                            <div class="form-group col-lg-2 text-center">
-                                                <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                            </div>
-                                        </div>
-                                    <?php endforeach ?>
-                                <?php endif ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <button data-targeting-add="rotation" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#cloaking_container" aria-expanded="false" aria-controls="cloaking_container">
-                <i class="fas fa-fw fa-eye fa-sm mr-1"></i> <?= l('link.settings.cloaking_header') ?>
-            </button>
-
-            <div class="collapse" id="cloaking_container">
-                <div <?= $this->user->plan_settings->cloaking_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="<?= $this->user->plan_settings->cloaking_is_enabled ? null : 'container-disabled' ?>">
-                        <div class="form-group custom-control custom-switch">
-                            <input
-                                    id="cloaking_is_enabled"
-                                    name="cloaking_is_enabled"
-                                    type="checkbox"
-                                    class="custom-control-input"
-                                <?= $data->link->settings->cloaking_is_enabled ? 'checked="checked"' : null ?>
-                                <?= $this->user->plan_settings->cloaking_is_enabled ? null : 'disabled="disabled"' ?>
-                            >
-                            <label class="custom-control-label" for="cloaking_is_enabled"><i class="fas fa-fw fa-user-tie fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_is_enabled') ?></label>
-                            <small class="form-text text-muted"><?= l('link.settings.cloaking_is_enabled_help') ?></small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="cloaking_title"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_title') ?></label>
-                    <input id="cloaking_title" type="text" class="form-control" name="cloaking_title" value="<?= $data->link->settings->cloaking_title ?>" maxlength="70" />
-                </div>
-
-                <div class="form-group">
-                    <label for="cloaking_meta_description"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_meta_description') ?></label>
-                    <input id="cloaking_meta_description" type="text" class="form-control" name="cloaking_meta_description" value="<?= $data->link->settings->cloaking_meta_description ?>" maxlength="160" />
-                </div>
-
-                <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->favicon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->favicon_size_limit) ?>">
-                    <label for="cloaking_favicon"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_favicon') ?></label>
-                    <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'favicons', 'file_key' => 'cloaking_favicon', 'already_existing_image' => $data->link->settings->cloaking_favicon, 'input_data' => 'data-crop data-aspect-ratio="1"']) ?>
-                    <?= \SeeGap\Alerts::output_field_error('cloaking_favicon') ?>
-                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
-                </div>
-
-                <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->seo_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->seo_image_size_limit) ?>">
-                    <label for="cloaking_opengraph"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_opengraph') ?></label>
-                    <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'microsite_seo_image', 'file_key' => 'cloaking_opengraph', 'already_existing_image' => $data->link->settings->cloaking_opengraph, 'input_data' => 'data-crop data-aspect-ratio="1.91"']) ?>
-                    <?= \SeeGap\Alerts::output_field_error('cloaking_opengraph') ?>
-                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
-                </div>
-
-                <div <?= $this->user->plan_settings->custom_js_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                    <div class="form-group <?= $this->user->plan_settings->custom_js_is_enabled ? null : 'container-disabled' ?>" data-character-counter="textarea">
-                        <label for="cloaking_custom_js" class="d-flex justify-content-between align-items-center">
-                            <span><i class="fab fa-fw fa-sm fa-js-square text-muted mr-1"></i> <?= l('global.custom_js') ?></span>
-                            <small class="text-muted" data-character-counter-wrapper></small>
-                        </label>
-                        <textarea id="cloaking_custom_js" class="form-control" name="cloaking_custom_js" maxlength="10000" placeholder="<?= l('global.custom_js_placeholder') ?>"><?= $data->link->settings->cloaking_custom_js ?></textarea>
-                        <small class="form-text text-muted"><?= l('global.custom_js_help') ?></small>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#http_container" aria-expanded="false" aria-controls="http_container">
-                <i class="fas fa-fw fa-laptop-code fa-sm mr-1"></i> <?= l('link.settings.http_header') ?>
-            </button>
-
-            <div class="collapse" id="http_container">
-                <div class="alert alert-info"><?= l('link.settings.http_header_help') ?></div>
-
-                <div class="form-group custom-control custom-radio">
-                    <input type="radio" id="http_status_code_301" name="http_status_code" value="301" class="custom-control-input" <?= $data->link->settings->http_status_code == '301' ? 'checked="checked"' : null ?>>
-                    <label class="custom-control-label" for="http_status_code_301"><?= l('link.settings.http_status_code.301') ?></label>
-                </div>
-
-                <div class="form-group custom-control custom-radio">
-                    <input type="radio" id="http_status_code_302" name="http_status_code" value="302" class="custom-control-input" <?= $data->link->settings->http_status_code == '302' ? 'checked="checked"' : null ?>>
-                    <label class="custom-control-label" for="http_status_code_302"><?= l('link.settings.http_status_code.302') ?></label>
-                </div>
-
-                <div class="form-group custom-control custom-radio">
-                    <input type="radio" id="http_status_code_307" name="http_status_code" value="307" class="custom-control-input" <?= $data->link->settings->http_status_code == '307' ? 'checked="checked"' : null ?>>
-                    <label class="custom-control-label" for="http_status_code_307"><?= l('link.settings.http_status_code.307') ?></label>
-                </div>
-
-                <div class="form-group custom-control custom-radio">
-                    <input type="radio" id="http_status_code_308" name="http_status_code" value="308" class="custom-control-input" <?= $data->link->settings->http_status_code == '308' ? 'checked="checked"' : null ?>>
-                    <label class="custom-control-label" for="http_status_code_308"><?= l('link.settings.http_status_code.308') ?></label>
-                </div>
-            </div>
-
-            <button class="btn btn-block btn-gray-200 my-2" type="button" data-toggle="collapse" data-target="#advanced_container" aria-expanded="false" aria-controls="advanced_container">
-                <i class="fas fa-fw fa-user-tie fa-sm mr-1"></i> <?= l('link.settings.advanced_header') ?>
-            </button>
-
-            <div class="collapse" id="advanced_container">
-                <?php if(settings()->links->projects_is_enabled): ?>
-                <div class="form-group">
-                    <div class="d-flex flex-column flex-xl-row justify-content-between">
-                        <label for="project_id"><i class="fas fa-fw fa-sm fa-project-diagram text-muted mr-1"></i> <?= l('projects.project_id') ?></label>
-                        <a href="<?= url('project-create') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('projects.create') ?></a>
-                    </div>
-                    <select id="project_id" name="project_id" class="custom-select">
-                        <option value=""><?= l('global.none') ?></option>
-                        <?php foreach($data->projects as $row): ?>
-                            <option value="<?= $row->project_id ?>" <?= $data->link->project_id == $row->project_id ? 'selected="selected"' : null?>><?= $row->name ?></option>
-                        <?php endforeach ?>
-                    </select>
-                </div>
-                <?php endif ?>
-
-                <?php if(settings()->links->splash_page_is_enabled): ?>
-                    <div <?= $this->user->plan_settings->splash_pages_limit ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                        <div class="<?= $this->user->plan_settings->splash_pages_limit ? null : 'container-disabled' ?>">
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="link-settings-tabContent">
+                        
+                        <!-- General Tab -->
+                        <div class="tab-pane fade show active" id="link-general" role="tabpanel" aria-labelledby="link-general-tab">
                             <div class="form-group">
-                                <div class="d-flex flex-column flex-xl-row justify-content-between">
-                                    <label for="splash_page_id"><i class="fas fa-fw fa-sm fa-droplet text-muted mr-1"></i> <?= l('splash_pages.splash_page_id') ?></label>
-                                    <a href="<?= url('splash-pages') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('splash_pages.create') ?></a>
+                                <label for="location_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('link.settings.location_url') ?></label>
+                                <input id="location_url" type="text" class="form-control" name="location_url" value="<?= $data->link->location_url ?>" maxlength="2048" required="required" placeholder="<?= l('global.url_placeholder') ?>" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="url"><i class="fas fa-fw fa-bolt fa-sm text-muted mr-1"></i> <?= l('link.settings.url') ?></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <?php if(count($data->domains)): ?>
+                                            <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
+                                                <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
+                                                    <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
+                                                <?php endif ?>
+                                                <?php foreach($data->domains as $row): ?>
+                                                    <option value="<?= $row->domain_id ?>" <?= $data->link->domain && $row->domain_id == $data->link->domain->domain_id ? 'selected="selected"' : null ?>  data-full-url="<?= $row->url ?>" data-type="<?= $row->type ?>"><?= remove_url_protocol_from_url($row->url) ?></option>
+                                                <?php endforeach ?>
+                                            </select>
+                                        <?php else: ?>
+                                            <span class="input-group-text"><?= remove_url_protocol_from_url(SITE_URL) ?></span>
+                                        <?php endif ?>
+                                    </div>
+
+                                    <input
+                                            id="url"
+                                            type="text"
+                                            class="form-control"
+                                            name="url"
+                                            placeholder="<?= l('global.url_slug_placeholder') ?>"
+                                            value="<?= $data->link->url ?>"
+                                            maxlength="<?= $this->user->plan_settings->url_maximum_characters ?? 64 ?>"
+                                            onchange="update_this_value(this, get_slug)"
+                                            onkeyup="update_this_value(this, get_slug)"
+                                        <?= !$this->user->plan_settings->custom_url ? 'readonly="readonly"' : null ?>
+                                        <?= $this->user->plan_settings->custom_url ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>
+                                    />
                                 </div>
-                                <select id="splash_page_id" name="splash_page_id" class="custom-select">
-                                    <option value=""><?= l('global.none') ?></option>
-                                    <?php foreach($data->splash_pages as $row): ?>
-                                        <option value="<?= $row->splash_page_id ?>" <?= $data->link->splash_page_id == $row->splash_page_id ? 'selected="selected"' : null?>><?= $row->name ?></option>
-                                    <?php endforeach ?>
-                                </select>
+                                <small class="form-text text-muted"><?= l('link.settings.url_help') ?></small>
+                            </div>
+
+                            <?php if(count($data->domains)): ?>
+                                <div id="is_main_link_wrapper" class="form-group custom-control custom-switch">
+                                    <input id="is_main_link" name="is_main_link" type="checkbox" class="custom-control-input" <?= $data->link->domain_id && $data->domains[$data->link->domain_id]->link_id == $data->link->link_id ? 'checked="checked"' : null ?>>
+                                    <label class="custom-control-label" for="is_main_link"><?= l('link.settings.is_main_link') ?></label>
+                                    <small class="form-text text-muted"><?= l('link.settings.is_main_link_help') ?></small>
+                                </div>
+                            <?php endif ?>
+                        </div>
+
+                        <!-- Targeting Tab -->
+                        <div class="tab-pane fade" id="link-targeting" role="tabpanel" aria-labelledby="link-targeting-tab">
+                            <div <?= $this->user->plan_settings->targeting_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
+                                <div class="<?= $this->user->plan_settings->targeting_is_enabled ? null : 'container-disabled' ?>">
+                                    <div class="form-group">
+                                        <label for="targeting_type"><i class="fas fa-fw fa-bullseye fa-sm text-muted mr-1"></i> <?= l('link.settings.targeting_type') ?></label>
+                                        <select id="targeting_type" name="targeting_type" class="custom-select">
+                                            <option value="false" <?= $data->link->settings->targeting_type == 'false' ? 'selected="selected"' : null?>>😊 <?= l('global.none') ?></option>
+                                            <option value="continent_code" <?= $data->link->settings->targeting_type == 'continent_code' ? 'selected="selected"' : null?>>🌍 <?= l('global.continent') ?></option>
+                                            <option value="country_code" <?= $data->link->settings->targeting_type == 'country_code' ? 'selected="selected"' : null?>>🇨🇺 <?= l('global.country') ?></option>
+                                            <option value="city_name" <?= $data->link->settings->targeting_type == 'city_name' ? 'selected="selected"' : null?>>🏙️ <?= l('global.city') ?></option>
+                                            <option value="device_type" <?= $data->link->settings->targeting_type == 'device_type' ? 'selected="selected"' : null?>>📱 <?= l('link.settings.targeting_type_device_type') ?></option>
+                                            <option value="os_name" <?= $data->link->settings->targeting_type == 'os_name' ? 'selected="selected"' : null?>>💻 <?= l('link.settings.targeting_type_os_name') ?></option>
+                                            <option value="browser_name" <?= $data->link->settings->targeting_type == 'browser_name' ? 'selected="selected"' : null?>>🌐 <?= l('link.settings.targeting_type_browser_name') ?></option>
+                                            <option value="browser_language" <?= $data->link->settings->targeting_type == 'browser_language' ? 'selected="selected"' : null?>>🗣️ <?= l('link.settings.targeting_type_browser_language') ?></option>
+                                            <option value="rotation" <?= $data->link->settings->targeting_type == 'rotation' ? 'selected="selected"' : null?>>🔄 <?= l('link.settings.targeting_type_rotation') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tracking Tab -->
+                        <div class="tab-pane fade" id="link-tracking" role="tabpanel" aria-labelledby="link-tracking-tab">
+                            <?php if(settings()->links->pixels_is_enabled): ?>
+                                <div class="form-group">
+                                    <div class="d-flex flex-column flex-xl-row justify-content-between">
+                                        <label><i class="fas fa-fw fa-sm fa-adjust text-muted mr-1"></i> <?= l('link.settings.pixels_ids') ?></label>
+                                        <a href="<?= url('pixels') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('pixels.create') ?></a>
+                                    </div>
+
+                                    <div class="row">
+                                        <?php $available_pixels = require APP_PATH . 'includes/pixels.php'; ?>
+                                        <?php foreach($data->pixels as $pixel): ?>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="custom-control custom-checkbox my-2">
+                                                    <input id="pixel_id_<?= $pixel->pixel_id ?>" name="pixels_ids[]" value="<?= $pixel->pixel_id ?>" type="checkbox" class="custom-control-input" <?= in_array($pixel->pixel_id, $data->link->pixels_ids) ? 'checked="checked"' : null ?>>
+                                                    <label class="custom-control-label d-flex align-items-center" for="pixel_id_<?= $pixel->pixel_id ?>">
+                                                        <span class="text-truncate" title="<?= $pixel->name ?>"><?= $pixel->name ?></span>
+                                                        <small class="badge badge-light ml-1" data-toggle="tooltip" title="<?= $available_pixels[$pixel->type]['name'] ?>">
+                                                            <i class="<?= $available_pixels[$pixel->type]['icon'] ?> fa-fw fa-sm" style="color: <?= $available_pixels[$pixel->type]['color'] ?>"></i>
+                                                        </small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <?php endforeach ?>
+                                    </div>
+                                </div>
+                            <?php endif ?>
+
+                            <!-- UTM Parameters -->
+                            <div <?= $this->user->plan_settings->utm ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
+                                <div class="<?= $this->user->plan_settings->utm ? null : 'container-disabled' ?>">
+                                    <h6 class="mt-4 mb-3"><i class="fas fa-fw fa-keyboard fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_header') ?></h6>
+                                    
+                                    <div class="form-group">
+                                        <label for="utm_source"><i class="fas fa-fw fa-sitemap fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_source') ?></label>
+                                        <input id="utm_source" type="text" class="form-control" name="utm_source" value="<?= $data->link->settings->utm->source ?? '' ?>" maxlength="128" placeholder="<?= l('link.settings.utm_source_placeholder') ?>" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="utm_medium"><i class="fas fa-fw fa-inbox fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_medium') ?></label>
+                                        <input id="utm_medium" type="text" class="form-control" name="utm_medium" value="<?= $data->link->settings->utm->medium ?? '' ?>" maxlength="128" placeholder="<?= l('link.settings.utm_medium_placeholder') ?>" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="utm_campaign"><i class="fas fa-fw fa-bullhorn fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_campaign') ?></label>
+                                        <input id="utm_campaign" type="text" class="form-control" name="utm_campaign" value="<?= $data->link->settings->utm->campaign ?? '' ?>" placeholder="<?= l('link.settings.utm_campaign_placeholder') ?>" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="utm_preview"><i class="fas fa-fw fa-eye fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_preview') ?></label>
+                                        <input id="utm_preview" type="text" class="form-control-plaintext" name="utm_preview" readonly="readonly" />
+                                        <small class="form-text text-muted"><?= l('link.settings.utm_preview_help') ?></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Tab -->
+                        <div class="tab-pane fade" id="link-security" role="tabpanel" aria-labelledby="link-security-tab">
+                            <div class="form-group custom-control custom-switch">
+                                <input
+                                        id="schedule"
+                                        name="schedule"
+                                        type="checkbox"
+                                        class="custom-control-input"
+                                    <?= $data->link->settings->schedule && !empty($data->link->start_date) && !empty($data->link->end_date) ? 'checked="checked"' : null ?>
+                                    <?= $this->user->plan_settings->temporary_url_is_enabled ? null : 'disabled="disabled"' ?>
+                                >
+                                <label class="custom-control-label" for="schedule"><?= l('link.settings.schedule') ?></label>
+                                <small class="form-text text-muted"><?= l('link.settings.schedule_help') ?></small>
+                            </div>
+
+                            <div id="schedule_container" style="display: none;">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label><i class="fas fa-fw fa-hourglass-start fa-sm text-muted mr-1"></i> <?= l('link.settings.start_date') ?></label>
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="start_date"
+                                                    value="<?= \SeeGap\Date::get($data->link->start_date, 1) ?>"
+                                                    placeholder="<?= l('link.settings.start_date') ?>"
+                                                    autocomplete="off"
+                                                    data-daterangepicker
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.end_date') ?></label>
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="end_date"
+                                                    value="<?= \SeeGap\Date::get($data->link->end_date, 1) ?>"
+                                                    placeholder="<?= l('link.settings.end_date') ?>"
+                                                    autocomplete="off"
+                                                    data-daterangepicker
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="clicks_limit"><i class="fas fa-fw fa-mouse fa-sm text-muted mr-1"></i> <?= l('link.settings.clicks_limit') ?></label>
+                                <input id="clicks_limit" type="number" class="form-control" name="clicks_limit" value="<?= $data->link->settings->clicks_limit ?>" />
+                                <small class="form-text text-muted"><?= l('link.settings.clicks_limit_help') ?></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="expiration_url"><i class="fas fa-fw fa-hourglass-end fa-sm text-muted mr-1"></i> <?= l('link.settings.expiration_url') ?></label>
+                                <input id="expiration_url" type="url" class="form-control" name="expiration_url" value="<?= $data->link->settings->expiration_url ?>" maxlength="2048" />
+                                <small class="form-text text-muted"><?= l('link.settings.expiration_url_help') ?></small>
+                            </div>
+
+                            <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
+                                <label for="qweasdzxc"><i class="fas fa-fw fa-key fa-sm text-muted mr-1"></i> <?= l('global.password') ?></label>
+                                <input id="qweasdzxc" type="password" class="form-control" name="qweasdzxc" value="<?= $data->link->settings->password ?>" autocomplete="new-password" <?= !$this->user->plan_settings->password ? 'disabled="disabled"': null ?> />
+                                <small class="form-text text-muted"><?= l('link.settings.password_help') ?></small>
+                            </div>
+
+                            <div class="form-group custom-control custom-switch">
+                                <input
+                                        type="checkbox"
+                                        class="custom-control-input"
+                                        id="sensitive_content"
+                                        name="sensitive_content"
+                                    <?= !$this->user->plan_settings->sensitive_content ? 'disabled="disabled"': null ?>
+                                    <?= $data->link->settings->sensitive_content ? 'checked="checked"' : null ?>
+                                >
+                                <label class="custom-control-label" for="sensitive_content"><?= l('link.settings.sensitive_content') ?></label>
+                                <small class="form-text text-muted"><?= l('link.settings.sensitive_content_help') ?></small>
+                            </div>
+                        </div>
+
+                        <!-- SEO Tab -->
+                        <div class="tab-pane fade" id="link-seo" role="tabpanel" aria-labelledby="link-seo-tab">
+                            <div <?= $this->user->plan_settings->cloaking_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
+                                <div class="<?= $this->user->plan_settings->cloaking_is_enabled ? null : 'container-disabled' ?>">
+                                    <div class="form-group custom-control custom-switch">
+                                        <input
+                                                id="cloaking_is_enabled"
+                                                name="cloaking_is_enabled"
+                                                type="checkbox"
+                                                class="custom-control-input"
+                                            <?= $data->link->settings->cloaking_is_enabled ? 'checked="checked"' : null ?>
+                                            <?= $this->user->plan_settings->cloaking_is_enabled ? null : 'disabled="disabled"' ?>
+                                        >
+                                        <label class="custom-control-label" for="cloaking_is_enabled"><i class="fas fa-fw fa-user-tie fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_is_enabled') ?></label>
+                                        <small class="form-text text-muted"><?= l('link.settings.cloaking_is_enabled_help') ?></small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cloaking_title"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_title') ?></label>
+                                <input id="cloaking_title" type="text" class="form-control" name="cloaking_title" value="<?= $data->link->settings->cloaking_title ?>" maxlength="70" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cloaking_meta_description"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_meta_description') ?></label>
+                                <input id="cloaking_meta_description" type="text" class="form-control" name="cloaking_meta_description" value="<?= $data->link->settings->cloaking_meta_description ?>" maxlength="160" />
+                            </div>
+
+                            <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->favicon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->favicon_size_limit) ?>">
+                                <label for="cloaking_favicon"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_favicon') ?></label>
+                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'favicons', 'file_key' => 'cloaking_favicon', 'already_existing_image' => $data->link->settings->cloaking_favicon, 'input_data' => 'data-crop data-aspect-ratio="1"']) ?>
+                                <?= \SeeGap\Alerts::output_field_error('cloaking_favicon') ?>
+                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
+                            </div>
+
+                            <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->seo_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->seo_image_size_limit) ?>">
+                                <label for="cloaking_opengraph"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.cloaking_opengraph') ?></label>
+                                <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'microsite_seo_image', 'file_key' => 'cloaking_opengraph', 'already_existing_image' => $data->link->settings->cloaking_opengraph, 'input_data' => 'data-crop data-aspect-ratio="1.91"']) ?>
+                                <?= \SeeGap\Alerts::output_field_error('cloaking_opengraph') ?>
+                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Tab -->
+                        <div class="tab-pane fade" id="link-advanced" role="tabpanel" aria-labelledby="link-advanced-tab">
+                            <?php if(settings()->links->projects_is_enabled ?? false): ?>
+                                <div class="form-group">
+                                    <div class="d-flex flex-column flex-xl-row justify-content-between">
+                                        <label for="project_id"><i class="fas fa-fw fa-sm fa-project-diagram text-muted mr-1"></i> <?= l('projects.project_id') ?></label>
+                                        <a href="<?= url('project-create') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('projects.create') ?></a>
+                                    </div>
+                                    <select id="project_id" name="project_id" class="custom-select">
+                                        <option value=""><?= l('global.none') ?></option>
+                                        <?php foreach($data->projects as $row): ?>
+                                            <option value="<?= $row->project_id ?>" <?= $data->link->project_id == $row->project_id ? 'selected="selected"' : null?>><?= $row->name ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                            <?php endif ?>
+
+                            <?php if(settings()->links->splash_page_is_enabled): ?>
+                                <div <?= $this->user->plan_settings->splash_pages_limit ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
+                                    <div class="<?= $this->user->plan_settings->splash_pages_limit ? null : 'container-disabled' ?>">
+                                        <div class="form-group">
+                                            <div class="d-flex flex-column flex-xl-row justify-content-between">
+                                                <label for="splash_page_id"><i class="fas fa-fw fa-sm fa-droplet text-muted mr-1"></i> <?= l('splash_pages.splash_page_id') ?></label>
+                                                <a href="<?= url('splash-pages') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('splash_pages.create') ?></a>
+                                            </div>
+                                            <select id="splash_page_id" name="splash_page_id" class="custom-select">
+                                                <option value=""><?= l('global.none') ?></option>
+                                                <?php foreach($data->splash_pages as $row): ?>
+                                                    <option value="<?= $row->splash_page_id ?>" <?= $data->link->splash_page_id == $row->splash_page_id ? 'selected="selected"' : null?>><?= $row->name ?></option>
+                                                <?php endforeach ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif ?>
+                            <div class="form-group" data-character-counter="textarea">
+                                <label for="custom_css" class="d-flex justify-content-between align-items-center">
+                                    <span><i class="fab fa-fw fa-sm fa-css3-alt text-muted mr-1"></i> <?= l('global.custom_css') ?></span>
+                                    <small class="text-muted" data-character-counter-wrapper></small>
+                                </label>
+                                <textarea id="custom_css" class="form-control" name="custom_css" maxlength="10000" placeholder="<?= l('global.custom_css_placeholder') ?>"><?= $data->link->settings->custom_css ?></textarea>
+                                <small class="form-text text-muted"><?= l('global.custom_css_help') ?></small>
+                            </div>
+
+                            <div class="form-group" data-character-counter="textarea">
+                                <label for="custom_js" class="d-flex justify-content-between align-items-center">
+                                    <span><i class="fab fa-fw fa-sm fa-js-square text-muted mr-1"></i> <?= l('global.custom_js') ?></span>
+                                    <small class="text-muted" data-character-counter-wrapper></small>
+                                </label>
+                                <textarea id="custom_js" class="form-control" name="custom_js" maxlength="10000" placeholder="<?= l('global.custom_js_placeholder') ?>"><?= $data->link->settings->custom_js ?></textarea>
+                                <small class="form-text text-muted"><?= l('global.custom_js_help') ?></small>
                             </div>
                         </div>
                     </div>
-                <?php endif ?>
 
-                <div class="form-group custom-control custom-switch">
-                    <input
-                            id="forward_query_parameters_is_enabled"
-                            name="forward_query_parameters_is_enabled"
-                            type="checkbox"
-                            class="custom-control-input"
-                        <?= $data->link->settings->forward_query_parameters_is_enabled ? 'checked="checked"' : null ?>
-                    >
-                    <label class="custom-control-label" for="forward_query_parameters_is_enabled"><i class="fas fa-fw fa-forward fa-sm text-muted mr-1"></i> <?= l('link.settings.forward_query_parameters_is_enabled') ?></label>
-                    <small class="form-text text-muted"><?= l('link.settings.forward_query_parameters_is_enabled_help') ?></small>
+                    <button type="submit" name="submit" class="btn btn-block btn-primary mt-4">
+                        <?= l('global.update') ?>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Middle Column - Link Flow Visualization -->
+    <div class="col-12 col-lg-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="mb-3 d-flex align-items-center">
+                    <i class="fas fa-fw fa-route fa-sm text-muted mr-1"></i> 
+                    <?= l('link.settings.flow_header') ?? 'Link Flow' ?>
+                </h6>
+
+                <div class="link-flow-visualization">
+                    <!-- User Click Step -->
+                    <div class="flow-step">
+                        <div class="flow-icon">
+                            <i class="fas fa-mouse-pointer fa-2x text-primary"></i>
+                        </div>
+                        <div class="flow-content">
+                            <h6 class="mb-1"><?= l('link.settings.flow_step_click') ?? 'User Clicks Link' ?></h6>
+                            <small class="text-muted">
+                                <code class="small" id="flow_short_url"><?= $data->link->full_url ?></code>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-down text-muted"></i>
+                    </div>
+
+                    <!-- Targeting Decision Step (conditional) -->
+                    <div class="flow-step" id="flow_targeting_step" style="<?= ($data->link->settings->targeting_type && $data->link->settings->targeting_type !== 'false') ? 'display: flex;' : 'display: none;' ?>">
+                        <div class="flow-icon">
+                            <i class="fas fa-bullseye fa-2x text-warning"></i>
+                        </div>
+                        <div class="flow-content">
+                            <h6 class="mb-1"><?= l('link.settings.flow_step_targeting') ?? 'Targeting Rules' ?></h6>
+                            <small class="text-muted" id="flow_targeting_description">
+                                <?php if($data->link->settings->targeting_type && $data->link->settings->targeting_type !== 'false'): ?>
+                                    <?php
+                                    $targeting_labels = [
+                                        'continent_code' => l('global.continent') . ' ' . l('link.settings.targeting_type'),
+                                        'country_code' => l('global.country') . ' ' . l('link.settings.targeting_type'),
+                                        'city_name' => l('global.city') . ' ' . l('link.settings.targeting_type'),
+                                        'device_type' => l('link.settings.targeting_type_device_type'),
+                                        'os_name' => l('link.settings.targeting_type_os_name'),
+                                        'browser_name' => l('link.settings.targeting_type_browser_name'),
+                                        'browser_language' => l('link.settings.targeting_type_browser_language'),
+                                        'rotation' => l('link.settings.targeting_type_rotation')
+                                    ];
+                                    echo $targeting_labels[$data->link->settings->targeting_type] ?? l('link.settings.targeting_type');
+                                    ?>
+                                <?php else: ?>
+                                    <?= l('link.settings.flow_step_targeting_description') ?? 'Apply targeting rules' ?>
+                                <?php endif ?>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow" id="flow_targeting_arrow" style="<?= ($data->link->settings->targeting_type && $data->link->settings->targeting_type !== 'false') ? 'display: block;' : 'display: none;' ?>">
+                        <i class="fas fa-arrow-down text-muted"></i>
+                    </div>
+
+                    <!-- Security Check Step (conditional) -->
+                    <div class="flow-step" id="flow_security_step" style="<?= ($data->link->settings->password || $data->link->settings->sensitive_content) ? 'display: flex;' : 'display: none;' ?>">
+                        <div class="flow-icon">
+                            <i class="fas fa-shield-alt fa-2x text-info"></i>
+                        </div>
+                        <div class="flow-content">
+                            <h6 class="mb-1"><?= l('link.settings.flow_step_security') ?? 'Security Check' ?></h6>
+                            <small class="text-muted">
+                                <?php if($data->link->settings->password): ?>
+                                    <?= l('link.settings.flow_password_protection') ?? 'Password protection' ?>
+                                <?php elseif($data->link->settings->sensitive_content): ?>
+                                    <?= l('link.settings.flow_sensitive_content') ?? 'Sensitive content warning' ?>
+                                <?php endif ?>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow" id="flow_security_arrow" style="<?= ($data->link->settings->password || $data->link->settings->sensitive_content) ? 'display: block;' : 'display: none;' ?>">
+                        <i class="fas fa-arrow-down text-muted"></i>
+                    </div>
+
+                    <!-- Final Destination Step -->
+                    <div class="flow-step">
+                        <div class="flow-icon">
+                            <i class="fas fa-external-link-alt fa-2x text-success"></i>
+                        </div>
+                        <div class="flow-content">
+                            <h6 class="mb-1"><?= l('link.settings.flow_step_destination') ?? 'Final Destination' ?></h6>
+                            <small class="text-muted">
+                                <span id="flow_destination_url">
+                                    <?php $display_url = strlen($data->link->location_url) > 40 ? substr($data->link->location_url, 0, 40) . '...' : $data->link->location_url; ?>
+                                    <code class="small"><?= $display_url ?></code>
+                                </span>
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="mt-4">
-                <button type="submit" name="submit" class="btn btn-block btn-primary" data-is-ajax><?= l('global.update') ?></button>
+    <!-- Right Column - Live Preview -->
+    <div class="col-12 col-lg-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="mb-3 d-flex align-items-center">
+                    <i class="fas fa-fw fa-eye fa-sm text-muted mr-1"></i> 
+                    <?= l('link.settings.preview_header') ?? 'Live Preview' ?>
+                    <button type="button" class="btn btn-sm btn-outline-secondary ml-auto" id="refresh_preview">
+                        <i class="fas fa-sync-alt fa-sm"></i>
+                    </button>
+                </h6>
+
+                <div class="d-flex justify-content-center">
+                    <div class="browser-preview">
+                        <div class="browser-frame">
+                            <div class="browser-header">
+                                <div class="browser-controls">
+                                    <span class="browser-dot browser-dot-red"></span>
+                                    <span class="browser-dot browser-dot-yellow"></span>
+                                    <span class="browser-dot browser-dot-green"></span>
+                                </div>
+                                <div class="browser-url">
+                                    <small class="text-muted"><?= remove_url_protocol_from_url($data->link->full_url) ?></small>
+                                </div>
+                            </div>
+                            <div class="browser-content">
+                                <iframe 
+                                    id="link_preview_iframe" 
+                                    src="<?= $data->link->location_url ?>" 
+                                    frameborder="0" 
+                                    style="width: 100%; height: 300px; border: none;"
+                                    sandbox="allow-same-origin allow-scripts allow-forms"
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="preview-stats">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="preview-stat">
+                                    <i class="fas fa-mouse-pointer text-primary"></i>
+                                    <small class="d-block text-muted"><?= l('link.statistics.clicks') ?? 'Clicks' ?></small>
+                                    <strong><?= nr($data->link->clicks) ?></strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="preview-stat">
+                                    <i class="fas fa-chart-line text-success"></i>
+                                    <small class="d-block text-muted"><?= l('link.statistics.impressions') ?? 'Views' ?></small>
+                                    <strong><?= nr($data->link->impressions ?? 0) ?></strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="preview-stat">
+                                    <i class="fas fa-percentage text-info"></i>
+                                    <small class="d-block text-muted"><?= l('link.statistics.ctr') ?? 'CTR' ?></small>
+                                    <strong><?= $data->link->clicks > 0 && ($data->link->impressions ?? 0) > 0 ? number_format(($data->link->clicks / ($data->link->impressions ?? 1)) * 100, 1) . '%' : '0%' ?></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="preview-actions">
+                        <a href="<?= $data->link->full_url ?>" target="_blank" class="btn btn-sm btn-outline-primary btn-block">
+                            <i class="fas fa-external-link-alt fa-sm mr-1"></i>
+                            <?= l('link.settings.test_link') ?? 'Test Link' ?>
+                        </a>
+                        <a href="<?= url('link/' . $data->link->link_id . '/statistics') ?>" class="btn btn-sm btn-outline-secondary btn-block mt-2">
+                            <i class="fas fa-chart-bar fa-sm mr-1"></i>
+                            <?= l('link.statistics.link') ?? 'View Statistics' ?>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </form>
-
+        </div>
     </div>
 </div>
 
-<template id="template_targeting_continent_code">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <select name="targeting_continent_code_key[]" class="custom-select">
-                <?php foreach(get_continents_array() as $continent_code => $continent_name): ?>
-                    <option value="<?= $continent_code ?>"><?= $continent_name ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+<style>
+.microsite-block-tabs .nav-minimal {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 4px;
+    background-color: #f8f9fa;
+}
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_continent_code_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
+.microsite-block-tabs .nav-minimal .nav-link {
+    border: none;
+    border-radius: 6px;
+    padding: 5px;
+    margin: 0 1px;
+    color: #6c757d;
+    background: transparent;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 30px;
+    min-width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
+.microsite-block-tabs .nav-minimal .nav-link:hover {
+    background-color: #e9ecef;
+    color: #495057;
+    transform: translateY(-1px);
+}
 
-<template id="template_targeting_country_code">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <select name="targeting_country_code_key[]" class="custom-select">
-                <?php foreach(get_countries_array() as $country => $country_name): ?>
-                    <option value="<?= $country ?>"><?= $country_name ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+.microsite-block-tabs .nav-minimal .nav-link.active {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
+}
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_country_code_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
+.microsite-block-tabs .nav-minimal .nav-link.active:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
 
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
+.microsite-block-tabs .nav-minimal .nav-link i {
+    font-size: 0.9rem;
+}
 
-<template id="template_targeting_city_name">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <input type="text" name="targeting_city_name_key[]" class="form-control" value="" placeholder="<?= l('link.settings.targeting_type_city_name_placeholder') ?>" maxlength="128" />
-        </div>
+.link-flow-visualization .flow-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_city_name_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
+.link-flow-visualization .flow-icon {
+    margin-right: 1rem;
+    min-width: 50px;
+    text-align: center;
+}
 
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
+.link-flow-visualization .flow-content {
+    flex: 1;
+}
 
-<template id="template_targeting_device_type">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <select name="targeting_device_type_key[]" class="custom-select">
-                <?php foreach(['desktop', 'tablet', 'mobile'] as $device_type): ?>
-                    <option value="<?= $device_type ?>"><?= l('global.device.' . $device_type) ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+.link-flow-visualization .flow-arrow {
+    text-align: center;
+    margin: 0.5rem 0;
+}
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_device_type_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
+.browser-preview {
+    width: 100%;
+    max-width: 350px;
+}
 
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
+.browser-frame {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
-<template id="template_targeting_os_name">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <select name="targeting_os_name_key[]" class="custom-select">
-                <?php foreach(['iOS', 'Android', 'Windows', 'OS X', 'Linux', 'Ubuntu', 'Chrome OS'] as $os_name): ?>
-                    <option value="<?= $os_name ?>"><?= $os_name ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+.browser-header {
+    background: #f5f5f5;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+}
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_os_name_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
+.browser-controls {
+    display: flex;
+    gap: 4px;
+    margin-right: 12px;
+}
 
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
+.browser-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
 
-<template id="template_targeting_browser_name">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <select name="targeting_browser_name_key[]" class="custom-select">
-                <?php foreach(['Chrome', 'Firefox', 'Safari', 'Edge', 'Opera', 'Samsung Internet'] as $browser_name): ?>
-                    <option value="<?= $browser_name ?>"><?= $browser_name ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+.browser-dot-red { background: #ff5f57; }
+.browser-dot-yellow { background: #ffbd2e; }
+.browser-dot-green { background: #28ca42; }
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_browser_name_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
+.browser-url {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
 
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
+.browser-content {
+    background: #fff;
+}
 
-<template id="template_targeting_browser_language">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <select name="targeting_browser_language_key[]" class="custom-select">
-                <?php foreach(get_locale_languages_array() as $locale => $language): ?>
-                    <option value="<?= $locale ?>"><?= $language ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+.preview-stat {
+    padding: 0.5rem 0;
+}
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_browser_language_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
+.preview-stat i {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
 
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
+.preview-actions .btn {
+    font-size: 0.875rem;
+}
 
-<template id="template_targeting_rotation">
-    <div class="form-row">
-        <div class="form-group col-lg-5">
-            <input type="number" min="0" max="100" name="targeting_rotation_key[]" class="form-control" value="1" placeholder="<?= l('link.settings.targeting_type_percentage') ?>" required="required" />
-        </div>
+@media (max-width: 768px) {
+    .microsite-block-tabs .nav-minimal .nav-link {
+        padding: 6px;
+        min-height: 32px;
+        min-width: 32px;
+    }
+    
+    .microsite-block-tabs .nav-minimal .nav-link i {
+        font-size: 0.8rem !important;
+    }
+}
+</style>
 
-        <div class="form-group col-lg-5">
-            <input type="url" name="targeting_rotation_value[]" class="form-control" value="" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-        </div>
-
-        <div class="form-group col-lg-2 text-center">
-            <button type="button" data-targeting-remove="" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-        </div>
-    </div>
-</template>
-
-<?php $html = ob_get_clean() ?>
-
-
-<?php ob_start() ?>
 <script>
-    /* UTM */
-    let process_utm = () => {
-
-        let utm_source = document.querySelector('input[name="utm_source"]').value;
-        let utm_medium = document.querySelector('input[name="utm_medium"]').value;
-        let utm_campaign = document.querySelector('input[name="utm_campaign"]').value;
-        let utm_preview = <?= json_encode(l('global.none')) ?>;
-
-        if(utm_source || utm_medium || utm_campaign) {
-            let link = new URL(<?= json_encode(SITE_URL) ?>);
-
-            if(utm_source) link.searchParams.set('utm_source', utm_source.trim());
-            if(utm_medium) link.searchParams.set('utm_medium', utm_medium.trim());
-            if(utm_campaign) link.searchParams.set('utm_campaign', utm_campaign.trim());
-
-            utm_preview = '?' + link.searchParams.toString();
-        }
-
-        document.querySelector('input[name="utm_preview"]').value = utm_preview;
-    }
-
-    document.querySelectorAll('input[name="utm_source"], input[name="utm_medium"], input[name="utm_campaign"]').forEach(element => {
-        ['change', 'paste', 'keyup'].forEach(event_type => {
-            element.addEventListener(event_type, process_utm);
-        });
-    })
-
-    process_utm();
-
-    /* Targeting */
-    let targeting_type_handler = () => {
-        let targeting_type = document.querySelector('#targeting_type').value;
-
-        document.querySelectorAll('[data-targeting-type]').forEach(element => {
-            let element_targeting_type = element.getAttribute('data-targeting-type');
-
-            if(element_targeting_type == targeting_type) {
-                document.querySelector(`[data-targeting-type="${element_targeting_type}"]`).classList.remove('d-none');
-            } else {
-                document.querySelector(`[data-targeting-type="${element_targeting_type}"]`).classList.add('d-none');
-            }
-        })
-    }
-
-    targeting_type_handler();
-    document.querySelector('#targeting_type').addEventListener('change', targeting_type_handler);
-
-    /* add new request header */
-    let targeting_add = event => {
-        let type = event.currentTarget.getAttribute('data-targeting-add');
-
-        let clone = document.querySelector(`#template_targeting_${type}`).content.cloneNode(true);
-
-        let request_headers_count = document.querySelectorAll(`[data-targeting-list="${type}"] .form-row`).length;
-
-        clone.querySelector(`[name="targeting_${type}_key[]"`).setAttribute('name', `targeting_${type}_key[${request_headers_count}]`);
-        clone.querySelector(`[name="targeting_${type}_value[]"`).setAttribute('name', `targeting_${type}_value[${request_headers_count}]`);
-
-        document.querySelector(`[data-targeting-list="${type}"]`).appendChild(clone);
-
-        targeting_remove_initiator();
-    };
-
-    document.querySelectorAll('[data-targeting-add]').forEach(element => {
-        element.addEventListener('click', targeting_add);
-    })
-
-    /* remove request header */
-    let targeting_remove = event => {
-        event.currentTarget.closest('.form-row').remove();
-    };
-
-    let targeting_remove_initiator = () => {
-        document.querySelectorAll('[data-targeting-remove]').forEach(element => {
-            element.removeEventListener('click', targeting_remove);
-            element.addEventListener('click', targeting_remove)
-        })
-    };
-
-    targeting_remove_initiator();
-
-
-    /* Settings Tab */
-    let schedule_handler = () => {
-        if($('#schedule').is(':checked')) {
-            $('#schedule_container').show();
-        } else {
-            $('#schedule_container').hide();
-        }
-    };
-
-    $('#schedule').on('change', schedule_handler);
-
-    schedule_handler();
-
-    /* Daterangepicker */
-    let locale = <?= json_encode(require APP_PATH . 'includes/daterangepicker_translations.php') ?>;
-    $('[data-daterangepicker]').daterangepicker({
-        minDate: new Date(),
-        alwaysShowCalendars: true,
-        singleCalendar: true,
-        singleDatePicker: true,
-        locale: {...locale, format: 'YYYY-MM-DD HH:mm:ss'},
-        timePicker: true,
-        timePicker24Hour: true,
-        timePickerSeconds: true,
-    }, (start, end, label) => {
+document.addEventListener('DOMContentLoaded', function() {
+    // Refresh preview functionality
+    document.getElementById('refresh_preview').addEventListener('click', function() {
+        const iframe = document.getElementById('link_preview_iframe');
+        const currentSrc = iframe.src;
+        iframe.src = '';
+        setTimeout(() => {
+            iframe.src = currentSrc;
+        }, 100);
+        
+        // Add loading state
+        this.innerHTML = '<i class="fas fa-spinner fa-spin fa-sm"></i>';
+        setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-sync-alt fa-sm"></i>';
+        }, 1000);
     });
 
-    /* Form handling */
-    $('form[name="update_link"]').on('submit', event => {
-        let form = $(event.currentTarget)[0];
-        let data = new FormData(form);
-        let notification_container = event.currentTarget.querySelector('.notification-container');
-        notification_container.innerHTML = '';
-        pause_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
+    // Update flow visualization when form changes
+    function updateLinkFlow() {
+        const locationUrl = document.getElementById('location_url').value;
+        const targetingType = document.getElementById('targeting_type').value;
+        const password = document.getElementById('qweasdzxc').value;
+        const sensitiveContent = document.getElementById('sensitive_content').checked;
 
-        $.ajax({
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            cache: false,
-            url: `${url}link-ajax`,
-            data: data,
-            dataType: 'json',
-            success: (data) => {
-                display_notifications(data.message, data.status, notification_container);
-                notification_container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                enable_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
+        // Update destination URL
+        const flowDestinationUrl = document.getElementById('flow_destination_url');
+        if (locationUrl) {
+            const displayUrl = locationUrl.length > 40 ? locationUrl.substring(0, 40) + '...' : locationUrl;
+            flowDestinationUrl.innerHTML = '<code class="small">' + displayUrl + '</code>';
+        }
 
-                if(data.status == 'success') {
-                    update_main_url(data.details.url);
+        // Show/hide targeting step
+        const targetingStep = document.getElementById('flow_targeting_step');
+        const targetingArrow = document.getElementById('flow_targeting_arrow');
+        const targetingDescription = document.getElementById('flow_targeting_description');
+        
+        if (targetingType && targetingType !== 'false') {
+            targetingStep.style.display = 'flex';
+            targetingArrow.style.display = 'block';
+            
+            // Update targeting description
+            const targetingLabels = {
+                'continent_code': '🌍 <?= l('global.continent') ?> <?= l('link.settings.targeting_type') ?>',
+                'country_code': '🇨🇺 <?= l('global.country') ?> <?= l('link.settings.targeting_type') ?>',
+                'city_name': '🏙️ <?= l('global.city') ?> <?= l('link.settings.targeting_type') ?>',
+                'device_type': '📱 <?= l('link.settings.targeting_type_device_type') ?>',
+                'os_name': '💻 <?= l('link.settings.targeting_type_os_name') ?>',
+                'browser_name': '🌐 <?= l('link.settings.targeting_type_browser_name') ?>',
+                'browser_language': '🗣️ <?= l('link.settings.targeting_type_browser_language') ?>',
+                'rotation': '🔄 <?= l('link.settings.targeting_type_rotation') ?>'
+            };
+            targetingDescription.textContent = targetingLabels[targetingType] || '<?= l('link.settings.targeting_type') ?>';
+        } else {
+            targetingStep.style.display = 'none';
+            targetingArrow.style.display = 'none';
+        }
 
-                    /* App linking */
-                    document.querySelectorAll('[data-app-linking-matched]').forEach(element => element.classList.add('d-none'));
+        // Show/hide security step
+        const securityStep = document.getElementById('flow_security_step');
+        const securityArrow = document.getElementById('flow_security_arrow');
+        
+        if (password || sensitiveContent) {
+            securityStep.style.display = 'flex';
+            securityArrow.style.display = 'block';
+        } else {
+            securityStep.style.display = 'none';
+            securityArrow.style.display = 'none';
+        }
+    }
 
-                    if(data.details.app_linking.app) {
-                        document.querySelector(`[data-app-linking-matched="${data.details.app_linking.app}"]`).classList.remove('d-none');
-                        document.querySelector('#app_linking_supported_apps_no_match').classList.add('d-none');
-                    } else {
-                        document.querySelector('#app_linking_supported_apps_no_match').classList.remove('d-none');
+    // Add event listeners for real-time updates
+    document.getElementById('location_url').addEventListener('input', updateLinkFlow);
+    document.getElementById('targeting_type').addEventListener('change', updateLinkFlow);
+    document.getElementById('qweasdzxc').addEventListener('input', updateLinkFlow);
+    document.getElementById('sensitive_content').addEventListener('change', updateLinkFlow);
+
+    // Initial update
+    updateLinkFlow();
+
+    // AJAX form submission for link updates
+    const form = document.querySelector('form[name="update_link"]');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const submitButton = form.querySelector('button[type="submit"]');
+            const notificationContainer = form.querySelector('.notification-container');
+            
+            // Clear previous notifications
+            notificationContainer.innerHTML = '';
+            
+            // Disable submit button and show loading state
+            submitButton.disabled = true;
+            const originalButtonText = submitButton.innerHTML;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> <?= l('global.please_wait') ?>';
+            
+            // Make AJAX request
+            fetch('<?= url('link-ajax') ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+                
+                // Display notification using toast system
+                if (data.status === 'success') {
+                    // Show success toast
+                    if (typeof showToast === 'function') {
+                        showToast('success', data.message);
                     }
+                    
+                    // Update the flow visualization
+                    updateLinkFlow();
+                    
+                    // Update URL in flow if it changed
+                    if (data.details && data.details.url) {
+                        const flowShortUrl = document.getElementById('flow_short_url');
+                        if (flowShortUrl) {
+                            flowShortUrl.textContent = data.details.url;
+                        }
+                    }
+                } else {
+                    // Show error in notification container for errors (not toast)
+                    notificationContainer.innerHTML = `
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-times-circle mr-1"></i>
+                            ${data.message}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Scroll to notification
+                    notificationContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-            },
-            error: () => {
-                enable_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
-                display_notifications(<?= json_encode(l('global.error_message.basic')) ?>, 'error', notification_container);
-            },
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+                
+                // Show error notification
+                notificationContainer.innerHTML = `
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-times-circle mr-1"></i>
+                        <?= l('global.error_message.basic') ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `;
+                
+                // Scroll to notification
+                notificationContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
         });
-
-        event.preventDefault();
-    })
+    }
+});
 </script>
-
-<?php include_view(THEME_PATH . 'views/partials/js_cropper.php') ?>
-<?php $javascript = ob_get_clean() ?>
-
-<?php return (object) ['html' => $html, 'javascript' => $javascript] ?>

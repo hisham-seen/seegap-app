@@ -54,37 +54,72 @@ abstract class BaseLinkHandler implements Interfaces\LinkHandlerInterface {
      * Function to bundle together all the checks of an url
      */
     protected function check_location_url($url, $can_be_empty = false) {
+        debug_log('BASE_HANDLER_CHECK_LOCATION_URL', [
+            'url' => $url,
+            'can_be_empty' => $can_be_empty,
+            'url_empty' => empty(trim($url))
+        ]);
+
         if(empty(trim($url)) && $can_be_empty) {
+            debug_log('BASE_HANDLER_CHECK_LOCATION_URL', 'URL is empty but allowed to be empty');
             return;
         }
 
         if(empty(trim($url))) {
+            debug_log('BASE_HANDLER_CHECK_LOCATION_URL_ERROR', 'URL is empty and not allowed to be empty');
             Response::json(l('global.error_message.empty_fields'), 'error');
         }
 
         $url_details = parse_url($url);
 
+        debug_log('BASE_HANDLER_URL_PARSE', [
+            'url' => $url,
+            'parsed_details' => $url_details,
+            'has_scheme' => isset($url_details['scheme'])
+        ]);
+
         if(!isset($url_details['scheme'])) {
+            debug_log('BASE_HANDLER_CHECK_LOCATION_URL_ERROR', 'URL has no scheme');
             Response::json(l('link.error_message.invalid_location_url'), 'error');
         }
 
         if(!$this->user->plan_settings->deep_links && !in_array($url_details['scheme'], ['http', 'https'])) {
+            debug_log('BASE_HANDLER_CHECK_LOCATION_URL_ERROR', [
+                'message' => 'Invalid scheme for user plan',
+                'scheme' => $url_details['scheme'],
+                'deep_links_allowed' => $this->user->plan_settings->deep_links
+            ]);
             Response::json(l('link.error_message.invalid_location_url'), 'error');
         }
 
         /* Make sure the domain is not blacklisted */
         $domain = get_domain_from_url($url);
 
+        debug_log('BASE_HANDLER_DOMAIN_CHECK', [
+            'url' => $url,
+            'extracted_domain' => $domain,
+            'blacklisted_domains' => settings()->links->blacklisted_domains ?? []
+        ]);
+
         if($domain && in_array($domain, settings()->links->blacklisted_domains)) {
+            debug_log('BASE_HANDLER_CHECK_LOCATION_URL_ERROR', 'Domain is blacklisted: ' . $domain);
             Response::json(l('link.error_message.blacklisted_domain'), 'error');
         }
 
         /* Check the url with google safe browsing to make sure it is a safe website */
         if(settings()->links->google_safe_browsing_is_enabled) {
+            debug_log('BASE_HANDLER_GOOGLE_SAFE_BROWSING_CHECK', [
+                'url' => $url,
+                'api_key_set' => !empty(settings()->links->google_safe_browsing_api_key)
+            ]);
+
             if(google_safe_browsing_check($url, settings()->links->google_safe_browsing_api_key)) {
+                debug_log('BASE_HANDLER_CHECK_LOCATION_URL_ERROR', 'URL failed Google Safe Browsing check');
                 Response::json(l('link.error_message.blacklisted_location_url'), 'error');
             }
         }
+
+        debug_log('BASE_HANDLER_CHECK_LOCATION_URL_SUCCESS', 'URL validation passed');
     }
 
     /**

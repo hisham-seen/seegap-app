@@ -22,31 +22,91 @@ class LinkAjax extends Controller {
     public $links_types = null;
 
     public function index() {
-        \SeeGap\Authentication::guard();
+        // Add basic debug log to see if this method is called at all
+        debug_log('LINK_AJAX_INDEX_CALLED', [
+            'timestamp' => date('Y-m-d H:i:s'),
+            'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+            'request_uri' => $_SERVER['REQUEST_URI'] ?? 'unknown'
+        ]);
+
+        try {
+            debug_log('LINK_AJAX_AUTH_CHECK', 'About to check authentication');
+            \SeeGap\Authentication::guard();
+            debug_log('LINK_AJAX_AUTH_PASSED', 'Authentication passed');
+        } catch (\Exception $e) {
+            debug_log('LINK_AJAX_AUTH_FAILED', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            throw $e;
+        }
+
+        // Debug logging for all requests
+        debug_log('LINK_AJAX_REQUEST', [
+            'user_id' => $this->user->user_id ?? 'unknown',
+            'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+            'post_data' => $_POST,
+            'request_uri' => $_SERVER['REQUEST_URI'] ?? 'unknown',
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+            'ip' => get_ip(),
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
 
         if(!empty($_POST) && (\SeeGap\Csrf::check('token') || \SeeGap\Csrf::check('global_token')) && isset($_POST['request_type'])) {
 
             $this->links_types = require APP_PATH . 'includes/links_types.php';
 
-            switch($_POST['request_type']) {
+            debug_log('LINK_AJAX_PROCESSING', [
+                'request_type' => $_POST['request_type'],
+                'type' => $_POST['type'] ?? 'not_set',
+                'csrf_valid' => true,
+                'user_id' => $this->user->user_id
+            ]);
 
-                /* Status toggle */
-                case 'is_enabled_toggle': $this->is_enabled_toggle(); break;
+            try {
+                switch($_POST['request_type']) {
 
-                /* Create */
-                case 'create': $this->create(); break;
+                    /* Status toggle */
+                    case 'is_enabled_toggle': $this->is_enabled_toggle(); break;
 
-                /* Update */
-                case 'update': $this->update(); break;
+                    /* Create */
+                    case 'create': $this->create(); break;
 
-                /* Delete */
-                case 'delete': $this->delete(); break;
+                    /* Update */
+                    case 'update': $this->update(); break;
 
-                /* Duplicate */
-                case 'duplicate': $this->duplicate(); break;
+                    /* Delete */
+                    case 'delete': $this->delete(); break;
 
+                    /* Duplicate */
+                    case 'duplicate': $this->duplicate(); break;
+
+                    default:
+                        debug_log('LINK_AJAX_ERROR', 'Unknown request_type: ' . $_POST['request_type']);
+                        Response::json('Unknown request type', 'error');
+                        break;
+                }
+            } catch (\Exception $e) {
+                debug_log('LINK_AJAX_EXCEPTION', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                    'request_type' => $_POST['request_type'] ?? 'unknown',
+                    'user_id' => $this->user->user_id
+                ]);
+                Response::json('Server error: ' . $e->getMessage(), 'error');
             }
 
+        } else {
+            debug_log('LINK_AJAX_VALIDATION_FAILED', [
+                'post_empty' => empty($_POST),
+                'csrf_token_valid' => \SeeGap\Csrf::check('token'),
+                'csrf_global_token_valid' => \SeeGap\Csrf::check('global_token'),
+                'request_type_set' => isset($_POST['request_type']),
+                'user_id' => $this->user->user_id ?? 'unknown'
+            ]);
         }
 
         die();

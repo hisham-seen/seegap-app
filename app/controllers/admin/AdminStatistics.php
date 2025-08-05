@@ -1495,4 +1495,43 @@ class AdminStatistics extends Controller {
         ];
 
     }
+
+    protected function products() {
+
+        $total = ['products' => 0];
+
+        $convert_tz_sql = get_convert_tz_sql('`datetime`', $this->user->timezone);
+
+        $products_chart = [];
+        $result = database()->query("
+            SELECT
+                COUNT(*) AS `total`,
+                DATE_FORMAT({$convert_tz_sql}, '{$this->datetime['query_date_format']}') AS `formatted_date`
+            FROM
+                `products`
+            WHERE
+                {$convert_tz_sql} BETWEEN '{$this->datetime['query_start_date']}' AND '{$this->datetime['query_end_date']}'
+            GROUP BY
+                `formatted_date`
+            ORDER BY
+                `formatted_date`
+        ");
+        while($row = $result->fetch_object()) {
+            $row->formatted_date = $this->datetime['process']($row->formatted_date, true);
+
+            $products_chart[$row->formatted_date] = [
+                'products' => $row->total,
+            ];
+
+            $total['products'] += $row->total;
+        }
+
+        $products_chart = get_chart_data($products_chart);
+
+        return [
+            'total' => $total,
+            'products_chart' => $products_chart,
+        ];
+
+    }
 }

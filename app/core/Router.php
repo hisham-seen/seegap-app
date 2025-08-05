@@ -247,6 +247,14 @@ class Router {
                 ]
             ],
 
+            'qr-code-create' => [
+                'controller' => 'QrCodeCreate',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
             'qr-code-generator' => [
                 'controller' => 'QrCodeGenerator',
                 'settings' => [
@@ -276,6 +284,30 @@ class Router {
 
             'gs1-link' => [
                 'controller' => 'Gs1Link',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
+            'products' => [
+                'controller' => 'Products',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
+            'product-create' => [
+                'controller' => 'ProductCreate',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => true,
+                ]
+            ],
+
+            'product-update' => [
+                'controller' => 'ProductUpdate',
                 'settings' => [
                     'wrapper' => 'app_wrapper',
                     'ads' => true,
@@ -373,6 +405,10 @@ class Router {
 
             'gs1-link-ajax' => [
                 'controller' => 'Gs1LinkAjax'
+            ],
+
+            'product-ajax' => [
+                'controller' => 'ProductAjax'
             ],
 
             /* Email signatures */
@@ -1135,6 +1171,14 @@ class Router {
                     'allow_indexing' => false,
                 ]
             ],
+            'products' => [
+                'controller' => 'ApiProducts',
+                'settings' => [
+                    'no_authentication_check' => true,
+                    'has_view' => false,
+                    'allow_indexing' => false,
+                ]
+            ],
 
             /* Common routes */
             'teams' => [
@@ -1315,6 +1359,10 @@ class Router {
 
             'gs1-links' => [
                 'controller' => 'AdminGs1Links'
+            ],
+
+            'products' => [
+                'controller' => 'AdminProducts'
             ],
 
             'domains' => [

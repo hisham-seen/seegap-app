@@ -1719,6 +1719,63 @@ class AdminSettings extends Controller {
         }
     }
 
+    public function products() {
+        $this->process();
+
+        if(!empty($_POST)) {
+            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
+
+            /* :) */
+            $_POST['products_is_enabled'] = (int) isset($_POST['products_is_enabled']);
+            $_POST['gtin_validation_is_enabled'] = (int) isset($_POST['gtin_validation_is_enabled']);
+            $_POST['gtin_format_validation'] = in_array($_POST['gtin_format_validation'], ['strict', 'lenient', 'disabled']) ? $_POST['gtin_format_validation'] : 'strict';
+            $_POST['require_gtin'] = (int) isset($_POST['require_gtin']);
+            $_POST['auto_generate_gtin'] = (int) isset($_POST['auto_generate_gtin']);
+            $_POST['domains_is_enabled'] = (int) isset($_POST['domains_is_enabled']);
+            $_POST['projects_is_enabled'] = (int) isset($_POST['projects_is_enabled']);
+            $_POST['analytics_is_enabled'] = (int) isset($_POST['analytics_is_enabled']);
+            $_POST['import_export_is_enabled'] = (int) isset($_POST['import_export_is_enabled']);
+            $_POST['compliance_tracking_is_enabled'] = (int) isset($_POST['compliance_tracking_is_enabled']);
+            $_POST['sustainability_tracking_is_enabled'] = (int) isset($_POST['sustainability_tracking_is_enabled']);
+            $_POST['quality_control_is_enabled'] = (int) isset($_POST['quality_control_is_enabled']);
+            $_POST['inventory_tracking_is_enabled'] = (int) isset($_POST['inventory_tracking_is_enabled']);
+            $_POST['pricing_management_is_enabled'] = (int) isset($_POST['pricing_management_is_enabled']);
+            $_POST['product_relationships_is_enabled'] = (int) isset($_POST['product_relationships_is_enabled']);
+            $_POST['branding'] = trim($_POST['branding']);
+            $_POST['default_currency'] = input_clean($_POST['default_currency']);
+            $_POST['allowed_gtin_prefixes'] = array_filter(array_map('trim', explode(',', $_POST['allowed_gtin_prefixes'])));
+            $_POST['blacklisted_gtins'] = array_filter(array_map('trim', explode(',', $_POST['blacklisted_gtins'])));
+            $_POST['product_image_size_limit'] = $_POST['product_image_size_limit'] > get_max_upload() || $_POST['product_image_size_limit'] < 0 ? get_max_upload() : (float) $_POST['product_image_size_limit'];
+            $_POST['product_file_size_limit'] = $_POST['product_file_size_limit'] > get_max_upload() || $_POST['product_file_size_limit'] < 0 ? get_max_upload() : (float) $_POST['product_file_size_limit'];
+
+            $value = json_encode([
+                'products_is_enabled' => $_POST['products_is_enabled'],
+                'gtin_validation_is_enabled' => $_POST['gtin_validation_is_enabled'],
+                'gtin_format_validation' => $_POST['gtin_format_validation'],
+                'require_gtin' => $_POST['require_gtin'],
+                'auto_generate_gtin' => $_POST['auto_generate_gtin'],
+                'domains_is_enabled' => $_POST['domains_is_enabled'],
+                'projects_is_enabled' => $_POST['projects_is_enabled'],
+                'analytics_is_enabled' => $_POST['analytics_is_enabled'],
+                'import_export_is_enabled' => $_POST['import_export_is_enabled'],
+                'compliance_tracking_is_enabled' => $_POST['compliance_tracking_is_enabled'],
+                'sustainability_tracking_is_enabled' => $_POST['sustainability_tracking_is_enabled'],
+                'quality_control_is_enabled' => $_POST['quality_control_is_enabled'],
+                'inventory_tracking_is_enabled' => $_POST['inventory_tracking_is_enabled'],
+                'pricing_management_is_enabled' => $_POST['pricing_management_is_enabled'],
+                'product_relationships_is_enabled' => $_POST['product_relationships_is_enabled'],
+                'branding' => $_POST['branding'],
+                'default_currency' => $_POST['default_currency'],
+                'allowed_gtin_prefixes' => $_POST['allowed_gtin_prefixes'],
+                'blacklisted_gtins' => $_POST['blacklisted_gtins'],
+                'product_image_size_limit' => $_POST['product_image_size_limit'],
+                'product_file_size_limit' => $_POST['product_file_size_limit'],
+            ]);
+
+            $this->update_settings('products', $value);
+        }
+    }
+
     public function send_test_email() {
 
         if(empty($_POST)) {

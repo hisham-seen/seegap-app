@@ -136,6 +136,10 @@
                 <a href="<?= url('admin/gs1-links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('admin_gs1_links.menu') ?></a>
             </li>
 
+            <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminProducts']) ? 'active' : null ?>">
+                <a href="<?= url('admin/products') ?>"><i class="fas fa-fw fa-sm fa-box mr-2"></i> <?= l('admin_products.menu') ?></a>
+            </li>
+
             <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminReports']) ? 'active' : null ?>">
                 <a href="<?= url('admin/reports') ?>"><i class="fas fa-fw fa-sm fa-chart-bar mr-2"></i> <?= l('admin_reports.menu') ?></a>
             </li>

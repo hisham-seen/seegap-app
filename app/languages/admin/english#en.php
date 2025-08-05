@@ -1940,4 +1940,19 @@ return [
     'admin_chat_assistant_update.breadcrumb' => 'Edit chat assistant',
     'admin_chat_assistant_update.title' => 'Edit chat assistant',
     'admin_chat_assistant_update.header' => 'Edit chat assistant',
+
+    // Admin Products
+    'admin_products.title' => 'Products',
+    'admin_products.header' => 'Products',
+    'admin_products.menu' => 'Products',
+    'admin_products.breadcrumb' => 'Products',
+    'admin_products.subheader' => 'Manage all products in the system',
+    'admin_products.total_products' => 'Total Products',
+    'admin_products.active_products' => 'Active Products',
+    'admin_products.disabled_products' => 'Disabled Products',
+    'admin_products.user' => 'User',
+    'admin_products.bulk_delete' => 'Delete selected products',
+
+    // Admin Plans - Products
+    'admin_plans.plan.products_limit' => 'Products Limit',
 ];

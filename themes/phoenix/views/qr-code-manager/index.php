@@ -41,26 +41,89 @@
         <input type="hidden" name="reload" value="" data-reload-qr-code />
         <input type="hidden" name="is_readable" value="" />
 
-        <div class="flex-wrap mb-4 btn-group-toggle d-none d-lg-flex" data-toggle="buttons">
-            <?php foreach($data->available_qr_codes as $key => $value): ?>
-                <label class="mr-3 mb-3 btn btn-light font-size-small font-weight-500 <?= $data->values['type'] == $key ? 'active' : null ?>" data-toggle="tooltip" title="<?= l('qr_codes.type.' . $key . '_description') ?>" data-tooltip-hide-on-click>
-                    <input type="radio" name="type" value="<?= $key ?>" class="custom-control-input" <?= $data->values['type'] == $key ? 'checked="checked"' : null ?> required="required" data-reload-qr-code />
-                    <i class="<?= $value['icon'] ?> fa-fw fa-sm mr-1"></i> <?= l('qr_codes.type.' . $key) ?>
-                </label>
-            <?php endforeach ?>
-        </div>
-
         <div class="row">
             <div class="col-12 col-lg-6 d-print-none mb-5 mb-lg-0">
                 <div class="card">
                     <div class="card-body">
                         <div class="notification-container"></div>
 
-                        <div class="form-group">
-                            <label for="name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('global.name') ?></label>
-                            <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?? null ?>" maxlength="64" required="required" />
-                            <?= \SeeGap\Alerts::output_field_error('name') ?>
-                        </div>
+                        <?php
+                        // Define tabs for the QR code manager
+                        $tabs = [
+                            [
+                                'id' => 'general',
+                                'title' => l('global.general'),
+                                'icon' => 'fas fa-cog'
+                            ],
+                            [
+                                'id' => 'design',
+                                'title' => l('qr_codes.input.design'),
+                                'icon' => 'fas fa-palette'
+                            ],
+                            [
+                                'id' => 'frame',
+                                'title' => l('qr_codes.input.frame'),
+                                'icon' => 'fas fa-crop-alt'
+                            ],
+                            [
+                                'id' => 'branding',
+                                'title' => l('qr_codes.input.branding'),
+                                'icon' => 'fas fa-copyright'
+                            ],
+                            [
+                                'id' => 'advanced',
+                                'title' => l('qr_codes.input.advanced'),
+                                'icon' => 'fas fa-wrench'
+                            ]
+                        ];
+
+                        // Set the block_id for the tab component
+                        $block_id = 'qr-code';
+                        $active_tab = 'general';
+
+                        // Include the reusable tab navigation
+                        include THEME_PATH . 'views/partials/microsite_block_tabs.php';
+                        ?>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="qr-code-tabContent">
+                            <!-- General Tab -->
+                            <div class="tab-pane fade show active" id="qr-code-general" role="tabpanel" aria-labelledby="qr-code-general-tab">
+                                <!-- QR Code Type Selector -->
+                                <div class="form-group">
+                                    <label><i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.type') ?></label>
+                                    <div class="flex-wrap btn-group-toggle d-flex" data-toggle="buttons">
+                                        <?php 
+                                        $allowed_types = ['text', 'url', 'phone', 'email'];
+                                        foreach($data->available_qr_codes as $key => $value): 
+                                            if (!in_array($key, $allowed_types)) continue;
+                                        ?>
+                                            <label class="mr-2 mb-2 btn btn-light font-size-small font-weight-500 <?= $data->values['type'] == $key ? 'active' : null ?>" data-toggle="tooltip" title="<?= l('qr_codes.type.' . $key . '_description') ?>" data-tooltip-hide-on-click>
+                                                <input type="radio" name="type" value="<?= $key ?>" class="custom-control-input" <?= $data->values['type'] == $key ? 'checked="checked"' : null ?> required="required" data-reload-qr-code />
+                                                <i class="<?= $value['icon'] ?> fa-fw fa-sm mr-1"></i> <?= l('qr_codes.type.' . $key) ?>
+                                            </label>
+                                        <?php endforeach ?>
+                                    </div>
+                                </div>
+
+                                <div class="form-group d-lg-none">
+                                    <label for="type_mobile"><i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.type') ?></label>
+                                    <select id="type_mobile" name="type" class="custom-select">
+                                        <?php 
+                                        $allowed_types = ['text', 'url', 'phone', 'email'];
+                                        foreach(array_keys($data->available_qr_codes) as $type): 
+                                            if (!in_array($type, $allowed_types)) continue;
+                                        ?>
+                                            <option value="<?= $type ?>" <?= ($data->values['type'] ?? null) == $type ? 'selected="selected"' : null ?>><?= $data->available_qr_codes[$type]['emoji'] . ' ' . l('qr_codes.type.' . $type) ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('global.name') ?></label>
+                                    <input type="text" id="name" name="name" class="form-control <?= \SeeGap\Alerts::has_field_errors('name') ? 'is-invalid' : null ?>" value="<?= $data->values['name'] ?? null ?>" maxlength="64" required="required" />
+                                    <?= \SeeGap\Alerts::output_field_error('name') ?>
+                                </div>
 
                         <?php if(settings()->links->projects_is_enabled): ?>
                         <div class="form-group">
@@ -77,14 +140,6 @@
                         </div>
                         <?php endif ?>
 
-                        <div class="form-group d-lg-none">
-                            <label for="type"><i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.type') ?></label>
-                            <select id="type" name="type" class="custom-select">
-                                <?php foreach(array_keys($data->available_qr_codes) as $type): ?>
-                                    <option value="<?= $type ?>" <?= ($data->values['type'] ?? null) == $type ? 'selected="selected"' : null ?>><?= $data->available_qr_codes[$type]['emoji'] . ' ' . l('qr_codes.type.' . $type) ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
 
                         <div>
                             <div class="form-group" data-type="text" data-character-counter="textarea">
@@ -195,19 +250,6 @@
                             </div>
                         </div>
 
-                        <div>
-                            <div class="form-group" data-type="sms">
-                                <label for="sms"><i class="fas fa-fw fa-sms fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.sms') ?></label>
-                                <input type="text" id="sms" name="sms" class="form-control <?= \SeeGap\Alerts::has_field_errors('sms') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['sms'] ?? null ?>" maxlength="<?= $data->available_qr_codes['sms']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('sms') ?>
-                            </div>
-
-                            <div class="form-group" data-type="sms">
-                                <label for="sms_body"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.sms_body') ?></label>
-                                <textarea id="sms_body" name="sms_body" class="form-control <?= \SeeGap\Alerts::has_field_errors('sms_body') ? 'is-invalid' : null ?>" maxlength="<?= $data->available_qr_codes['sms']['body']['max_length'] ?>" data-reload-qr-code><?= $data->values['settings']['sms_body'] ?? null ?></textarea>
-                                <?= \SeeGap\Alerts::output_field_error('sms_body') ?>
-                            </div>
-                        </div>
 
                         <div>
                             <div class="form-group" data-type="email">
@@ -228,487 +270,16 @@
                                 <?= \SeeGap\Alerts::output_field_error('email_body') ?>
                             </div>
                         </div>
+                    </div>
 
-                        <div>
-                            <div class="form-group" data-type="whatsapp">
-                                <label for="whatsapp"><i class="fab fa-fw fa-whatsapp fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.whatsapp') ?></label>
-                                <input type="text" id="whatsapp" name="whatsapp" class="form-control <?= \SeeGap\Alerts::has_field_errors('whatsapp') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['whatsapp'] ?? null ?>" maxlength="<?= $data->available_qr_codes['whatsapp']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('whatsapp') ?>
-                            </div>
-
-                            <div class="form-group" data-type="whatsapp">
-                                <label for="whatsapp_body"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.whatsapp_body') ?></label>
-                                <textarea id="whatsapp_body" name="whatsapp_body" class="form-control <?= \SeeGap\Alerts::has_field_errors('whatsapp_body') ? 'is-invalid' : null ?>" maxlength="<?= $data->available_qr_codes['whatsapp']['body']['max_length'] ?>" data-reload-qr-code><?= $data->values['settings']['whatsapp_body'] ?? null ?></textarea>
-                                <?= \SeeGap\Alerts::output_field_error('whatsapp_body') ?>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="facetime">
-                                <label for="facetime"><i class="fas fa-fw fa-headset fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.facetime') ?></label>
-                                <input type="text" id="facetime" name="facetime" class="form-control <?= \SeeGap\Alerts::has_field_errors('facetime') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['facetime'] ?? null ?>" maxlength="<?= $data->available_qr_codes['facetime']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('facetime') ?>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="location">
-                                <label for="location_latitude"><i class="fas fa-fw fa-map-pin fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.location_latitude') ?></label>
-                                <input type="number" id="location_latitude" name="location_latitude" step="0.0000001" class="form-control <?= \SeeGap\Alerts::has_field_errors('location_latitude') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['location_latitude'] ?? null ?>" maxlength="<?= $data->available_qr_codes['location']['latitude']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('location_latitude') ?>
-                            </div>
-
-                            <div class="form-group" data-type="location">
-                                <label for="location_longitude"><i class="fas fa-fw fa-map-pin fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.location_longitude') ?></label>
-                                <input type="number" id="location_longitude" name="location_longitude" step="0.0000001" class="form-control <?= \SeeGap\Alerts::has_field_errors('location_longitude') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['location_longitude'] ?? null ?>" maxlength="<?= $data->available_qr_codes['location']['longitude']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('location_longitude') ?>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="wifi">
-                                <label for="wifi_ssid"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.wifi_ssid') ?></label>
-                                <input type="text" id="wifi_ssid" name="wifi_ssid" class="form-control <?= \SeeGap\Alerts::has_field_errors('wifi_ssid') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['wifi_ssid'] ?? null ?>" maxlength="<?= $data->available_qr_codes['wifi']['ssid']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('wifi_ssid') ?>
-                            </div>
-
-                            <div class="form-group" data-type="wifi">
-                                <label for="wifi_encryption"><i class="fas fa-fw fa-user-shield fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.wifi_encryption') ?></label>
-                                <select id="wifi_encryption" name="wifi_encryption" class="custom-select" data-reload-qr-code>
-                                    <option value="WEP" <?= ($data->values['settings']['wifi_encryption'] ?? null) == 'WEP' ? 'selected="selected"' : null ?>>WEP</option>
-                                    <option value="WPA/WPA2" <?= ($data->values['settings']['wifi_encryption'] ?? null) == 'WPA/WPA2' ? 'selected="selected"' : null ?>>WPA/WPA2</option>
-                                    <option value="nopass" <?= ($data->values['settings']['wifi_encryption'] ?? null) == 'nopass' ? 'selected="selected"' : null ?>><?= l('qr_codes.input.wifi_encryption_nopass') ?></option>
-                                </select>
-                            </div>
-
-                            <div class="form-group" data-type="wifi">
-                                <label for="wifi_password"><i class="fas fa-fw fa-key fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.wifi_password') ?></label>
-                                <input type="text" id="wifi_password" name="wifi_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('wifi_password') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['wifi_password'] ?? null ?>" maxlength="<?= $data->available_qr_codes['wifi']['password']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('wifi_password') ?>
-                            </div>
-
-                            <div class="form-group" data-type="wifi">
-                                <label for="wifi_is_hidden"><i class="fas fa-fw fa-user-secret fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.wifi_is_hidden') ?></label>
-                                <select id="wifi_is_hidden" name="wifi_is_hidden" class="custom-select" data-reload-qr-code>
-                                    <option value="1" <?= $data->values['settings']['wifi_is_hidden'] ?? null ? 'selected="selected"' : null ?>><?= l('global.yes') ?></option>
-                                    <option value="0" <?= $data->values['settings']['wifi_is_hidden'] ?? null ? 'selected="selected"' : null ?>><?= l('global.no') ?></option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="event">
-                                <label for="event"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event') ?></label>
-                                <input type="text" id="event" name="event" class="form-control <?= \SeeGap\Alerts::has_field_errors('event') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['event'] ?? null ?>" maxlength="<?= $data->available_qr_codes['event']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('event') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_location"><i class="fas fa-fw fa-map-pin fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_location') ?></label>
-                                <input type="text" id="event_location" name="event_location" class="form-control <?= \SeeGap\Alerts::has_field_errors('event_location') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['event_location'] ?? null ?>" maxlength="<?= $data->available_qr_codes['event']['location']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('event_location') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_url') ?></label>
-                                <input type="url" id="event_url" name="event_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('event_url') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['event_url'] ?? null ?>" maxlength="<?= $data->available_qr_codes['event']['url']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('event_url') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_note"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_note') ?></label>
-                                <textarea id="event_note" name="event_note" class="form-control <?= \SeeGap\Alerts::has_field_errors('event_note') ? 'is-invalid' : null ?>" maxlength="<?= $data->available_qr_codes['event']['note']['max_length'] ?>" data-reload-qr-code><?= $data->values['settings']['event_note'] ?? null ?></textarea>
-                                <?= \SeeGap\Alerts::output_field_error('event_note') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_start_datetime"><i class="fas fa-fw fa-calendar-day fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_start_datetime') ?></label>
-                                <input type="datetime-local" id="event_start_datetime" name="event_start_datetime" class="form-control <?= \SeeGap\Alerts::has_field_errors('event_start_datetime') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['event_start_datetime'] ?? null ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('event_start_datetime') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_end_datetime"><i class="fas fa-fw fa-calendar-times fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_end_datetime') ?></label>
-                                <input type="datetime-local" id="event_end_datetime" name="event_end_datetime" class="form-control <?= \SeeGap\Alerts::has_field_errors('event_end_datetime') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['event_end_datetime'] ?? null ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('event_end_datetime') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_first_alert_datetime"><i class="fas fa-fw fa-calendar-check fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_first_alert_datetime') ?></label>
-                                <input type="datetime-local" id="event_first_alert_datetime" name="event_first_alert_datetime" class="form-control <?= \SeeGap\Alerts::has_field_errors('event_first_alert_datetime') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['event_first_alert_datetime'] ?? null ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('event_first_alert_datetime') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_second_alert_datetime"><i class="fas fa-fw fa-calendar-alt fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_second_alert_datetime') ?></label>
-                                <input type="datetime-local" id="event_second_alert_datetime" name="event_second_alert_datetime" class="form-control <?= \SeeGap\Alerts::has_field_errors('event_second_alert_datetime') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['event_second_alert_datetime'] ?? null ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('event_second_alert_datetime') ?>
-                            </div>
-
-                            <div class="form-group" data-type="event">
-                                <label for="event_timezone"><i class="fas fa-fw fa-atlas fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.event_timezone') ?></label>
-                                <select id="event_timezone" name="event_timezone" class="custom-select" data-reload-qr-code>
-                                    <?php foreach(DateTimeZone::listIdentifiers() as $timezone): ?>
-                                        <option value="<?= $timezone ?>" <?= ($data->values['settings']['event_timezone'] ?? null) == $timezone ? 'selected="selected"' : null?>><?= $timezone ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="crypto">
-                                <label for="crypto_coin"><i class="fab fa-fw fa-bitcoin fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.crypto_coin') ?></label>
-                                <select id="crypto_coin" name="crypto_coin" class="custom-select" data-reload-qr-code>
-                                    <?php foreach($data->available_qr_codes['crypto']['coins'] as $coin => $coin_name): ?>
-                                        <option value="<?= $coin ?>" <?= ($data->values['settings']['crypto_coin'] ?? null) == $coin ? 'selected="selected"' : null?>><?= $coin_name ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group" data-type="crypto">
-                                <label for="crypto_address"><i class="fas fa-fw fa-map-marker-alt fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.crypto_address') ?></label>
-                                <input type="text" id="crypto_address" name="crypto_address" class="form-control <?= \SeeGap\Alerts::has_field_errors('crypto_address') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['crypto_address'] ?? null ?>" maxlength="<?= $data->available_qr_codes['crypto']['address']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('crypto_address') ?>
-                            </div>
-
-                            <div class="form-group" data-type="crypto">
-                                <label for="crypto_amount"><i class="fas fa-fw fa-coins fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.crypto_amount') ?></label>
-                                <input type="number" step="0.01" min="0.00000001" id="crypto_amount" name="crypto_amount" class="form-control <?= \SeeGap\Alerts::has_field_errors('crypto_amount') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['crypto_amount'] ?? null ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('crypto_address') ?>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_first_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_first_name') ?></label>
-                                <input type="text" id="vcard_first_name" name="vcard_first_name" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_first_name') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_first_name'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['first_name']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_first_name') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_last_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_last_name') ?></label>
-                                <input type="text" id="vcard_last_name" name="vcard_last_name" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_last_name') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_last_name'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['last_name']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_last_name') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_email"><i class="fas fa-fw fa-envelope fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_email') ?></label>
-                                <input type="email" id="vcard_email" name="vcard_email" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_email') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_email'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['email']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_email') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_url') ?></label>
-                                <input type="url" id="vcard_url" name="vcard_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_url') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_url'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['url']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_url') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_company"><i class="fas fa-fw fa-building fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_company') ?></label>
-                                <input type="text" id="vcard_company" name="vcard_company" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_company') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_company'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['company']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_company') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_job_title"><i class="fas fa-fw fa-user-tie fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_job_title') ?></label>
-                                <input type="text" id="vcard_job_title" name="vcard_job_title" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_job_title') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_job_title'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['job_title']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_job_title') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_birthday"><i class="fas fa-fw fa-birthday-cake fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_birthday') ?></label>
-                                <input type="date" id="vcard_birthday" name="vcard_birthday" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_birthday') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_birthday'] ?? null ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_birthday') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_street"><i class="fas fa-fw fa-road fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_street') ?></label>
-                                <input type="text" id="vcard_street" name="vcard_street" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_street') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_street'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['street']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_street') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_city"><i class="fas fa-fw fa-city fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_city') ?></label>
-                                <input type="text" id="vcard_city" name="vcard_city" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_city') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_city'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['city']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_city') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_zip"><i class="fas fa-fw fa-mail-bulk fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_zip') ?></label>
-                                <input type="text" id="vcard_zip" name="vcard_zip" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_zip') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_zip'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['zip']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_zip') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_region"><i class="fas fa-fw fa-flag fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_region') ?></label>
-                                <input type="text" id="vcard_region" name="vcard_region" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_region') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_region'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['region']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_region') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_country"><i class="fas fa-fw fa-globe fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_country') ?></label>
-                                <input type="text" id="vcard_country" name="vcard_country" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_country') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['vcard_country'] ?? null ?>" maxlength="<?= $data->available_qr_codes['vcard']['country']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('vcard_country') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label for="vcard_note"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_note') ?></label>
-                                <textarea id="vcard_note" name="vcard_note" class="form-control <?= \SeeGap\Alerts::has_field_errors('vcard_note') ? 'is-invalid' : null ?>" maxlength="<?= $data->available_qr_codes['vcard']['note']['max_length'] ?>" data-reload-qr-code><?= $data->values['settings']['vcard_note'] ?? null ?></textarea>
-                                <?= \SeeGap\Alerts::output_field_error('vcard_note') ?>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label><i class="fas fa-fw fa-phone fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_phone_numbers') ?></label>
-
-                                <div data-vcard-phone-numbers>
-                                    <?php if(isset($data->values['settings']['vcard_phone_numbers']) && is_array($data->values['settings']['vcard_phone_numbers'])): ?>
-                                        <?php foreach($data->values['settings']['vcard_phone_numbers'] as $key => $phone_number): ?>
-                                            <div class="form-row mb-3" data-vcard-phone-number>
-                                                <div class="col-4">
-                                                    <input type="text" name="vcard_phone_number_label[]" class="form-control" value="<?= $phone_number['label'] ?>" placeholder="<?= l('qr_codes.input.vcard_phone_number_label_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['phone_number_value']['max_length'] ?>" data-reload-qr-code />
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="text" name="vcard_phone_number_value[]" class="form-control" value="<?= $phone_number['value'] ?>" placeholder="<?= l('qr_codes.input.vcard_phone_number_value_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['phone_number_value']['max_length'] ?>" data-reload-qr-code />
-                                                </div>
-                                                <div class="col-2">
-                                                    <button type="button" data-remove="vcard-phone-number" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                                </div>
-                                            </div>
-                                        <?php endforeach ?>
-                                    <?php endif ?>
-                                </div>
-
-                                <button data-add="vcard-phone-number" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-
-                            <div class="form-group" data-type="vcard">
-                                <label><i class="fas fa-fw fa-hashtag fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.vcard_socials') ?></label>
-
-                                <div data-vcard-socials>
-                                    <?php if(isset($data->values['settings']['vcard_socials']) && is_array($data->values['settings']['vcard_socials'])): ?>
-                                        <?php foreach($data->values['settings']['vcard_socials'] as $key => $social): ?>
-                                            <div class="form-row mb-3" data-vcard-social>
-                                                <div class="col-4">
-                                                    <input type="text" name="vcard_social_label[]" class="form-control" value="<?= $social['label'] ?>" placeholder="<?= l('qr_codes.input.vcard_social_label_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['social_value']['max_length'] ?>" data-reload-qr-code />
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="text" name="vcard_social_value[]" class="form-control" value="<?= $social['value'] ?>" placeholder="<?= l('qr_codes.input.vcard_social_value_placeholder') ?>" maxlength="<?= $data->available_qr_codes['vcard']['social_value']['max_length'] ?>" data-reload-qr-code />
-                                                </div>
-                                                <div class="col-2">
-                                                    <button type="button" data-remove="vcard-social" class="btn btn-block btn-outline-danger" title="<?= l('global.delete') ?>"><i class="fas fa-fw fa-times"></i></button>
-                                                </div>
-                                            </div>
-                                        <?php endforeach ?>
-                                    <?php endif ?>
-                                </div>
-
-                                <button data-add="vcard-social" type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('global.create') ?></button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="paypal">
-                                <label for="paypal_type"><i class="fab fa-fw fa-paypal fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_type') ?></label>
-                                <select id="paypal_type" name="paypal_type" class="custom-select" data-reload-qr-code>
-                                    <?php foreach($data->available_qr_codes['paypal']['type'] as $key => $value): ?>
-                                        <option value="<?= $key ?>" <?= ($data->values['settings']['paypal_type'] ?? null) == $key ? 'selected="selected"' : null?>><?= l('qr_codes.input.paypal_type_' . $key) ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group" data-type="paypal">
-                                <label for="paypal_email"><i class="fas fa-fw fa-envelope fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_email') ?></label>
-                                <input type="email" id="paypal_email" name="paypal_email" class="form-control <?= \SeeGap\Alerts::has_field_errors('paypal_email') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['paypal_email'] ?? null ?>" maxlength="<?= $data->available_qr_codes['paypal']['email']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('paypal_email') ?>
-                            </div>
-
-                            <div class="form-group" data-type="paypal">
-                                <label for="paypal_title"><i class="fas fa-fw fa-heading fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_title') ?></label>
-                                <input type="text" id="paypal_title" name="paypal_title" class="form-control <?= \SeeGap\Alerts::has_field_errors('paypal_title') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['paypal_title'] ?? null ?>" maxlength="<?= $data->available_qr_codes['paypal']['title']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('paypal_title') ?>
-                            </div>
-
-                            <div class="form-group" data-type="paypal">
-                                <label for="paypal_currency"><i class="fas fa-fw fa-euro-sign fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_currency') ?></label>
-                                <input type="text" id="paypal_currency" name="paypal_currency" class="form-control <?= \SeeGap\Alerts::has_field_errors('paypal_currency') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['paypal_currency'] ?? null ?>" maxlength="<?= $data->available_qr_codes['paypal']['currency']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('paypal_currency') ?>
-                            </div>
-
-                            <div class="form-group" data-type="paypal">
-                                <label for="paypal_price"><i class="fas fa-fw fa-dollar-sign fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_price') ?></label>
-                                <input type="number" id="paypal_price" name="paypal_price" class="form-control <?= \SeeGap\Alerts::has_field_errors('paypal_price') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['paypal_price'] ?? null ?>" min="1" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('paypal_price') ?>
-                            </div>
-
-                            <div class="form-group" data-type="paypal">
-                                <label for="paypal_thank_you_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_thank_you_url') ?></label>
-                                <input type="text" id="paypal_thank_you_url" name="paypal_thank_you_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('paypal_thank_you_url') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['paypal_thank_you_url'] ?? null ?>" maxlength="<?= $data->available_qr_codes['paypal']['thank_you_url']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('paypal_thank_you_url') ?>
-                            </div>
-
-                            <div class="form-group" data-type="paypal">
-                                <label for="paypal_cancel_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.paypal_cancel_url') ?></label>
-                                <input type="text" id="paypal_cancel_url" name="paypal_cancel_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('paypal_cancel_url') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['paypal_cancel_url'] ?? null ?>" maxlength="<?= $data->available_qr_codes['paypal']['cancel_url']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('paypal_cancel_url') ?>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_payee_id"><i class="fas fa-fw fa-fingerprint fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_payee_id') ?></label>
-                                <input type="text" id="upi_payee_id" name="upi_payee_id" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_payee_id') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['upi_payee_id'] ?? null ?>" maxlength="<?= $data->available_qr_codes['upi']['payee_id']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_payee_id') ?>
-                            </div>
-
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_payee_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_payee_name') ?></label>
-                                <input type="text" id="upi_payee_name" name="upi_payee_name" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_payee_name') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['upi_payee_name'] ?? null ?>" maxlength="<?= $data->available_qr_codes['upi']['payee_name']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_payee_name') ?>
-                            </div>
-
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_amount"><i class="fas fa-fw fa-money-bill fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_amount') ?></label>
-                                <input type="number" id="upi_amount" name="upi_amount" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_amount') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['upi_amount'] ?? null ?>" min="0" step="0.01" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_amount') ?>
-                            </div>
-
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_currency"><i class="fas fa-fw fa-rupee-sign fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_currency') ?></label>
-                                <input type="text" id="upi_currency" name="upi_currency" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_currency') ? 'is-invalid' : null ?>" value="INR" maxlength="<?= $data->available_qr_codes['upi']['currency']['max_length'] ?>" required="required" readonly="readonly" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_currency') ?>
-                            </div>
-
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_transaction_id"><i class="fas fa-fw fa-id-card fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_transaction_id') ?></label>
-                                <input type="text" id="upi_transaction_id" name="upi_transaction_id" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_transaction_id') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['upi_transaction_id'] ?? null ?>" maxlength="<?= $data->available_qr_codes['upi']['transaction_id']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_transaction_id') ?>
-                            </div>
-
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_transaction_reference"><i class="fas fa-fw fa-receipt fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_transaction_reference') ?></label>
-                                <input type="text" id="upi_transaction_reference" name="upi_transaction_reference" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_transaction_reference') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['upi_transaction_reference'] ?? null ?>" maxlength="<?= $data->available_qr_codes['upi']['transaction_reference']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_transaction_reference') ?>
-                            </div>
-
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_transaction_note"><i class="fas fa-fw fa-sticky-note fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_transaction_note') ?></label>
-                                <input type="text" id="upi_transaction_note" name="upi_transaction_note" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_transaction_note') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['upi_transaction_note'] ?? null ?>" maxlength="<?= $data->available_qr_codes['upi']['transaction_note']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_transaction_note') ?>
-                            </div>
-
-                            <div class="form-group" data-type="upi">
-                                <label for="upi_thank_you_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.upi_thank_you_url') ?></label>
-                                <input type="url" id="upi_thank_you_url" name="upi_thank_you_url" class="form-control <?= \SeeGap\Alerts::has_field_errors('upi_thank_you_url') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['upi_thank_you_url'] ?? null ?>" maxlength="<?= $data->available_qr_codes['upi']['thank_you_url']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('upi_thank_you_url') ?>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="epc">
-                                <label for="epc_iban"><i class="fas fa-fw fa-fingerprint fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_iban') ?></label>
-                                <input type="text" id="epc_iban" name="epc_iban" class="form-control <?= \SeeGap\Alerts::has_field_errors('epc_iban') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['epc_iban'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['iban']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('epc_iban') ?>
-                            </div>
-
-                            <div class="form-group" data-type="epc">
-                                <label for="epc_payee_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_payee_name') ?></label>
-                                <input type="text" id="epc_payee_name" name="epc_payee_name" class="form-control <?= \SeeGap\Alerts::has_field_errors('epc_payee_name') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['epc_payee_name'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['payee_name']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('epc_payee_name') ?>
-                            </div>
-
-                            <div class="form-group" data-type="epc">
-                                <label for="epc_amount"><i class="fas fa-fw fa-money-bill fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_amount') ?></label>
-                                <input type="number" id="epc_amount" name="epc_amount" class="form-control <?= \SeeGap\Alerts::has_field_errors('epc_amount') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['epc_amount'] ?? null ?>" min="0" step="0.01" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('epc_amount') ?>
-                            </div>
-
-                            <div class="form-group" data-type="epc">
-                                <label for="epc_currency"><i class="fas fa-fw fa-euro-sign fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_currency') ?></label>
-                                <input type="text" id="epc_currency" name="epc_currency" class="form-control <?= \SeeGap\Alerts::has_field_errors('epc_currency') ? 'is-invalid' : null ?>" value="EUR" maxlength="<?= $data->available_qr_codes['epc']['currency']['max_length'] ?>" required="required" readonly="readonly" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('epc_currency') ?>
-                            </div>
-
-                            <div class="form-group" data-type="epc">
-                                <label for="epc_bic"><i class="fas fa-fw fa-id-card fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_bic') ?></label>
-                                <input type="text" id="epc_bic" name="epc_bic" class="form-control <?= \SeeGap\Alerts::has_field_errors('epc_bic') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['epc_bic'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['bic']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('epc_bic') ?>
-                            </div>
-
-                            <div class="form-group" data-type="epc">
-                                <label for="epc_remittance_reference"><i class="fas fa-fw fa-receipt fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_remittance_reference') ?></label>
-                                <input type="text" id="epc_remittance_reference" name="epc_remittance_reference" class="form-control <?= \SeeGap\Alerts::has_field_errors('epc_remittance_reference') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['epc_remittance_reference'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['remittance_reference']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('epc_remittance_reference') ?>
-                            </div>
-
-                            <div class="form-group" data-type="epc">
-                                <label for="epc_remittance_text"><i class="fas fa-fw fa-sticky-note fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_remittance_text') ?></label>
-                                <input type="text" id="epc_remittance_text" name="epc_remittance_text" class="form-control <?= \SeeGap\Alerts::has_field_errors('epc_remittance_text') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['epc_remittance_text'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['remittance_text']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('epc_remittance_text') ?>
-                            </div>
-
-                            <div class="form-group" data-type="epc">
-                                <label for="information"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.epc_information') ?></label>
-                                <input type="text" id="information" name="information" class="form-control <?= \SeeGap\Alerts::has_field_errors('information') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['information'] ?? null ?>" maxlength="<?= $data->available_qr_codes['epc']['information']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('information') ?>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group" data-type="pix">
-                                <label for="pix_payee_key"><i class="fas fa-fw fa-fingerprint fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_payee_key') ?></label>
-                                <input type="text" id="pix_payee_key" name="pix_payee_key" class="form-control <?= \SeeGap\Alerts::has_field_errors('pix_payee_key') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_payee_key'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['payee_key']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('pix_payee_key') ?>
-                                <small class="form-text text-muted"><?= l('qr_codes.input.pix_payee_key_help') ?></small>
-                            </div>
-
-                            <div class="form-group" data-type="pix">
-                                <label for="pix_payee_name"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_payee_name') ?></label>
-                                <input type="text" id="pix_payee_name" name="pix_payee_name" class="form-control <?= \SeeGap\Alerts::has_field_errors('pix_payee_name') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_payee_name'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['payee_name']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('pix_payee_name') ?>
-                            </div>
-
-                            <div class="form-group" data-type="pix">
-                                <label for="pix_amount"><i class="fas fa-fw fa-money-bill fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_amount') ?></label>
-                                <input type="number" id="pix_amount" name="pix_amount" class="form-control <?= \SeeGap\Alerts::has_field_errors('pix_amount') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_amount'] ?? null ?>" min="0" step="0.01" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('pix_amount') ?>
-                            </div>
-
-                            <div class="form-group" data-type="pix">
-                                <label for="pix_currency"><i class="fas fa-fw fa-credit-card fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_currency') ?></label>
-                                <input type="text" id="pix_currency" name="pix_currency" class="form-control <?= \SeeGap\Alerts::has_field_errors('pix_currency') ? 'is-invalid' : null ?>" value="BRL" maxlength="<?= $data->available_qr_codes['pix']['currency']['max_length'] ?>" required="required" readonly="readonly" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('pix_currency') ?>
-                            </div>
-
-                            <div class="form-group" data-type="pix">
-                                <label for="pix_city"><i class="fas fa-fw fa-city fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_city') ?></label>
-                                <input type="text" id="pix_city" name="pix_city" class="form-control <?= \SeeGap\Alerts::has_field_errors('pix_city') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_city'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['city']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('pix_city') ?>
-                            </div>
-
-                            <div class="form-group" data-type="pix">
-                                <label for="pix_transaction_id"><i class="fas fa-fw fa-receipt fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_transaction_id') ?></label>
-                                <input type="text" id="pix_transaction_id" name="pix_transaction_id" class="form-control <?= \SeeGap\Alerts::has_field_errors('pix_transaction_id') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_transaction_id'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['transaction_id']['max_length'] ?>" required="required" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('pix_transaction_id') ?>
-                            </div>
-
-                            <div class="form-group" data-type="pix">
-                                <label for="pix_description"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.pix_description') ?></label>
-                                <input type="text" id="pix_description" name="pix_description" class="form-control <?= \SeeGap\Alerts::has_field_errors('pix_description') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['pix_description'] ?? null ?>" maxlength="<?= $data->available_qr_codes['pix']['description']['max_length'] ?>" data-reload-qr-code />
-                                <?= \SeeGap\Alerts::output_field_error('pix_description') ?>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#style_container" aria-expanded="false" aria-controls="style_container">
-                            <i class="fas fa-fw fa-qrcode fa-sm mr-1"></i> <?= l('qr_codes.input.style') ?>
-                        </button>
-
-                        <div class="collapse" id="style_container" data-parent="#form">
+                    <!-- Design Tab -->
+                            <div class="tab-pane fade" id="qr-code-design" role="tabpanel" aria-labelledby="qr-code-design-tab">
                             <div class="form-group">
                                 <label for="style"><i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.style') ?></label>
                                 <div class="row btn-group-toggle p-2" data-toggle="buttons">
                                     <?php foreach($data->styles as $key => $style): ?>
                                         <div class="col-2 p-1">
-                                            <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['style'] ?? null) == $key ? 'active"' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
+                                            <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['style'] ?? null) == $key ? 'active' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
                                                 <input type="radio" name="style" value="<?= $key ?>" class="custom-control-input" <?= ($data->values['settings']['style'] ?? null) == $key ? 'checked="checked"' : null?> required="required" data-reload-qr-code />
                                                 <div class="py-1">
                                                     <?= sprintf($style['svg'], 'var(--primary-800)') ?>
@@ -724,7 +295,7 @@
                                 <div class="row btn-group-toggle p-2" data-toggle="buttons">
                                     <?php foreach($data->inner_eyes as $key => $style): ?>
                                         <div class="col-2 p-1">
-                                            <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['inner_eye_style'] ?? null) == $key ? 'active"' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
+                                            <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['inner_eye_style'] ?? null) == $key ? 'active' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
                                                 <input type="radio" name="inner_eye_style" value="<?= $key ?>" class="custom-control-input" <?= ($data->values['settings']['inner_eye_style'] ?? null) == $key ? 'checked="checked"' : null?> required="required" data-reload-qr-code />
                                                 <div class="py-1">
                                                     <?= sprintf($style['svg'], 'var(--primary-800)') ?>
@@ -740,7 +311,7 @@
                                 <div class="row btn-group-toggle p-2" data-toggle="buttons">
                                     <?php foreach($data->outer_eyes as $key => $style): ?>
                                         <div class="col-1 p-1">
-                                            <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['outer_eye_style'] ?? null) == $key ? 'active"' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
+                                            <label class="btn btn-light btn-block mb-0 text-truncate <?= ($data->values['settings']['outer_eye_style'] ?? null) == $key ? 'active' : null?>" data-toggle="tooltip" title="<?= l('qr_codes.input.style.' . $key) ?>" data-tooltip-hide-on-click>
                                                 <input type="radio" name="outer_eye_style" value="<?= $key ?>" class="custom-control-input" <?= ($data->values['settings']['outer_eye_style'] ?? null) == $key ? 'checked="checked"' : null?> required="required" data-reload-qr-code />
                                                 <div class="py-1">
                                                     <?= sprintf($style['svg'], 'var(--primary-800)') ?>
@@ -750,13 +321,8 @@
                                     <?php endforeach ?>
                                 </div>
                             </div>
-                        </div>
-
-                        <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#colors_container" aria-expanded="false" aria-controls="colors_container">
-                            <i class="fas fa-fw fa-palette fa-sm mr-1"></i> <?= l('qr_codes.input.colors') ?>
-                        </button>
-
-                        <div class="collapse" id="colors_container" data-parent="#form">
+                                <!-- Colors Section -->
+                                <h6 class="mt-4 mb-3"><?= l('qr_codes.input.colors') ?></h6>
                             <div class="form-group">
                                 <label for="foreground_type"><i class="fas fa-fw fa-paint-roller fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.foreground_type') ?></label>
                                 <div class="row btn-group-toggle" data-toggle="buttons">
@@ -832,13 +398,10 @@
                                 <input type="hidden" id="eyes_outer_color" name="eyes_outer_color" class="form-control <?= \SeeGap\Alerts::has_field_errors('eyes_outer_color') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['eyes_outer_color'] ?? '#000000' ?>" data-reload-qr-code data-color-picker />
                                 <?= \SeeGap\Alerts::output_field_error('eyes_outer_color') ?>
                             </div>
-                        </div>
+                            </div>
 
-                        <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#frame_container" aria-expanded="false" aria-controls="frame_container">
-                            <i class="fas fa-fw fa-crop-alt fa-sm mr-1"></i> <?= l('qr_codes.input.frame') ?>
-                        </button>
-
-                        <div class="collapse" id="frame_container" data-parent="#form">
+                            <!-- Frame Tab -->
+                            <div class="tab-pane fade" id="qr-code-frame" role="tabpanel" aria-labelledby="qr-code-frame-tab">
 
                             <div class="form-group">
                                 <label for="frame"><i class="fas fa-fw fa-qrcode fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.frame') ?></label>
@@ -905,13 +468,10 @@
                                 <input type="hidden" id="frame_text_color" name="frame_text_color" class="form-control <?= \SeeGap\Alerts::has_field_errors('frame_text_color') ? 'is-invalid' : null ?>" value="<?= $data->values['settings']['frame_text_color'] ?>" data-reload-qr-code data-color-picker />
                                 <?= \SeeGap\Alerts::output_field_error('frame_text_color') ?>
                             </div>
-                        </div>
+                            </div>
 
-                        <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#branding_container" aria-expanded="false" aria-controls="branding_container">
-                            <i class="fas fa-fw fa-copyright fa-sm mr-1"></i> <?= l('qr_codes.input.branding') ?>
-                        </button>
-
-                        <div class="collapse" id="branding_container" data-parent="#form">
+                            <!-- Branding Tab -->
+                            <div class="tab-pane fade" id="qr-code-branding" role="tabpanel" aria-labelledby="qr-code-branding-tab">
                             <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->codes->logo_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->codes->logo_size_limit) ?>">
                                 <label for="qr_code_logo"><i class="fas fa-fw fa-sm fa-eye text-muted mr-1"></i> <?= l('qr_codes.input.qr_code_logo') ?></label>
                                 <?= include_view(THEME_PATH . 'views/partials/file_image_input.php', ['uploads_file_key' => 'qr_code_logo', 'file_key' => 'qr_code_logo', 'already_existing_image' => $data->mode == 'edit' ? $data->qr_code->qr_code_logo : null, 'input_data' => 'data-reload-qr-code']) ?>
@@ -950,13 +510,10 @@
                                 <input id="qr_code_foreground_transparency" type="range" min="0" max="95" step="5" name="qr_code_foreground_transparency" value="<?= $data->values['settings']['qr_code_foreground_transparency'] ?? 0 ?>" class="form-control-range <?= \SeeGap\Alerts::has_field_errors('qr_code_foreground_transparency') ? 'is-invalid' : null ?>" data-reload-qr-code />
                                 <?= \SeeGap\Alerts::output_field_error('qr_code_foreground_transparency') ?>
                             </div>
-                        </div>
+                            </div>
 
-                        <button class="btn btn-block btn-gray-300 my-4" type="button" data-toggle="collapse" data-target="#options_container" aria-expanded="false" aria-controls="options_container">
-                            <i class="fas fa-fw fa-wrench fa-sm mr-1"></i> <?= l('qr_codes.input.options') ?>
-                        </button>
-
-                        <div class="collapse" id="options_container" data-parent="#form">
+                            <!-- Advanced Tab -->
+                            <div class="tab-pane fade" id="qr-code-advanced" role="tabpanel" aria-labelledby="qr-code-advanced-tab">
                             <div class="form-group">
                                 <label for="size"><i class="fas fa-fw fa-expand-arrows-alt fa-sm text-muted mr-1"></i> <?= l('qr_codes.input.size') ?></label>
                                 <div class="input-group">
@@ -991,6 +548,7 @@
                                     <?php endforeach ?>
                                 </select>
                             </div>
+                            </div>
                         </div>
 
                         <button type="submit" name="submit" class="btn btn-block btn-primary mt-4">
@@ -1008,7 +566,7 @@
                 <div class="sticky">
                     <div class="mb-4">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 300px;">
                                 <img id="qr_code" src="<?= $data->mode == 'edit' && $data->qr_code->qr_code ? \SeeGap\Uploads::get_full_url('qr_code') . $data->qr_code->qr_code : (settings()->codes->qr_codes_default_image ? \SeeGap\Uploads::get_full_url('qr_code_default_image') . settings()->codes->qr_codes_default_image : ASSETS_FULL_URL . 'images/qr_code.svg') ?>" class="img-fluid qr-code" loading="lazy" />
                             </div>
                         </div>
@@ -1066,35 +624,3 @@
 
 <?php require THEME_PATH . 'views/qr-codes/js_qr_codes.php' ?>
 <?php include_view(THEME_PATH . 'views/partials/color_picker_js.php') ?>
-
-<script>
-/* VCard phone numbers */
-document.querySelectorAll('[data-add="vcard-phone-number"]').forEach(element => {
-    element.addEventListener('click', event => {
-        let clone = document.querySelector('[data-vcard-phone-number]').cloneNode(true);
-        clone.querySelectorAll('input').forEach(input => input.value = '');
-        document.querySelector('[data-vcard-phone-numbers]').appendChild(clone);
-    });
-});
-
-document.addEventListener('click', event => {
-    if(event.target.closest('[data-remove="vcard-phone-number"]')) {
-        event.target.closest('[data-vcard-phone-number]').remove();
-    }
-});
-
-/* VCard socials */
-document.querySelectorAll('[data-add="vcard-social"]').forEach(element => {
-    element.addEventListener('click', event => {
-        let clone = document.querySelector('[data-vcard-social]').cloneNode(true);
-        clone.querySelectorAll('input').forEach(input => input.value = '');
-        document.querySelector('[data-vcard-socials]').appendChild(clone);
-    });
-});
-
-document.addEventListener('click', event => {
-    if(event.target.closest('[data-remove="vcard-social"]')) {
-        event.target.closest('[data-vcard-social]').remove();
-    }
-});
-</script>
