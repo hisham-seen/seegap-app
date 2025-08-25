@@ -299,7 +299,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                         <?php foreach(['center', 'justify', 'left', 'right'] as $text_alignment): ?>
                             <div class="col-6">
                                 <label class="btn btn-light btn-block text-truncate <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'active' : '' ?>">
-                                    <input type="radio" name="text_alignment" value="<?= $text_alignment ?>" class="custom-control-input" <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'checked="checked"' : '' ?> />
+                                    <input type="radio" name="text_alignment" value="<?= $text_alignment ?>" class="custom-control-input" <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'checked="checked"' : '' ?> onchange="updateCanvasText('<?= $unique_id ?>')" />
                                     <i class="fas fa-fw fa-align-<?= $text_alignment ?> fa-sm mr-1"></i> <?= l('microsite_link.text_alignment.' . $text_alignment) ?>
                                 </label>
                             </div>
@@ -369,7 +369,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                 ?>
                 <div class="form-group">
                     <label for="<?= 'animation_' . $component_block_id ?>"><i class="fas fa-fw fa-film fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation') ?></label>
-                    <select id="<?= 'animation_' . $component_block_id ?>" name="animation" class="form-control">
+                    <select id="<?= 'animation_' . $component_block_id ?>" name="animation" class="form-control" onchange="updateCanvasAnimation('<?= $component_block_id ?>')">
                         <option value="false" <?= (!isset($component_settings->animation) || !$component_settings->animation) ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
                         <?php foreach(require APP_PATH . 'includes/microsite_animations.php' as $animation): ?>
                             <option value="<?= $animation ?>" <?= (isset($component_settings->animation) && $component_settings->animation == $animation) ? 'selected="selected"' : null ?>><?= l('microsite_animations.' . $animation) ?></option>
@@ -379,7 +379,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
 
                 <div class="form-group">
                     <label for="<?= 'animation_runs_' . $component_block_id ?>"><i class="fas fa-fw fa-play fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation_runs') ?></label>
-                    <select id="<?= 'animation_runs_' . $component_block_id ?>" name="animation_runs" class="form-control">
+                    <select id="<?= 'animation_runs_' . $component_block_id ?>" name="animation_runs" class="form-control" onchange="updateCanvasAnimation('<?= $component_block_id ?>')">
                         <option value="repeat-1" <?= (!isset($component_settings->animation_runs) || $component_settings->animation_runs == 'repeat-1') ? 'selected="selected"' : null ?>>1</option>
                         <option value="repeat-2" <?= (isset($component_settings->animation_runs) && $component_settings->animation_runs == 'repeat-2') ? 'selected="selected"' : null ?>>2</option>
                         <option value="repeat-3" <?= (isset($component_settings->animation_runs) && $component_settings->animation_runs == 'repeat-3') ? 'selected="selected"' : null ?>>3</option>
@@ -389,7 +389,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
 
                 <div class="form-group" data-range-counter data-range-counter-suffix="ms">
                     <label for="<?= 'animation_delay_' . $component_block_id ?>"><i class="fas fa-fw fa-clock fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation_delay') ?></label>
-                    <input id="<?= 'animation_delay_' . $component_block_id ?>" type="range" min="0" max="5000" step="100" class="form-control-range" name="animation_delay" value="<?= $component_settings->animation_delay ?? 0 ?>" required="required" />
+                    <input id="<?= 'animation_delay_' . $component_block_id ?>" type="range" min="0" max="5000" step="100" class="form-control-range" name="animation_delay" value="<?= $component_settings->animation_delay ?? 0 ?>" required="required" onchange="updateCanvasAnimation('<?= $component_block_id ?>')" oninput="updateCanvasAnimation('<?= $component_block_id ?>')" />
                 </div>
             </div>
 
@@ -740,4 +740,183 @@ document.querySelectorAll('[data-add="accordion_item"]').forEach(function(elemen
 });
 
 accordion_item_remove_initiator();
+
+// Real-time canvas update functions for accordion blocks
+window.updateCanvasAnimation = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get animation values from the current form inputs
+            const animation = $(`#animation_${blockId}`).val() || 'false';
+            const runs = $(`#animation_runs_${blockId}`).val() || 'repeat-1';
+            const delay = $(`#animation_delay_${blockId}`).val() || 0;
+            
+            // Target the accordion container for animations
+            const accordion_container = microsite_link.find('.accordion');
+            
+            if (accordion_container.length) {
+                // Remove all existing animate.css classes
+                const animateClasses = [
+                    'animate__animated', 'animate__bounce', 'animate__flash', 'animate__pulse', 
+                    'animate__rubberBand', 'animate__shakeX', 'animate__shakeY', 'animate__headShake',
+                    'animate__swing', 'animate__tada', 'animate__wobble', 'animate__jello',
+                    'animate__heartBeat', 'animate__backInDown', 'animate__backInLeft',
+                    'animate__backInRight', 'animate__backInUp', 'animate__bounceIn',
+                    'animate__bounceInDown', 'animate__bounceInLeft', 'animate__bounceInRight',
+                    'animate__bounceInUp', 'animate__fadeIn', 'animate__fadeInDown',
+                    'animate__fadeInDownBig', 'animate__fadeInLeft', 'animate__fadeInLeftBig',
+                    'animate__fadeInRight', 'animate__fadeInRightBig', 'animate__fadeInUp',
+                    'animate__fadeInUpBig', 'animate__fadeInTopLeft', 'animate__fadeInTopRight',
+                    'animate__fadeInBottomLeft', 'animate__fadeInBottomRight', 'animate__flip',
+                    'animate__flipInX', 'animate__flipInY', 'animate__lightSpeedIn',
+                    'animate__lightSpeedInRight', 'animate__lightSpeedInLeft', 'animate__rotateIn',
+                    'animate__rotateInDownLeft', 'animate__rotateInDownRight', 'animate__rotateInUpLeft',
+                    'animate__rotateInUpRight', 'animate__jackInTheBox', 'animate__rollIn',
+                    'animate__zoomIn', 'animate__zoomInDown', 'animate__zoomInLeft',
+                    'animate__zoomInRight', 'animate__zoomInUp', 'animate__slideInDown',
+                    'animate__slideInLeft', 'animate__slideInRight', 'animate__slideInUp',
+                    'animate__repeat-1', 'animate__repeat-2', 'animate__repeat-3', 'animate__infinite'
+                ];
+                
+                accordion_container.removeClass(animateClasses.join(' '));
+                
+                if (animation !== 'false' && animation !== '') {
+                    // Add new animation classes
+                    accordion_container.addClass('animate__animated');
+                    accordion_container.addClass(`animate__${animation}`);
+                    
+                    // Add repeat class
+                    if (runs && runs !== 'repeat-1') {
+                        accordion_container.addClass(`animate__${runs}`);
+                    }
+                    
+                    // Apply delay
+                    const delayMs = parseInt(delay) || 0;
+                    accordion_container.css('animation-delay', `${delayMs}ms`);
+                    
+                    // Force animation restart by triggering reflow
+                    accordion_container[0].offsetHeight; // trigger reflow
+                    
+                    // Remove and re-add animated class to restart animation
+                    setTimeout(() => {
+                        accordion_container.removeClass('animate__animated');
+                        accordion_container[0].offsetHeight; // trigger reflow
+                        setTimeout(() => {
+                            accordion_container.addClass('animate__animated');
+                        }, 50);
+                    }, 50);
+                }
+            }
+        }
+    }
+};
+
+window.updateCanvasText = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get text values from form inputs
+            const textColor = $(`input[name="text_color"]`).val() || '#333333';
+            const textAlignment = $(`input[name="text_alignment"]:checked`).val() || 'center';
+            
+            // Update accordion container text alignment
+            const accordion_container = microsite_link.find('.accordion');
+            if (accordion_container.length) {
+                accordion_container.css('text-align', textAlignment);
+            }
+            
+            // Update text color for buttons and card bodies
+            const accordion_buttons = microsite_link.find('.accordion .card-header button');
+            const accordion_bodies = microsite_link.find('.accordion .card-body');
+            
+            accordion_buttons.css('color', textColor);
+            accordion_bodies.css('color', textColor);
+            
+            // Update text alignment for buttons and card bodies
+            accordion_buttons.css('text-align', textAlignment);
+            accordion_bodies.css('text-align', textAlignment);
+        }
+    }
+};
+
+window.updateCanvasBackground = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get background color from form input
+            const backgroundColor = $(`input[name="background_color"]`).val() || '#ffffff';
+            
+            // Apply background color to individual accordion cards
+            const accordion_cards = microsite_link.find('.accordion .card');
+            accordion_cards.css('background-color', backgroundColor);
+        }
+    }
+};
+
+window.updateCanvasBorder = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get border values from form inputs
+            const borderWidth = $(`input[name="border_width"]`).val() || 0;
+            const borderColor = $(`input[name="border_color"]`).val() || '#ffffff';
+            const borderStyle = $(`select[name="border_style"]`).val() || 'solid';
+            const borderRadius = $(`input[name="border_radius"]`).val() || 0;
+            
+            // Apply border styling to individual accordion cards
+            const accordion_cards = microsite_link.find('.accordion .card');
+            
+            if (parseInt(borderWidth) > 0) {
+                accordion_cards.css('border', `${borderWidth}px ${borderStyle} ${borderColor} !important`);
+            } else {
+                accordion_cards.css('border', 'none');
+            }
+            
+            if (parseInt(borderRadius) > 0) {
+                accordion_cards.css('border-radius', `${borderRadius}px !important`);
+            } else {
+                accordion_cards.css('border-radius', '0px');
+            }
+        }
+    }
+};
+
+window.updateCanvasShadow = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get shadow values from form inputs
+            const shadowX = $(`input[name="border_shadow_offset_x"]`).val() || 0;
+            const shadowY = $(`input[name="border_shadow_offset_y"]`).val() || 0;
+            const shadowBlur = $(`input[name="border_shadow_blur"]`).val() || 0;
+            const shadowSpread = $(`input[name="border_shadow_spread"]`).val() || 0;
+            const shadowColor = $(`input[name="border_shadow_color"]`).val() || '#00000010';
+            
+            // Apply shadow to individual accordion cards
+            const accordion_cards = microsite_link.find('.accordion .card');
+            
+            if (parseInt(shadowBlur) > 0) {
+                const boxShadow = `${shadowX}px ${shadowY}px ${shadowBlur}px ${shadowSpread}px ${shadowColor}`;
+                accordion_cards.css('box-shadow', boxShadow + ' !important');
+            } else {
+                accordion_cards.css('box-shadow', 'none');
+            }
+        }
+    }
+};
 </script>

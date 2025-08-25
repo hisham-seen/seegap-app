@@ -52,7 +52,7 @@
 
         $.ajax({
             type: 'POST',
-            url: `${url}microsite-block-ajax`,
+            url: `${url}ajax`,
             data: $(event.currentTarget).serialize(),
             dataType: 'json',
             success: (data) => {
@@ -76,15 +76,15 @@
                         /* Hide modal */
                         $('#microsite_block_delete_modal').modal('hide');
 
-                        /* Remove block */
-                        document.querySelector(`[data-microsite-block-id="${microsite_block_id}"]`).remove();
-
                         /* Remove notification */
                         notification_container.innerHTML = '';
 
-                        /* Refresh iframe */
-                        if (typeof refresh_microsite_preview === 'function') {
-                            refresh_microsite_preview();
+                        /* Use the same approach as block creation - full page redirect to refresh everything */
+                        if (data.details && data.details.url) {
+                            redirect(data.details.url, true);
+                        } else {
+                            /* Fallback: reload current page to refresh the canvas and block list */
+                            location.reload();
                         }
                     }, 750);
                 }

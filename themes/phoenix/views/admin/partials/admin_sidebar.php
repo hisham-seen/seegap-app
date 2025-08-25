@@ -176,43 +176,6 @@
                 </li>
             <?php endif ?>
 
-            <?php if(\SeeGap\Plugin::is_active('aix')): ?>
-                <div class="divider-wrapper">
-                    <div class="divider"></div>
-                </div>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminTemplatesCategories', 'AdminTemplateCategoryCreate', 'AdminTemplateCategoryUpdate']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/templates-categories') ?>"><i class="fas fa-fw fa-sm fa-folder mr-2"></i> <?= l('admin_templates_categories.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminTemplates', 'AdminTemplateCreate', 'AdminTemplateUpdate']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/templates') ?>"><i class="fas fa-fw fa-sm fa-moon mr-2"></i> <?= l('admin_templates.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminDocuments']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/documents') ?>"><i class="fas fa-fw fa-sm fa-robot mr-2"></i> <?= l('admin_documents.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminTranscriptions']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/transcriptions') ?>"><i class="fas fa-fw fa-sm fa-microphone-alt mr-2"></i> <?= l('admin_transcriptions.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminSyntheses']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/syntheses') ?>"><i class="fas fa-fw fa-sm fa-voicemail mr-2"></i> <?= l('admin_syntheses.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminChatsAssistants', 'AdminChatAssistantCreate', 'AdminChatAssistantUpdate']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/chats-assistants') ?>"><i class="fas fa-fw fa-sm fa-id-card-alt mr-2"></i> <?= l('admin_chats_assistants.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminChats']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/chats') ?>"><i class="fas fa-fw fa-sm fa-comments mr-2"></i> <?= l('admin_chats.menu') ?></a>
-                </li>
-
-                <li class="<?= in_array(\SeeGap\Router::$controller, ['AdminImages']) ? 'active' : null ?>">
-                    <a href="<?= url('admin/images') ?>"><i class="fas fa-fw fa-sm fa-icons mr-2"></i> <?= l('admin_images.menu') ?></a>
-                </li>
-            <?php endif ?>
         </ul>
     </div>
 

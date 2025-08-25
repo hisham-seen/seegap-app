@@ -28,6 +28,16 @@ if(!empty($data->link->settings->items)) {
     $border_radius = $data->link->settings->border_radius ?? 0;
     $hover_effect = $data->link->settings->hover_effect ?? 'none';
     
+    // Individual image border and shadow settings
+    $border_width = $data->link->settings->border_width ?? 0;
+    $border_color = $data->link->settings->border_color ?? '#ffffff';
+    $border_style = $data->link->settings->border_style ?? 'solid';
+    $shadow_offset_x = $data->link->settings->border_shadow_offset_x ?? 0;
+    $shadow_offset_y = $data->link->settings->border_shadow_offset_y ?? 0;
+    $shadow_blur = $data->link->settings->border_shadow_blur ?? 0;
+    $shadow_spread = $data->link->settings->border_shadow_spread ?? 0;
+    $shadow_color = $data->link->settings->border_shadow_color ?? '#00000010';
+    
     // Calculate height based on aspect ratio with minimum height validation
     $calculated_height = $image_height;
     if($aspect_ratio !== 'custom') {
@@ -106,16 +116,17 @@ if(!empty($data->link->settings->items)) {
 
 #<?= $grid_id ?> .image-grid-item {
     position: relative;
-    overflow: hidden;
-    border-radius: <?= $border_radius ?>px;
+    /* Removed overflow: hidden to allow shadows to show */
+    overflow: visible;
 }
 
 #<?= $grid_id ?> .image-wrapper {
     position: relative;
     width: 100%;
     height: <?= $calculated_height ?>;
-    overflow: hidden;
     border-radius: <?= $border_radius ?>px;
+    /* Removed shadow from wrapper - now applied to individual images */
+    overflow: visible; /* Allow shadows to overflow */
 }
 
 #<?= $grid_id ?> .image-grid-image {
@@ -125,6 +136,13 @@ if(!empty($data->link->settings->items)) {
     object-fit: <?= $image_fit ?>;
     transition: all 0.3s ease;
     border-radius: <?= $border_radius ?>px;
+    <?php if($border_width > 0): ?>
+    border: <?= $border_width ?>px <?= $border_style ?> <?= $border_color ?>;
+    <?php endif ?>
+    /* Apply shadow to individual images for proper overflow */
+    <?php if($shadow_offset_x != 0 || $shadow_offset_y != 0 || $shadow_blur != 0 || $shadow_spread != 0): ?>
+    box-shadow: <?= $shadow_offset_x ?>px <?= $shadow_offset_y ?>px <?= $shadow_blur ?>px <?= $shadow_spread ?>px <?= $shadow_color ?>;
+    <?php endif ?>
 }
 
 #<?= $grid_id ?> .image-grid-link {
@@ -148,9 +166,22 @@ if(!empty($data->link->settings->items)) {
     opacity: 0.8;
 }
 <?php elseif($hover_effect === 'lift'): ?>
-#<?= $grid_id ?> .hover-effect-lift:hover {
+#<?= $grid_id ?> .image-wrapper:has(.hover-effect-lift:hover) {
     transform: translateY(-5px);
+    <?php if($shadow_offset_x != 0 || $shadow_offset_y != 0 || $shadow_blur != 0 || $shadow_spread != 0): ?>
+    box-shadow: <?= $shadow_offset_x ?>px <?= $shadow_offset_y + 10 ?>px <?= max($shadow_blur, 25) ?>px <?= $shadow_spread ?>px rgba(0,0,0,0.15);
+    <?php else: ?>
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    <?php endif ?>
+}
+
+/* Fallback for browsers that don't support :has() */
+#<?= $grid_id ?> .hover-effect-lift:hover {
+    /* Image hover effect as fallback */
+}
+
+#<?= $grid_id ?> .image-wrapper:hover .hover-effect-lift {
+    /* Trigger wrapper transform via child hover */
 }
 <?php endif ?>
 

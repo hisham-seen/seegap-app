@@ -319,20 +319,17 @@ const initializeAjaxForms = () => {
         /* Get form data immediately */
         const formData = new FormData(form);
         
-        /* Determine the endpoint based on form type */
+        /* Check if this is an update operation vs create operation */
+        /* Update operations have either microsite_block_id (block updates) or link_id (microsite settings) */
+        const isUpdateOperation = formData.has('microsite_block_id') || 
+                                 (formData.has('link_id') && formData.get('request_type') === 'update');
+        
+        /* Determine the endpoint - use universal AJAX endpoint */
         let endpoint = form.getAttribute('action');
         
         if (!endpoint) {
-            /* Check if this is a microsite block form */
-            if (formData.get('request_type') && (formData.get('block_type') || formData.get('microsite_block_id'))) {
-                endpoint = url + 'microsite-block-ajax';
-            } else if (formData.get('request_type') && formData.get('type')) {
-                /* For link creation/update forms */
-                endpoint = url + 'link-ajax';
-            } else {
-                /* For regular forms, use the current page */
-                endpoint = window.location.pathname;
-            }
+            /* Default to universal AJAX endpoint */
+            endpoint = url + 'ajax';
         }
         
         /* Make sure we have the base URL for relative paths */
@@ -420,22 +417,25 @@ const initializeAjaxForms = () => {
                     // Add a small delay to ensure server has processed the changes
                     setTimeout(() => {
                         window.refresh_microsite_preview();
-                    }, 500);
+                    }, 200);
                 }
                 
-                /* Refresh blocks panel to show the new block */
-                setTimeout(() => {
-                    // Try to reload the current page to refresh the blocks list
-                    if (window.location.href.includes('?tab=blocks')) {
-                        // If we're on the blocks tab, reload the page
-                        window.location.reload();
-                    } else {
-                        // If not on blocks tab, redirect to blocks tab
-                        const currentUrl = new URL(window.location.href);
-                        currentUrl.searchParams.set('tab', 'blocks');
-                        window.location.href = currentUrl.toString();
-                    }
-                }, 1500); // Wait a bit longer to ensure modal closes first
+                /* Only reload page for CREATE operations, not UPDATE operations */
+                /* This prevents the annoying double refresh when updating block settings */
+                if (!isUpdateOperation) {
+                    setTimeout(() => {
+                        // Try to reload the current page to refresh the blocks list
+                        if (window.location.href.includes('?tab=blocks')) {
+                            // If we're on the blocks tab, reload the page
+                            window.location.reload();
+                        } else {
+                            // If not on blocks tab, redirect to blocks tab
+                            const currentUrl = new URL(window.location.href);
+                            currentUrl.searchParams.set('tab', 'blocks');
+                            window.location.href = currentUrl.toString();
+                        }
+                    }, 1500); // Wait a bit longer to ensure modal closes first
+                }
                 
                 /* Handle redirect if provided */
                 if (data.url) {
@@ -1404,7 +1404,7 @@ const ajax_call_helper = (event, controller, request_type, success_callback = ()
 
     $.ajax({
         type: 'POST',
-        url: `${url}${controller}`,
+        url: `${url}ajax`,
         data: data,
         dataType: 'json',
         success: (data) => {
@@ -1952,6 +1952,590 @@ const repeaterObserver = new MutationObserver((mutations) => {
 });
 
 repeaterObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+/* Shadow Preview System */
+window.ShadowPreview = {
+    instances: new Map(),
+    
+    // Initialize shadow preview for a specific block
+    initialize: function(blockId) {
+        if (this.instances.has(blockId)) {
+            return; // Already initialized
+        }
+        
+        const previewElement = document.querySelector(`#shadow_preview_${blockId} .shadow-preview-element`);
+        if (!previewElement) {
+            return; // Preview element not found
+        }
+        
+        // Get all shadow control elements
+        const controls = {
+            offsetX: document.getElementById(`block_border_shadow_offset_x_${blockId}`),
+            offsetY: document.getElementById(`block_border_shadow_offset_y_${blockId}`),
+            blur: document.getElementById(`block_border_shadow_blur_${blockId}`),
+            spread: document.getElementById(`block_border_shadow_spread_${blockId}`),
+            colorInput: document.getElementById(`border_shadow_color_${blockId}`)
+        };
+        
+        // Check if all controls exist
+        const allControlsExist = Object.values(controls).every(control => control !== null);
+        if (!allControlsExist) {
+            console.warn('Shadow Preview: Not all controls found for block', blockId);
+            return;
+        }
+        
+        // Store instance data
+        const instance = {
+            blockId: blockId,
+            previewElement: previewElement,
+            controls: controls,
+            updateTimeout: null
+        };
+        
+        this.instances.set(blockId, instance);
+        
+        // Add event listeners
+        this.addEventListeners(instance);
+        
+        // Initial update
+        this.updatePreview(instance);
+        
+        console.log('Shadow Preview initialized for block:', blockId);
+    },
+    
+    // Add event listeners to controls
+    addEventListeners: function(instance) {
+        const { controls } = instance;
+        
+        // Range slider event listeners
+        ['offsetX', 'offsetY', 'blur', 'spread'].forEach(controlName => {
+            const control = controls[controlName];
+            if (control) {
+                control.addEventListener('input', () => {
+                    this.scheduleUpdate(instance);
+                });
+                control.addEventListener('change', () => {
+                    this.scheduleUpdate(instance);
+                });
+            }
+        });
+        
+        // Color picker event listener
+        if (controls.colorInput) {
+            // Listen for direct input changes
+            controls.colorInput.addEventListener('input', () => {
+                this.scheduleUpdate(instance);
+            });
+            controls.colorInput.addEventListener('change', () => {
+                this.scheduleUpdate(instance);
+            });
+            
+            // Also listen for Pickr color picker changes
+            // We need to observe the input value changes since Pickr updates it
+            const observer = new MutationObserver(() => {
+                this.scheduleUpdate(instance);
+            });
+            
+            observer.observe(controls.colorInput, {
+                attributes: true,
+                attributeFilter: ['value']
+            });
+            
+            // Store observer for cleanup
+            instance.colorObserver = observer;
+        }
+    },
+    
+    // Schedule update with debouncing
+    scheduleUpdate: function(instance) {
+        if (instance.updateTimeout) {
+            clearTimeout(instance.updateTimeout);
+        }
+        
+        instance.updateTimeout = setTimeout(() => {
+            this.updatePreview(instance);
+        }, 50); // 50ms debounce for smooth updates
+    },
+    
+    // Update the shadow preview
+    updatePreview: function(instance) {
+        const { previewElement, controls } = instance;
+        
+        // Get current values
+        const offsetX = controls.offsetX ? parseInt(controls.offsetX.value) || 0 : 0;
+        const offsetY = controls.offsetY ? parseInt(controls.offsetY.value) || 0 : 0;
+        const blur = controls.blur ? parseInt(controls.blur.value) || 0 : 0;
+        const spread = controls.spread ? parseInt(controls.spread.value) || 0 : 0;
+        const color = controls.colorInput ? controls.colorInput.value || '#00000010' : '#00000010';
+        
+        // Generate CSS box-shadow value
+        const boxShadow = `${offsetX}px ${offsetY}px ${blur}px ${spread}px ${color}`;
+        
+        // Apply shadow to preview element
+        previewElement.style.boxShadow = boxShadow;
+        
+        // Debug log
+        console.log('Shadow Preview updated:', {
+            blockId: instance.blockId,
+            shadow: boxShadow
+        });
+    },
+    
+    // Initialize all shadow previews on the page
+    initializeAll: function() {
+        // Find all shadow preview containers
+        const containers = document.querySelectorAll('[id^="shadow_preview_container_"]');
+        
+        containers.forEach(container => {
+            const blockId = container.id.replace('shadow_preview_container_', '');
+            this.initialize(blockId);
+        });
+    },
+    
+    // Cleanup instance
+    cleanup: function(blockId) {
+        const instance = this.instances.get(blockId);
+        if (instance) {
+            if (instance.updateTimeout) {
+                clearTimeout(instance.updateTimeout);
+            }
+            if (instance.colorObserver) {
+                instance.colorObserver.disconnect();
+            }
+            this.instances.delete(blockId);
+        }
+    }
+};
+
+// Initialize shadow previews on DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+    ShadowPreview.initializeAll();
+});
+
+// Re-initialize when new content is loaded (modals, AJAX, etc.)
+const shadowPreviewObserver = new MutationObserver((mutations) => {
+    let shouldReinitialize = false;
+    
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Check if shadow preview containers were added
+                    if (node.querySelector && node.querySelector('[id^="shadow_preview_container_"]')) {
+                        shouldReinitialize = true;
+                    }
+                    // Check if the node itself is a shadow preview container
+                    if (node.id && node.id.startsWith('shadow_preview_container_')) {
+                        shouldReinitialize = true;
+                    }
+                }
+            });
+        }
+    });
+    
+    if (shouldReinitialize) {
+        setTimeout(() => {
+            ShadowPreview.initializeAll();
+        }, 100);
+    }
+});
+
+shadowPreviewObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// Initialize when modals are shown (for create/update forms)
+document.addEventListener('shown.bs.modal', function(event) {
+    setTimeout(() => {
+        ShadowPreview.initializeAll();
+    }, 200);
+});
+
+// Initialize when tabs are shown (for tabbed interfaces)
+document.addEventListener('shown.bs.tab', function(event) {
+    setTimeout(() => {
+        ShadowPreview.initializeAll();
+    }, 100);
+});
+
+/* Border Preview System */
+window.BorderPreview = {
+    instances: new Map(),
+    
+    // Initialize border preview for a specific block
+    initialize: function(blockId) {
+        if (this.instances.has(blockId)) {
+            return; // Already initialized
+        }
+        
+        const previewElement = document.querySelector(`#border_preview_${blockId} .border-preview-element`);
+        if (!previewElement) {
+            return; // Preview element not found
+        }
+        
+        // Get all border control elements
+        const controls = {
+            width: document.getElementById(`block_border_width_${blockId}`),
+            radius: document.getElementById(`block_border_radius_${blockId}`),
+            colorInput: document.getElementById(`border_color_${blockId}`),
+            styleInputs: document.querySelectorAll(`input[name="border_style"]`)
+        };
+        
+        // Check if essential controls exist
+        if (!controls.width || !controls.radius || !controls.colorInput) {
+            console.warn('Border Preview: Not all controls found for block', blockId);
+            return;
+        }
+        
+        // Store instance data
+        const instance = {
+            blockId: blockId,
+            previewElement: previewElement,
+            controls: controls,
+            updateTimeout: null
+        };
+        
+        this.instances.set(blockId, instance);
+        
+        // Add event listeners
+        this.addEventListeners(instance);
+        
+        // Initial update
+        this.updatePreview(instance);
+        
+        console.log('Border Preview initialized for block:', blockId);
+    },
+    
+    // Add event listeners to controls
+    addEventListeners: function(instance) {
+        const { controls } = instance;
+        
+        // Range slider event listeners
+        ['width', 'radius'].forEach(controlName => {
+            const control = controls[controlName];
+            if (control) {
+                control.addEventListener('input', () => {
+                    this.scheduleUpdate(instance);
+                });
+                control.addEventListener('change', () => {
+                    this.scheduleUpdate(instance);
+                });
+            }
+        });
+        
+        // Color picker event listener
+        if (controls.colorInput) {
+            // Listen for direct input changes
+            controls.colorInput.addEventListener('input', () => {
+                this.scheduleUpdate(instance);
+            });
+            controls.colorInput.addEventListener('change', () => {
+                this.scheduleUpdate(instance);
+            });
+            
+            // Also listen for Pickr color picker changes
+            // We need to observe the input value changes since Pickr updates it
+            const observer = new MutationObserver(() => {
+                this.scheduleUpdate(instance);
+            });
+            
+            observer.observe(controls.colorInput, {
+                attributes: true,
+                attributeFilter: ['value']
+            });
+            
+            // Store observer for cleanup
+            instance.colorObserver = observer;
+        }
+        
+        // Border style radio button listeners
+        if (controls.styleInputs) {
+            controls.styleInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    this.scheduleUpdate(instance);
+                });
+            });
+        }
+    },
+    
+    // Schedule update with debouncing
+    scheduleUpdate: function(instance) {
+        if (instance.updateTimeout) {
+            clearTimeout(instance.updateTimeout);
+        }
+        
+        instance.updateTimeout = setTimeout(() => {
+            this.updatePreview(instance);
+        }, 50); // 50ms debounce for smooth updates
+    },
+    
+    // Update the border preview
+    updatePreview: function(instance) {
+        const { previewElement, controls } = instance;
+        
+        // Get current values
+        const width = controls.width ? parseInt(controls.width.value) || 0 : 0;
+        const radius = controls.radius ? parseInt(controls.radius.value) || 0 : 0;
+        const color = controls.colorInput ? controls.colorInput.value || '#e9ecef' : '#e9ecef';
+        
+        // Get selected border style
+        let style = 'solid';
+        if (controls.styleInputs) {
+            const checkedStyle = Array.from(controls.styleInputs).find(input => input.checked);
+            if (checkedStyle) {
+                style = checkedStyle.value;
+            }
+        }
+        
+        // Apply border styles to preview element
+        previewElement.style.borderWidth = `${width}px`;
+        previewElement.style.borderStyle = style;
+        previewElement.style.borderColor = color;
+        previewElement.style.borderRadius = `${radius}px`;
+        
+        // Debug log
+        console.log('Border Preview updated:', {
+            blockId: instance.blockId,
+            width: `${width}px`,
+            style: style,
+            color: color,
+            radius: `${radius}px`
+        });
+    },
+    
+    // Initialize all border previews on the page
+    initializeAll: function() {
+        // Find all border preview containers
+        const containers = document.querySelectorAll('[id^="border_preview_container_"]');
+        
+        containers.forEach(container => {
+            const blockId = container.id.replace('border_preview_container_', '');
+            this.initialize(blockId);
+        });
+    },
+    
+    // Cleanup instance
+    cleanup: function(blockId) {
+        const instance = this.instances.get(blockId);
+        if (instance) {
+            if (instance.updateTimeout) {
+                clearTimeout(instance.updateTimeout);
+            }
+            if (instance.colorObserver) {
+                instance.colorObserver.disconnect();
+            }
+            this.instances.delete(blockId);
+        }
+    }
+};
+
+// Initialize border previews on DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+    BorderPreview.initializeAll();
+});
+
+// Re-initialize when new content is loaded (modals, AJAX, etc.)
+const borderPreviewObserver = new MutationObserver((mutations) => {
+    let shouldReinitialize = false;
+    
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Check if border preview containers were added
+                    if (node.querySelector && node.querySelector('[id^="border_preview_container_"]')) {
+                        shouldReinitialize = true;
+                    }
+                    // Check if the node itself is a border preview container
+                    if (node.id && node.id.startsWith('border_preview_container_')) {
+                        shouldReinitialize = true;
+                    }
+                }
+            });
+        }
+    });
+    
+    if (shouldReinitialize) {
+        setTimeout(() => {
+            BorderPreview.initializeAll();
+        }, 100);
+    }
+});
+
+borderPreviewObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// Initialize when modals are shown (for create/update forms)
+document.addEventListener('shown.bs.modal', function(event) {
+    setTimeout(() => {
+        BorderPreview.initializeAll();
+    }, 200);
+});
+
+// Initialize when tabs are shown (for tabbed interfaces)
+document.addEventListener('shown.bs.tab', function(event) {
+    setTimeout(() => {
+        BorderPreview.initializeAll();
+    }, 100);
+});
+
+
+/* Background Preview System */
+window.BackgroundPreview = {
+    instances: new Map(),
+    
+    // Initialize background preview for a specific block
+    initialize: function(blockId) {
+        if (this.instances.has(blockId)) {
+            return; // Already initialized
+        }
+        
+        const previewElement = document.querySelector(`#background_preview_element_${blockId}`);
+        if (!previewElement) {
+            return; // Preview element not found
+        }
+        
+        // Get background color control element
+        const controls = {
+            colorInput: document.getElementById(`background_color_${blockId}`)
+        };
+        
+        // Check if control exists
+        if (!controls.colorInput) {
+            return;
+        }
+        
+        // Store instance data
+        const instance = {
+            blockId: blockId,
+            previewElement: previewElement,
+            controls: controls,
+            updateTimeout: null
+        };
+        
+        this.instances.set(blockId, instance);
+        
+        // Add event listeners
+        this.addEventListeners(instance);
+        
+        // Initial update
+        this.updatePreview(instance);
+        
+        console.log('Background Preview initialized for block:', blockId);
+    },
+    
+    // Add event listeners to controls
+    addEventListeners: function(instance) {
+        const { controls } = instance;
+        
+        // Color picker event listener
+        if (controls.colorInput) {
+            // Listen for direct input changes
+            controls.colorInput.addEventListener('input', () => {
+                this.scheduleUpdate(instance);
+            });
+            controls.colorInput.addEventListener('change', () => {
+                this.scheduleUpdate(instance);
+            });
+            
+            // Simple MutationObserver to watch for value changes (works with Pickr)
+            const observer = new MutationObserver(() => {
+                this.scheduleUpdate(instance);
+            });
+            
+            observer.observe(controls.colorInput, {
+                attributes: true,
+                attributeFilter: ['value']
+            });
+            
+            // Store observer for cleanup
+            instance.colorObserver = observer;
+        }
+    },
+    
+    // Schedule update with debouncing
+    scheduleUpdate: function(instance) {
+        if (instance.updateTimeout) {
+            clearTimeout(instance.updateTimeout);
+        }
+        
+        instance.updateTimeout = setTimeout(() => {
+            this.updatePreview(instance);
+        }, 50); // 50ms debounce for smooth updates
+    },
+    
+    // Update the background preview
+    updatePreview: function(instance) {
+        const { previewElement, controls } = instance;
+        
+        // Get current color value
+        const color = controls.colorInput ? controls.colorInput.value || 'transparent' : 'transparent';
+        
+        // Apply background color to preview element
+        previewElement.style.backgroundColor = color;
+        
+        // Debug log
+        console.log('Background Preview updated:', {
+            blockId: instance.blockId,
+            backgroundColor: color
+        });
+    },
+    
+    // Initialize all background previews on the page
+    initializeAll: function() {
+        // Find all background preview containers
+        const containers = document.querySelectorAll('[id^="background_preview_container_"]');
+        
+        containers.forEach(container => {
+            const blockId = container.id.replace('background_preview_container_', '');
+            this.initialize(blockId);
+        });
+    },
+    
+    // Cleanup instance
+    cleanup: function(blockId) {
+        const instance = this.instances.get(blockId);
+        if (instance) {
+            if (instance.updateTimeout) {
+                clearTimeout(instance.updateTimeout);
+            }
+            if (instance.colorObserver) {
+                instance.colorObserver.disconnect();
+            }
+            this.instances.delete(blockId);
+        }
+    }
+};
+
+// Auto-initialize all background previews on page load
+document.addEventListener('DOMContentLoaded', function() {
+    window.BackgroundPreview.initializeAll();
+});
+
+// Watch for new content being added to the page
+const backgroundObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) { // Element node
+                    const containers = node.querySelectorAll ? node.querySelectorAll('[id^="background_preview_container_"]') : [];
+                    containers.forEach(function(container) {
+                        const blockId = container.id.replace('background_preview_container_', '');
+                        window.BackgroundPreview.initialize(blockId);
+                    });
+                }
+            });
+        }
+    });
+});
+
+backgroundObserver.observe(document.body, {
     childList: true,
     subtree: true
 });

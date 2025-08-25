@@ -179,7 +179,8 @@ $('#create_microsite_accordion').on('shown.bs.modal', function(event) {
 });
 
 // Accordion item management
-let accordion_item_add = function(event) {
+if (typeof window.accordion_item_add === 'undefined') {
+    window.accordion_item_add = function(event) {
     let microsite_block_id = event.currentTarget.getAttribute('data-microsite-block-id');
     let clone = document.querySelector('#template_accordion_item').content.cloneNode(true);
     let count = document.querySelectorAll(`[id="accordion_items_${microsite_block_id}"] .accordion-item-wrapper`).length;
@@ -217,11 +218,13 @@ let accordion_item_add = function(event) {
         initializeDragAndDrop(`accordion_items_${microsite_block_id}`);
     }, 100);
 
-    accordion_item_remove_initiator();
-};
+    window.accordion_item_remove_initiator();
+    };
+}
 
 // Remove accordion item
-let accordion_item_remove = function(event) {
+if (typeof window.accordion_item_remove === 'undefined') {
+    window.accordion_item_remove = function(event) {
     const wrapper = event.currentTarget.closest('.accordion-item-wrapper');
     const container = wrapper.parentNode;
     
@@ -235,12 +238,14 @@ let accordion_item_remove = function(event) {
     
     // Update field names after removal
     updateFieldNames(container.id);
-};
+    };
+}
 
-let accordion_item_remove_initiator = function() {
+if (typeof window.accordion_item_remove_initiator === 'undefined') {
+    window.accordion_item_remove_initiator = function() {
     document.querySelectorAll('[id^="accordion_items_"] [data-remove]').forEach(function(element) {
-        element.removeEventListener('click', accordion_item_remove);
-        element.addEventListener('click', accordion_item_remove);
+        element.removeEventListener('click', window.accordion_item_remove);
+        element.addEventListener('click', window.accordion_item_remove);
     });
     
     // Add title update listeners
@@ -250,14 +255,15 @@ let accordion_item_remove_initiator = function() {
             updateAccordionTitle(this);
         });
     });
-};
+    };
+}
 
 // Add event listeners
 document.querySelectorAll('[data-add="accordion_item"]').forEach(function(element) {
-    element.addEventListener('click', accordion_item_add);
+    element.addEventListener('click', window.accordion_item_add);
 });
 
-accordion_item_remove_initiator();
+window.accordion_item_remove_initiator();
 </script>
 <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>
 

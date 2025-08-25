@@ -395,20 +395,17 @@ class Router {
                 ]
             ],
 
-            'microsite-block-ajax' => [
-                'controller' => 'MicrositeBlockAjax'
+            'ajax' => [
+                'controller' => 'Ajax'
             ],
 
-            'link-ajax' => [
-                'controller' => 'LinkAjax'
-            ],
-
-            'gs1-link-ajax' => [
-                'controller' => 'Gs1LinkAjax'
-            ],
-
-            'product-ajax' => [
-                'controller' => 'ProductAjax'
+            'file-access' => [
+                'controller' => 'FileAccess',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'has_view' => false,
+                    'allow_indexing' => false,
+                ]
             ],
 
             /* Email signatures */

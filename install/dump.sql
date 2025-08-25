@@ -47,6 +47,11 @@ CREATE TABLE `users` (
 `total_logins` int DEFAULT '0',
 `user_deletion_reminder` tinyint(4) DEFAULT '0',
 `source` varchar(32) DEFAULT 'direct',
+`aix_words_current_month` int(11) NOT NULL DEFAULT '0',
+`aix_images_current_month` int(11) NOT NULL DEFAULT '0',
+`aix_chats_current_month` int(11) NOT NULL DEFAULT '0',
+`documents_default_order_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT 'document_id',
+`chats_default_order_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT 'chat_id',
 PRIMARY KEY (`user_id`),
 KEY `plan_id` (`plan_id`),
 KEY `api_key` (`api_key`)
@@ -272,6 +277,7 @@ VALUES
 ('codes', '{"qr_codes_is_enabled":1,"logo_size_limit":1,"background_size_limit":1,"available_qr_codes":{"text":true,"url":true,"phone":true,"sms":true,"email":true,"whatsapp":true,"facetime":true,"location":true,"wifi":true,"event":true,"vcard":true,"crypto":true,"paypal":true,"upi":true,"epc":true,"pix":true},"qr_codes_branding_logo":"","qr_codes_default_image":""}'),
 ('gs1_links', '{"gs1_links_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_target_url":false,"default_target_url":"","domains_is_enabled":true,"projects_is_enabled":true,"pixels_is_enabled":true,"analytics_is_enabled":true,"auto_generate_qr_codes":false,"branding":"","random_gtin_length":"14","blacklisted_gtins":[],"allowed_gtin_prefixes":[]}'),
 ('products', '{"products_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_product_name":true,"require_brand_name":false,"auto_generate_gs1_links":false,"auto_generate_qr_codes":false,"projects_is_enabled":true,"image_size_limit":5,"max_images_per_product":10,"allowed_categories":[],"required_fields":["product_name","gtin"],"export_formats":["csv","json"],"bulk_import_is_enabled":true,"analytics_is_enabled":true}'),
+('aix', '{"is_enabled":true,"openai_api_key":"","openai_model":"gpt-4","openai_max_tokens":4096,"google_api_key":"","google_model":"gemini-pro","anthropic_api_key":"","anthropic_model":"claude-3-sonnet-20240229","documents_is_enabled":true,"images_is_enabled":true,"chats_is_enabled":true,"templates_is_enabled":true,"receipt_analysis_is_enabled":true,"receipt_analysis_providers":["openai","google","anthropic"],"receipt_analysis_timeout":30,"receipt_analysis_max_retries":3,"receipt_analysis_auto_process":true,"receipt_analysis_extract_items":true,"receipt_analysis_extract_totals":true,"receipt_analysis_extract_merchant":true,"receipt_analysis_extract_date":true,"receipt_analysis_extract_payment":true}'),
 ('license', '{\"license\":\"BYPASSED-LICENSE\",\"type\":\"SPECIAL\"}'),
 ('product_info', '{\"version\":\"56.0.0\", \"code\":\"5600\"}'),
 ('support', '{\"key\":\"BYPASSED-SUPPORT\",\"expiry_datetime\":\"2099-12-31 23:59:59\"}');
@@ -645,6 +651,10 @@ CREATE TABLE `form_submissions` (
   `form_type` varchar(32) NOT NULL DEFAULT 'custom',
   `responses` longtext,
   `metadata` longtext,
+  `receipt_images` longtext NULL COMMENT 'JSON array of uploaded receipt image paths',
+  `ai_analysis_data` longtext NULL COMMENT 'JSON object containing AI analysis results from all providers',
+  `ai_analysis_status` ENUM('pending', 'processing', 'completed', 'failed') DEFAULT 'pending' COMMENT 'Status of AI analysis processing',
+  `ai_providers_used` varchar(255) NULL COMMENT 'Comma-separated list of AI providers used for analysis',
   `ip` varchar(64) DEFAULT NULL,
   `user_agent` text,
   `submitted_at` datetime NOT NULL,
@@ -652,6 +662,8 @@ CREATE TABLE `form_submissions` (
   KEY `microsite_block_id` (`microsite_block_id`),
   KEY `link_id` (`link_id`),
   KEY `submitted_at` (`submitted_at`),
+  KEY `idx_form_submissions_ai_status` (`ai_analysis_status`),
+  KEY `idx_form_submissions_receipt_images` (`receipt_images`(255)),
   CONSTRAINT `form_submissions_ibfk_1` FOREIGN KEY (`microsite_block_id`) REFERENCES `microsites_blocks` (`microsite_block_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `form_submissions_ibfk_2` FOREIGN KEY (`link_id`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -698,3 +710,251 @@ CREATE TABLE `products` (
   CONSTRAINT `products_projects_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `products_gs1_links_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SEPARATOR --
+
+CREATE TABLE `receipt_analysis_queue` (
+  `queue_id` int NOT NULL AUTO_INCREMENT,
+  `form_submission_id` int NOT NULL,
+  `image_path` varchar(512) NOT NULL,
+  `ai_providers` JSON NOT NULL COMMENT 'Array of AI providers to use for analysis',
+  `status` ENUM('pending', 'processing', 'completed', 'failed') DEFAULT 'pending',
+  `attempts` int DEFAULT 0 COMMENT 'Number of processing attempts',
+  `analysis_results` longtext NULL COMMENT 'JSON object with results from each provider',
+  `error_message` text NULL COMMENT 'Error message if processing failed',
+  `created_at` datetime NOT NULL,
+  `processed_at` datetime NULL,
+  `priority` int DEFAULT 0 COMMENT 'Processing priority (higher = more urgent)',
+  PRIMARY KEY (`queue_id`),
+  KEY `form_submission_id` (`form_submission_id`),
+  KEY `status` (`status`),
+  KEY `priority_created` (`priority` DESC, `created_at` ASC),
+  CONSTRAINT `receipt_analysis_queue_ibfk_1` FOREIGN KEY (`form_submission_id`) REFERENCES `form_submissions` (`form_submission_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Queue for background processing of receipt AI analysis';
+
+-- SEPARATOR --
+
+CREATE TABLE `receipt_analysis_providers` (
+  `provider_id` int NOT NULL AUTO_INCREMENT,
+  `provider_name` varchar(50) NOT NULL COMMENT 'Provider name (openai, google, anthropic)',
+  `api_key` varchar(512) NULL COMMENT 'Encrypted API key',
+  `api_endpoint` varchar(255) NULL COMMENT 'Custom API endpoint if needed',
+  `is_enabled` tinyint(1) DEFAULT 1 COMMENT 'Whether this provider is active',
+  `priority` int DEFAULT 0 COMMENT 'Provider priority (higher = preferred)',
+  `rate_limit_per_minute` int DEFAULT 60 COMMENT 'API rate limit per minute',
+  `cost_per_request` decimal(10,6) DEFAULT 0.000000 COMMENT 'Cost per API request in USD',
+  `settings` JSON NULL COMMENT 'Provider-specific settings',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`provider_id`),
+  UNIQUE KEY `provider_name` (`provider_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI provider configuration for receipt analysis';
+
+-- SEPARATOR --
+
+INSERT INTO `receipt_analysis_providers` (`provider_name`, `is_enabled`, `priority`, `rate_limit_per_minute`, `cost_per_request`, `settings`, `created_at`, `updated_at`) VALUES
+('openai', 1, 3, 60, 0.002000, JSON_OBJECT('model', 'gpt-4-vision-preview', 'max_tokens', 4096), NOW(), NOW()),
+('google', 1, 2, 60, 0.001500, JSON_OBJECT('model', 'gemini-pro-vision', 'safety_settings', 'BLOCK_NONE'), NOW(), NOW()),
+('anthropic', 1, 1, 60, 0.003000, JSON_OBJECT('model', 'claude-3-sonnet-20240229', 'max_tokens', 4096), NOW(), NOW());
+
+-- SEPARATOR --
+
+CREATE TABLE `receipt_analysis_logs` (
+  `log_id` int NOT NULL AUTO_INCREMENT,
+  `queue_id` int NOT NULL,
+  `provider_name` varchar(50) NOT NULL,
+  `status` ENUM('started', 'completed', 'failed') NOT NULL,
+  `processing_time` decimal(8,3) NULL COMMENT 'Processing time in seconds',
+  `tokens_used` int NULL COMMENT 'Number of tokens consumed',
+  `cost` decimal(10,6) NULL COMMENT 'Cost of this request in USD',
+  `confidence_score` decimal(3,2) NULL COMMENT 'AI confidence score (0.00-1.00)',
+  `error_message` text NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`log_id`),
+  KEY `queue_id` (`queue_id`),
+  KEY `provider_name` (`provider_name`),
+  KEY `created_at` (`created_at`),
+  CONSTRAINT `receipt_analysis_logs_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `receipt_analysis_queue` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Logs for receipt analysis processing';
+
+-- SEPARATOR --
+
+CREATE OR REPLACE VIEW `receipt_analysis_summary` AS
+SELECT 
+    fs.`form_submission_id`,
+    fs.`microsite_block_id`,
+    fs.`link_id`,
+    fs.`form_type`,
+    fs.`ai_analysis_status`,
+    fs.`ai_providers_used`,
+    fs.`submitted_at`,
+    JSON_LENGTH(fs.`receipt_images`) as `image_count`,
+    raq.`queue_id`,
+    raq.`status` as `queue_status`,
+    raq.`attempts`,
+    raq.`created_at` as `queued_at`,
+    raq.`processed_at`,
+    COUNT(ral.`log_id`) as `processing_logs_count`
+FROM `form_submissions` fs
+LEFT JOIN `receipt_analysis_queue` raq ON fs.`form_submission_id` = raq.`form_submission_id`
+LEFT JOIN `receipt_analysis_logs` ral ON raq.`queue_id` = ral.`queue_id`
+WHERE fs.`receipt_images` IS NOT NULL
+GROUP BY fs.`form_submission_id`, raq.`queue_id`;
+
+-- SEPARATOR --
+
+CREATE TABLE `templates_categories` (
+  `template_category_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `settings` text,
+  `icon` varchar(64) DEFAULT 'fas fa-folder',
+  `emoji` varchar(8) DEFAULT '📁',
+  `color` varchar(16) DEFAULT '#000000',
+  `background` varchar(16) DEFAULT '#ffffff',
+  `order` int DEFAULT 0,
+  `is_enabled` tinyint(1) DEFAULT 1,
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`template_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AIX template categories';
+
+-- SEPARATOR --
+
+INSERT INTO `templates_categories` (`name`, `icon`, `emoji`, `color`, `background`, `order`, `is_enabled`, `datetime`) VALUES
+('General', 'fas fa-star', '⭐', '#ffffff', '#3b82f6', 1, 1, NOW()),
+('Business', 'fas fa-briefcase', '💼', '#ffffff', '#10b981', 2, 1, NOW()),
+('Creative', 'fas fa-palette', '🎨', '#ffffff', '#f59e0b', 3, 1, NOW()),
+('Technical', 'fas fa-code', '💻', '#ffffff', '#8b5cf6', 4, 1, NOW()),
+('Marketing', 'fas fa-bullhorn', '📢', '#ffffff', '#ef4444', 5, 1, NOW());
+
+-- SEPARATOR --
+
+CREATE TABLE `templates` (
+  `template_id` int NOT NULL AUTO_INCREMENT,
+  `template_category_id` int NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `prompt` text NOT NULL,
+  `settings` text,
+  `icon` varchar(64) DEFAULT 'fas fa-file-alt',
+  `order` int DEFAULT 0,
+  `total_usage` bigint unsigned DEFAULT 0,
+  `is_enabled` tinyint(1) DEFAULT 1,
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`template_id`),
+  KEY `template_category_id` (`template_category_id`),
+  KEY `total_usage` (`total_usage`),
+  CONSTRAINT `templates_ibfk_1` FOREIGN KEY (`template_category_id`) REFERENCES `templates_categories` (`template_category_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AIX document templates';
+
+-- SEPARATOR --
+
+INSERT INTO `templates` (`template_category_id`, `name`, `prompt`, `icon`, `order`, `is_enabled`, `datetime`) VALUES
+(1, 'Blog Post', 'Write a comprehensive blog post about [TOPIC]. Include an engaging introduction, main points with supporting details, and a compelling conclusion. Make it SEO-friendly and engaging for readers.', 'fas fa-blog', 1, 1, NOW()),
+(1, 'Email Template', 'Create a professional email template for [PURPOSE]. Include a clear subject line, greeting, main message, call-to-action, and professional closing.', 'fas fa-envelope', 2, 1, NOW()),
+(2, 'Business Plan', 'Create a comprehensive business plan for [BUSINESS_TYPE]. Include executive summary, market analysis, marketing strategy, financial projections, and implementation timeline.', 'fas fa-chart-line', 1, 1, NOW()),
+(2, 'Meeting Minutes', 'Generate professional meeting minutes template including date, attendees, agenda items, key decisions, action items, and next steps.', 'fas fa-clipboard-list', 2, 1, NOW()),
+(3, 'Creative Story', 'Write an engaging creative story about [THEME/TOPIC]. Include compelling characters, interesting plot development, vivid descriptions, and a satisfying conclusion.', 'fas fa-feather-alt', 1, 1, NOW()),
+(3, 'Social Media Content', 'Create engaging social media content for [PLATFORM] about [TOPIC]. Include hashtags, call-to-action, and platform-specific formatting.', 'fas fa-share-alt', 2, 1, NOW());
+
+-- SEPARATOR --
+
+CREATE TABLE `documents` (
+  `document_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `template_id` int DEFAULT NULL,
+  `template_category_id` int DEFAULT NULL,
+  `name` varchar(128) NOT NULL,
+  `type` varchar(32) DEFAULT 'custom',
+  `content` longtext,
+  `words` int DEFAULT 0,
+  `model` varchar(64) DEFAULT 'gpt-4',
+  `api_response_time` decimal(8,3) DEFAULT NULL,
+  `settings` text,
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`document_id`),
+  KEY `user_id` (`user_id`),
+  KEY `project_id` (`project_id`),
+  KEY `template_id` (`template_id`),
+  KEY `template_category_id` (`template_category_id`),
+  KEY `datetime` (`datetime`),
+  CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `documents_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `documents_ibfk_3` FOREIGN KEY (`template_id`) REFERENCES `templates` (`template_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `documents_ibfk_4` FOREIGN KEY (`template_category_id`) REFERENCES `templates_categories` (`template_category_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AIX generated documents';
+
+-- SEPARATOR --
+
+CREATE TABLE `images` (
+  `image_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `name` varchar(128) NOT NULL,
+  `input` text NOT NULL,
+  `image` varchar(64) DEFAULT NULL,
+  `style` varchar(64) DEFAULT NULL,
+  `artist` varchar(64) DEFAULT NULL,
+  `lighting` varchar(64) DEFAULT NULL,
+  `mood` varchar(64) DEFAULT NULL,
+  `size` varchar(16) DEFAULT '1024x1024',
+  `settings` text,
+  `api` varchar(32) DEFAULT 'dall-e-2',
+  `api_response_time` decimal(8,3) DEFAULT NULL,
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`image_id`),
+  KEY `user_id` (`user_id`),
+  KEY `project_id` (`project_id`),
+  KEY `datetime` (`datetime`),
+  CONSTRAINT `images_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `images_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AIX generated images';
+
+-- SEPARATOR --
+
+CREATE TABLE `chats_assistants` (
+  `chat_assistant_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `prompt` text NOT NULL,
+  `settings` text,
+  `image` varchar(64) DEFAULT NULL,
+  `order` int DEFAULT 0,
+  `total_usage` bigint unsigned DEFAULT 0,
+  `is_enabled` tinyint(1) DEFAULT 1,
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`chat_assistant_id`),
+  KEY `total_usage` (`total_usage`),
+  KEY `order` (`order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AIX chat assistants';
+
+-- SEPARATOR --
+
+INSERT INTO `chats_assistants` (`name`, `prompt`, `order`, `is_enabled`, `datetime`) VALUES
+('General Assistant', 'You are a helpful AI assistant. Provide accurate, helpful, and friendly responses to user questions and requests.', 1, 1, NOW()),
+('Business Advisor', 'You are a business advisor AI. Help users with business strategy, planning, marketing, and professional advice.', 2, 1, NOW()),
+('Creative Writer', 'You are a creative writing assistant. Help users with storytelling, creative content, and writing improvement.', 3, 1, NOW()),
+('Technical Expert', 'You are a technical expert AI. Assist users with programming, technology questions, and technical problem-solving.', 4, 1, NOW());
+
+-- SEPARATOR --
+
+CREATE TABLE `chats` (
+  `chat_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `chat_assistant_id` int DEFAULT NULL,
+  `name` varchar(128) NOT NULL,
+  `total_messages` int DEFAULT 0,
+  `used_tokens` int DEFAULT 0,
+  `settings` text,
+  `datetime` datetime NOT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`chat_id`),
+  KEY `user_id` (`user_id`),
+  KEY `chat_assistant_id` (`chat_assistant_id`),
+  KEY `datetime` (`datetime`),
+  CONSTRAINT `chats_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `chats_ibfk_2` FOREIGN KEY (`chat_assistant_id`) REFERENCES `chats_assistants` (`chat_assistant_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AIX chat conversations';

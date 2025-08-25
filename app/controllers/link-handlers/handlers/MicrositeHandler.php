@@ -39,7 +39,40 @@ class MicrositeHandler extends BaseLinkHandler {
             $_POST['microsite_template_id'] = settings()->links->default_microsite_template_id;
         }
 
-        $this->process_common_post_data();
+        /* Process common POST data without URL processing for updates */
+        $_POST['project_id'] = empty($_POST['project_id']) ? null : (int) $_POST['project_id'];
+        
+        /* Provide default values for missing form fields to prevent PHP warnings */
+        $default_values = [
+            'domain_id' => '',
+            'background_type' => 'preset',
+            'background' => 'zero',
+            'text_color' => '#ffffff',
+            'verified_location' => 'top',
+            'branding_name' => '',
+            'branding_url' => '',
+            'seo_title' => '',
+            'seo_meta_description' => '',
+            'seo_meta_keywords' => '',
+            'utm_medium' => '',
+            'utm_source' => '',
+            'custom_css' => '',
+            'custom_js' => '',
+            'font' => 'default',
+            'font_size' => 16,
+            'pwa_display_install_bar_delay' => 3
+        ];
+        
+        foreach($default_values as $key => $default_value) {
+            if(!isset($_POST[$key])) {
+                $_POST[$key] = $default_value;
+            }
+        }
+        
+        /* Domain validation */
+        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\SeeGap\Authentication::is_admin()) {
+            Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
+        }
 
         /* Check if custom domain is set */
         $domain_id = $this->get_domain_id($_POST['domain_id'] ?? false);
@@ -254,7 +287,40 @@ class MicrositeHandler extends BaseLinkHandler {
             Response::json(l('global.error_message.basic'), 'error');
         }
 
-        $this->process_common_post_data();
+        /* Process common POST data without URL processing for updates */
+        $_POST['project_id'] = empty($_POST['project_id']) ? null : (int) $_POST['project_id'];
+        
+        /* Provide default values for missing form fields to prevent PHP warnings */
+        $default_values = [
+            'domain_id' => '',
+            'background_type' => 'preset',
+            'background' => 'zero',
+            'text_color' => '#ffffff',
+            'verified_location' => 'top',
+            'branding_name' => '',
+            'branding_url' => '',
+            'seo_title' => '',
+            'seo_meta_description' => '',
+            'seo_meta_keywords' => '',
+            'utm_medium' => '',
+            'utm_source' => '',
+            'custom_css' => '',
+            'custom_js' => '',
+            'font' => 'default',
+            'font_size' => 16,
+            'pwa_display_install_bar_delay' => 3
+        ];
+        
+        foreach($default_values as $key => $default_value) {
+            if(!isset($_POST[$key])) {
+                $_POST[$key] = $default_value;
+            }
+        }
+        
+        /* Domain validation */
+        if(empty($_POST['domain_id']) && !settings()->links->main_domain_is_enabled && !\SeeGap\Authentication::is_admin()) {
+            Response::json(l('create_link_modal.error_message.main_domain_is_disabled'), 'error');
+        }
 
         /* Get domains */
         $domains = $this->get_available_domains();
@@ -284,18 +350,55 @@ class MicrositeHandler extends BaseLinkHandler {
         /* Existing pixels */
         $this->process_pixels_data();
 
-        if($_POST['url'] == $link->url) {
+        /* Debug logging for URL preservation */
+        debug_log('MICROSITE_URL_PRESERVATION_DEBUG', [
+            'post_url' => $_POST['url'] ?? 'NOT_SET',
+            'existing_url' => $link->url,
+            'post_url_isset' => isset($_POST['url']),
+            'urls_match' => isset($_POST['url']) && $_POST['url'] == $link->url,
+            'post_url_type' => isset($_POST['url']) ? gettype($_POST['url']) : 'NOT_SET',
+            'existing_url_type' => gettype($link->url),
+            'post_url_length' => isset($_POST['url']) ? strlen($_POST['url']) : 0,
+            'existing_url_length' => strlen($link->url),
+            'user_id' => $this->user->user_id,
+            'link_id' => $link->link_id
+        ]);
+
+        /* Handle URL preservation logic */
+        if(!isset($_POST['url']) || $_POST['url'] === null) {
+            /* URL field is missing from POST data (canvas form submission) - preserve existing URL */
             $url = $link->url;
-
-            if($link->domain_id != $domain_id) {
-                $this->check_duplicate_url($_POST['url'], $domain_id, $link->link_id);
-            }
+            debug_log('MICROSITE_URL_PRESERVED_MISSING_POST', [
+                'preserved_url' => $url,
+                'reason' => 'URL field missing from POST data',
+                'user_id' => $this->user->user_id,
+                'link_id' => $link->link_id
+            ]);
+        } else if($_POST['url'] == $link->url) {
+            /* URL field is present and matches existing URL - preserve it */
+            $url = $link->url;
+            debug_log('MICROSITE_URL_PRESERVED_SAME', [
+                'preserved_url' => $url,
+                'reason' => 'URL field matches existing URL',
+                'user_id' => $this->user->user_id,
+                'link_id' => $link->link_id
+            ]);
         } else {
-            $url = $_POST['url'] ? $_POST['url'] : $this->generate_random_url($domain_id);
-
-            $this->check_duplicate_url($_POST['url'], $domain_id, $link->link_id);
-
-            $this->check_url($_POST['url']);
+            /* URL field is present and different - process the change */
+            debug_log('MICROSITE_URL_CHANGED', [
+                'old_url' => $link->url,
+                'new_url' => $_POST['url'],
+                'user_id' => $this->user->user_id,
+                'link_id' => $link->link_id
+            ]);
+            
+            if($_POST['url']) {
+                $this->check_duplicate_url($_POST['url'], $domain_id, $link->link_id);
+                $this->check_url($_POST['url']);
+                $url = $_POST['url'];
+            } else {
+                $url = $this->generate_random_url($domain_id);
+            }
         }
 
         /* Image uploads */
@@ -434,7 +537,7 @@ class MicrositeHandler extends BaseLinkHandler {
         $_POST['background_type'] = array_key_exists($_POST['background_type'], $microsite_backgrounds) ? $_POST['background_type'] : 'preset';
         $_POST['background_attachment'] = isset($_POST['background_attachment']) && in_array($_POST['background_attachment'], ['scroll', 'fixed']) ? $_POST['background_attachment'] : 'scroll';
         $_POST['background_blur'] = isset($_POST['background_blur']) && in_array((int) $_POST['background_attachment'], range(0, 30)) ? (int) $_POST['background_blur'] : 0;
-        $_POST['background_brightness'] = isset($_POST['background_brightness']) && in_array((int) $_POST['background_attachment'], range(0, 150)) ? (int) $_POST['background_brightness'] : 0;
+        $_POST['background_brightness'] = isset($_POST['background_brightness']) && in_array((int) $_POST['background_brightness'], range(0, 150)) ? (int) $_POST['background_brightness'] : ($link->settings->background_brightness ?? 100);
 
         switch($_POST['background_type']) {
             case 'preset':

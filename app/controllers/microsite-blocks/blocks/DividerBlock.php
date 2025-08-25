@@ -44,6 +44,18 @@ class DividerBlock extends BaseBlockHandler {
             'divider_width' => 100,
             'divider_color' => '#e9ecef',
 
+            /* Shadow settings */
+            'border_shadow_color' => '#00000010',
+            'border_shadow_offset_x' => 0,
+            'border_shadow_offset_y' => 0,
+            'border_shadow_blur' => 0,
+            'border_shadow_spread' => 0,
+
+            /* Animation settings */
+            'animation' => false,
+            'animation_runs' => 'repeat-1',
+            'animation_delay' => 0,
+
             /* Display settings */
             'display_continents' => [],
             'display_countries' => [],
@@ -85,6 +97,19 @@ class DividerBlock extends BaseBlockHandler {
         $_POST['divider_width'] = in_array($_POST['divider_width'], range(10, 100, 5)) ? (int) $_POST['divider_width'] : 100;
         $_POST['divider_color'] = !verify_hex_color($_POST['divider_color']) ? '#e9ecef' : $_POST['divider_color'];
 
+        /* Shadow settings - updated to match settings components */
+        $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color'] ?? '#00000010') ? '#00000010' : ($_POST['border_shadow_color'] ?? '#00000010');
+        $_POST['border_shadow_offset_x'] = in_array(($_POST['border_shadow_offset_x'] ?? 0), range(-25, 25)) ? (int) ($_POST['border_shadow_offset_x'] ?? 0) : 0;
+        $_POST['border_shadow_offset_y'] = in_array(($_POST['border_shadow_offset_y'] ?? 0), range(-25, 25)) ? (int) ($_POST['border_shadow_offset_y'] ?? 0) : 0;
+        $_POST['border_shadow_blur'] = in_array(($_POST['border_shadow_blur'] ?? $_POST['border_shadow_blur_radius'] ?? 0), range(0, 30)) ? (int) ($_POST['border_shadow_blur'] ?? $_POST['border_shadow_blur_radius'] ?? 0) : 0;
+        $_POST['border_shadow_spread'] = in_array(($_POST['border_shadow_spread'] ?? $_POST['border_shadow_spread_radius'] ?? 0), range(-15, 15)) ? (int) ($_POST['border_shadow_spread'] ?? $_POST['border_shadow_spread_radius'] ?? 0) : 0;
+
+        /* Animation settings - updated to match settings components */
+        $_POST['animation'] = $_POST['animation'] ?? $_POST['animation_type'] ?? false;
+        if ($_POST['animation'] === 'false') $_POST['animation'] = false;
+        $_POST['animation_runs'] = in_array($_POST['animation_runs'], ['repeat-1', 'repeat-2', 'repeat-3', 'infinite']) ? $_POST['animation_runs'] : 'repeat-1';
+        $_POST['animation_delay'] = (int) ($_POST['animation_delay'] ?? 0);
+
         /* Display settings */
         $this->process_display_settings();
 
@@ -102,6 +127,18 @@ class DividerBlock extends BaseBlockHandler {
             'divider_style' => $_POST['divider_style'],
             'divider_width' => $_POST['divider_width'],
             'divider_color' => $_POST['divider_color'],
+
+            /* Shadow settings */
+            'border_shadow_color' => $_POST['border_shadow_color'],
+            'border_shadow_offset_x' => $_POST['border_shadow_offset_x'],
+            'border_shadow_offset_y' => $_POST['border_shadow_offset_y'],
+            'border_shadow_blur' => $_POST['border_shadow_blur'],
+            'border_shadow_spread' => $_POST['border_shadow_spread'],
+
+            /* Animation settings */
+            'animation' => $_POST['animation'],
+            'animation_runs' => $_POST['animation_runs'],
+            'animation_delay' => $_POST['animation_delay'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

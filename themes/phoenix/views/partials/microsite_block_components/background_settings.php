@@ -16,36 +16,15 @@ $field_name = $field_name ?? 'background_color';
 $include_image = $include_image ?? false;
 ?>
 
+
 <!-- Background Color -->
 <?php
-// Create isolated variables for color picker to prevent conflicts
-$bg_field_name = $field_name;
-$bg_label = l('microsite_link.background_color');
-$bg_icon = 'fas fa-fill';
-$bg_default = '#00000000'; // Transparent default
-$bg_current = $settings->$bg_field_name ?? $bg_default;
-$bg_include_opacity = true; // Enable opacity for background colors
-
-// Set variables for color picker component
-$color_picker_field_name = $bg_field_name;
-$color_picker_label = $bg_label;
-$color_picker_icon = $bg_icon;
-$color_picker_default_color = $bg_default;
-$color_picker_current_color = $bg_current;
-$color_picker_include_opacity = $bg_include_opacity;
-
-// Temporarily override variables for color picker
-$field_name = $color_picker_field_name;
-$label = $color_picker_label;
-$icon = $color_picker_icon;
-$default_color = $color_picker_default_color;
-$current_color = $color_picker_current_color;
-$include_opacity = $color_picker_include_opacity;
-
+$field_name = 'background_color';
+$label = l('microsite_link.background_color');
+$icon = 'fas fa-fill';
+$default_color = '#ffffff';
+$current_color = $settings->background_color ?? $default_color;
 include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
-
-// Restore original field_name
-$field_name = $bg_field_name;
 ?>
 
 <?php if($include_image): ?>

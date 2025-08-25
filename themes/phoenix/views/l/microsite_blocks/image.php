@@ -111,10 +111,10 @@ $verified_badge = $data->link->settings->verified_badge ?? (object)['enabled' =>
     <div class="image-block-container position-relative d-inline-block">
         <?php if($data->link->location_url): ?>
         <a href="<?= $data->link->location_url . $data->link->utm_query ?>" data-track-microsite-block-id="<?= $data->link->microsite_block_id ?>" target="<?= $data->link->settings->open_in_new_tab ? '_blank' : '_self' ?>" class="<?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>">
-            <img src="<?= \SeeGap\Uploads::get_full_url('block_images') . $data->link->settings->image ?>" class="<?= $width_class ?> <?= $height_class ?> <?= $animation_class ?> <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>" alt="<?= $data->link->settings->image_alt ?>" loading="lazy" <?= $style_attribute ?> />
+            <img src="<?= \SeeGap\Uploads::get_full_url('block_images') . $data->link->settings->image ?>" class="<?= $width_class ?> <?= $height_class ?> <?= $animation_class ?> <?= ($data->microsite->settings->hover_animation ?? 'smooth') != 'false' ? 'link-hover-animation-' . ($data->microsite->settings->hover_animation ?? 'smooth') : null ?>" alt="<?= $data->link->settings->image_alt ?>" loading="lazy" <?= $style_attribute ?> data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-background-color />
         </a>
         <?php else: ?>
-        <img src="<?= \SeeGap\Uploads::get_full_url('block_images') . $data->link->settings->image ?>" class="<?= $width_class ?> <?= $height_class ?> <?= $animation_class ?>" alt="<?= $data->link->settings->image_alt ?>" loading="lazy" <?= $style_attribute ?> />
+        <img src="<?= \SeeGap\Uploads::get_full_url('block_images') . $data->link->settings->image ?>" class="<?= $width_class ?> <?= $height_class ?> <?= $animation_class ?>" alt="<?= $data->link->settings->image_alt ?>" loading="lazy" <?= $style_attribute ?> data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-background-color />
         <?php endif ?>
 
         <!-- Verified Badge -->

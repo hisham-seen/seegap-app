@@ -134,7 +134,7 @@ class TextBlock extends BaseBlockHandler {
             /* Animation settings */
             'animation' => isset($_POST['animation']) && $_POST['animation'] !== 'false' ? query_clean($_POST['animation']) : false,
             'animation_runs' => in_array($_POST['animation_runs'] ?? 'repeat-1', ['repeat-1', 'repeat-2', 'repeat-3', 'infinite']) ? query_clean($_POST['animation_runs']) : 'repeat-1',
-            'animation_delay' => isset($_POST['animation_delay']) ? (int) $_POST['animation_delay'] : 0,
+            'animation_delay' => (int) ($_POST['animation_delay'] ?? 0),
             
             /* Background, border, and shadow settings */
             'background_color' => !verify_hex_color($_POST['background_color']) ? '#00000000' : $_POST['background_color'],

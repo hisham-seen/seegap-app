@@ -9,16 +9,16 @@
     <div class="notification-container"></div>
 
     <?php
-    // Define tabs for the Review block
-    $tabs = [
+    // Define primary tabs for the Review block
+    $primary_tabs = [
         [
             'id' => 'content',
             'title' => 'Content',
             'icon' => 'fas fa-edit'
         ],
         [
-            'id' => 'style',
-            'title' => 'Style',
+            'id' => 'design',
+            'title' => 'Design',
             'icon' => 'fas fa-palette'
         ],
         [
@@ -28,8 +28,10 @@
         ]
     ];
 
-    // Set the block_id for the tab component
-    $block_id = 'review-' . $row->microsite_block_id;
+    // Set the block_id for the primary tab component
+    $primary_tab_block_id = 'review-' . $row->microsite_block_id;
+    $tabs = $primary_tabs; // Store primary tabs
+    $block_id = $primary_tab_block_id;
     
     // Include the reusable tab navigation
     include THEME_PATH . 'views/partials/microsite_block_tabs.php';
@@ -277,83 +279,179 @@
 
         </div>
 
-        <!-- Style Tab -->
-        <div class="tab-pane fade" id="review-<?= $row->microsite_block_id ?>-style" role="tabpanel" aria-labelledby="review-<?= $row->microsite_block_id ?>-style-tab">
+        <!-- Design Tab -->
+        <div class="tab-pane fade" id="review-<?= $row->microsite_block_id ?>-design" role="tabpanel" aria-labelledby="review-<?= $row->microsite_block_id ?>-design-tab">
             
-            <!-- Review Colors Section -->
-            <h6 class="text-muted mb-3"><i class="fas fa-fw fa-palette fa-sm mr-1"></i> <?= l('microsite_review.colors') ?? 'Review Colors' ?></h6>
-            
-            <!-- Title Color -->
             <?php
-            $block_id = $row->microsite_block_id;
-            $field_name = 'title_color';
-            $label = l('microsite_review.title_color');
-            $icon = 'fas fa-paint-brush';
-            $default_color = '#333333';
-            $current_color = $row->settings->title_color ?? $default_color;
-            include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
+            // Define secondary tabs for the design section
+            $design_tabs = [
+                [
+                    'id' => 'colors',
+                    'title' => 'Colors',
+                    'icon' => 'fas fa-palette'
+                ],
+                [
+                    'id' => 'layout',
+                    'title' => 'Layout',
+                    'icon' => 'fas fa-align-center'
+                ],
+                [
+                    'id' => 'background',
+                    'title' => 'Background',
+                    'icon' => 'fas fa-fill'
+                ],
+                [
+                    'id' => 'border',
+                    'title' => 'Border',
+                    'icon' => 'fas fa-border-style'
+                ],
+                [
+                    'id' => 'shadow',
+                    'title' => 'Shadow',
+                    'icon' => 'fas fa-clone'
+                ],
+                [
+                    'id' => 'animation',
+                    'title' => 'Animation',
+                    'icon' => 'fas fa-film'
+                ]
+            ];
+
+            // Set the block_id for the secondary tab component
+            $secondary_block_id = 'review-design-' . $row->microsite_block_id;
+            $tabs = $design_tabs; // Use design tabs for the secondary navigation
+            $block_id = $secondary_block_id; // Override block_id for secondary tabs
+            
+            // Include the reusable tab navigation for secondary tabs
+            include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             ?>
 
-            <!-- Description Color -->
-            <?php
-            $field_name = 'description_color';
-            $label = l('microsite_link.description_color');
-            $default_color = '#666666';
-            $current_color = $row->settings->description_color ?? $default_color;
-            include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
-            ?>
+            <div class="tab-content" id="review-design-<?= $row->microsite_block_id ?>-tabContent">
+                
+                <!-- Colors Sub-tab -->
+                <div class="tab-pane fade show active" id="review-design-<?= $row->microsite_block_id ?>-colors" role="tabpanel" aria-labelledby="review-design-<?= $row->microsite_block_id ?>-colors-tab">
+                    
+                    <h6 class="text-muted mb-3"><i class="fas fa-fw fa-palette fa-sm mr-1"></i> Review Colors</h6>
+                    
+                    <!-- Title Color -->
+                    <?php
+                    $block_id = $row->microsite_block_id;
+                    $field_name = 'title_color';
+                    $label = 'Title Color';
+                    $icon = 'fas fa-paint-brush';
+                    $default_color = '#333333';
+                    $current_color = $row->settings->title_color ?? $default_color;
+                    $include_opacity = true;
+                    include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
+                    ?>
 
-            <!-- Author Name Color -->
-            <?php
-            $field_name = 'author_name_color';
-            $label = l('microsite_review.author_name_color');
-            $default_color = '#333333';
-            $current_color = $row->settings->author_name_color ?? $default_color;
-            include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
-            ?>
+                    <!-- Description Color -->
+                    <?php
+                    $field_name = 'description_color';
+                    $label = 'Description Color';
+                    $icon = 'fas fa-paint-brush';
+                    $default_color = '#666666';
+                    $current_color = $row->settings->description_color ?? $default_color;
+                    include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
+                    ?>
 
-            <!-- Author Description Color -->
-            <?php
-            $field_name = 'author_description_color';
-            $label = l('microsite_review.author_description_color');
-            $default_color = '#666666';
-            $current_color = $row->settings->author_description_color ?? $default_color;
-            include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
-            ?>
+                    <!-- Author Name Color -->
+                    <?php
+                    $field_name = 'author_name_color';
+                    $label = 'Author Name Color';
+                    $icon = 'fas fa-paint-brush';
+                    $default_color = '#333333';
+                    $current_color = $row->settings->author_name_color ?? $default_color;
+                    include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
+                    ?>
 
-            <!-- Stars Color -->
-            <?php
-            $field_name = 'stars_color';
-            $label = l('microsite_review.stars_color');
-            $icon = 'fas fa-star';
-            $default_color = '#ffc107';
-            $current_color = $row->settings->stars_color ?? $default_color;
-            include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
-            ?>
+                    <!-- Author Description Color -->
+                    <?php
+                    $field_name = 'author_description_color';
+                    $label = 'Author Description Color';
+                    $icon = 'fas fa-paint-brush';
+                    $default_color = '#666666';
+                    $current_color = $row->settings->author_description_color ?? $default_color;
+                    include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
+                    ?>
 
-            <hr class="my-4">
+                    <!-- Stars Color -->
+                    <?php
+                    $field_name = 'stars_color';
+                    $label = 'Stars Color';
+                    $icon = 'fas fa-star';
+                    $default_color = '#ffc107';
+                    $current_color = $row->settings->stars_color ?? $default_color;
+                    include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
+                    ?>
 
-            <!-- Standard Styling Components -->
-            <?php
-            // Set up variables for components
-            $block_id = $row->microsite_block_id;
-            $settings = $row->settings;
-            
-            // Include reusable styling components
-            $include_alignment = true;
-            $text_color_field = 'text_color'; // For general text if needed
-            include THEME_PATH . 'views/partials/microsite_block_components/text_styling.php';
-            
-            // Background settings
-            include THEME_PATH . 'views/partials/microsite_block_components/background_settings.php';
-            
-            // Border and shadow settings
-            include THEME_PATH . 'views/partials/microsite_block_components/border_settings.php';
-            include THEME_PATH . 'views/partials/microsite_block_components/shadow_settings.php';
-            
-            // Animation effects
-            include THEME_PATH . 'views/partials/microsite_block_components/animation_settings.php';
-            ?>
+                </div>
+
+                <!-- Layout Sub-tab -->
+                <div class="tab-pane fade" id="review-design-<?= $row->microsite_block_id ?>-layout" role="tabpanel" aria-labelledby="review-design-<?= $row->microsite_block_id ?>-layout-tab">
+                    
+                    <!-- Text Alignment -->
+                    <div class="form-group">
+                        <label for="<?= 'block_text_alignment_' . $row->microsite_block_id ?>"><i class="fas fa-fw fa-align-center fa-sm text-muted mr-1"></i> <?= l('microsite_link.text_alignment') ?? 'Text Alignment' ?></label>
+                        <div class="row btn-group-toggle" data-toggle="buttons">
+                            <?php foreach(['center', 'justify', 'left', 'right'] as $text_alignment): ?>
+                                <div class="col-6">
+                                    <label class="btn btn-light btn-block text-truncate <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'active' : '' ?>">
+                                        <input type="radio" name="text_alignment" value="<?= $text_alignment ?>" class="custom-control-input" <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'checked="checked"' : '' ?> />
+                                        <i class="fas fa-fw fa-align-<?= $text_alignment ?> fa-sm mr-1"></i> <?= ucfirst($text_alignment) ?>
+                                    </label>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Background Sub-tab -->
+                <div class="tab-pane fade" id="review-design-<?= $row->microsite_block_id ?>-background" role="tabpanel" aria-labelledby="review-design-<?= $row->microsite_block_id ?>-background-tab">
+                    <?php
+                    // Set up variables for background component
+                    $block_id = $row->microsite_block_id;
+                    $settings = $row->settings;
+                    $use_accordion = false; // Disable accordion when used in tabs
+                    include THEME_PATH . 'views/partials/microsite_block_components/background_settings.php';
+                    ?>
+                </div>
+
+                <!-- Border Sub-tab -->
+                <div class="tab-pane fade" id="review-design-<?= $row->microsite_block_id ?>-border" role="tabpanel" aria-labelledby="review-design-<?= $row->microsite_block_id ?>-border-tab">
+                    <?php
+                    // Set up variables for border component
+                    $block_id = $row->microsite_block_id;
+                    $settings = $row->settings;
+                    $use_accordion = false; // Disable accordion when used in tabs
+                    include THEME_PATH . 'views/partials/microsite_block_components/border_settings.php';
+                    ?>
+                </div>
+
+                <!-- Shadow Sub-tab -->
+                <div class="tab-pane fade" id="review-design-<?= $row->microsite_block_id ?>-shadow" role="tabpanel" aria-labelledby="review-design-<?= $row->microsite_block_id ?>-shadow-tab">
+                    <?php
+                    // Set up variables for shadow component
+                    $block_id = $row->microsite_block_id;
+                    $settings = $row->settings;
+                    $use_accordion = false; // Disable accordion when used in tabs
+                    include THEME_PATH . 'views/partials/microsite_block_components/shadow_settings.php';
+                    ?>
+                </div>
+
+                <!-- Animation Sub-tab -->
+                <div class="tab-pane fade" id="review-design-<?= $row->microsite_block_id ?>-animation" role="tabpanel" aria-labelledby="review-design-<?= $row->microsite_block_id ?>-animation-tab">
+                    <?php
+                    // Set up variables for animation component
+                    $block_id = $row->microsite_block_id;
+                    $settings = $row->settings;
+                    $use_accordion = false; // Disable accordion when used in tabs
+                    include THEME_PATH . 'views/partials/microsite_block_components/animation_settings.php';
+                    ?>
+                </div>
+
+            </div>
 
         </div>
 
@@ -701,6 +799,217 @@ document.querySelectorAll('[data-add="review_item"]').forEach(function(element) 
 });
 
 review_item_remove_initiator();
+
+// Real-time canvas update functions for review blocks
+window.updateCanvasColors = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get color values from the hidden inputs created by Pickr color picker
+            const titleColor = $(`input[name="title_color"]`).val() || '#333333';
+            const descriptionColor = $(`input[name="description_color"]`).val() || '#666666';
+            const authorNameColor = $(`input[name="author_name_color"]`).val() || '#333333';
+            const authorDescColor = $(`input[name="author_description_color"]`).val() || '#666666';
+            const starsColor = $(`input[name="stars_color"]`).val() || '#ffc107';
+            
+            // Update review title colors
+            microsite_link.find('.review-title, .review-title h1, .review-title h2, .review-title h3, .review-title h4, .review-title h5, .review-title h6').css('color', titleColor);
+            
+            // Update review description colors
+            microsite_link.find('.review-description, .review-content').css('color', descriptionColor);
+            
+            // Update author name colors
+            microsite_link.find('.review-author-name, .author-name').css('color', authorNameColor);
+            
+            // Update author description colors
+            microsite_link.find('.review-author-description, .author-description').css('color', authorDescColor);
+            
+            // Update stars colors
+            microsite_link.find('.review-stars .fas.fa-star, .stars .fas.fa-star').css('color', starsColor);
+        }
+    }
+};
+
+window.updateCanvasAnimation = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get animation values from the current form inputs
+            const animation = $(`select[name="animation"]`).val() || 'false';
+            const runs = $(`select[name="animation_runs"]`).val() || 'repeat-1';
+            const delay = $(`input[name="animation_delay"]`).val() || 0;
+            
+            // Find the review container element
+            let element = microsite_link.find('.review-slider, .review-container');
+            if (!element.length) {
+                element = microsite_link.find('.card');
+            }
+            if (!element.length) {
+                element = microsite_link; // fallback to the block itself
+            }
+            
+            if (element.length) {
+                // Remove all existing animate.css classes
+                const animateClasses = [
+                    'animate__animated', 'animate__bounce', 'animate__flash', 'animate__pulse', 
+                    'animate__rubberBand', 'animate__shakeX', 'animate__shakeY', 'animate__headShake',
+                    'animate__swing', 'animate__tada', 'animate__wobble', 'animate__jello',
+                    'animate__heartBeat', 'animate__backInDown', 'animate__backInLeft',
+                    'animate__backInRight', 'animate__backInUp', 'animate__bounceIn',
+                    'animate__bounceInDown', 'animate__bounceInLeft', 'animate__bounceInRight',
+                    'animate__bounceInUp', 'animate__fadeIn', 'animate__fadeInDown',
+                    'animate__fadeInDownBig', 'animate__fadeInLeft', 'animate__fadeInLeftBig',
+                    'animate__fadeInRight', 'animate__fadeInRightBig', 'animate__fadeInUp',
+                    'animate__fadeInUpBig', 'animate__fadeInTopLeft', 'animate__fadeInTopRight',
+                    'animate__fadeInBottomLeft', 'animate__fadeInBottomRight', 'animate__flip',
+                    'animate__flipInX', 'animate__flipInY', 'animate__lightSpeedIn',
+                    'animate__lightSpeedInRight', 'animate__lightSpeedInLeft', 'animate__rotateIn',
+                    'animate__rotateInDownLeft', 'animate__rotateInDownRight', 'animate__rotateInUpLeft',
+                    'animate__rotateInUpRight', 'animate__jackInTheBox', 'animate__rollIn',
+                    'animate__zoomIn', 'animate__zoomInDown', 'animate__zoomInLeft',
+                    'animate__zoomInRight', 'animate__zoomInUp', 'animate__slideInDown',
+                    'animate__slideInLeft', 'animate__slideInRight', 'animate__slideInUp',
+                    'animate__repeat-1', 'animate__repeat-2', 'animate__repeat-3', 'animate__infinite'
+                ];
+                
+                element.removeClass(animateClasses.join(' '));
+                
+                if (animation !== 'false' && animation !== '') {
+                    // Add new animation classes
+                    element.addClass('animate__animated');
+                    element.addClass(`animate__${animation}`);
+                    
+                    // Add repeat class
+                    if (runs && runs !== 'repeat-1') {
+                        element.addClass(`animate__${runs}`);
+                    }
+                    
+                    // Apply delay
+                    const delayMs = parseInt(delay) || 0;
+                    element.css('animation-delay', `${delayMs}ms`);
+                    
+                    // Force animation restart by triggering reflow
+                    element[0].offsetHeight; // trigger reflow
+                    
+                    // Remove and re-add animated class to restart animation
+                    setTimeout(() => {
+                        element.removeClass('animate__animated');
+                        element[0].offsetHeight; // trigger reflow
+                        setTimeout(() => {
+                            element.addClass('animate__animated');
+                        }, 50);
+                    }, 50);
+                }
+            }
+        }
+    }
+};
+
+window.updateCanvasShadow = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get shadow values from form inputs
+            const shadowX = $(`input[name="border_shadow_offset_x"]`).val() || 0;
+            const shadowY = $(`input[name="border_shadow_offset_y"]`).val() || 0;
+            const shadowBlur = $(`input[name="border_shadow_blur"]`).val() || 0;
+            const shadowSpread = $(`input[name="border_shadow_spread"]`).val() || 0;
+            const shadowColor = $(`input[name="border_shadow_color"]`).val() || '#00000010';
+            
+            // Apply shadow to review container
+            let element = microsite_link.find('.review-slider, .review-container');
+            if (!element.length) {
+                element = microsite_link.find('.card');
+            }
+            if (!element.length) {
+                element = microsite_link;
+            }
+            
+            if (element.length) {
+                if (parseInt(shadowBlur) > 0) {
+                    const boxShadow = `${shadowX}px ${shadowY}px ${shadowBlur}px ${shadowSpread}px ${shadowColor}`;
+                    element.css('box-shadow', boxShadow + ' !important');
+                } else {
+                    element.css('box-shadow', 'none');
+                }
+            }
+        }
+    }
+};
+
+window.updateCanvasBackground = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get background color from form input
+            const backgroundColor = $(`input[name="background_color"]`).val() || '#ffffff';
+            
+            // Apply background color to review container
+            let element = microsite_link.find('.review-slider, .review-container');
+            if (!element.length) {
+                element = microsite_link.find('.card');
+            }
+            if (!element.length) {
+                element = microsite_link;
+            }
+            
+            if (element.length) {
+                element.css('background-color', backgroundColor);
+            }
+        }
+    }
+};
+
+window.updateCanvasBorder = function(blockId) {
+    if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
+        const iframe = $('#microsite_preview_iframe');
+        const iframeDoc = iframe.contents();
+        const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
+        
+        if (microsite_link.length) {
+            // Get border values from form inputs
+            const borderWidth = $(`input[name="border_width"]`).val() || 0;
+            const borderColor = $(`input[name="border_color"]`).val() || '#ffffff';
+            const borderStyle = $(`select[name="border_style"]`).val() || 'solid';
+            const borderRadius = $(`input[name="border_radius"]`).val() || 0;
+            
+            // Apply border styling to review container
+            let element = microsite_link.find('.review-slider, .review-container');
+            if (!element.length) {
+                element = microsite_link.find('.card');
+            }
+            if (!element.length) {
+                element = microsite_link;
+            }
+            
+            if (element.length) {
+                if (parseInt(borderWidth) > 0) {
+                    element.css('border', `${borderWidth}px ${borderStyle} ${borderColor} !important`);
+                } else {
+                    element.css('border', 'none');
+                }
+                
+                if (parseInt(borderRadius) > 0) {
+                    element.css('border-radius', `${borderRadius}px !important`);
+                } else {
+                    element.css('border-radius', '0px');
+                }
+            }
+        }
+    }
+};
 </script>
 
 <style>

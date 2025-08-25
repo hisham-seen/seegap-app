@@ -69,7 +69,7 @@ class AccordionBlock extends BaseBlockHandler {
             /* Border */
             'border_width' => (int) ($_POST['border_width'] ?? 0),
             'border_color' => $_POST['border_color'],
-            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_radius' => (is_numeric($_POST['border_radius']) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 0,
             'border_style' => $_POST['border_style'] ?? 'solid',
             
             /* Shadow */
@@ -159,7 +159,7 @@ class AccordionBlock extends BaseBlockHandler {
             /* Border */
             'border_width' => (int) ($_POST['border_width'] ?? 0),
             'border_color' => $_POST['border_color'],
-            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_radius' => (is_numeric($_POST['border_radius']) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 0,
             'border_style' => $_POST['border_style'] ?? 'solid',
             
             /* Shadow */

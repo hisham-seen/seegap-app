@@ -377,7 +377,7 @@
             processData: false,
             contentType: false,
             cache: false,
-            url: `${url}link-ajax`,
+            url: `${url}ajax`,
             data: data,
             dataType: 'json',
             success: (data) => {

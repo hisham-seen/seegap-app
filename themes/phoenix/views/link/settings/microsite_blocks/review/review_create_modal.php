@@ -28,25 +28,25 @@
 
                     <div class="form-group">
                         <label for="review_title"><i class="fas fa-fw fa-signature fa-sm text-muted mr-1"></i> First Review Title</label>
-                        <input id="review_title" type="text" name="title" class="form-control" placeholder="Great product!" maxlength="128" />
+                        <input id="review_title" type="text" name="review_title[0]" class="form-control" placeholder="Great product!" maxlength="128" />
                         <small class="form-text text-muted">Optional: Add a title for this review</small>
                     </div>
 
                     <div class="form-group">
                         <label for="review_description"><i class="fas fa-fw fa-pen fa-sm text-muted mr-1"></i> Review Description</label>
-                        <textarea id="review_description" name="description" class="form-control" rows="3" placeholder="I really loved this product. It exceeded my expectations..." maxlength="1024"></textarea>
+                        <textarea id="review_description" name="review_description[0]" class="form-control" rows="3" placeholder="I really loved this product. It exceeded my expectations..." maxlength="1024"></textarea>
                         <small class="form-text text-muted">The main review content</small>
                     </div>
 
                     <div class="form-group">
                         <label for="review_author_name"><i class="fas fa-fw fa-user fa-sm text-muted mr-1"></i> <?= l('microsite_review.author_name') ?></label>
-                        <input id="review_author_name" type="text" name="author_name" class="form-control" placeholder="John Smith" maxlength="128" required="required" />
+                        <input id="review_author_name" type="text" name="review_author_name[0]" class="form-control" placeholder="John Smith" maxlength="128" required="required" />
                         <small class="form-text text-muted">Required: The reviewer's name</small>
                     </div>
 
                     <div class="form-group">
                         <label for="review_author_description"><i class="fas fa-fw fa-user-tag fa-sm text-muted mr-1"></i> <?= l('microsite_review.author_description') ?></label>
-                        <input id="review_author_description" type="text" name="author_description" class="form-control" placeholder="Verified Customer" maxlength="128" />
+                        <input id="review_author_description" type="text" name="review_author_description[0]" class="form-control" placeholder="Verified Customer" maxlength="128" />
                         <small class="form-text text-muted">Optional: Customer status or description</small>
                     </div>
 
@@ -58,14 +58,14 @@
                             <i class="fas fa-star star-input active" data-rating="3"></i>
                             <i class="fas fa-star star-input active" data-rating="4"></i>
                             <i class="fas fa-star star-input active" data-rating="5"></i>
-                            <input id="review_stars" type="hidden" name="stars" value="5" required="required" />
+                            <input id="review_stars" type="hidden" name="review_stars[0]" value="5" required="required" />
                         </div>
                         <small class="form-text text-muted">Click stars to set rating (1-5 stars)</small>
                     </div>
 
                     <div class="form-group">
                         <label for="review_image"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> Author Image</label>
-                        <input id="review_image" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']) ?>" class="form-control-file seegap-file-input" data-crop data-aspect-ratio="1" />
+                        <input id="review_image" type="file" name="review_image[0]" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']) ?>" class="form-control-file seegap-file-input" data-crop data-aspect-ratio="1" />
                         <small class="form-text text-muted">Optional: Upload the reviewer's photo. <?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['review']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
                     </div>
 

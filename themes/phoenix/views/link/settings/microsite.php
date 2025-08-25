@@ -18,7 +18,9 @@
                             <input type="hidden" name="request_type" value="update" />
                             <input type="hidden" name="type" value="microsite" />
                             <input type="hidden" name="link_id" value="<?= $data->link->link_id ?>" />
-                            <button type="submit" name="submit" class="btn btn-xs btn-success" data-is-ajax><i class="fas fa-fw fa-save fa-sm"></i> <?= l('global.save') ?></button>
+                            <button type="submit" name="submit" class="btn btn-xs btn-outline-success" data-is-ajax disabled id="canvas-save-btn">
+                                <i class="fas fa-fw fa-layer-group fa-sm"></i> <span class="canvas-save-text">Layout Saved</span>
+                            </button>
                         </form>
                         <button type="button" data-toggle="modal" data-target="#microsite_link_create_modal" class="btn btn-xs btn-primary">
                             <i class="fas fa-fw fa-plus fa-sm"></i>
@@ -166,8 +168,7 @@
     <div class="col-12 col-lg-4">
         <div class="d-flex justify-content-center mb-3">
             <div class="microsite-preview">
-                <div class="microsite-preview-iframe-container">
-                    <div id="microsite_preview_iframe_loading" class="microsite-preview-iframe-loading d-none"><div class="spinner-border bg-primary" role="status"></div></div>
+                <div class="microsite-preview-iframe-container position-relative">
                     <iframe id="microsite_preview_iframe" class="microsite-preview-iframe" src="<?= SITE_URL . $data->link->url . '?preview=' . md5($data->link->user_id) ?>"></iframe>
                 </div>
             </div>
@@ -176,9 +177,35 @@
 
     <!-- Right Column - Settings -->
     <div class="col-12 col-lg-4">
-        <div class="card mb-3">
+        <div class="card mb-3 shadow-sm">
             <div class="card-body p-2">
-                <h6 class="mb-1 d-flex align-items-center"><i class="fas fa-fw fa-wrench fa-xs mr-1"></i> <?= l('link.header.settings_tab') ?></h6>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h6 class="mb-0 d-flex align-items-center">
+                        <i class="fas fa-fw fa-wrench fa-sm text-muted mr-1"></i> 
+                        <span><?= l('link.header.settings_tab') ?></span>
+                    </h6>
+                </div>
+
+                <!-- Settings Navigation Tabs -->
+                <div class="microsite-block-tabs">
+                    <div class="nav nav-pills nav-fill nav-minimal mb-4" id="settings-tabs" role="tablist">
+                        <a class="nav-item nav-link active" id="settings-general-tab" data-toggle="pill" href="#settings-general" role="tab" aria-controls="settings-general" aria-selected="true" data-toggle="tooltip" title="General Settings">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                        <a class="nav-item nav-link" id="settings-theme-tab" data-toggle="pill" href="#settings-theme" role="tab" aria-controls="settings-theme" aria-selected="false" data-toggle="tooltip" title="Theme Settings">
+                            <i class="fas fa-palette"></i>
+                        </a>
+                        <a class="nav-item nav-link" id="settings-customization-tab" data-toggle="pill" href="#settings-customization" role="tab" aria-controls="settings-customization" aria-selected="false" data-toggle="tooltip" title="Design Settings">
+                            <i class="fas fa-paint-brush"></i>
+                        </a>
+                        <a class="nav-item nav-link" id="settings-features-tab" data-toggle="pill" href="#settings-features" role="tab" aria-controls="settings-features" aria-selected="false" data-toggle="tooltip" title="Features Settings">
+                            <i class="fas fa-star"></i>
+                        </a>
+                        <a class="nav-item nav-link" id="settings-advanced-tab" data-toggle="pill" href="#settings-advanced" role="tab" aria-controls="settings-advanced" aria-selected="false" data-toggle="tooltip" title="Advanced Settings">
+                            <i class="fas fa-code"></i>
+                        </a>
+                    </div>
+                </div>
 
                 <form id="update_microsite" name="update_microsite" action="" method="post" role="form" enctype="multipart/form-data">
                     <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
@@ -188,742 +215,49 @@
 
                     <div class="notification-container"></div>
 
-                    <div class="form-group mb-2">
-                        <label for="url" class="small mb-1"><i class="fas fa-fw fa-bolt fa-sm text-muted mr-1"></i> <?= l('link.settings.url') ?></label>
-                        <div class="input-group input-group-sm">
-                            <div class="input-group-prepend">
-                                <?php if(count($data->domains)): ?>
-                                    <select name="domain_id" class="appearance-none custom-select form-control input-group-text">
-                                        <?php if(settings()->links->main_domain_is_enabled || \SeeGap\Authentication::is_admin()): ?>
-                                            <option value="" <?= $data->link->domain ? 'selected="selected"' : null ?> data-full-url="<?= SITE_URL ?>"><?= remove_url_protocol_from_url(SITE_URL) ?></option>
-                                        <?php endif ?>
-
-                                        <?php foreach($data->domains as $row): ?>
-                                            <option value="<?= $row->domain_id ?>" <?= $data->link->domain && $row->domain_id == $data->link->domain->domain_id ? 'selected="selected"' : null ?>  data-full-url="<?= $row->url ?>" data-type="<?= $row->type ?>"><?= remove_url_protocol_from_url($row->url) ?></option>
-                                        <?php endforeach ?>
-                                    </select>
-                                <?php else: ?>
-                                    <span class="input-group-text"><?= remove_url_protocol_from_url(SITE_URL) ?></span>
-                                <?php endif ?>
-                            </div>
-                            <input
-                                    id="url"
-                                    type="text"
-                                    class="form-control form-control-sm"
-                                    name="url"
-                                    placeholder="<?= l('global.url_slug_placeholder') ?>"
-                                    value="<?= $data->link->url ?>"
-                                    maxlength="256"
-                                    onchange="update_this_value(this, get_slug)"
-                                    onkeyup="update_this_value(this, get_slug)"
-                                <?= !$this->user->plan_settings->custom_url ? 'readonly="readonly"' : null ?>
-                                <?= $this->user->plan_settings->custom_url ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>
-                            />
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="settings-tabContent">
+                        <!-- General Tab -->
+                        <div class="tab-pane fade show active" id="settings-general" role="tabpanel" aria-labelledby="settings-general-tab">
+                            <?php include THEME_PATH . 'views/partials/microsite_settings/general_settings.php'; ?>
                         </div>
-                        <small class="form-text text-muted"><?= l('link.settings.url_help') ?></small>
+
+                        <!-- Theme Tab -->
+                        <div class="tab-pane fade" id="settings-theme" role="tabpanel" aria-labelledby="settings-theme-tab">
+                            <?php include THEME_PATH . 'views/partials/microsite_settings/theme_settings.php'; ?>
+                        </div>
+
+                        <!-- Customization Tab -->
+                        <div class="tab-pane fade" id="settings-customization" role="tabpanel" aria-labelledby="settings-customization-tab">
+                            <?php include THEME_PATH . 'views/partials/microsite_settings/customization_settings.php'; ?>
+                        </div>
+
+                        <!-- Features Tab -->
+                        <div class="tab-pane fade" id="settings-features" role="tabpanel" aria-labelledby="settings-features-tab">
+                            <?php include THEME_PATH . 'views/partials/microsite_settings/features_settings.php'; ?>
+                        </div>
+
+                        <!-- Advanced Tab -->
+                        <div class="tab-pane fade" id="settings-advanced" role="tabpanel" aria-labelledby="settings-advanced-tab">
+                            <?php include THEME_PATH . 'views/partials/microsite_settings/security_seo_settings.php'; ?>
+                        </div>
                     </div>
 
-                    <?php if(count($data->domains)): ?>
-                        <div id="is_main_link_wrapper" class="form-group custom-control custom-switch mb-2">
-                            <input id="is_main_link" name="is_main_link" type="checkbox" class="custom-control-input" <?= $data->link->domain_id && $data->domains[$data->link->domain_id]->link_id == $data->link->link_id ? 'checked="checked"' : null ?>>
-                            <label class="custom-control-label" for="is_main_link"><?= l('link.settings.is_main_link') ?></label>
-                            <small class="form-text text-muted"><?= l('link.settings.is_main_link_help') ?></small>
-                        </div>
-                    <?php endif ?>
-
-                    <?php if(settings()->links->microsites_themes_is_enabled): ?>
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#theme_container" aria-expanded="false" aria-controls="theme_container">
-                                <i class="fas fa-fw fa-palette fa-xs mr-1"></i> <?= l('link.settings.theme_header') ?>
-                            </button>
-
-                            <div class="collapse" id="theme_container">
-                            <div class="form-group mb-2">
-                                <label class="small mb-1"><i class="fas fa-fw fa-palette fa-sm text-muted mr-1"></i> <?= l('link.settings.microsite_theme_id') ?></label>
-
-                                <div class="position-relative">
-                                    <?php $microsite_socials = require APP_PATH . 'includes/microsite_socials.php'; ?>
-
-                                    <div class="microsite-themes-wrapper-left" style="opacity: 0"></div>
-                                    <div class="microsite-themes-wrapper-right" style="opacity: 1"></div>
-
-                                    <div id="microsites_themes" class="microsite-themes-wrapper d-flex" style="overflow-x: scroll; width: 100%;">
-                                        <?php foreach($data->microsites_themes as $key => $theme): ?>
-                                            <?php $link_style = \SeeGap\Link::get_processed_link_style($theme->settings->microsite_block) ?>
-
-                                            <label for="settings_microsite_theme_id_<?= $key ?>" class="m-0 col-6 p-2" <?= in_array($theme->microsite_theme_id, $this->user->plan_settings->microsites_themes ?? []) ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                                <input type="radio" name="microsite_theme_id" value="<?= $key ?>" id="settings_microsite_theme_id_<?= $key ?>" class="d-none" <?= $data->link->microsite_theme_id == $key ? 'checked="checked"' : null ?> />
-                                                <div class="link-microsite-theme card h-100 <?= in_array($theme->microsite_theme_id, $this->user->plan_settings->microsites_themes ?? []) ? null : 'container-disabled' ?>" style="<?= \SeeGap\Link::get_processed_background_style($theme->settings->microsite); ?>">
-                                                    <div class="card-body flex-column d-flex justify-content-center align-items-center text-truncate">
-
-                                                        <div class="w-100" style="cursor: not-allowed;pointer-events: none;">
-
-                                                            <div class="text-center text-truncate mb-1">
-                                                                <span style="color: <?= $theme->settings->microsite_block_heading->text_color ?? '#ffffff' ?>"><?= $this->link->url ?></span>
-                                                            </div>
-
-                                                            <div class="text-center text-truncate small mb-2">
-                                                                <span style="color: <?= $theme->settings->microsite_block_paragraph->text_color ?? '#ffffff' ?>"><?= l('link.settings.microsite_theme_sample_description') ?></span>
-                                                            </div>
-
-                                                            <button type="button" class="btn btn-block btn-sm btn-primary link-btn <?= 'link-btn-' . $theme->settings->microsite_block->border_radius ?>" style="<?= $link_style['style'] ?>">
-                                                                <small><?= $theme->name ?></small>
-                                                            </button>
-
-                                                            <button type="button" class="btn btn-block btn-sm btn-primary link-btn <?= 'link-btn-' . $theme->settings->microsite_block->border_radius ?>" style="<?= $link_style['style'] ?>">
-                                                                <small><?= $theme->name ?></small>
-                                                            </button>
-
-                                                            <button type="button" class="btn btn-block btn-sm btn-primary link-btn <?= 'link-btn-' . $theme->settings->microsite_block->border_radius ?>" style="<?= $link_style['style'] ?>">
-                                                                <small><?= $theme->name ?></small>
-                                                            </button>
-
-                                                            <div class="d-flex flex-wrap justify-content-center mt-2">
-                                                                <?php foreach(array_slice($microsite_socials, 0, 3) as $key => $value): ?>
-                                                                    <?php if($value): ?>
-                                                                        <div class="my-1 mx-1 <?= 'link-btn-' . ($theme->settings->microsite_block_socials->border_radius ?? 'rounded') ?>" style="background: <?= $theme->settings->microsite_block_socials->background_color ?: '#FFFFFF00' ?>; padding: .05rem .3rem;">
-                                                                            <a href="#">
-                                                                                <i class="<?= $microsite_socials[$key]['icon'] ?> fa-xs fa-fw" style="color: <?= $theme->settings->microsite_block_socials->color ?>" data-color></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    <?php endif ?>
-                                                                <?php endforeach ?>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </label><br />
-
-                                        <?php endforeach ?>
-
-                                        <label for="settings_microsite_theme_id_null" class="m-0 col-6 p-2">
-                                            <input type="radio" name="microsite_theme_id" value="" id="settings_microsite_theme_id_null" class="d-none" <?= !$data->link->microsite_theme_id ? 'checked="checked"' : null ?> />
-                                            <div class="link-microsite-theme link-microsite-theme-custom card h-100">
-                                                <div class="card-body d-flex justify-content-center align-items-center">
-                                                    <?= l('link.settings.microsite_theme_id_null') ?>
-                                                </div>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif ?>
-
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#customizations_container" aria-expanded="false" aria-controls="customizations_container">
-                                <i class="fas fa-fw fa-paint-brush fa-xs mr-1"></i> <?= l('link.settings.customization_header') ?>
-                            </button>
-
-                            <div class="collapse" id="customizations_container">
-                        <div class="form-group mb-2">
-                            <label for="settings_background_type" class="small mb-1"><i class="fas fa-fw fa-fill fa-sm text-muted mr-1"></i> <?= l('link.settings.background_type') ?></label>
-                            <select id="settings_background_type" name="background_type" class="custom-select custom-select-sm">
-                                <?php foreach($microsite_backgrounds as $key => $value): ?>
-                                    <option value="<?= $key ?>" <?= $data->link->settings->background_type == $key ? 'selected="selected"' : null?>><?= l('link.settings.background_type_' . $key) ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
-
-                        <div id="background_type_preset" class="row" style="margin-right: -7px; margin-left: -7px;">
-                            <?php foreach($microsite_backgrounds['preset'] as $key => $value): ?>
-                                <label for="settings_background_type_preset_<?= $key ?>" class="m-0 col-3 p-2">
-                                    <input type="radio" name="background" value="<?= $key ?>" id="settings_background_type_preset_<?= $key ?>" class="d-none" <?= $data->link->settings->background_type == 'preset' && $data->link->settings->background == $key ? 'checked="checked"' : null ?>/>
-                                    <div class="link-background-type-preset" style="<?= $value ?>"></div>
-                                </label>
-                            <?php endforeach ?>
-                        </div>
-
-                        <div id="background_type_preset_abstract" class="row" style="margin-right: -7px; margin-left: -7px;">
-                            <?php foreach($microsite_backgrounds['preset_abstract'] as $key => $value): ?>
-                                <label for="settings_background_type_preset_abstract_<?= $key ?>" class="m-0 col-3 p-2">
-                                    <input type="radio" name="background" value="<?= $key ?>" id="settings_background_type_preset_abstract_<?= $key ?>" class="d-none" <?= $data->link->settings->background_type == 'preset_abstract' && $data->link->settings->background == $key ? 'checked="checked"' : null ?>/>
-                                    <div class="link-background-type-preset" style="<?= $value ?>"></div>
-                                </label>
-                            <?php endforeach ?>
-                        </div>
-
-                        <div id="background_type_gradient">
-                            <div class="form-group mb-2">
-                                <label for="settings_background_type_gradient_color_one" class="small mb-1"><?= l('link.settings.background_type_gradient_color_one') ?></label>
-                                <input type="hidden" id="settings_background_type_gradient_color_one" name="background_color_one" class="form-control form-control-sm" value="<?= $data->link->settings->background_color_one ?? '#000000' ?>" />
-                                <div id="settings_background_type_gradient_color_one_pickr"></div>
-                            </div>
-
-                            <div class="form-group mb-2">
-                                <label for="settings_background_type_gradient_color_two" class="small mb-1"><?= l('link.settings.background_type_gradient_color_two') ?></label>
-                                <input type="hidden" id="settings_background_type_gradient_color_two" name="background_color_two" class="form-control form-control-sm" value="<?= $data->link->settings->background_color_two ?? '#000000' ?>" />
-                                <div id="settings_background_type_gradient_color_two_pickr"></div>
-                            </div>
-                        </div>
-
-                        <div id="background_type_color">
-                            <div class="form-group mb-2">
-                                <label for="settings_background_type_color" class="small mb-1"><?= l('link.settings.background_type_color') ?></label>
-                                <input type="hidden" id="settings_background_type_color" name="background" class="form-control form-control-sm" value="<?= is_string($data->link->settings->background) ? $data->link->settings->background : '#000000' ?>" />
-                                <div id="settings_background_type_color_pickr"></div>
-                            </div>
-                        </div>
-
-                        <div id="background_type_image" data-image-container="background">
-                            <div class="form-group mb-2">
-                                <div class="row">
-                                    <div class="col">
-                                        <input id="background_type_image_input" type="file" name="background" accept="<?= \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_background') ?>" class="form-control-file seegap-file-input" />
-                                    </div>
-
-                                    <?php if($data->link->settings->background_type == 'image' && is_string($data->link->settings->background) && !string_ends_with('.mp4', $data->link->settings->background)): ?>
-                                        <div class="col-3 d-flex justify-content-center align-items-center">
-                                            <a href="<?= \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" target="_blank" data-toggle="tooltip" title="<?= l('global.view') ?>" data-tooltip-hide-on-click>
-                                                <img id="background_type_image_preview" src="<?= \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" data-default-src="<?= \SeeGap\Uploads::get_full_url('backgrounds') . $data->link->settings->background ?>" class="seegap-file-input-preview rounded" loading="lazy" />
-                                            </a>
-                                        </div>
-                                    <?php endif ?>
-                                </div>
-                                <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_background')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->background_size_limit) ?></small>
-                            </div>
-                        </div>
-
-                                <div class="form-group mb-2">
-                                    <label for="background_attachment" class="small mb-1"><i class="fas fa-fw fa-print fa-sm text-muted mr-1"></i> <?= l('link.settings.background_attachment') ?></label>
-                                    <div class="row btn-group-toggle" data-toggle="buttons">
-                                        <?php foreach(['scroll', 'fixed'] as $background_attachment): ?>
-                                            <div class="col-6">
-                                                <label class="btn btn-light btn-block text-truncate <?= $data->link->settings->background_attachment == $background_attachment ? 'active"' : null?>">
-                                                    <input type="radio" name="background_attachment" value="<?= $background_attachment ?>" class="custom-control-input" <?= ($data->link->settings->background_attachment ?? null) == $background_attachment ? 'checked="checked"' : null?> />
-                                                    <?= l('link.settings.background_attachment.' . $background_attachment) ?>
-                                                </label>
-                                            </div>
-                                        <?php endforeach ?>
-                                    </div>
-                                </div>
-
-                                <div class="form-group mb-2" data-range-counter data-range-counter-suffix="px">
-                                    <label for="background_blur" class="small mb-1"><i class="fas fa-fw fa-low-vision fa-sm text-muted mr-1"></i> <?= l('link.settings.background_blur') ?></label>
-                                    <input id="background_blur" type="range"  min="0" max="30" class="form-control-range" name="background_blur" value="<?= $data->link->settings->background_blur ?? 0 ?>" />
-                                </div>
-
-                                <div class="form-group mb-2" data-range-counter data-range-counter-suffix="%">
-                                    <label for="background_brightness" class="small mb-1"><i class="fas fa-fw fa-sun fa-sm text-muted mr-1"></i> <?= l('link.settings.background_brightness') ?></label>
-                                    <input id="background_brightness" type="range"  min="0" max="150" class="form-control-range" name="background_brightness" value="<?= $data->link->settings->background_brightness ?? 100 ?>" />
-                                </div>
-
-                                <div class="form-group mb-2" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->favicon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->favicon_size_limit) ?>">
-                                    <label for="favicon" class="small mb-1"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.favicon') ?></label>
-                                    <?= include_view(THEME_PATH . 'views/partials/custom_file_image_input.php', ['uploads_file_key' => 'favicons', 'file_key' => 'favicon', 'already_existing_image' => $data->link->settings->favicon, 'image_container' => 'favicon', 'input_data' => 'data-crop data-aspect-ratio="1"']) ?>
-                                    <?= \SeeGap\Alerts::output_field_error('favicon') ?>
-                                    <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('favicons')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->favicon_size_limit) ?></small>
-                                </div>
-
-                                <div <?= $this->user->plan_settings->fonts ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->fonts ? null : 'container-disabled' ?>">
-                                        <?php $microsite_fonts = require APP_PATH . 'includes/microsite_fonts.php'; ?>
-                                        <?php foreach($microsite_fonts as $font_key => $font): ?>
-                                            <?php if($font['font_css_url']): ?>
-                                                <?php ob_start() ?>
-                                                <link href="<?= $font['font_css_url'] ?>" rel="stylesheet">
-                                                <?php \SeeGap\Event::add_content(ob_get_clean(), 'head') ?>
-                                            <?php endif ?>
-                                        <?php endforeach ?>
-
-                                        <div class="form-group">
-                                            <label for="settings_font"><i class="fas fa-fw fa-pen-nib fa-sm text-muted mr-1"></i> <?= l('link.settings.font') ?></label>
-                                            <div class="row btn-group-toggle" data-toggle="buttons">
-                                                <?php foreach($microsite_fonts as $font_key => $font): ?>
-                                                    <div class="col-6 col-lg-4 p-2 h-100">
-                                                        <label class="btn btn-light btn-block text-truncate mb-0 <?= ($data->link->settings->font ?? 'default') == $font_key ? 'active"' : null?>" style="font-family: <?= $font['font-family'] ?> !important;">
-                                                            <input type="radio" name="font" value="<?= $font_key ?>" class="custom-control-input" <?= ($data->link->settings->font ?? 'default') == $font_key ? 'checked="checked"' : null?> required="required" data-font-family="<?= $font['font-family'] ?>" data-font-css-url="<?= $font['font_css_url'] ?>" />
-                                                            <?= $font['name'] ?>
-                                                        </label>
-                                                    </div>
-                                                <?php endforeach ?>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="settings_font_size"><i class="fas fa-fw fa-font fa-sm text-muted mr-1"></i> <?= l('link.settings.font_size') ?></label>
-                                            <div class="input-group">
-                                                <input id="settings_font_size" type="number" min="14" max="22" name="font_size" class="form-control" value="<?= $data->link->settings->font_size ?>" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">px</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="settings_width"><i class="fas fa-fw fa-arrows-left-right fa-sm text-muted mr-1"></i> <?= l('link.settings.width') ?></label>
-                                            <div class="row btn-group-toggle" data-toggle="buttons">
-                                                <?php foreach(['6', '8', '10', '12'] as $key): ?>
-                                                    <div class="col-12 col-lg-4 p-2 h-100">
-                                                        <label class="btn btn-light btn-block text-truncate mb-0 <?= ($data->link->settings->width ?? '8') == $key ? 'active"' : null?>">
-                                                            <input type="radio" name="width" value="<?= $key ?>" class="custom-control-input" <?= ($data->link->settings->width ?? '8') == $key ? 'checked="checked"' : null?> required="required" />
-                                                            <?= l('link.settings.width.' . $key) ?>
-                                                        </label>
-                                                    </div>
-                                                <?php endforeach ?>
-                                            </div>
-                                            <small class="form-text text-muted"><?= l('link.settings.width_help') ?></small>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="settings_block_spacing"><i class="fas fa-fw fa-arrows-up-down fa-sm text-muted mr-1"></i> <?= l('link.settings.block_spacing') ?></label>
-                                            <div class="row btn-group-toggle" data-toggle="buttons">
-                                                <?php foreach(['1', '2', '3',] as $key): ?>
-                                                    <div class="col-12 col-lg-4 p-2 h-100">
-                                                        <label class="btn btn-light btn-block text-truncate mb-0 <?= ($data->link->settings->block_spacing ?? '2') == $key ? 'active"' : null?>">
-                                                            <input type="radio" name="block_spacing" value="<?= $key ?>" class="custom-control-input" <?= ($data->link->settings->block_spacing ?? '2') == $key ? 'checked="checked"' : null?> required="required" />
-                                                            <?= l('link.settings.block_spacing.' . $key) ?>
-                                                        </label>
-                                                    </div>
-                                                <?php endforeach ?>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="settings_hover_animation"><i class="fas fa-fw fa-arrow-pointer fa-sm text-muted mr-1"></i> <?= l('link.settings.hover_animation') ?></label>
-                                            <div class="row btn-group-toggle" data-toggle="buttons">
-                                                <div class="col-12 col-lg-4 p-2 h-100">
-                                                    <label class="btn btn-light btn-block text-truncate mb-0 <?= ($data->link->settings->hover_animation ?? 'smooth') == 'false' ? 'active"' : null?>">
-                                                        <input type="radio" name="hover_animation" value="false" class="custom-control-input" <?= ($data->link->settings->hover_animation ?? 'smooth') == 'false' ? 'checked="checked"' : null?> required="required" />
-                                                        <?= l('global.none') ?>
-                                                    </label>
-                                                </div>
-
-                                                <?php foreach(['smooth', 'instant',] as $key): ?>
-                                                    <div class="col-12 col-lg-4 p-2 h-100">
-                                                        <label class="btn btn-light btn-block text-truncate mb-0 <?= ($data->link->settings->hover_animation ?? 'smooth') == $key ? 'active"' : null?>">
-                                                            <input type="radio" name="hover_animation" value="<?= $key ?>" class="custom-control-input" <?= ($data->link->settings->hover_animation ?? 'smooth') == $key ? 'checked="checked"' : null?> required="required" />
-                                                            <?= l('link.settings.hover_animation.' . $key) ?>
-                                                        </label>
-                                                    </div>
-                                                <?php endforeach ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#verified_container" aria-expanded="false" aria-controls="verified_container">
-                                <i class="fas fa-fw fa-check-circle fa-xs mr-1"></i> <?= l('link.settings.verified_header') ?>
-                            </button>
-
-                            <div class="collapse" id="verified_container">
-                                <?php if(!$data->link->is_verified): ?>
-                                    <div class="alert alert-info">
-                                        <i class="fas fa-fw fa-info-circle mr-1"></i>
-                                        <?php if(settings()->email_notifications->contact && !empty(settings()->email_notifications->emails)): ?>
-                                            <?= sprintf(l('link.settings.verified_help'), '<a href="' . url('contact') . '" class="font-weight-bold" target="_blank">', '</a>') ?>
-                                        <?php else: ?>
-                                            <?= sprintf(l('link.settings.verified_help'), '', '') ?>
-                                        <?php endif ?>
-                                    </div>
-                                <?php endif ?>
-
-                                <div <?= $data->link->is_verified ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $data->link->is_verified ? null : 'container-disabled' ?>">
-
-                                        <div class="form-group">
-                                            <label for="settings_verified_location"><i class="fas fa-fw fa-check-circle fa-sm text-muted mr-1"></i> <?= l('link.settings.verified_location') ?></label>
-                                            <div class="row btn-group-toggle" data-toggle="buttons">
-                                                <div class="col-12 col-lg-4 p-2 h-100">
-                                                    <label class="btn btn-light btn-block text-truncate mb-0 <?= $data->link->settings->verified_location == '' ? 'active"' : null?>">
-                                                        <input type="radio" name="verified_location" value="" class="custom-control-input" <?= $data->link->settings->verified_location == 'false' ? 'checked="checked"' : null?> />
-                                                        <?= l('global.none') ?>
-                                                    </label>
-                                                </div>
-
-                                                <?php foreach(['top', 'bottom',] as $key): ?>
-                                                    <div class="col-12 col-lg-4 p-2 h-100">
-                                                        <label class="btn btn-light btn-block text-truncate mb-0 <?= $data->link->settings->verified_location == $key ? 'active"' : null?>">
-                                                            <input type="radio" name="verified_location" value="<?= $key ?>" class="custom-control-input" <?= $data->link->settings->verified_location == $key ? 'checked="checked"' : null?> />
-                                                            <?= l('link.settings.verified_location.' . $key) ?>
-                                                        </label>
-                                                    </div>
-                                                <?php endforeach ?>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#branding_container" aria-expanded="false" aria-controls="branding_container">
-                                <i class="fas fa-fw fa-random fa-xs mr-1"></i> <?= l('link.settings.branding_header') ?>
-                            </button>
-
-                            <div class="collapse" id="branding_container">
-                                <div <?= $this->user->plan_settings->removable_branding ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->removable_branding ? null : 'container-disabled' ?>">
-                                        <div class="form-group custom-control custom-switch">
-                                            <input
-                                                    type="checkbox"
-                                                    class="custom-control-input"
-                                                    id="display_branding"
-                                                    name="display_branding"
-                                                <?= !$this->user->plan_settings->removable_branding ? 'disabled="disabled"': null ?>
-                                                <?= $data->link->settings->display_branding ? 'checked="checked"' : null ?>
-                                            >
-                                            <label class="custom-control-label" for="display_branding"><?= l('link.settings.display_branding') ?></label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div <?= $this->user->plan_settings->custom_branding ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->custom_branding ? null : 'container-disabled' ?>">
-                                        <div class="form-group">
-                                            <label for="branding_name"><i class="fas fa-fw fa-random fa-sm text-muted mr-1"></i> <?= l('link.settings.branding.name') ?></label>
-                                            <input id="branding_name" type="text" class="form-control" name="branding_name" value="<?= $data->link->settings->branding->name ?? '' ?>" maxlength="128" />
-                                            <small class="form-text text-muted"><?= l('link.settings.branding.name_help') ?></small>
-                                        </div>
-
-                                        <div id="branding_url_text_color" class="<?= $data->link->settings->branding->name ? null : 'container-disabled' ?>">
-                                            <div class="form-group">
-                                                <label for="branding_url"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('link.settings.branding.url') ?></label>
-                                                <input id="branding_url" type="text" class="form-control" name="branding_url" value="<?= $data->link->settings->branding->url ?? '' ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="settings_text_color"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('link.settings.text_color') ?></label>
-                                                <input type="hidden" id="settings_text_color" name="text_color" class="form-control" value="<?= $data->link->settings->text_color ?>" required="required" />
-                                                <div id="settings_text_color_pickr"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <?php if(settings()->links->pixels_is_enabled): ?>
-                                <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#pixels_container" aria-expanded="false" aria-controls="pixels_container">
-                                    <i class="fas fa-fw fa-adjust fa-xs mr-1"></i> <?= l('link.settings.pixels_header') ?>
-                                </button>
-
-                                <div class="collapse" id="pixels_container">
-                                    <div class="form-group">
-                                        <div class="d-flex flex-column flex-xl-row justify-content-between">
-                                            <label><i class="fas fa-fw fa-sm fa-adjust text-muted mr-1"></i> <?= l('link.settings.pixels_ids') ?></label>
-                                            <a href="<?= url('pixels') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('pixels.create') ?></a>
-                                        </div>
-
-                                        <div class="row">
-                                            <?php $available_pixels = require APP_PATH . 'includes/pixels.php'; ?>
-                                            <?php foreach($data->pixels as $pixel): ?>
-                                                <div class="col-12 col-lg-6">
-                                                    <div class="custom-control custom-checkbox my-2">
-                                                        <input id="pixel_id_<?= $pixel->pixel_id ?>" name="pixels_ids[]" value="<?= $pixel->pixel_id ?>" type="checkbox" class="custom-control-input" <?= in_array($pixel->pixel_id, $data->link->pixels_ids) ? 'checked="checked"' : null ?>>
-                                                        <label class="custom-control-label d-flex align-items-center" for="pixel_id_<?= $pixel->pixel_id ?>">
-                                                            <span class="text-truncate" title="<?= $pixel->name ?>"><?= $pixel->name ?></span>
-                                                            <small class="badge badge-light ml-1" data-toggle="tooltip" title="<?= $available_pixels[$pixel->type]['name'] ?>">
-                                                                <i class="<?= $available_pixels[$pixel->type]['icon'] ?> fa-fw fa-sm" style="color: <?= $available_pixels[$pixel->type]['color'] ?>"></i>
-                                                            </small>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif ?>
-
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#utm_container" aria-expanded="false" aria-controls="utm_container">
-                                <i class="fas fa-fw fa-keyboard fa-xs mr-1"></i> <?= l('link.settings.utm_header') ?>
-                            </button>
-
-                            <div class="collapse" id="utm_container">
-                                <div <?= $this->user->plan_settings->utm ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->utm ? null : 'container-disabled' ?>">
-                                        <div class="form-group mb-2">
-                                            <label for="utm_source" class="small mb-1"><i class="fas fa-fw fa-sitemap fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_source') ?></label>
-                                            <input id="utm_source" type="text" class="form-control" name="utm_source" value="<?= $data->link->settings->utm->source ?? '' ?>" maxlength="128" placeholder="<?= l('link.settings.utm_source_placeholder') ?>" />
-                                        </div>
-
-                                        <div class="form-group mb-2">
-                                            <label for="utm_medium" class="small mb-1"><i class="fas fa-fw fa-inbox fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_medium') ?></label>
-                                            <input id="utm_medium" type="text" class="form-control" name="utm_medium" value="<?= $data->link->settings->utm->medium ?? '' ?>" maxlength="128" placeholder="<?= l('link.settings.utm_medium_placeholder') ?>" />
-                                        </div>
-
-                                        <div class="form-group mb-2">
-                                            <label for="utm_campaign" class="small mb-1"><i class="fas fa-fw fa-bullhorn fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_campaign') ?></label>
-                                            <input id="utm_campaign" type="text" class="form-control" name="utm_campaign" value="<?= l('link.settings.utm_campaign_placeholder_automatic') ?>" maxlength="128" readonly="readonly" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="utm_preview"><i class="fas fa-fw fa-eye fa-sm text-muted mr-1"></i> <?= l('link.settings.utm_preview') ?></label>
-                                            <input id="utm_preview" type="text" class="form-control-plaintext" name="utm_preview" readonly="readonly" />
-                                            <small class="form-text text-muted"><?= l('link.settings.utm_preview_help') ?></small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#protection_container" aria-expanded="false" aria-controls="protection_container">
-                                <i class="fas fa-fw fa-user-shield fa-xs mr-1"></i> <?= l('link.settings.protection_header') ?>
-                            </button>
-
-                            <div class="collapse" id="protection_container">
-
-                                <div <?= $this->user->plan_settings->password ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->password ? null : 'container-disabled' ?>">
-                                        <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
-                                            <label for="qweasdzxc"><i class="fas fa-fw fa-key fa-sm text-muted mr-1"></i> <?= l('global.password') ?></label>
-                                            <input id="qweasdzxc" type="password" class="form-control" name="qweasdzxc" value="<?= $data->link->settings->password ?>" autocomplete="new-password" <?= !$this->user->plan_settings->password ? 'disabled="disabled"': null ?> />
-                                            <small class="form-text text-muted"><?= l('link.settings.password_help') ?></small>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div <?= $this->user->plan_settings->sensitive_content ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->sensitive_content ? null : 'container-disabled' ?>">
-                                        <div class="form-group custom-control custom-switch">
-                                            <input
-                                                    type="checkbox"
-                                                    class="custom-control-input"
-                                                    id="sensitive_content"
-                                                    name="sensitive_content"
-                                                <?= !$this->user->plan_settings->sensitive_content ? 'disabled="disabled"': null ?>
-                                                <?= $data->link->settings->sensitive_content ? 'checked="checked"' : null ?>
-                                            >
-                                            <label class="custom-control-label" for="sensitive_content"><?= l('link.settings.sensitive_content') ?></label>
-                                            <small class="form-text text-muted"><?= l('link.settings.sensitive_content_help') ?></small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#seo_container" aria-expanded="false" aria-controls="seo_container">
-                                <i class="fas fa-fw fa-search-plus fa-xs mr-1"></i> <?= l('link.settings.seo_header') ?>
-                            </button>
-
-                            <div class="collapse" id="seo_container">
-                                <div <?= $this->user->plan_settings->seo ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->seo ? null : 'container-disabled' ?>">
-                                        <div class="form-group custom-control custom-switch">
-                                            <input id="seo_block" name="seo_block" type="checkbox" class="custom-control-input" <?= $data->link->settings->seo->block ? 'checked="checked"' : null ?>>
-                                            <label class="custom-control-label" for="seo_block"><?= l('link.settings.seo_block') ?></label>
-                                            <small class="form-text text-muted"><?= l('link.settings.seo_block_help') ?></small>
-                                        </div>
-
-                                        <div class="form-group mb-2">
-                                            <label for="seo_title" class="small mb-1"><i class="fas fa-fw fa-heading fa-sm text-muted mr-1"></i> <?= l('link.settings.seo_title') ?></label>
-                                            <input id="seo_title" type="text" class="form-control" name="seo_title" value="<?= $data->link->settings->seo->title ?? '' ?>" maxlength="70" />
-                                            <small class="form-text text-muted"><?= l('link.settings.seo_title_help') ?></small>
-                                        </div>
-
-                                        <div class="form-group mb-2">
-                                            <label for="seo_meta_description" class="small mb-1"><i class="fas fa-fw fa-paragraph fa-sm text-muted mr-1"></i> <?= l('link.settings.seo_meta_description') ?></label>
-                                            <input id="seo_meta_description" type="text" class="form-control" name="seo_meta_description" value="<?= $data->link->settings->seo->meta_description ?? '' ?>" maxlength="160" />
-                                            <small class="form-text text-muted"><?= l('link.settings.seo_meta_description_help') ?></small>
-                                        </div>
-
-                                        <div class="form-group mb-2">
-                                            <label for="seo_meta_keywords" class="small mb-1"><i class="fas fa-fw fa-file-word fa-sm text-muted mr-1"></i> <?= l('link.settings.seo_meta_keywords') ?></label>
-                                            <input id="seo_meta_keywords" type="text" class="form-control" name="seo_meta_keywords" value="<?= $data->link->settings->seo->meta_keywords ?? '' ?>" maxlength="160" />
-                                        </div>
-
-                                        <div class="form-group mb-2" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->seo_image_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->seo_image_size_limit) ?>">
-                                            <label for="seo_image" class="small mb-1"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.seo_image') ?></label>
-                                            <?= include_view(THEME_PATH . 'views/partials/custom_file_image_input.php', ['uploads_file_key' => 'microsite_seo_image', 'file_key' => 'seo_image', 'already_existing_image' => $data->link->settings->seo->image, 'image_container' => 'seo_image', 'input_data' => 'data-crop data-aspect-ratio="1.91"']) ?>
-                                            <?= \SeeGap\Alerts::output_field_error('seo_image') ?>
-                                            <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('microsite_seo_image')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->seo_image_size_limit) ?></small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <?php if(\SeeGap\Plugin::is_active('pwa') && settings()->pwa->is_enabled): ?>
-                                <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#pwa_container" aria-expanded="false" aria-controls="pwa_container">
-                                    <i class="fas fa-fw fa-mobile-alt fa-sm mr-1"></i> <?= l('link.settings.pwa_header') ?>
-                                </button>
-
-                                <div class="collapse" id="pwa_container" data-parent="#settings">
-                                    <div class="alert alert-info">
-                                        <i class="fas fa-fw fa-info-circle mr-1"></i> <?= l('link.settings.pwa_help') ?>
-                                    </div>
-
-                                    <div <?= !$this->user->plan_settings->custom_pwa_is_enabled ? 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' : null ?>>
-                                        <div class="<?= !$this->user->plan_settings->custom_pwa_is_enabled ? 'container-disabled' : null ?>">
-
-                                            <div class="form-group custom-control custom-switch">
-                                                <input
-                                                        type="checkbox"
-                                                        class="custom-control-input"
-                                                        id="pwa_is_enabled"
-                                                        name="pwa_is_enabled"
-                                                    <?= $data->link->settings->pwa_is_enabled ? 'checked="checked"' : null ?>
-                                                    <?= !$this->user->plan_settings->custom_pwa_is_enabled ? 'disabled="disabled"' : null ?>
-                                                >
-                                                <label class="custom-control-label" for="pwa_is_enabled"><?= l('link.settings.pwa_is_enabled') ?></label>
-                                            </div>
-
-                                            <div class="form-group custom-control custom-switch">
-                                                <input
-                                                        type="checkbox"
-                                                        class="custom-control-input"
-                                                        id="pwa_display_install_bar"
-                                                        name="pwa_display_install_bar"
-                                                    <?= $data->link->settings->pwa_display_install_bar ? 'checked="checked"' : null ?>
-                                                    <?= !$this->user->plan_settings->custom_pwa_is_enabled ? 'disabled="disabled"' : null ?>
-                                                >
-                                                <label class="custom-control-label" for="pwa_display_install_bar"><?= l('link.settings.pwa_display_install_bar') ?></label>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="pwa_display_install_bar_delay"><i class="fas fa-fw fa-bars fa-sm text-muted mr-1"></i> <?= l('link.settings.pwa_display_install_bar_delay') ?></label>
-                                                <div class="input-group">
-                                                    <input id="pwa_display_install_bar_delay" type="number" min="0" class="form-control" name="pwa_display_install_bar_delay" value="<?= $data->link->settings->pwa_display_install_bar_delay ?? 3 ?>" />
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text"><?= l('global.date.seconds') ?></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group" data-file-image-input-wrapper data-file-input-wrapper-size-limit="<?= settings()->links->pwa_icon_size_limit ?>" data-file-input-wrapper-size-limit-error="<?= sprintf(l('global.error_message.file_size_limit'), settings()->links->pwa_icon_size_limit) ?>">
-                                                <label for="pwa_icon"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('link.settings.pwa_icon') ?></label>
-                                                <?= include_view(THEME_PATH . 'views/partials/custom_file_image_input.php', ['uploads_file_key' => 'app_icon', 'file_key' => 'pwa_icon', 'already_existing_image' => $data->link->settings->pwa_icon, 'image_container' => 'pwa_icon']) ?>
-                                                <?= \SeeGap\Alerts::output_field_error('pwa_icon') ?>
-                                                <small class="form-text text-muted"><?= l('link.settings.pwa_icon_help') ?><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::get_whitelisted_file_extensions_accept('app_icon')) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->pwa_icon_size_limit) ?></small>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="pwa_theme_color"><i class="fas fa-fw fa-paint-brush fa-sm text-muted mr-1"></i> <?= l('link.settings.pwa_theme_color') ?></label>
-                                                <input type="hidden" id="pwa_theme_color" name="pwa_theme_color" class="form-control" value="<?= $data->link->settings->pwa_theme_color ?? '#000000' ?>" required="required" data-color-picker />
-                                                <div id="settings_pwa_theme_color_pickr"></div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif ?>
-
-                            <button class="btn btn-block btn-sm btn-gray-200 mb-2" type="button" data-toggle="collapse" data-target="#advanced_container" aria-expanded="false" aria-controls="advanced_container">
-                                <i class="fas fa-fw fa-user-tie fa-xs mr-1"></i> <?= l('link.settings.advanced_header') ?>
-                            </button>
-
-                            <div class="collapse" id="advanced_container">
-                                <div class="form-group custom-control custom-switch">
-                                    <input
-                                            type="checkbox"
-                                            class="custom-control-input"
-                                            id="share_is_enabled"
-                                            name="share_is_enabled"
-                                        <?= $data->link->settings->share_is_enabled ? 'checked="checked"' : null ?>
-                                    >
-                                    <label class="custom-control-label" for="share_is_enabled"><?= l('link.settings.share_is_enabled') ?></label>
-                                </div>
-
-                                <div class="form-group custom-control custom-switch">
-                                    <input
-                                            type="checkbox"
-                                            class="custom-control-input"
-                                            id="scroll_buttons_is_enabled"
-                                            name="scroll_buttons_is_enabled"
-                                        <?= $data->link->settings->scroll_buttons_is_enabled ? 'checked="checked"' : null ?>
-                                    >
-                                    <label class="custom-control-label" for="scroll_buttons_is_enabled"><?= l('link.settings.scroll_buttons_is_enabled') ?></label>
-                                    <small class="form-text text-muted"><?= l('link.settings.scroll_buttons_is_enabled_help') ?></small>
-                                </div>
-
-                                <?php if(settings()->links->directory_is_enabled ?? false): ?>
-                                    <div <?= settings()->links->directory_display != 'all' && !$data->link->is_verified ? 'data-toggle="tooltip" title="' . l('link.settings.verified_required') . '"' : null ?>>
-                                        <div class="<?= settings()->links->directory_display != 'all' && !$data->link->is_verified ? 'container-disabled' : null ?>">
-                                            <div class="form-group custom-control custom-switch">
-                                                <input
-                                                        type="checkbox"
-                                                        class="custom-control-input"
-                                                        id="directory_is_enabled"
-                                                        name="directory_is_enabled"
-                                                    <?= $data->link->directory_is_enabled ? 'checked="checked"' : null ?>
-                                                >
-                                                <label class="custom-control-label" for="directory_is_enabled"><?= l('link.settings.directory_is_enabled') ?></label>
-                                                <small class="form-text text-muted"><?= sprintf(l('link.settings.directory_is_enabled_help'), '<a href="' . url('directory') . '">' . l('directory.menu') . '</a>') ?></small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <?php if(settings()->links->directory_display != 'all' && !$data->link->is_verified): ?>
-                                        <div class="alert alert-info">
-                                            <i class="fas fa-fw fa-info-circle mr-1"></i>
-                                            <?php if(settings()->email_notifications->contact && !empty(settings()->email_notifications->emails)): ?>
-                                                <?= sprintf(l('link.settings.verified_help'), '<a href="' . url('contact') . '" class="font-weight-bold" target="_blank">', '</a>') ?>
-                                            <?php else: ?>
-                                                <?= sprintf(l('link.settings.verified_help'), '', '') ?>
-                                            <?php endif ?>
-                                        </div>
-                                    <?php endif ?>
-                                <?php endif ?>
-
-                                <?php if(settings()->links->projects_is_enabled ?? false): ?>
-                                <div class="form-group">
-                                    <div class="d-flex flex-column flex-xl-row justify-content-between">
-                                        <label for="project_id"><i class="fas fa-fw fa-sm fa-project-diagram text-muted mr-1"></i> <?= l('projects.project_id') ?></label>
-                                        <a href="<?= url('project-create') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('projects.create') ?></a>
-                                    </div>
-                                    <select id="project_id" name="project_id" class="custom-select">
-                                        <option value=""><?= l('global.none') ?></option>
-                                        <?php foreach($data->projects as $row): ?>
-                                            <option value="<?= $row->project_id ?>" <?= $data->link->project_id == $row->project_id ? 'selected="selected"' : null?>><?= $row->name ?></option>
-                                        <?php endforeach ?>
-                                    </select>
-                                </div>
-                                <?php endif ?>
-
-                                <?php if(settings()->links->splash_page_is_enabled): ?>
-                                    <div <?= $this->user->plan_settings->splash_pages_limit ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                        <div class="<?= $this->user->plan_settings->splash_pages_limit ? null : 'container-disabled' ?>">
-                                            <div class="form-group">
-                                                <div class="d-flex flex-column flex-xl-row justify-content-between">
-                                                    <label for="splash_page_id"><i class="fas fa-fw fa-sm fa-droplet text-muted mr-1"></i> <?= l('splash_pages.splash_page_id') ?></label>
-                                                    <a href="<?= url('splash-pages') ?>" target="_blank" class="small mb-2"><i class="fas fa-fw fa-sm fa-plus mr-1"></i> <?= l('splash_pages.create') ?></a>
-                                                </div>
-                                                <select id="splash_page_id" name="splash_page_id" class="custom-select">
-                                                    <option value=""><?= l('global.none') ?></option>
-                                                    <?php foreach($data->splash_pages as $row): ?>
-                                                        <option value="<?= $row->splash_page_id ?>" <?= $data->link->splash_page_id == $row->splash_page_id ? 'selected="selected"' : null?>><?= $row->name ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endif ?>
-
-                                <div <?= $this->user->plan_settings->leap_link ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="<?= $this->user->plan_settings->leap_link ? null : 'container-disabled' ?>">
-                                        <div class="form-group">
-                                            <label for="leap_link"><i class="fas fa-fw fa-forward fa-sm text-muted mr-1"></i> <?= l('link.settings.leap_link') ?></label>
-                                            <input id="leap_link" type="url" class="form-control" name="leap_link" value="<?= $data->link->settings->leap_link ?>" maxlength="2048" <?= !$this->user->plan_settings->leap_link ? 'disabled="disabled"': null ?> placeholder="<?= l('global.url_placeholder') ?>" autocomplete="off" />
-                                            <small class="form-text text-muted"><?= l('link.settings.leap_link_help') ?></small>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div <?= $this->user->plan_settings->custom_css_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="form-group <?= $this->user->plan_settings->custom_css_is_enabled ? null : 'container-disabled' ?>" data-character-counter="textarea">
-                                        <label for="custom_css" class="d-flex justify-content-between align-items-center">
-                                            <span><i class="fab fa-fw fa-sm fa-css3 text-muted mr-1"></i> <?= l('global.custom_css') ?></span>
-                                            <small class="text-muted" data-character-counter-wrapper></small>
-                                        </label>
-                                        <textarea id="custom_css" class="form-control" name="custom_css" maxlength="10000" placeholder="<?= l('global.custom_css_placeholder') ?>"><?= $data->link->settings->custom_css ?></textarea>
-                                        <small class="form-text text-muted"><?= l('global.custom_css_help') ?></small>
-                                    </div>
-                                </div>
-
-                                <div <?= $this->user->plan_settings->custom_js_is_enabled ? null : 'data-toggle="tooltip" title="' . l('global.info_message.plan_feature_no_access') . '"' ?>>
-                                    <div class="form-group <?= $this->user->plan_settings->custom_js_is_enabled ? null : 'container-disabled' ?>" data-character-counter="textarea">
-                                        <label for="custom_js" class="d-flex justify-content-between align-items-center">
-                                            <span><i class="fab fa-fw fa-sm fa-js-square text-muted mr-1"></i> <?= l('global.custom_js') ?></span>
-                                            <small class="text-muted" data-character-counter-wrapper></small>
-                                        </label>
-                                        <textarea id="custom_js" class="form-control" name="custom_js" maxlength="10000" placeholder="<?= l('global.custom_js_placeholder') ?>"><?= $data->link->settings->custom_js ?></textarea>
-                                        <small class="form-text text-muted"><?= l('global.custom_js_help') ?></small>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-
+                    <!-- Unified Update Button -->
+                    <div class="mt-4">
+                        <button type="submit" name="submit" id="unified-update-btn" class="btn btn-block btn-primary" data-is-ajax>
+                            <i class="fas fa-fw fa-save fa-sm mr-2"></i>
+                            <span class="unified-update-text"><?= l('global.update') ?></span>
+                        </button>
                     </div>
-                </div>
+
+                </form>
             </div>
         </div>
     </div>
+</div>
+
+</div>
 </div>
 
 <?php $html = ob_get_clean() ?>
@@ -934,23 +268,25 @@
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/fontawesome-iconpicker.min.js?v=' . PRODUCT_CODE ?>"></script>
 <script>
     /* Type handler function for form elements - declared first to prevent reference errors */
-    window.type_handler = window.type_handler || ((selector, attribute, operator = '=') => {
-        let element = document.querySelector(selector);
-        if(!element) return;
-        
-        let value = element.value;
-        let target_selector = `[${attribute}${operator}"${value}"]`;
-        
-        // Hide all elements first
-        document.querySelectorAll(`[${attribute}]`).forEach(el => {
-            el.style.display = 'none';
-        });
-        
-        // Show matching elements
-        document.querySelectorAll(target_selector).forEach(el => {
-            el.style.display = 'block';
-        });
-    });
+    if (typeof window.type_handler === 'undefined') {
+        window.type_handler = (selector, attribute, operator = '=') => {
+            let element = document.querySelector(selector);
+            if(!element) return;
+            
+            let value = element.value;
+            let target_selector = `[${attribute}${operator}"${value}"]`;
+            
+            // Hide all elements first
+            document.querySelectorAll(`[${attribute}]`).forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show matching elements
+            document.querySelectorAll(target_selector).forEach(el => {
+                el.style.display = 'block';
+            });
+        };
+    }
 
     /* Settings Tab */
     const container = document.querySelector('.microsite-themes-wrapper');
@@ -1018,33 +354,134 @@
 
     process_utm();
 
-    /* Refresh microsite preview function */
+    /* Global refresh coordination to prevent double refreshes */
+    window.previewRefreshState = {
+        isRefreshing: false,
+        pendingRefresh: false,
+        lastRefreshTime: 0
+    };
+
+    /* Enhanced microsite preview refresh function with proper loading handling */
     window.refresh_microsite_preview = window.refresh_microsite_preview || (() => {
         let microsite_preview_iframe = document.querySelector('#microsite_preview_iframe');
-        if(microsite_preview_iframe) {
-            // Add loader
-            document.querySelector('#microsite_preview_iframe_loading').classList.remove('d-none');
-            
-            // Refresh iframe by updating its src
-            let current_src = microsite_preview_iframe.getAttribute('src');
-            let url = new URL(current_src);
-            url.searchParams.set('_refresh', Date.now()); // Add timestamp to force refresh
-            microsite_preview_iframe.setAttribute('src', url.toString());
-            
-            // Handle iframe load completion
-            microsite_preview_iframe.onload = () => {
-                microsite_preview_iframe.dispatchEvent(new Event('refreshed'));
-                document.querySelector('#microsite_preview_iframe_loading').classList.add('d-none');
-            }
+        if(!microsite_preview_iframe) return;
+
+        const now = Date.now();
+        const minRefreshInterval = 1000; // Minimum 1 second between refreshes
+
+        // Prevent multiple simultaneous refreshes
+        if(window.previewRefreshState.isRefreshing) {
+            window.previewRefreshState.pendingRefresh = true;
+            return;
         }
+
+        // Prevent too frequent refreshes
+        if(now - window.previewRefreshState.lastRefreshTime < minRefreshInterval) {
+            if(!window.previewRefreshState.pendingRefresh) {
+                window.previewRefreshState.pendingRefresh = true;
+                setTimeout(() => {
+                    if(window.previewRefreshState.pendingRefresh) {
+                        window.previewRefreshState.pendingRefresh = false;
+                        window.refresh_microsite_preview();
+                    }
+                }, minRefreshInterval - (now - window.previewRefreshState.lastRefreshTime));
+            }
+            return;
+        }
+        
+        window.previewRefreshState.isRefreshing = true;
+        window.previewRefreshState.lastRefreshTime = now;
+        
+        // Add loading overlay to prevent flash
+        let container = microsite_preview_iframe.closest('.microsite-preview-iframe-container');
+        if(container && !container.querySelector('.preview-loading-overlay')) {
+            let overlay = document.createElement('div');
+            overlay.className = 'preview-loading-overlay';
+            overlay.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+                border-radius: inherit;
+            `;
+            overlay.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
+            container.appendChild(overlay);
+        }
+
+        // Create a promise that resolves when iframe loads
+        const loadPromise = new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject(new Error('Iframe load timeout'));
+            }, 10000); // 10 second timeout
+
+            const onLoad = () => {
+                clearTimeout(timeout);
+                microsite_preview_iframe.removeEventListener('load', onLoad);
+                microsite_preview_iframe.removeEventListener('error', onError);
+                resolve();
+            };
+
+            const onError = () => {
+                clearTimeout(timeout);
+                microsite_preview_iframe.removeEventListener('load', onLoad);
+                microsite_preview_iframe.removeEventListener('error', onError);
+                reject(new Error('Iframe load error'));
+            };
+
+            microsite_preview_iframe.addEventListener('load', onLoad);
+            microsite_preview_iframe.addEventListener('error', onError);
+        });
+
+        // Update iframe src
+        let current_src = microsite_preview_iframe.getAttribute('src');
+        let url = new URL(current_src);
+        url.searchParams.set('_refresh', Date.now());
+        microsite_preview_iframe.setAttribute('src', url.toString());
+
+        // Handle load completion
+        loadPromise
+            .then(() => {
+                // Remove loading overlay
+                let overlay = container?.querySelector('.preview-loading-overlay');
+                if(overlay) {
+                    overlay.remove();
+                }
+                
+                // Dispatch refreshed event
+                setTimeout(() => {
+                    microsite_preview_iframe.dispatchEvent(new Event('refreshed'));
+                }, 100); // Small delay to ensure DOM is ready
+            })
+            .catch((error) => {
+                console.warn('Preview refresh failed:', error);
+                // Remove loading overlay even on error
+                let overlay = container?.querySelector('.preview-loading-overlay');
+                if(overlay) {
+                    overlay.remove();
+                }
+            })
+            .finally(() => {
+                window.previewRefreshState.isRefreshing = false;
+                
+                // Handle any pending refresh request
+                if(window.previewRefreshState.pendingRefresh) {
+                    window.previewRefreshState.pendingRefresh = false;
+                    setTimeout(() => {
+                        window.refresh_microsite_preview();
+                    }, 500); // Small delay before processing pending refresh
+                }
+            });
     });
 
     /* Switching themes & previewing */
     let microsite_theme_preview = () => {
         let microsite_theme_id = document.querySelector('input[name="microsite_theme_id"]:checked').value;
-
-        /* Add loader */
-        document.querySelector('#microsite_preview_iframe_loading').classList.remove('d-none');
 
         /* Refresh iframe */
         let microsite_preview_iframe = document.querySelector('#microsite_preview_iframe');
@@ -1054,12 +491,12 @@
             microsite_preview_iframe_url.searchParams.set('microsite_theme_id', microsite_theme_id);
             microsite_preview_iframe_url.search = microsite_preview_iframe_url.searchParams.toString()
             microsite_preview_iframe.setAttribute('src', microsite_preview_iframe_url.toString());
+            
+            // Dispatch refreshed event after iframe loads
+            setTimeout(() => {
+                document.querySelector('#microsite_preview_iframe').dispatchEvent(new Event('refreshed'));
+            }, 500);
         }, 750)
-
-        microsite_preview_iframe.onload = () => {
-            document.querySelector('#microsite_preview_iframe').dispatchEvent(new Event('refreshed'));
-            document.querySelector('#microsite_preview_iframe_loading').classList.add('d-none');
-        }
     }
 
     document.querySelectorAll('input[name="microsite_theme_id"]').forEach(element => {
@@ -1295,29 +732,212 @@
         }
     });
 
-    /* Form handling update */
-    $('form[name="update_microsite"],form[name="update_microsite_"],form[name="update_microsite_canvas"]').on('submit', event => {
-        let form = $(event.currentTarget)[0];
-        let data = new FormData(form);
+    /* Smart Change Detection System */
+    let initialFormState = {};
+    let initialBlockOrder = [];
+    let hasSettingsChanges = false;
+    let hasLayoutChanges = false;
+
+    // Capture initial form state
+    function captureFormState() {
+        const form = document.getElementById('update_microsite');
+        const formData = new FormData(form);
+        const state = {};
         
-        // If this is the canvas form (floppy disk button), also include all fields from the main settings form
-        if(event.currentTarget.getAttribute('name') == 'update_microsite_canvas') {
-            let mainForm = document.getElementById('update_microsite');
-            let mainFormData = new FormData(mainForm);
-            
-            // Append all fields from the main form to the canvas form data
-            for(let pair of mainFormData.entries()) {
-                data.append(pair[0], pair[1]);
+        for (let [key, value] of formData.entries()) {
+            if (key.endsWith('[]')) {
+                // Handle array inputs (like checkboxes)
+                if (!state[key]) state[key] = [];
+                state[key].push(value);
+            } else {
+                state[key] = value;
             }
-            
-            // Use the notification container from the main form
-            var notification_container = mainForm.querySelector('.notification-container');
-        } else {
-            var notification_container = event.currentTarget.querySelector('.notification-container');
         }
         
-        notification_container.innerHTML = '';
-        pause_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
+        return state;
+    }
+
+    // Capture initial block order
+    function captureBlockOrder() {
+        const blocks = [];
+        $('#microsite_blocks > .microsite_block').each((i, elm) => {
+            blocks.push({
+                microsite_block_id: $(elm).data('microsite-block-id'),
+                order: i,
+                is_enabled: $(elm).find('input[type="checkbox"]').is(':checked')
+            });
+        });
+        return blocks;
+    }
+
+    // Deep equality check for objects
+    function deepEqual(obj1, obj2) {
+        if (obj1 === obj2) return true;
+        if (obj1 == null || obj2 == null) return false;
+        if (typeof obj1 !== typeof obj2) return false;
+        
+        if (typeof obj1 === 'object') {
+            const keys1 = Object.keys(obj1);
+            const keys2 = Object.keys(obj2);
+            
+            if (keys1.length !== keys2.length) return false;
+            
+            for (let key of keys1) {
+                if (!keys2.includes(key)) return false;
+                if (!deepEqual(obj1[key], obj2[key])) return false;
+            }
+            return true;
+        }
+        
+        return obj1 === obj2;
+    }
+
+    // Update button states based on changes
+    function updateButtonStates(settingsChanged, layoutChanged) {
+        const canvasSaveBtn = document.getElementById('canvas-save-btn');
+        const canvasSaveText = document.querySelector('.canvas-save-text');
+        const settingsUpdateBtn = document.getElementById('settings-update-btn');
+        const settingsUpdateText = document.querySelector('.settings-update-text');
+        
+        // Canvas button for layout changes
+        if (canvasSaveBtn && canvasSaveText) {
+            canvasSaveBtn.disabled = !layoutChanged;
+            canvasSaveBtn.className = layoutChanged ? 
+                'btn btn-xs btn-success' : 
+                'btn btn-xs btn-outline-success';
+            canvasSaveText.textContent = layoutChanged ? 'Save Layout' : 'Layout Saved';
+        }
+        
+        // Settings button for form changes
+        if (settingsUpdateBtn && settingsUpdateText) {
+            settingsUpdateBtn.disabled = !settingsChanged;
+            settingsUpdateBtn.className = settingsChanged ? 
+                'btn btn-sm btn-primary' : 
+                'btn btn-sm btn-outline-primary';
+            settingsUpdateText.textContent = settingsChanged ? 'Update Settings' : 'Settings Saved';
+        }
+        
+        // Store current state
+        hasSettingsChanges = settingsChanged;
+        hasLayoutChanges = layoutChanged;
+    }
+
+    // Detect changes function
+    function detectChanges() {
+        const currentFormState = captureFormState();
+        const currentBlockOrder = captureBlockOrder();
+        
+        const settingsChanged = !deepEqual(initialFormState, currentFormState);
+        const layoutChanged = !deepEqual(initialBlockOrder, currentBlockOrder);
+        
+        updateButtonStates(settingsChanged, layoutChanged);
+    }
+
+    // Initialize change detection when page loads
+    $(document).ready(function() {
+        // Capture initial states
+        initialFormState = captureFormState();
+        initialBlockOrder = captureBlockOrder();
+        
+        // Set initial button states
+        updateButtonStates(false, false);
+        
+        // Monitor form changes
+        $('#update_microsite').on('input change', 'input, select, textarea', function() {
+            setTimeout(detectChanges, 100); // Small delay to ensure DOM is updated
+        });
+        
+        // Monitor color picker changes
+        $(document).on('pickr:change', function() {
+            setTimeout(detectChanges, 100);
+        });
+        
+        // Monitor file input changes
+        $('#update_microsite').on('change', 'input[type="file"]', function() {
+            setTimeout(detectChanges, 100);
+        });
+    });
+
+    /* Enhanced form handling with separate handlers for main form vs canvas form */
+    
+    // Settings update button handler (new dedicated button)
+    $('#settings-update-btn').on('click', function(event) {
+        if (!hasSettingsChanges) return;
+        
+        const form = document.getElementById('update_microsite');
+        const formData = new FormData(form);
+        const notificationContainer = form.querySelector('.notification-container');
+        
+        handleFormSubmission(form, formData, notificationContainer, 'settings');
+    });
+    
+    // Main settings form handler (right panel) - for form submission via Enter key
+    $('form[name="update_microsite"]').on('submit', function(event) {
+        let form = $(event.currentTarget)[0];
+        let formData = new FormData(form);
+        let notificationContainer = event.currentTarget.querySelector('.notification-container');
+        
+        handleFormSubmission(form, formData, notificationContainer, 'settings');
+        event.preventDefault();
+    });
+
+    // Canvas form handler (floppy disk button - left panel)
+    $('form[name="update_microsite_canvas"]').on('submit', function(event) {
+        let form = $(event.currentTarget)[0];
+        let mainForm = document.getElementById('update_microsite');
+        
+        if(!mainForm) {
+            return false;
+        }
+        
+        // Create FormData from main form to ensure all fields are included
+        let formData = new FormData(mainForm);
+        
+        // Override with canvas form's hidden fields to ensure correct submission context
+        let canvasFormData = new FormData(form);
+        for (let [key, value] of canvasFormData.entries()) {
+            formData.set(key, value);
+        }
+        
+        let notificationContainer = mainForm.querySelector('.notification-container');
+        
+        handleFormSubmission(form, formData, notificationContainer, 'canvas');
+        event.preventDefault();
+    });
+
+    // Unified form submission handler
+    function handleFormSubmission(form, formData, notificationContainer, submissionType) {
+        notificationContainer.innerHTML = '';
+        let submitButton = form.querySelector('[type="submit"][name="submit"]');
+        pause_submit_button(submitButton);
+
+        // Add loading overlay with submission type indicator
+        let micrositePreviewIframe = document.querySelector('#microsite_preview_iframe');
+        let container = micrositePreviewIframe?.closest('.microsite-preview-iframe-container');
+        
+        if(container && !container.querySelector('.save-loading-overlay')) {
+            let overlay = document.createElement('div');
+            overlay.className = 'save-loading-overlay';
+            overlay.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.9);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 15;
+                border-radius: inherit;
+            `;
+            overlay.innerHTML = `
+                <div class="spinner-border spinner-border-sm mb-2" role="status"></div>
+                <small class="text-muted">Saving changes...</small>
+            `;
+            container.appendChild(overlay);
+        }
 
         $.ajax({
             type: 'POST',
@@ -1325,122 +945,129 @@
             processData: false,
             contentType: false,
             cache: false,
-            url: event.currentTarget.getAttribute('name') == 'update_microsite_' ? `${url}microsite-block-ajax` : `${url}link-ajax`,
-            data: data,
+            url: `${url}ajax`,
+            data: formData,
             dataType: 'json',
-            success: (data) => {
-                display_notifications(data.message, data.status, notification_container);
-
-                /* Auto scroll to notification */
-                notification_container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                enable_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'))
-
-                /* Update image previews for some link types */
-                if(event.currentTarget.getAttribute('name') == 'update_microsite_') {
-                    if(data.details.images) {
-                        for(const [key, value] of Object.entries(data.details.images)) {
-                            event.currentTarget.querySelector(`input[name="${key}"]`).value = null;
-
-                            if(event.currentTarget.querySelector(`[name="${key}_remove"]`) && event.currentTarget.querySelector(`[name="${key}_remove"]`).checked) {
-                                event.currentTarget.querySelector(`[name="${key}_remove"]`).click();
-                            }
-
-                            if(value) {
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] img`).setAttribute('src', value);
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] img`).setAttribute('data-src', value);
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] img`).classList.remove('d-none');
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] a`).setAttribute('href', value);
-                                event.currentTarget.querySelector(`[data-image-container="${key}"] a`).classList.remove('d-none');
-                                event.currentTarget.querySelectorAll(`[data-image-container="${key}"]`).forEach(element => element.classList.remove('d-none'));
-                                event.currentTarget.querySelector(`[id*="_remove_selected_file_wrapper"]`).classList.add('d-none');
-                            } else {
-                                if(event.currentTarget.querySelector(`[data-image-container="${key}"] img`)) {
-                                    event.currentTarget.querySelector(`[data-image-container="${key}"] img`).setAttribute('src', '');
-                                    event.currentTarget.querySelector(`[data-image-container="${key}"] img`).classList.add('d-none');
-                                    event.currentTarget.querySelector(`[data-image-container="${key}"] img`).removeAttribute('data-src');
-                                }
-                                event.currentTarget.querySelectorAll(`[data-image-container="${key}"]`).forEach(element => element.classList.add('d-none'));
-                            }
-                        }
-                    }
-                }
-
-                if(event.currentTarget.getAttribute('name') == 'update_microsite') {
-                    if(data.status == 'success') {
-                        update_main_url(data.details.url);
-                    }
-
-                    if(data.details?.images) {
-                        for(const [key, value] of Object.entries(data.details.images)) {
-                            const inputElement = event.currentTarget.querySelector(`input[name="${key}"]`);
-                            if(inputElement) {
-                                inputElement.value = null;
-                            }
-
-                            const removeElement = event.currentTarget.querySelector(`[name="${key}_remove"]`);
-                            if(removeElement && removeElement.checked) {
-                                removeElement.click();
-                            }
-
-                            const imgContainer = event.currentTarget.querySelector(`[data-image-container="${key}"] img`);
-                            const linkElement = event.currentTarget.querySelector(`[data-image-container="${key}"] a`);
-                            const containers = event.currentTarget.querySelectorAll(`[data-image-container="${key}"]`);
-
-                            if(value) {
-                                if(imgContainer) {
-                                    imgContainer.setAttribute('src', value);
-                                    imgContainer.classList.remove('d-none');
-                                }
-                                if(linkElement) {
-                                    linkElement.setAttribute('href', value);
-                                    linkElement.classList.remove('d-none');
-                                }
-                                containers.forEach(element => element.classList.remove('d-none'));
-                            } else {
-                                if(imgContainer) {
-                                    imgContainer.setAttribute('src', '');
-                                    imgContainer.classList.add('d-none');
-                                }
-                                if(linkElement) {
-                                    linkElement.setAttribute('href', '');
-                                    linkElement.classList.add('d-none');
-                                }
-                                containers.forEach(element => element.classList.add('d-none'));
-                            }
-
-                            if(key == 'background') {
-                                const backgroundInput = event.currentTarget.querySelector('#background_type_image_input');
-                                if(backgroundInput) {
-                                    backgroundInput.value = '';
-                                }
-                            } else {
-                                const keyInput = event.currentTarget.querySelector(`#${key}`);
-                                if(keyInput) {
-                                    keyInput.value = '';
-                                }
-                            }
-                        }
-                    }
-                }
-
-    /* Refresh iframe */
-    window.refresh_microsite_preview();
-
+            timeout: 30000,
+            success: function(responseData) {
+                handleFormSuccess(responseData, notificationContainer, submitButton, container, submissionType);
             },
-            error: () => {
-                enable_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
-                display_notifications(<?= json_encode(l('global.error_message.basic')) ?>, 'error', notification_container);
+            error: function(xhr, status, error) {
+                handleFormError(xhr, status, error, notificationContainer, submitButton, container);
             },
         });
+    }
 
-        event.preventDefault();
-    })
+    // Success handler
+    function handleFormSuccess(responseData, notificationContainer, submitButton, container, submissionType) {
+        display_notifications(responseData.message, responseData.status, notificationContainer);
+        notificationContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        enable_submit_button(submitButton);
+
+        // Handle image updates
+        if(responseData.details?.images) {
+            updateImagePreviews(responseData.details.images);
+        }
+
+        // Handle successful save
+        if(responseData.status === 'success') {
+            // Remove loading overlay
+            let saveOverlay = container?.querySelector('.save-loading-overlay');
+            if(saveOverlay) {
+                saveOverlay.remove();
+            }
+            
+            // Coordinated refresh with toast persistence
+            setTimeout(function() {
+                window.refresh_microsite_preview();
+            }, 800); // Reduced delay for better UX
+        } else {
+            // Remove loading overlay on error
+            let saveOverlay = container?.querySelector('.save-loading-overlay');
+            if(saveOverlay) {
+                saveOverlay.remove();
+            }
+        }
+    }
+
+    // Error handler
+    function handleFormError(xhr, status, error, notificationContainer, submitButton, container) {
+        enable_submit_button(submitButton);
+        
+        let saveOverlay = container?.querySelector('.save-loading-overlay');
+        if(saveOverlay) {
+            saveOverlay.remove();
+        }
+        
+        let errorMessage = <?= json_encode(l('global.error_message.basic')) ?>;
+        if(status === 'timeout') {
+            errorMessage = 'Save operation timed out. Please try again.';
+        } else if(xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+        }
+        
+        display_notifications(errorMessage, 'error', notificationContainer);
+    }
+
+    // Image preview update helper
+    function updateImagePreviews(images) {
+        for(const [key, value] of Object.entries(images)) {
+            const inputElement = document.querySelector(`input[name="${key}"]`);
+            if(inputElement) {
+                inputElement.value = null;
+            }
+
+            const removeElement = document.querySelector(`[name="${key}_remove"]`);
+            if(removeElement && removeElement.checked) {
+                removeElement.click();
+            }
+
+            const imgContainer = document.querySelector(`[data-image-container="${key}"] img`);
+            const linkElement = document.querySelector(`[data-image-container="${key}"] a`);
+            const containers = document.querySelectorAll(`[data-image-container="${key}"]`);
+
+            if(value) {
+                if(imgContainer) {
+                    imgContainer.setAttribute('src', value);
+                    imgContainer.classList.remove('d-none');
+                }
+                if(linkElement) {
+                    linkElement.setAttribute('href', value);
+                    linkElement.classList.remove('d-none');
+                }
+                containers.forEach(element => element.classList.remove('d-none'));
+            } else {
+                if(imgContainer) {
+                    imgContainer.setAttribute('src', '');
+                    imgContainer.classList.add('d-none');
+                }
+                if(linkElement) {
+                    linkElement.setAttribute('href', '');
+                    linkElement.classList.add('d-none');
+                }
+                containers.forEach(element => element.classList.add('d-none'));
+            }
+
+            // Special handling for background input
+            if(key == 'background') {
+                const backgroundInput = document.querySelector('#background_type_image_input');
+                if(backgroundInput) {
+                    backgroundInput.value = '';
+                }
+            } else {
+                const keyInput = document.querySelector(`#${key}`);
+                if(keyInput) {
+                    keyInput.value = '';
+                }
+            }
+        }
+    }
+
 
     /* Form handling create */
-    $('form[name^="create_microsite_"]').on('submit', event => {
+    $('form[name^="create_microsite_"]').on('submit', function(event) {
         let form = $(event.currentTarget)[0];
-        let data = new FormData(form);
+        let formData = new FormData(form);
         pause_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
 
         $.ajax({
@@ -1449,22 +1076,22 @@
             processData: false,
             contentType: false,
             cache: false,
-            url: `${url}microsite-block-ajax`,
-            data: data,
+            url: `${url}ajax`,
+            data: formData,
             dataType: 'json',
-            success: (data) => {
-                let notification_container = event.currentTarget.querySelector('.notification-container');
-                notification_container.innerHTML = '';
+            success: function(responseData) {
+                let notificationContainer = event.currentTarget.querySelector('.notification-container');
+                notificationContainer.innerHTML = '';
                 enable_submit_button(event.currentTarget.querySelector('[type="submit"][name="submit"]'));
 
-                if(data.status == 'error') {
-                    display_notifications(data.message, 'error', notification_container);
+                if(responseData.status == 'error') {
+                    display_notifications(responseData.message, 'error', notificationContainer);
                 }
 
-                else if(data.status == 'success') {
+                else if(responseData.status == 'success') {
 
                     /* Redirect */
-                    redirect(data.details.url, true);
+                    redirect(responseData.details.url, true);
 
                 }
             },
@@ -1489,12 +1116,35 @@
 
 <script src="<?= ASSETS_FULL_URL . 'js/libraries/sortable.js?v=' . PRODUCT_CODE ?>"></script>
 <script>
-    /* Links tab sortable */
+    /* Enhanced sortable with proper race condition handling */
+    let isReordering = false;
+    let reorderTimeout = null;
+    
     let sortable = Sortable.create(document.getElementById('microsite_blocks'), {
         animation: 150,
         handle: '.drag',
+        onStart: (event) => {
+            // Clear any pending reorder operations
+            if (reorderTimeout) {
+                clearTimeout(reorderTimeout);
+                reorderTimeout = null;
+            }
+        },
         onUpdate: (event) => {
-
+            // Prevent concurrent reordering operations
+            if (isReordering) {
+                console.log('Reordering already in progress, skipping...');
+                return;
+            }
+            
+            isReordering = true;
+            
+            // Add visual feedback
+            const container = document.getElementById('microsite_blocks');
+            container.style.opacity = '0.7';
+            container.style.pointerEvents = 'none';
+            
+            // Collect new order
             let microsite_blocks = [];
             $('#microsite_blocks > .microsite_block').each((i, elm) => {
                 microsite_blocks.push({
@@ -1503,30 +1153,50 @@
                 });
             });
 
+            // Make AJAX request with proper promise handling
             $.ajax({
                 type: 'POST',
-                url: `${url}microsite-block-ajax`,
+                url: `${url}ajax`,
                 dataType: 'json',
                 data: {
                     request_type: 'order',
                     microsite_blocks,
                     global_token
                 },
+                timeout: 10000 // 10 second timeout
+            })
+            .done((data) => {
+                console.log('Block reorder successful:', data);
+                
+                // Wait longer for server to process and database to commit, then refresh preview
+                setTimeout(() => {
+                    window.refresh_microsite_preview();
+                }, 1000); // Increased delay to ensure database commit
+            })
+            .fail((xhr, status, error) => {
+                console.error('Block reorder failed:', error);
+                showToast('error', 'Failed to update block order. Please try again.');
+                
+                // Optionally revert the visual order on failure
+                // This would require storing the original order before the change
+            })
+            .always(() => {
+                // Re-enable interface
+                container.style.opacity = '1';
+                container.style.pointerEvents = 'auto';
+                isReordering = false;
             });
-
-            /* Refresh iframe */
-            window.refresh_microsite_preview();
         }
     });
 
     /* Status change handler for the links */
     $('[id^="microsite_block_is_enabled_"]').on('change', event => {
-        ajax_call_helper(event, 'microsite-block-ajax', 'is_enabled_toggle', () => {
+        ajax_call_helper(event, 'ajax', 'is_enabled_toggle', () => {
 
             $(event.currentTarget).closest('.microsite_block').toggleClass('custom-row-inactive');
 
             /* Refresh iframe */
-            refresh_microsite_preview();
+            window.refresh_microsite_preview();
         });
     });
 

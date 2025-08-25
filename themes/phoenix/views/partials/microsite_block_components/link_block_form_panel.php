@@ -155,14 +155,11 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <div class="tab-pane fade" id="link-style-<?= $unique_id ?>-background" role="tabpanel" aria-labelledby="link-style-<?= $unique_id ?>-background-tab">
                 
                 <?php
-                // Background Color
+                // Set up variables for background component (without accordion) - same as text/image blocks
                 $block_id = $unique_id;
-                $field_name = 'background_color';
-                $label = l('microsite_link.background_color');
-                $icon = 'fas fa-fill';
-                $default_color = '#ffffff';
-                $current_color = $row->settings->background_color ?? $default_color;
-                include THEME_PATH . 'views/partials/microsite_block_components/color_picker.php';
+                $settings = $row->settings;
+                $use_accordion = false; // Disable accordion when used in tabs
+                include THEME_PATH . 'views/partials/microsite_block_components/background_settings.php';
                 ?>
 
             </div>
@@ -171,8 +168,10 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <div class="tab-pane fade" id="link-style-<?= $unique_id ?>-border" role="tabpanel" aria-labelledby="link-style-<?= $unique_id ?>-border-tab">
                 
                 <?php
-                // Border Settings
+                // Set up variables for border component (without accordion)
                 $block_id = $unique_id;
+                $settings = $row->settings;
+                $use_accordion = false; // Disable accordion when used in tabs
                 include THEME_PATH . 'views/partials/microsite_block_components/border_settings.php';
                 ?>
 
@@ -182,8 +181,10 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <div class="tab-pane fade" id="link-style-<?= $unique_id ?>-shadow" role="tabpanel" aria-labelledby="link-style-<?= $unique_id ?>-shadow-tab">
                 
                 <?php
-                // Shadow Settings
+                // Set up variables for shadow component (without accordion)
                 $block_id = $unique_id;
+                $settings = $row->settings;
+                $use_accordion = false; // Disable accordion when used in tabs
                 include THEME_PATH . 'views/partials/microsite_block_components/shadow_settings.php';
                 ?>
 
@@ -193,8 +194,10 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <div class="tab-pane fade" id="link-style-<?= $unique_id ?>-animation" role="tabpanel" aria-labelledby="link-style-<?= $unique_id ?>-animation-tab">
                 
                 <?php
-                // Animation Settings
+                // Set up variables for animation component (without accordion)
                 $block_id = $unique_id;
+                $settings = $row->settings;
+                $use_accordion = false; // Disable accordion when used in tabs
                 include THEME_PATH . 'views/partials/microsite_block_components/animation_settings.php';
                 ?>
 

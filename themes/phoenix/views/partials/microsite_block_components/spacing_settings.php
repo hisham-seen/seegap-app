@@ -39,11 +39,12 @@ $spacing_types = array_intersect($spacing_types, ['margin_top', 'margin_bottom']
         <div class="card-body">
 <?php else: ?>
     <?php if($show_title): ?>
-    <div class="spacing-section mb-4">
+    <div class="mb-4">
         <h6 class="text-muted mb-3">
             <i class="fas fa-fw fa-arrows-alt-v fa-sm mr-2"></i>
             <?= l('global.spacing') ?? 'Spacing' ?>
         </h6>
+    </div>
     <?php endif ?>
 <?php endif ?>
 
@@ -99,27 +100,6 @@ $spacing_types = array_intersect($spacing_types, ['margin_top', 'margin_bottom']
                     </div>
                 </div>
                 <?php endif ?>
-            </div>
-
-            <!-- Spacing Preview -->
-            <div class="spacing-preview mt-3">
-                <div class="spacing-preview-container">
-                    <div class="spacing-preview-block">
-                        <?php if(in_array('margin_top', $spacing_types)): ?>
-                        <div class="spacing-preview-margin spacing-preview-margin-top" id="preview_margin_top_<?= $block_id ?>" data-value="<?= $settings->margin_top ?? 0 ?>">
-                            <span class="spacing-preview-label">Top: <?= $settings->margin_top ?? 0 ?></span>
-                        </div>
-                        <?php endif ?>
-                        <div class="spacing-preview-content">
-                            <i class="fas fa-minus"></i> Block Content
-                        </div>
-                        <?php if(in_array('margin_bottom', $spacing_types)): ?>
-                        <div class="spacing-preview-margin spacing-preview-margin-bottom" id="preview_margin_bottom_<?= $block_id ?>" data-value="<?= $settings->margin_bottom ?? 0 ?>">
-                            <span class="spacing-preview-label">Bottom: <?= $settings->margin_bottom ?? 0 ?></span>
-                        </div>
-                        <?php endif ?>
-                    </div>
-                </div>
             </div>
 
 <?php if($collapsed): ?>
@@ -293,43 +273,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const blockId = '<?= $block_id ?>';
         const marginTopInput = document.getElementById('margin_top_' + blockId);
         const marginBottomInput = document.getElementById('margin_bottom_' + blockId);
-        const previewMarginTop = document.getElementById('preview_margin_top_' + blockId);
-        const previewMarginBottom = document.getElementById('preview_margin_bottom_' + blockId);
         
-        // Update range value and preview
-        function updateSpacingValue(input, previewElement, type) {
+        // Update range value styling
+        function updateSpacingValue(input) {
             const value = input.value;
             const max = input.max;
             const percentage = (value / max) * 100;
             
             // Update CSS custom property for progress
             input.style.setProperty('--range-progress', percentage + '%');
-            
-            // Update preview
-            if (previewElement) {
-                previewElement.setAttribute('data-value', value);
-                const label = previewElement.querySelector('.spacing-preview-label');
-                if (label) {
-                    label.textContent = type + ': ' + value;
-                }
-            }
         }
         
         // Initialize margin top
         if (marginTopInput) {
-            updateSpacingValue(marginTopInput, previewMarginTop, 'Top');
+            updateSpacingValue(marginTopInput);
             
             marginTopInput.addEventListener('input', function() {
-                updateSpacingValue(this, previewMarginTop, 'Top');
+                updateSpacingValue(this);
             });
         }
         
         // Initialize margin bottom
         if (marginBottomInput) {
-            updateSpacingValue(marginBottomInput, previewMarginBottom, 'Bottom');
+            updateSpacingValue(marginBottomInput);
             
             marginBottomInput.addEventListener('input', function() {
-                updateSpacingValue(this, previewMarginBottom, 'Bottom');
+                updateSpacingValue(this);
             });
         }
         

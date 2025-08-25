@@ -65,19 +65,19 @@ if (isset($divider_settings->border_radius)) {
     }
 }
 
-// Handle shadow - following exact image block pattern
-if (isset($divider_settings->border_shadow_blur) && $divider_settings->border_shadow_blur > 0) {
+// Handle shadow - using correct field names
+if (isset($divider_settings->border_shadow_blur_radius) && $divider_settings->border_shadow_blur_radius > 0) {
     $shadow_x = $divider_settings->border_shadow_offset_x ?? 0;
     $shadow_y = $divider_settings->border_shadow_offset_y ?? 0;
-    $shadow_blur = $divider_settings->border_shadow_blur ?? 0;
-    $shadow_spread = $divider_settings->border_shadow_spread ?? 0;
+    $shadow_blur = $divider_settings->border_shadow_blur_radius ?? 0;
+    $shadow_spread = $divider_settings->border_shadow_spread_radius ?? 0;
     $shadow_color = $divider_settings->border_shadow_color ?? '#00000010';
     $all_styles[] = 'box-shadow: ' . $shadow_x . 'px ' . $shadow_y . 'px ' . $shadow_blur . 'px ' . $shadow_spread . 'px ' . $shadow_color;
 }
 
-// Handle animation - following exact image block pattern
-if (isset($divider_settings->animation) && $divider_settings->animation && $divider_settings->animation !== 'false') {
-    $animation_class = 'animate__animated animate__' . $divider_settings->animation;
+// Handle animation - using correct field names
+if (isset($divider_settings->animation_type) && $divider_settings->animation_type && $divider_settings->animation_type !== 'false') {
+    $animation_class = 'animate__animated animate__' . $divider_settings->animation_type;
     if (isset($divider_settings->animation_runs) && $divider_settings->animation_runs !== 'repeat-1') {
         $animation_class .= ' animate__' . $divider_settings->animation_runs;
     }

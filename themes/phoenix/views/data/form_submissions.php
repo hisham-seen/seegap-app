@@ -162,15 +162,25 @@
             // Collect all unique questions from all submissions to create dynamic columns
             $all_questions = [];
             foreach($data->form['submissions'] as $submission) {
-                if(is_array($submission->responses)) {
-                    foreach($submission->responses as $response) {
-                        $question = $response['question'] ?? 'Question';
+                // Decode JSON responses if needed
+                $responses = $submission->responses;
+                if(is_string($responses)) {
+                    $responses = json_decode($responses, true);
+                }
+                
+                if(is_array($responses)) {
+                    foreach($responses as $key => $response) {
+                        if(is_array($response) && isset($response['question'])) {
+                            $question = $response['question'];
+                        } else {
+                            $question = is_string($key) ? ucfirst($key) : 'Question';
+                        }
                         if(!in_array($question, $all_questions)) {
                             $all_questions[] = $question;
                         }
                     }
-                } elseif(is_object($submission->responses)) {
-                    foreach($submission->responses as $key => $value) {
+                } elseif(is_object($responses)) {
+                    foreach($responses as $key => $value) {
                         $question = ucfirst($key);
                         if(!in_array($question, $all_questions)) {
                             $all_questions[] = $question;
@@ -208,13 +218,25 @@
                         <?php
                         // Create a mapping of questions to answers for this submission
                         $question_answers = [];
-                        if(is_array($row->responses)) {
-                            foreach($row->responses as $response) {
-                                $question = $response['question'] ?? 'Question';
-                                $question_answers[$question] = $response['response'] ?? 'No response';
+                        
+                        // Decode JSON responses if needed
+                        $responses = $row->responses;
+                        if(is_string($responses)) {
+                            $responses = json_decode($responses, true);
+                        }
+                        
+                        if(is_array($responses)) {
+                            foreach($responses as $key => $response) {
+                                if(is_array($response) && isset($response['question'])) {
+                                    $question = $response['question'];
+                                    $question_answers[$question] = $response;
+                                } else {
+                                    $question = is_string($key) ? ucfirst($key) : 'Question';
+                                    $question_answers[$question] = $response;
+                                }
                             }
-                        } elseif(is_object($row->responses)) {
-                            foreach($row->responses as $key => $value) {
+                        } elseif(is_object($responses)) {
+                            foreach($responses as $key => $value) {
                                 $question = ucfirst($key);
                                 $question_answers[$question] = $value;
                             }
@@ -251,9 +273,97 @@
                             <?php foreach($all_questions as $question): ?>
                                 <td class="text-truncate" style="max-width: 200px;">
                                     <?php if(isset($question_answers[$question])): ?>
-                                        <span data-toggle="tooltip" title="<?= htmlspecialchars($question_answers[$question]) ?>">
-                                            <?= htmlspecialchars($question_answers[$question]) ?>
-                                        </span>
+                                        <?php 
+                                        $answer = $question_answers[$question];
+                                        
+                                        /* Check if this is a file upload response - handle both arrays and objects */
+                                        $is_file_upload = false;
+                                        if(is_array($answer)) {
+                                            $is_file_upload = isset($answer['files']) && is_array($answer['files']) && !empty($answer['files']);
+                                        } elseif(is_object($answer)) {
+                                            $is_file_upload = isset($answer->files) && is_array($answer->files) && !empty($answer->files);
+                                        }
+                                        
+                                        if($is_file_upload): ?>
+                                            <?php 
+                                            // Handle both array and object types for file data
+                                            $files = is_array($answer) ? $answer['files'] : $answer->files;
+                                            $response_text = is_array($answer) ? ($answer['response'] ?? count($files) . ' files') : ($answer->response ?? count($files) . ' files');
+                                            ?>
+                                            <div class="file-attachments">
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <i class="fas fa-paperclip text-primary mr-1"></i>
+                                                    <small class="text-muted"><?= $response_text ?></small>
+                                                </div>
+                                                <div class="file-thumbnails">
+                                                    <?php foreach($files as $file): ?>
+                                                        <?php 
+                                                        // Handle both array and object types for individual file data
+                                                        $file_mime_type = is_array($file) ? ($file['mime_type'] ?? '') : ($file->mime_type ?? '');
+                                                        $file_id = is_array($file) ? ($file['file_id'] ?? '') : ($file->file_id ?? '');
+                                                        $file_name = is_array($file) ? ($file['original_name'] ?? 'File') : ($file->original_name ?? 'File');
+                                                        ?>
+                                                        <?php if(!empty($file_mime_type) && strpos($file_mime_type, 'image/') === 0): ?>
+                                                            <div class="file-thumbnail-item d-inline-block mr-1 mb-1">
+                                                                <img src="<?= url('file-access/thumbnail?file_id=' . urlencode($file_id) . '&size=50') ?>" 
+                                                                     class="img-thumbnail receipt-image-thumbnail" 
+                                                                     style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
+                                                                     data-toggle="tooltip" 
+                                                                     title="<?= htmlspecialchars($file_name) ?>"
+                                                                     data-full-image="<?= url('file-access?file_id=' . urlencode($file_id)) ?>"
+                                                                     data-image-title="<?= htmlspecialchars($file_name) ?>">
+                                                            </div>
+                                                        <?php else: ?>
+                                                            <div class="file-item d-inline-block mr-1 mb-1">
+                                                                <a href="<?= url('file-access?file_id=' . urlencode($file_id)) ?>" 
+                                                                   target="_blank" 
+                                                                   class="btn btn-sm btn-outline-secondary"
+                                                                   data-toggle="tooltip" 
+                                                                   title="<?= htmlspecialchars($file_name) ?>">
+                                                                    <i class="fas fa-file"></i>
+                                                                </a>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                                <?php 
+                                                // Handle AI analysis for both array and object types
+                                                $ai_analysis = is_array($answer) ? ($answer['ai_analysis'] ?? null) : ($answer->ai_analysis ?? null);
+                                                if($ai_analysis): ?>
+                                                    <div class="ai-analysis-indicator mt-1">
+                                                        <small class="badge badge-info">
+                                                            <i class="fas fa-robot mr-1"></i>
+                                                            AI Analysis: <?= is_array($ai_analysis) ? ($ai_analysis['status'] ?? 'pending') : ($ai_analysis->status ?? 'pending') ?>
+                                                        </small>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <?php
+                                            // Handle different answer types safely
+                                            $display_value = '';
+                                            $tooltip_value = '';
+                                            
+                                            if(is_array($answer)) {
+                                                if(isset($answer['response'])) {
+                                                    $display_value = $answer['response'];
+                                                    $tooltip_value = json_encode($answer);
+                                                } else {
+                                                    $display_value = json_encode($answer);
+                                                    $tooltip_value = $display_value;
+                                                }
+                                            } elseif(is_object($answer)) {
+                                                $display_value = json_encode($answer);
+                                                $tooltip_value = $display_value;
+                                            } else {
+                                                $display_value = (string)$answer;
+                                                $tooltip_value = $display_value;
+                                            }
+                                            ?>
+                                            <span data-toggle="tooltip" title="<?= htmlspecialchars($tooltip_value) ?>">
+                                                <?= htmlspecialchars($display_value) ?>
+                                            </span>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <span class="text-muted">-</span>
                                     <?php endif; ?>
@@ -316,3 +426,56 @@
 
 <?php require THEME_PATH . 'views/partials/js_bulk.php' ?>
 <?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/bulk_delete_modal.php'), 'modals'); ?>
+
+<!-- Image Lightbox Modal -->
+<div class="modal fade" id="imageLightboxModal" tabindex="-1" role="dialog" aria-labelledby="imageLightboxModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageLightboxModalLabel">Receipt Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="lightboxImage" src="" alt="" class="img-fluid" style="max-height: 70vh;">
+            </div>
+            <div class="modal-footer">
+                <a id="downloadImageLink" href="" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-download mr-1"></i> Download Original
+                </a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle receipt image thumbnail clicks
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('receipt-image-thumbnail')) {
+            e.preventDefault();
+            
+            const fullImageUrl = e.target.getAttribute('data-full-image');
+            const imageTitle = e.target.getAttribute('data-image-title');
+            
+            if (fullImageUrl) {
+                // Set modal content
+                document.getElementById('lightboxImage').src = fullImageUrl;
+                document.getElementById('lightboxImage').alt = imageTitle || 'Receipt Image';
+                document.getElementById('imageLightboxModalLabel').textContent = imageTitle || 'Receipt Image';
+                document.getElementById('downloadImageLink').href = fullImageUrl;
+                
+                // Show modal
+                $('#imageLightboxModal').modal('show');
+            }
+        }
+    });
+    
+    // Handle modal close to reset image src
+    $('#imageLightboxModal').on('hidden.bs.modal', function() {
+        document.getElementById('lightboxImage').src = '';
+    });
+});
+</script>

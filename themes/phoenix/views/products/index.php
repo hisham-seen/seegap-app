@@ -239,7 +239,7 @@
                                         class="custom-control-input"
                                         id="product_is_enabled_<?= $row->product_id ?>"
                                         data-row-id="<?= $row->product_id ?>"
-                                        onchange="ajax_call_helper(event, 'product-ajax', 'is_enabled_toggle')"
+                                        onchange="ajax_call_helper(event, 'ajax', 'is_enabled_toggle')"
                                     <?= $row->is_enabled ? 'checked="checked"' : null ?>
                                 >
                                 <label class="custom-control-label" for="product_is_enabled_<?= $row->product_id ?>"></label>

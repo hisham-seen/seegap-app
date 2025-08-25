@@ -90,41 +90,6 @@
                     </li>
                 <?php endif ?>
 
-                <?php if(\SeeGap\Plugin::is_active('aix')): ?>
-                    <div class="divider-wrapper">
-                        <div class="divider"></div>
-                    </div>
-                <?php endif ?>
-
-                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->documents_is_enabled): ?>
-                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Documents', 'DocumentUpdate', 'DocumentCreate']) ? 'active' : null ?>">
-                        <a href="<?= url('documents') ?>"><i class="fas fa-fw fa-sm fa-robot mr-2"></i> <?= l('documents.menu') ?></a>
-                    </li>
-                <?php endif ?>
-
-                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->images_is_enabled): ?>
-                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Images', 'ImageUpdate', 'ImageCreate']) ? 'active' : null ?>">
-                        <a href="<?= url('images') ?>"><i class="fas fa-fw fa-sm fa-icons mr-2"></i> <?= l('images.menu') ?></a>
-                    </li>
-                <?php endif ?>
-
-                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->transcriptions_is_enabled): ?>
-                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Transcriptions', 'TranscriptionUpdate', 'TranscriptionCreate']) ? 'active' : null ?>">
-                        <a href="<?= url('transcriptions') ?>"><i class="fas fa-fw fa-sm fa-microphone-alt mr-2"></i> <?= l('transcriptions.menu') ?></a>
-                    </li>
-                <?php endif ?>
-
-                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->syntheses_is_enabled): ?>
-                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Syntheses', 'SynthesisUpdate', 'SynthesisCreate']) ? 'active' : null ?>">
-                        <a href="<?= url('syntheses') ?>"><i class="fas fa-fw fa-sm fa-voicemail mr-2"></i> <?= l('syntheses.menu') ?></a>
-                    </li>
-                <?php endif ?>
-
-                <?php if(\SeeGap\Plugin::is_active('aix') && settings()->aix->chats_is_enabled): ?>
-                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Chats', 'Chat', 'ChatCreate']) ? 'active' : null ?>">
-                        <a href="<?= url('chats') ?>"><i class="fas fa-fw fa-sm fa-comments mr-2"></i> <?= l('chats.menu') ?></a>
-                    </li>
-                <?php endif ?>
 
                 <?php if(\SeeGap\Plugin::is_active('email-signatures') && settings()->signatures->is_enabled): ?>
                     <li class="<?= in_array(\SeeGap\Router::$controller, ['Signatures', 'SignatureUpdate', 'SignatureCreate']) ? 'active' : null ?>">

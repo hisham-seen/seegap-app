@@ -32,20 +32,47 @@ class ReviewBlock extends BaseBlockHandler {
             die();
         }
 
-        // Create default review item
-        $default_review = [
-            'title' => '',
-            'description' => '',
-            'author_name' => '',
-            'author_description' => '',
-            'stars' => 5,
+        // Process review data from create modal
+        $review = [
+            'title' => mb_substr(input_clean($_POST['review_title'][0] ?? ''), 0, 128),
+            'description' => mb_substr(input_clean($_POST['review_description'][0] ?? ''), 0, 1024),
+            'author_name' => mb_substr(query_clean($_POST['review_author_name'][0] ?? ''), 0, 128),
+            'author_description' => mb_substr(query_clean($_POST['review_author_description'][0] ?? ''), 0, 128),
+            'stars' => in_array($_POST['review_stars'][0] ?? 5, [1, 2, 3, 4, 5]) ? (int) $_POST['review_stars'][0] : 5,
             'image' => ''
         ];
+
+        // Handle image upload for the review
+        if(isset($_FILES['review_image']['name'][0]) && !empty($_FILES['review_image']['name'][0])) {
+            // Create temporary $_FILES structure for individual image
+            $temp_files = [
+                'review_image' => [
+                    'name' => $_FILES['review_image']['name'][0],
+                    'type' => $_FILES['review_image']['type'][0],
+                    'tmp_name' => $_FILES['review_image']['tmp_name'][0],
+                    'error' => $_FILES['review_image']['error'][0],
+                    'size' => $_FILES['review_image']['size'][0]
+                ]
+            ];
+            
+            $old_files = $_FILES;
+            $_FILES = $temp_files;
+            
+            $db_image = $this->handle_image_upload('', 'block_images/', settings()->links->image_size_limit);
+            $review['image'] = $db_image;
+            
+            $_FILES = $old_files;
+        }
+
+        // Ensure we have at least author name (required field)
+        if(empty($review['author_name'])) {
+            $review['author_name'] = 'Anonymous';
+        }
 
         $type = 'review';
         $settings = json_encode([
             // Multiple reviews structure
-            'reviews' => [$default_review],
+            'reviews' => [$review],
             
             // Slider behavior settings
             'slider_mode' => 'manual', // 'manual', 'auto'
@@ -130,10 +157,10 @@ class ReviewBlock extends BaseBlockHandler {
         $_POST['border_width'] = in_array($_POST['border_width'] ?? 1, range(0, 20)) ? (int) $_POST['border_width'] : 1;
         $_POST['border_style'] = in_array($_POST['border_style'] ?? 'solid', ['solid', 'dashed', 'double', 'inset', 'outset']) ? query_clean($_POST['border_style']) : 'solid';
         $_POST['border_color'] = !verify_hex_color($_POST['border_color'] ?? '') ? '#dee2e6' : $_POST['border_color'];
-        $_POST['border_shadow_offset_x'] = in_array($_POST['border_shadow_offset_x'] ?? 0, range(-50, 50)) ? (int) $_POST['border_shadow_offset_x'] : 0;
-        $_POST['border_shadow_offset_y'] = in_array($_POST['border_shadow_offset_y'] ?? 0, range(-50, 50)) ? (int) $_POST['border_shadow_offset_y'] : 0;
-        $_POST['border_shadow_blur'] = in_array($_POST['border_shadow_blur'] ?? 0, range(0, 50)) ? (int) $_POST['border_shadow_blur'] : 0;
-        $_POST['border_shadow_spread'] = in_array($_POST['border_shadow_spread'] ?? 0, range(0, 20)) ? (int) $_POST['border_shadow_spread'] : 0;
+        $_POST['border_shadow_offset_x'] = in_array($_POST['border_shadow_offset_x'] ?? 0, range(-25, 25)) ? (int) $_POST['border_shadow_offset_x'] : 0;
+        $_POST['border_shadow_offset_y'] = in_array($_POST['border_shadow_offset_y'] ?? 0, range(-25, 25)) ? (int) $_POST['border_shadow_offset_y'] : 0;
+        $_POST['border_shadow_blur'] = in_array($_POST['border_shadow_blur'] ?? 0, range(0, 30)) ? (int) $_POST['border_shadow_blur'] : 0;
+        $_POST['border_shadow_spread'] = in_array($_POST['border_shadow_spread'] ?? 0, range(-15, 15)) ? (int) $_POST['border_shadow_spread'] : 0;
         $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color'] ?? '') ? '#00000010' : $_POST['border_shadow_color'];
         
         // Process animation settings

@@ -147,6 +147,7 @@ return [
     'global.info_message.team_limit' => 'Only the team owner can access this page.',
 
     // Success messages
+    'global.success_message.basic' => 'Operation completed successfully.',
     'global.success_message.create1' => '%s has been successfully created.',
     'global.success_message.create2' => 'Successfully created.',
     'global.success_message.update1' => '%s has been successfully updated.',
@@ -183,6 +184,12 @@ return [
     'global.accessibility.whitelisted_file_extensions' => '%s allowed.',
     'global.accessibility.file_size_limit' => '%s MB maximum.',
     'global.accessibility.admin_file_size_limit_help' => 'You are not able to set a higher limit than your actual server upload limit.',
+    'global.accessibility.whitelisted_continents' => 'Allowed continents',
+    'global.accessibility.whitelisted_countries' => 'Allowed countries',
+    'global.accessibility.whitelisted_cities' => 'Allowed cities',
+    'global.accessibility.whitelisted_devices' => 'Allowed devices',
+    'global.accessibility.whitelisted_operating_systems' => 'Allowed operating systems',
+    'global.accessibility.whitelisted_browsers' => 'Allowed browsers',
 
     // Pagination
     'global.pagination.previous' => 'Previous',

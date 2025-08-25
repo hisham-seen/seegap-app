@@ -91,12 +91,27 @@ class CountdownBlock extends BaseBlockHandler {
             'style' => 'digital-led', // Single countdown style
             'theme' => $_POST['theme'],
             'text_color' => $_POST['theme'] === 'dark' ? '#ffffff' : '#000000', // Auto-set based on theme
-            'background_color' => $_POST['theme'] === 'dark' ? '#2d3748' : '#ffffff', // Auto-set based on theme
+            
+            /* Background settings */
+            'background_color' => $_POST['background_color'] ?? '#00000000',
+            
+            /* Border settings */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#ffffff',
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Shadow settings */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#00000010',
 
             /* Animation settings */
-            'animation' => false,
-            'animation_runs' => 'repeat-1',
-            'animation_delay' => 0,
+            'animation' => $_POST['animation'] ?? false,
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            'animation_delay' => (int) ($_POST['animation_delay'] ?? 0),
 
             /* Display settings */
             'display_continents' => [],
@@ -192,12 +207,27 @@ class CountdownBlock extends BaseBlockHandler {
             'style' => 'digital-led', // Single countdown style
             'theme' => $_POST['theme'],
             'text_color' => $_POST['theme'] === 'dark' ? '#ffffff' : '#000000', // Auto-set based on theme
-            'background_color' => $_POST['theme'] === 'dark' ? '#2d3748' : '#ffffff', // Auto-set based on theme
+            
+            /* Background settings */
+            'background_color' => $_POST['background_color'] ?? '#00000000',
+            
+            /* Border settings */
+            'border_width' => (int) ($_POST['border_width'] ?? 0),
+            'border_color' => $_POST['border_color'] ?? '#ffffff',
+            'border_radius' => $_POST['border_radius'] ?? 'rounded',
+            'border_style' => $_POST['border_style'] ?? 'solid',
+            
+            /* Shadow settings */
+            'border_shadow_offset_x' => (int) ($_POST['border_shadow_offset_x'] ?? 0),
+            'border_shadow_offset_y' => (int) ($_POST['border_shadow_offset_y'] ?? 0),
+            'border_shadow_blur' => (int) ($_POST['border_shadow_blur'] ?? 0),
+            'border_shadow_spread' => (int) ($_POST['border_shadow_spread'] ?? 0),
+            'border_shadow_color' => $_POST['border_shadow_color'] ?? '#00000010',
 
             /* Animation settings */
-            'animation' => false,
-            'animation_runs' => 'repeat-1',
-            'animation_delay' => 0,
+            'animation' => $_POST['animation'] ?? false,
+            'animation_runs' => $_POST['animation_runs'] ?? 'repeat-1',
+            'animation_delay' => (int) ($_POST['animation_delay'] ?? 0),
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

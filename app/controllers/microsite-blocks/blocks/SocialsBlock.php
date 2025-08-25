@@ -62,11 +62,11 @@ class SocialsBlock extends BaseBlockHandler {
             'border_color' => '#000000',
 
             /* Shadow settings */
-            'shadow_offset_x' => 0,
-            'shadow_offset_y' => 0,
-            'shadow_blur' => 0,
-            'shadow_spread' => 0,
-            'shadow_color' => '#000000',
+            'border_shadow_offset_x' => 0,
+            'border_shadow_offset_y' => 0,
+            'border_shadow_blur' => 0,
+            'border_shadow_spread' => 0,
+            'border_shadow_color' => '#000000',
             'shadow_inset' => false,
 
             /* Spacing settings */
@@ -127,11 +127,11 @@ class SocialsBlock extends BaseBlockHandler {
         $_POST['border_color'] = !empty($_POST['border_color']) && verify_hex_color($_POST['border_color']) ? $_POST['border_color'] : '#000000';
 
         /* Shadow settings */
-        $_POST['shadow_offset_x'] = isset($_POST['shadow_offset_x']) ? (int) $_POST['shadow_offset_x'] : 0;
-        $_POST['shadow_offset_y'] = isset($_POST['shadow_offset_y']) ? (int) $_POST['shadow_offset_y'] : 0;
-        $_POST['shadow_blur'] = isset($_POST['shadow_blur']) ? (int) $_POST['shadow_blur'] : 0;
-        $_POST['shadow_spread'] = isset($_POST['shadow_spread']) ? (int) $_POST['shadow_spread'] : 0;
-        $_POST['shadow_color'] = !empty($_POST['shadow_color']) && verify_hex_color($_POST['shadow_color']) ? $_POST['shadow_color'] : '#000000';
+        $_POST['border_shadow_offset_x'] = isset($_POST['border_shadow_offset_x']) ? max(-25, min(25, (int) $_POST['border_shadow_offset_x'])) : 0;
+        $_POST['border_shadow_offset_y'] = isset($_POST['border_shadow_offset_y']) ? max(-25, min(25, (int) $_POST['border_shadow_offset_y'])) : 0;
+        $_POST['border_shadow_blur'] = isset($_POST['border_shadow_blur']) ? max(0, min(30, (int) $_POST['border_shadow_blur'])) : 0;
+        $_POST['border_shadow_spread'] = isset($_POST['border_shadow_spread']) ? max(-15, min(15, (int) $_POST['border_shadow_spread'])) : 0;
+        $_POST['border_shadow_color'] = !empty($_POST['border_shadow_color']) && verify_hex_color($_POST['border_shadow_color']) ? $_POST['border_shadow_color'] : '#000000';
         $_POST['shadow_inset'] = isset($_POST['shadow_inset']) ? (bool) $_POST['shadow_inset'] : false;
 
         /* Spacing settings */
@@ -181,11 +181,11 @@ class SocialsBlock extends BaseBlockHandler {
             'border_color' => $_POST['border_color'],
 
             /* Shadow settings */
-            'shadow_offset_x' => $_POST['shadow_offset_x'],
-            'shadow_offset_y' => $_POST['shadow_offset_y'],
-            'shadow_blur' => $_POST['shadow_blur'],
-            'shadow_spread' => $_POST['shadow_spread'],
-            'shadow_color' => $_POST['shadow_color'],
+            'border_shadow_offset_x' => $_POST['border_shadow_offset_x'],
+            'border_shadow_offset_y' => $_POST['border_shadow_offset_y'],
+            'border_shadow_blur' => $_POST['border_shadow_blur'],
+            'border_shadow_spread' => $_POST['border_shadow_spread'],
+            'border_shadow_color' => $_POST['border_shadow_color'],
             'shadow_inset' => $_POST['shadow_inset'],
 
             /* Spacing settings */

@@ -42,10 +42,30 @@ class ImageSliderBlock extends BaseBlockHandler {
         $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;
         $_POST['transition_type'] = in_array($_POST['transition_type'], ['slide', 'fade', 'loop']) ? $_POST['transition_type'] : 'slide';
         $_POST['transition_speed'] = in_array($_POST['transition_speed'], range(200, 2000)) ? (int) $_POST['transition_speed'] : 600;
-        $_POST['slides_per_view'] = in_array($_POST['slides_per_view'], range(1, 4)) ? (int) $_POST['slides_per_view'] : 1;
+        $_POST['slides_per_view'] = isset($_POST['slides_per_view']) && is_numeric($_POST['slides_per_view']) && $_POST['slides_per_view'] >= 1 && $_POST['slides_per_view'] <= 4 ? (int) $_POST['slides_per_view'] : 1;
         $_POST['slide_gap'] = in_array($_POST['slide_gap'], range(0, 50)) ? (int) $_POST['slide_gap'] : 0;
         $_POST['pause_on_hover'] = isset($_POST['pause_on_hover']);
         $_POST['infinite_loop'] = isset($_POST['infinite_loop']);
+
+        // Visual Settings - Hover Effect
+        $_POST['hover_effect'] = in_array($_POST['hover_effect'], ['none', 'zoom', 'fade', 'lift']) ? $_POST['hover_effect'] : 'none';
+
+        // Individual Image Border Settings
+        $_POST['border_width'] = (int) ($_POST['border_width'] ?? 0);
+        $_POST['border_color'] = !empty($_POST['border_color']) && preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['border_color']) ? $_POST['border_color'] : '#000000';
+        $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'dotted', 'double']) ? $_POST['border_style'] : 'solid';
+        $_POST['border_radius'] = (int) ($_POST['border_radius'] ?? 0);
+
+        // Individual Image Shadow Settings
+        $_POST['shadow_offset_x'] = (int) ($_POST['shadow_offset_x'] ?? 0);
+        $_POST['shadow_offset_y'] = (int) ($_POST['shadow_offset_y'] ?? 0);
+        $_POST['shadow_blur'] = (int) ($_POST['shadow_blur'] ?? 0);
+        $_POST['shadow_spread'] = (int) ($_POST['shadow_spread'] ?? 0);
+        $_POST['shadow_color'] = !empty($_POST['shadow_color']) && preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['shadow_color']) ? $_POST['shadow_color'] : '#000000';
+
+        // Background Settings
+        $_POST['background_color'] = !empty($_POST['background_color']) && preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['background_color']) ? $_POST['background_color'] : '';
+        $_POST['background_gradient'] = !empty($_POST['background_gradient']) ? $_POST['background_gradient'] : '';
 
         if(!$link = db()->where('link_id', $_POST['link_id'])->where('user_id', $this->user->user_id)->getOne('links')) {
             die();
@@ -105,6 +125,26 @@ class ImageSliderBlock extends BaseBlockHandler {
             'pause_on_hover' => $_POST['pause_on_hover'],
             'infinite_loop' => $_POST['infinite_loop'],
 
+            /* Visual Settings */
+            'hover_effect' => $_POST['hover_effect'],
+
+            /* Individual Image Border Settings */
+            'border_width' => $_POST['border_width'],
+            'border_color' => $_POST['border_color'],
+            'border_style' => $_POST['border_style'],
+            'border_radius' => $_POST['border_radius'],
+
+            /* Individual Image Shadow Settings */
+            'shadow_offset_x' => $_POST['shadow_offset_x'],
+            'shadow_offset_y' => $_POST['shadow_offset_y'],
+            'shadow_blur' => $_POST['shadow_blur'],
+            'shadow_spread' => $_POST['shadow_spread'],
+            'shadow_color' => $_POST['shadow_color'],
+
+            /* Background Settings */
+            'background_color' => $_POST['background_color'],
+            'background_gradient' => $_POST['background_gradient'],
+
             /* Display settings */
             'display_continents' => [],
             'display_countries' => [],
@@ -151,10 +191,30 @@ class ImageSliderBlock extends BaseBlockHandler {
         $_POST['border_radius'] = in_array($_POST['border_radius'], range(0, 50)) ? (int) $_POST['border_radius'] : 0;
         $_POST['transition_type'] = in_array($_POST['transition_type'], ['slide', 'fade', 'loop']) ? $_POST['transition_type'] : 'slide';
         $_POST['transition_speed'] = in_array($_POST['transition_speed'], range(200, 2000)) ? (int) $_POST['transition_speed'] : 600;
-        $_POST['slides_per_view'] = in_array($_POST['slides_per_view'], range(1, 4)) ? (int) $_POST['slides_per_view'] : 1;
+        $_POST['slides_per_view'] = isset($_POST['slides_per_view']) && is_numeric($_POST['slides_per_view']) && $_POST['slides_per_view'] >= 1 && $_POST['slides_per_view'] <= 4 ? (int) $_POST['slides_per_view'] : 1;
         $_POST['slide_gap'] = in_array($_POST['slide_gap'], range(0, 50)) ? (int) $_POST['slide_gap'] : 0;
         $_POST['pause_on_hover'] = isset($_POST['pause_on_hover']);
         $_POST['infinite_loop'] = isset($_POST['infinite_loop']);
+
+        // Visual Settings - Hover Effect
+        $_POST['hover_effect'] = in_array($_POST['hover_effect'], ['none', 'zoom', 'fade', 'lift']) ? $_POST['hover_effect'] : 'none';
+
+        // Individual Image Border Settings
+        $_POST['border_width'] = (int) ($_POST['border_width'] ?? 0);
+        $_POST['border_color'] = !empty($_POST['border_color']) && preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['border_color']) ? $_POST['border_color'] : '#000000';
+        $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'dotted', 'double']) ? $_POST['border_style'] : 'solid';
+        $_POST['border_radius'] = (int) ($_POST['border_radius'] ?? 0);
+
+        // Individual Image Shadow Settings
+        $_POST['shadow_offset_x'] = (int) ($_POST['shadow_offset_x'] ?? 0);
+        $_POST['shadow_offset_y'] = (int) ($_POST['shadow_offset_y'] ?? 0);
+        $_POST['shadow_blur'] = (int) ($_POST['shadow_blur'] ?? 0);
+        $_POST['shadow_spread'] = (int) ($_POST['shadow_spread'] ?? 0);
+        $_POST['shadow_color'] = !empty($_POST['shadow_color']) && preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['shadow_color']) ? $_POST['shadow_color'] : '#000000';
+
+        // Background Settings
+        $_POST['background_color'] = !empty($_POST['background_color']) && preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['background_color']) ? $_POST['background_color'] : '';
+        $_POST['background_gradient'] = !empty($_POST['background_gradient']) ? $_POST['background_gradient'] : '';
 
         /* Display settings */
         $this->process_display_settings();
@@ -256,6 +316,26 @@ class ImageSliderBlock extends BaseBlockHandler {
             'slide_gap' => $_POST['slide_gap'],
             'pause_on_hover' => $_POST['pause_on_hover'],
             'infinite_loop' => $_POST['infinite_loop'],
+
+            /* Visual Settings */
+            'hover_effect' => $_POST['hover_effect'],
+
+            /* Individual Image Border Settings */
+            'border_width' => $_POST['border_width'],
+            'border_color' => $_POST['border_color'],
+            'border_style' => $_POST['border_style'],
+            'border_radius' => $_POST['border_radius'],
+
+            /* Individual Image Shadow Settings */
+            'shadow_offset_x' => $_POST['shadow_offset_x'],
+            'shadow_offset_y' => $_POST['shadow_offset_y'],
+            'shadow_blur' => $_POST['shadow_blur'],
+            'shadow_spread' => $_POST['shadow_spread'],
+            'shadow_color' => $_POST['shadow_color'],
+
+            /* Background Settings */
+            'background_color' => $_POST['background_color'],
+            'background_gradient' => $_POST['background_gradient'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

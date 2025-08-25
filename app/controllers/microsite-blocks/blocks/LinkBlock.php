@@ -50,10 +50,11 @@ class LinkBlock extends BaseBlockHandler {
             'border_shadow_color' => '#00000010',
             'border_width' => 0,
             'border_style' => 'solid',
-            'border_color' => 'white',
-            'border_radius' => 'rounded',
+            'border_color' => '#ffffff',
+            'border_radius' => 4,
             'animation' => false,
             'animation_runs' => 'repeat-1',
+            'animation_delay' => 0,
             'icon' => '',
             'image' => '',
 
@@ -91,21 +92,22 @@ class LinkBlock extends BaseBlockHandler {
         $_POST['location_url'] = get_url($_POST['location_url']);
         $_POST['name'] = mb_substr(query_clean($_POST['name']), 0, 128);
         $_POST['open_in_new_tab'] = (int) isset($_POST['open_in_new_tab']);
-        $_POST['border_radius'] = in_array($_POST['border_radius'], ['straight', 'round', 'rounded']) ? query_clean($_POST['border_radius']) : 'rounded';
-        $_POST['border_width'] = in_array($_POST['border_width'], [0, 1, 2, 3, 4, 5]) ? (int) $_POST['border_width'] : 0;
+        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
+        $_POST['border_width'] = in_array($_POST['border_width'], range(0, 20)) ? (int) $_POST['border_width'] : 0;
+        $_POST['border_color'] = !verify_hex_color($_POST['border_color']) ? '#ffffff' : $_POST['border_color'];
+        $_POST['border_radius'] = (is_numeric($_POST['border_radius']) && $_POST['border_radius'] >= 0 && $_POST['border_radius'] <= 50) ? (int) $_POST['border_radius'] : 4;
         $_POST['border_style'] = in_array($_POST['border_style'], ['solid', 'dashed', 'double', 'inset', 'outset']) ? query_clean($_POST['border_style']) : 'solid';
-        $_POST['border_color'] = !verify_hex_color($_POST['border_color']) ? '#000000' : $_POST['border_color'];
-        $_POST['border_shadow_offset_x'] = in_array($_POST['border_shadow_offset_x'], range(-20, 20)) ? (int) $_POST['border_shadow_offset_x'] : 0;
-        $_POST['border_shadow_offset_y'] = in_array($_POST['border_shadow_offset_y'], range(-20, 20)) ? (int) $_POST['border_shadow_offset_y'] : 0;
-        $_POST['border_shadow_blur'] = in_array($_POST['border_shadow_blur'], range(0, 20)) ? (int) $_POST['border_shadow_blur'] : 0;
-        $_POST['border_shadow_spread'] = in_array($_POST['border_shadow_spread'], range(0, 10)) ? (int) $_POST['border_shadow_spread'] : 0;
-        $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#000000' : $_POST['border_shadow_color'];
+        $_POST['border_shadow_offset_x'] = in_array($_POST['border_shadow_offset_x'], range(-50, 50)) ? (int) $_POST['border_shadow_offset_x'] : 0;
+        $_POST['border_shadow_offset_y'] = in_array($_POST['border_shadow_offset_y'], range(-50, 50)) ? (int) $_POST['border_shadow_offset_y'] : 0;
+        $_POST['border_shadow_blur'] = in_array($_POST['border_shadow_blur'], range(0, 50)) ? (int) $_POST['border_shadow_blur'] : 0;
+        $_POST['border_shadow_spread'] = in_array($_POST['border_shadow_spread'], range(0, 20)) ? (int) $_POST['border_shadow_spread'] : 0;
+        $_POST['border_shadow_color'] = !verify_hex_color($_POST['border_shadow_color']) ? '#00000000' : $_POST['border_shadow_color'];
         $_POST['animation'] = in_array($_POST['animation'], require APP_PATH . 'includes/microsite_animations.php') || $_POST['animation'] == 'false' ? query_clean($_POST['animation']) : false;
         $_POST['animation_runs'] = isset($_POST['animation_runs']) && in_array($_POST['animation_runs'], ['repeat-1', 'repeat-2', 'repeat-3', 'infinite']) ? query_clean($_POST['animation_runs']) : false;
+        $_POST['animation_delay'] = (int) ($_POST['animation_delay'] ?? 0);
         $_POST['icon'] = query_clean($_POST['icon']);
         $_POST['text_color'] = !verify_hex_color($_POST['text_color']) ? '#000000' : $_POST['text_color'];
         $_POST['text_alignment'] = in_array($_POST['text_alignment'], ['center', 'left', 'right', 'justify']) ? query_clean($_POST['text_alignment']) : 'center';
-        $_POST['background_color'] = !verify_hex_color($_POST['background_color']) ? '#ffffff' : $_POST['background_color'];
 
         /* Display settings */
         $this->process_display_settings();
@@ -150,6 +152,7 @@ class LinkBlock extends BaseBlockHandler {
             'border_shadow_color' => $_POST['border_shadow_color'],
             'animation' => $_POST['animation'],
             'animation_runs' => $_POST['animation_runs'],
+            'animation_delay' => $_POST['animation_delay'],
             'icon' => $_POST['icon'],
             'image' => $db_image,
 

@@ -837,7 +837,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> <?= l('global.please_wait') ?>';
             
             // Make AJAX request
-            fetch('<?= url('link-ajax') ?>', {
+            fetch('<?= url('ajax') ?>', {
                 method: 'POST',
                 body: formData
             })

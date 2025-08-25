@@ -78,13 +78,13 @@ class SocialMediaEmbedBlock extends Controller {
             }
 
             /* Shadow settings */
-            if(isset($_POST['box_shadow_offset_x'])) {
-                $settings['box_shadow_offset_x'] = (int) $_POST['box_shadow_offset_x'];
-                $settings['box_shadow_offset_y'] = (int) $_POST['box_shadow_offset_y'];
-                $settings['box_shadow_blur'] = (int) $_POST['box_shadow_blur'];
-                $settings['box_shadow_spread'] = (int) $_POST['box_shadow_spread'];
-                $settings['box_shadow_color'] = !preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['box_shadow_color']) ? '#000000' : $_POST['box_shadow_color'];
-                $settings['box_shadow'] = $settings['box_shadow_offset_x'] . 'px ' . $settings['box_shadow_offset_y'] . 'px ' . $settings['box_shadow_blur'] . 'px ' . $settings['box_shadow_spread'] . 'px ' . $settings['box_shadow_color'];
+            if(isset($_POST['border_shadow_offset_x'])) {
+                $settings['border_shadow_offset_x'] = max(-25, min(25, (int) $_POST['border_shadow_offset_x']));
+                $settings['border_shadow_offset_y'] = max(-25, min(25, (int) $_POST['border_shadow_offset_y']));
+                $settings['border_shadow_blur'] = max(0, min(30, (int) $_POST['border_shadow_blur']));
+                $settings['border_shadow_spread'] = max(-15, min(15, (int) $_POST['border_shadow_spread']));
+                $settings['border_shadow_color'] = !preg_match('/#([A-Fa-f0-9]{3,4}){1,2}\b/i', $_POST['border_shadow_color']) ? '#000000' : $_POST['border_shadow_color'];
+                $settings['border_shadow'] = $settings['border_shadow_offset_x'] . 'px ' . $settings['border_shadow_offset_y'] . 'px ' . $settings['border_shadow_blur'] . 'px ' . $settings['border_shadow_spread'] . 'px ' . $settings['border_shadow_color'];
             }
 
             /* Animation settings */

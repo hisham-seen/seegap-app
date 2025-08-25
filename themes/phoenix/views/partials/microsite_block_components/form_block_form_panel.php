@@ -40,7 +40,7 @@ if ($form_type === 'create') {
         'text_color' => '#000000',
         'background_color' => '#ffffff',
         'text_alignment' => 'center',
-        'border_radius' => 'rounded',
+        'border_radius' => 0,
         'border_width' => 0,
         'border_style' => 'solid',
         'border_color' => '#000000',
@@ -201,6 +201,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                                             <option value="checkbox" <?= ($question->type ?? 'text') == 'checkbox' ? 'selected' : '' ?>><?= l('microsite_form.question_type.checkbox') ?></option>
                                             <option value="radio" <?= ($question->type ?? 'text') == 'radio' ? 'selected' : '' ?>><?= l('microsite_form.question_type.radio') ?></option>
                                             <option value="dropdown" <?= ($question->type ?? 'text') == 'dropdown' ? 'selected' : '' ?>><?= l('microsite_form.question_type.dropdown') ?></option>
+                                            <option value="receipt_upload" <?= ($question->type ?? 'text') == 'receipt_upload' ? 'selected' : '' ?>><?= l('microsite_form.question_type.receipt_upload') ?></option>
                                         </select>
                                     </div>
 
@@ -253,6 +254,193 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                                     <?php else: ?>
                                         <input type="hidden" name="question_max_rating[<?= $key ?>]" value="5">
                                     <?php endif ?>
+
+                                    <!-- Conditional Fields for Receipt Upload Questions -->
+                                    <?php if(($question->type ?? 'text') == 'receipt_upload'): ?>
+                                        <div class="form-group question-receipt-group">
+                                            <div class="card">
+                                                <div class="card-header bg-primary text-white">
+                                                    <h6 class="mb-0">
+                                                        <i class="fas fa-fw fa-receipt mr-2"></i>
+                                                        Receipt Upload Settings
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <!-- AI Analysis Toggle -->
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" name="question_ai_analysis[<?= $key ?>]" value="1" class="custom-control-input question-ai-analysis-input" id="question_ai_analysis_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->ai_analysis_enabled ?? false) ? 'checked' : '' ?> />
+                                                            <label class="custom-control-label" for="question_ai_analysis_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                <i class="fas fa-fw fa-brain fa-sm text-primary mr-1"></i> Enable AI Analysis
+                                                            </label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Automatically analyze receipt data using AI when users upload images.</small>
+                                                    </div>
+
+                                                    <!-- AI Analysis Settings (shown when enabled) -->
+                                                    <div class="ai-analysis-settings" style="display: <?= ($question->options->ai_analysis_enabled ?? false) ? 'block' : 'none' ?>">
+                                                        <!-- AI Providers -->
+                                                        <div class="form-group">
+                                                            <label><i class="fas fa-fw fa-cloud fa-sm text-muted mr-1"></i> AI Providers</label>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_ai_providers[<?= $key ?>][]" value="openai" class="custom-control-input" id="ai_provider_openai_<?= $questions_block_id ?>_<?= $key ?>" <?= (isset($question->options->ai_providers) && in_array('openai', $question->options->ai_providers)) ? 'checked' : 'checked' ?> />
+                                                                        <label class="custom-control-label" for="ai_provider_openai_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <strong>OpenAI GPT-4 Vision</strong><br>
+                                                                            <small class="text-muted">High accuracy, good for complex receipts</small>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_ai_providers[<?= $key ?>][]" value="google" class="custom-control-input" id="ai_provider_google_<?= $questions_block_id ?>_<?= $key ?>" <?= (isset($question->options->ai_providers) && in_array('google', $question->options->ai_providers)) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="ai_provider_google_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <strong>Google Gemini Pro Vision</strong><br>
+                                                                            <small class="text-muted">Fast processing, multilingual support</small>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_ai_providers[<?= $key ?>][]" value="anthropic" class="custom-control-input" id="ai_provider_anthropic_<?= $questions_block_id ?>_<?= $key ?>" <?= (isset($question->options->ai_providers) && in_array('anthropic', $question->options->ai_providers)) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="ai_provider_anthropic_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <strong>Anthropic Claude 3</strong><br>
+                                                                            <small class="text-muted">Detailed analysis, good reasoning</small>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <small class="form-text text-muted">Select one or more AI providers. Multiple providers provide redundancy and improved accuracy.</small>
+                                                        </div>
+
+                                                        <!-- Data Extraction Options -->
+                                                        <div class="form-group">
+                                                            <label><i class="fas fa-fw fa-extract fa-sm text-muted mr-1"></i> Data to Extract</label>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_extract_items[<?= $key ?>]" value="1" class="custom-control-input" id="extract_items_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->extract_items ?? true) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="extract_items_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <i class="fas fa-fw fa-list fa-sm mr-1"></i> Items & Prices
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_extract_totals[<?= $key ?>]" value="1" class="custom-control-input" id="extract_totals_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->extract_totals ?? true) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="extract_totals_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <i class="fas fa-fw fa-calculator fa-sm mr-1"></i> Totals & Subtotals
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_extract_merchant[<?= $key ?>]" value="1" class="custom-control-input" id="extract_merchant_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->extract_merchant ?? true) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="extract_merchant_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <i class="fas fa-fw fa-store fa-sm mr-1"></i> Merchant Info
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_extract_date[<?= $key ?>]" value="1" class="custom-control-input" id="extract_date_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->extract_date ?? true) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="extract_date_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <i class="fas fa-fw fa-calendar fa-sm mr-1"></i> Date & Time
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_extract_payment_method[<?= $key ?>]" value="1" class="custom-control-input" id="extract_payment_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->extract_payment_method ?? false) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="extract_payment_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <i class="fas fa-fw fa-credit-card fa-sm mr-1"></i> Payment Method
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" name="question_extract_tax[<?= $key ?>]" value="1" class="custom-control-input" id="extract_tax_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->extract_tax ?? false) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="extract_tax_<?= $questions_block_id ?>_<?= $key ?>">
+                                                                            <i class="fas fa-fw fa-percentage fa-sm mr-1"></i> Tax Information
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <small class="form-text text-muted">Choose what information to extract from receipts. More data extraction may take longer to process.</small>
+                                                        </div>
+
+                                                        <!-- Processing Settings -->
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label><i class="fas fa-fw fa-tachometer-alt fa-sm text-muted mr-1"></i> Processing Priority</label>
+                                                                    <select name="question_processing_priority[<?= $key ?>]" class="form-control">
+                                                                        <option value="low" <?= ($question->options->processing_priority ?? 'normal') == 'low' ? 'selected' : '' ?>>Low (Slower, cheaper)</option>
+                                                                        <option value="normal" <?= ($question->options->processing_priority ?? 'normal') == 'normal' ? 'selected' : '' ?>>Normal (Balanced)</option>
+                                                                        <option value="high" <?= ($question->options->processing_priority ?? 'normal') == 'high' ? 'selected' : '' ?>>High (Faster, premium)</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label><i class="fas fa-fw fa-redo fa-sm text-muted mr-1"></i> Auto-Retry</label>
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="checkbox" name="question_auto_retry[<?= $key ?>]" value="1" class="custom-control-input" id="auto_retry_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->auto_retry ?? true) ? 'checked' : '' ?> />
+                                                                        <label class="custom-control-label" for="auto_retry_<?= $questions_block_id ?>_<?= $key ?>">Enable auto-retry on failure</label>
+                                                                    </div>
+                                                                    <select name="question_max_retries[<?= $key ?>]" class="form-control mt-2">
+                                                                        <option value="1" <?= ($question->options->max_retries ?? 3) == 1 ? 'selected' : '' ?>>1 retry</option>
+                                                                        <option value="2" <?= ($question->options->max_retries ?? 3) == 2 ? 'selected' : '' ?>>2 retries</option>
+                                                                        <option value="3" <?= ($question->options->max_retries ?? 3) == 3 ? 'selected' : '' ?>>3 retries</option>
+                                                                        <option value="5" <?= ($question->options->max_retries ?? 3) == 5 ? 'selected' : '' ?>>5 retries</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- File Upload Settings -->
+                                                    <div class="form-group">
+                                                        <label><i class="fas fa-fw fa-upload fa-sm text-muted mr-1"></i> Upload Settings</label>
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <label class="small">Max File Size</label>
+                                                                <select name="question_max_file_size[<?= $key ?>]" class="form-control">
+                                                                    <option value="1" <?= ($question->options->max_file_size ?? 5) == 1 ? 'selected' : '' ?>>1 MB</option>
+                                                                    <option value="2" <?= ($question->options->max_file_size ?? 5) == 2 ? 'selected' : '' ?>>2 MB</option>
+                                                                    <option value="5" <?= ($question->options->max_file_size ?? 5) == 5 ? 'selected' : '' ?>>5 MB</option>
+                                                                    <option value="10" <?= ($question->options->max_file_size ?? 5) == 10 ? 'selected' : '' ?>>10 MB</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="small">Camera Quality</label>
+                                                                <select name="question_camera_quality[<?= $key ?>]" class="form-control">
+                                                                    <option value="low" <?= ($question->options->camera_quality ?? 'high') == 'low' ? 'selected' : '' ?>>Low (Faster)</option>
+                                                                    <option value="medium" <?= ($question->options->camera_quality ?? 'high') == 'medium' ? 'selected' : '' ?>>Medium</option>
+                                                                    <option value="high" <?= ($question->options->camera_quality ?? 'high') == 'high' ? 'selected' : '' ?>>High (Better OCR)</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="custom-control custom-switch mt-4">
+                                                                    <input type="checkbox" name="question_multiple_uploads[<?= $key ?>]" value="1" class="custom-control-input" id="multiple_uploads_<?= $questions_block_id ?>_<?= $key ?>" <?= ($question->options->multiple_uploads ?? false) ? 'checked' : '' ?> />
+                                                                    <label class="custom-control-label" for="multiple_uploads_<?= $questions_block_id ?>_<?= $key ?>">Multiple uploads</label>
+                                                                </div>
+                                                                <select name="question_max_uploads[<?= $key ?>]" class="form-control mt-1" style="display: <?= ($question->options->multiple_uploads ?? false) ? 'block' : 'none' ?>">
+                                                                    <option value="1" <?= ($question->options->max_uploads ?? 3) == 1 ? 'selected' : '' ?>>1 file</option>
+                                                                    <option value="2" <?= ($question->options->max_uploads ?? 3) == 2 ? 'selected' : '' ?>>2 files</option>
+                                                                    <option value="3" <?= ($question->options->max_uploads ?? 3) == 3 ? 'selected' : '' ?>>3 files</option>
+                                                                    <option value="5" <?= ($question->options->max_uploads ?? 3) == 5 ? 'selected' : '' ?>>5 files</option>
+                                                                    <option value="10" <?= ($question->options->max_uploads ?? 3) == 10 ? 'selected' : '' ?>>10 files</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <small class="form-text text-muted">Supported formats: JPG, PNG, PDF, HEIC, WebP. Higher quality images provide better AI analysis results.</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif ?>
                                 </div>
                             </div>
                         </div>
@@ -289,6 +477,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                                         <option value="checkbox"><?= l('microsite_form.question_type.checkbox') ?></option>
                                         <option value="radio"><?= l('microsite_form.question_type.radio') ?></option>
                                         <option value="dropdown"><?= l('microsite_form.question_type.dropdown') ?></option>
+                                        <option value="receipt_upload">Receipt Upload</option>
                                     </select>
                                 </div>
 
@@ -363,6 +552,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                                 <option value="checkbox"><?= l('microsite_form.question_type.checkbox') ?></option>
                                 <option value="radio"><?= l('microsite_form.question_type.radio') ?></option>
                                 <option value="dropdown"><?= l('microsite_form.question_type.dropdown') ?></option>
+                                <option value="receipt_upload">Receipt Upload</option>
                             </select>
                         </div>
 
@@ -544,11 +734,91 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                         <?php foreach(['center', 'justify', 'left', 'right'] as $text_alignment): ?>
                             <div class="col-6">
                                 <label class="btn btn-light btn-block text-truncate <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'active' : '' ?>">
-                                    <input type="radio" name="text_alignment" value="<?= $text_alignment ?>" class="custom-control-input" <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'checked="checked"' : '' ?> />
+                                    <input type="radio" name="text_alignment" value="<?= $text_alignment ?>" class="custom-control-input" <?= ($row->settings->text_alignment ?? 'center') == $text_alignment ? 'checked="checked"' : '' ?> onchange="updateCanvasText('<?= $unique_id ?>')" />
                                     <i class="fas fa-fw fa-align-<?= $text_alignment ?> fa-sm mr-1"></i> <?= l('microsite_link.text_alignment.' . $text_alignment) ?>
                                 </label>
                             </div>
                         <?php endforeach ?>
+                    </div>
+                </div>
+
+                <!-- Form Display Mode Customization -->
+                <div class="form-group">
+                    <label><i class="fas fa-fw fa-cog fa-sm text-muted mr-1"></i> Form Display Customization</label>
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Inline Form Styling -->
+                            <div class="form-group">
+                                <label><i class="fas fa-fw fa-list fa-sm text-muted mr-1"></i> Inline Form Style</label>
+                                <div class="row btn-group-toggle" data-toggle="buttons">
+                                    <div class="col-6">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->inline_form_style ?? 'card') == 'card' ? 'active' : '' ?>">
+                                            <input type="radio" name="inline_form_style" value="card" class="custom-control-input" <?= ($row->settings->inline_form_style ?? 'card') == 'card' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-square fa-sm mr-1"></i> Card Style
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->inline_form_style ?? 'card') == 'minimal' ? 'active' : '' ?>">
+                                            <input type="radio" name="inline_form_style" value="minimal" class="custom-control-input" <?= ($row->settings->inline_form_style ?? 'card') == 'minimal' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-minus fa-sm mr-1"></i> Minimal
+                                        </label>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">Choose how the inline form appears: Card style with background/borders, or Minimal with just form fields.</small>
+                            </div>
+
+                            <!-- Modal Form Styling -->
+                            <div class="form-group">
+                                <label><i class="fas fa-fw fa-window-maximize fa-sm text-muted mr-1"></i> Modal Form Style</label>
+                                <div class="row btn-group-toggle" data-toggle="buttons">
+                                    <div class="col-4">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->modal_form_style ?? 'standard') == 'standard' ? 'active' : '' ?>">
+                                            <input type="radio" name="modal_form_style" value="standard" class="custom-control-input" <?= ($row->settings->modal_form_style ?? 'standard') == 'standard' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-window-maximize fa-sm mr-1"></i> Standard
+                                        </label>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->modal_form_style ?? 'standard') == 'fullscreen' ? 'active' : '' ?>">
+                                            <input type="radio" name="modal_form_style" value="fullscreen" class="custom-control-input" <?= ($row->settings->modal_form_style ?? 'standard') == 'fullscreen' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-expand fa-sm mr-1"></i> Fullscreen
+                                        </label>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->modal_form_style ?? 'standard') == 'sidebar' ? 'active' : '' ?>">
+                                            <input type="radio" name="modal_form_style" value="sidebar" class="custom-control-input" <?= ($row->settings->modal_form_style ?? 'standard') == 'sidebar' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-columns fa-sm mr-1"></i> Sidebar
+                                        </label>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">Choose modal appearance: Standard popup, Fullscreen overlay, or Sidebar slide-in.</small>
+                            </div>
+
+                            <!-- Button Trigger Style (for modal mode) -->
+                            <div class="form-group">
+                                <label><i class="fas fa-fw fa-mouse-pointer fa-sm text-muted mr-1"></i> Button Trigger Style</label>
+                                <div class="row btn-group-toggle" data-toggle="buttons">
+                                    <div class="col-4">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->button_trigger_style ?? 'button') == 'button' ? 'active' : '' ?>">
+                                            <input type="radio" name="button_trigger_style" value="button" class="custom-control-input" <?= ($row->settings->button_trigger_style ?? 'button') == 'button' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-square fa-sm mr-1"></i> Button
+                                        </label>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->button_trigger_style ?? 'button') == 'link' ? 'active' : '' ?>">
+                                            <input type="radio" name="button_trigger_style" value="link" class="custom-control-input" <?= ($row->settings->button_trigger_style ?? 'button') == 'link' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-link fa-sm mr-1"></i> Link
+                                        </label>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="btn btn-light btn-block text-truncate <?= ($row->settings->button_trigger_style ?? 'button') == 'icon' ? 'active' : '' ?>">
+                                            <input type="radio" name="button_trigger_style" value="icon" class="custom-control-input" <?= ($row->settings->button_trigger_style ?? 'button') == 'icon' ? 'checked="checked"' : '' ?> onchange="updateCanvasFormStyle('<?= $unique_id ?>')" />
+                                            <i class="fas fa-fw fa-icons fa-sm mr-1"></i> Icon Only
+                                        </label>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">Choose how the modal trigger appears: Standard button, text link, or icon only.</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -602,7 +872,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                 ?>
                 <div class="form-group">
                     <label for="<?= 'animation_' . $component_block_id ?>"><i class="fas fa-fw fa-film fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation') ?></label>
-                    <select id="<?= 'animation_' . $component_block_id ?>" name="animation" class="form-control">
+                    <select id="<?= 'animation_' . $component_block_id ?>" name="animation" class="form-control" onchange="updateCanvasAnimation('<?= $component_block_id ?>')">
                         <option value="false" <?= (!isset($component_settings->animation) || !$component_settings->animation) ? 'selected="selected"' : null ?>><?= l('global.none') ?></option>
                         <?php foreach(require APP_PATH . 'includes/microsite_animations.php' as $animation): ?>
                             <option value="<?= $animation ?>" <?= (isset($component_settings->animation) && $component_settings->animation == $animation) ? 'selected="selected"' : null ?>><?= l('microsite_animations.' . $animation) ?></option>
@@ -612,7 +882,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
 
                 <div class="form-group">
                     <label for="<?= 'animation_runs_' . $component_block_id ?>"><i class="fas fa-fw fa-play fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation_runs') ?></label>
-                    <select id="<?= 'animation_runs_' . $component_block_id ?>" name="animation_runs" class="form-control">
+                    <select id="<?= 'animation_runs_' . $component_block_id ?>" name="animation_runs" class="form-control" onchange="updateCanvasAnimation('<?= $component_block_id ?>')">
                         <option value="repeat-1" <?= (!isset($component_settings->animation_runs) || $component_settings->animation_runs == 'repeat-1') ? 'selected="selected"' : null ?>>1</option>
                         <option value="repeat-2" <?= (isset($component_settings->animation_runs) && $component_settings->animation_runs == 'repeat-2') ? 'selected="selected"' : null ?>>2</option>
                         <option value="repeat-3" <?= (isset($component_settings->animation_runs) && $component_settings->animation_runs == 'repeat-3') ? 'selected="selected"' : null ?>>3</option>
@@ -622,7 +892,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
 
                 <div class="form-group" data-range-counter data-range-counter-suffix="ms">
                     <label for="<?= 'animation_delay_' . $component_block_id ?>"><i class="fas fa-fw fa-clock fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation_delay') ?></label>
-                    <input id="<?= 'animation_delay_' . $component_block_id ?>" type="range" min="0" max="5000" step="100" class="form-control-range" name="animation_delay" value="<?= $component_settings->animation_delay ?? 0 ?>" required="required" />
+                    <input id="<?= 'animation_delay_' . $component_block_id ?>" type="range" min="0" max="5000" step="100" class="form-control-range" name="animation_delay" value="<?= $component_settings->animation_delay ?? 0 ?>" required="required" onchange="updateCanvasAnimation('<?= $component_block_id ?>')" oninput="updateCanvasAnimation('<?= $component_block_id ?>')" />
                 </div>
             </div>
 
@@ -1024,6 +1294,7 @@ function updateQuestionType(select) {
     // Show/hide conditional fields
     const choicesGroup = wrapper.querySelector('.question-choices-group');
     const ratingGroup = wrapper.querySelector('.question-rating-group');
+    const receiptGroup = wrapper.querySelector('.question-receipt-group');
     
     if (choicesGroup) {
         choicesGroup.style.display = ['checkbox', 'radio', 'dropdown'].includes(select.value) ? 'block' : 'none';
@@ -1031,6 +1302,30 @@ function updateQuestionType(select) {
     
     if (ratingGroup) {
         ratingGroup.style.display = ['rating_star', 'rating_number'].includes(select.value) ? 'block' : 'none';
+    }
+    
+    if (receiptGroup) {
+        receiptGroup.style.display = select.value === 'receipt_upload' ? 'block' : 'none';
+    }
+}
+
+// Handle AI analysis toggle for receipt upload questions
+function toggleAIAnalysis(checkbox) {
+    const wrapper = checkbox.closest('.question-receipt-group');
+    const aiSettings = wrapper.querySelector('.ai-analysis-settings');
+    
+    if (aiSettings) {
+        aiSettings.style.display = checkbox.checked ? 'block' : 'none';
+    }
+}
+
+// Handle multiple uploads toggle
+function toggleMultipleUploads(checkbox) {
+    const wrapper = checkbox.closest('.question-receipt-group');
+    const maxUploadsSelect = wrapper.querySelector('select[name*="question_max_uploads"]');
+    
+    if (maxUploadsSelect) {
+        maxUploadsSelect.style.display = checkbox.checked ? 'block' : 'none';
     }
 }
 
@@ -1055,7 +1350,8 @@ function updateRequiredBadge(checkbox) {
 }
 
 // Form question management
-let form_question_add = function(event) {
+if (typeof window.form_question_add === 'undefined') {
+    window.form_question_add = function(event) {
     let microsite_block_id = event.currentTarget.getAttribute('data-microsite-block-id');
     let clone = document.querySelector(`#template_form_question_${microsite_block_id}`).content.cloneNode(true);
     let count = document.querySelectorAll(`[id="questions_container_${microsite_block_id}"] .question-item-wrapper`).length;
@@ -1123,11 +1419,13 @@ let form_question_add = function(event) {
         initializeDragAndDrop(`questions_container_${microsite_block_id}`);
     }, 100);
 
-    form_question_remove_initiator();
-};
+        form_question_remove_initiator();
+    };
+}
 
 // Remove form question
-let form_question_remove = function(event) {
+if (typeof window.form_question_remove === 'undefined') {
+    window.form_question_remove = function(event) {
     const wrapper = event.currentTarget.closest('.question-item-wrapper');
     const container = wrapper.parentNode;
     
@@ -1143,9 +1441,11 @@ let form_question_remove = function(event) {
         // Update field names after removal
         updateFieldNames(container.id);
     }
-};
+    };
+}
 
-let form_question_remove_initiator = function() {
+if (typeof window.form_question_remove_initiator === 'undefined') {
+    window.form_question_remove_initiator = function() {
     document.querySelectorAll('[id^="questions_container_"] [data-remove]').forEach(function(element) {
         element.removeEventListener('click', form_question_remove);
         element.addEventListener('click', form_question_remove);
@@ -1172,7 +1472,8 @@ let form_question_remove_initiator = function() {
             updateRequiredBadge(this);
         });
     });
-};
+    };
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const blockId = '<?= $unique_id ?>';
@@ -1224,8 +1525,160 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Add event listeners
 document.querySelectorAll('[data-add="form_question"]').forEach(function(element) {
-    element.addEventListener('click', form_question_add);
+    element.addEventListener('click', window.form_question_add);
 });
 
-form_question_remove_initiator();
+window.form_question_remove_initiator();
+
+// Form Block Canvas Update Functions
+function updateCanvasText(blockId) {
+    const iframe = document.getElementById('canvas-preview');
+    if (!iframe || !iframe.contentDocument) return;
+    
+    const blockElement = iframe.contentDocument.querySelector(`[data-microsite-block-id="${blockId}"]`);
+    if (!blockElement) return;
+    
+    // Update text alignment
+    const textAlign = document.querySelector(`input[name="text_alignment"]:checked`)?.value || 'center';
+    const textElements = blockElement.querySelectorAll('.form-title, .form-description, .form-label');
+    textElements.forEach(element => {
+        element.style.textAlign = textAlign;
+    });
+    
+    // Update text color if available
+    const textColor = document.querySelector('input[name="text_color"]')?.value;
+    if (textColor) {
+        textElements.forEach(element => {
+            element.style.color = textColor;
+        });
+    }
+}
+
+function updateCanvasFormStyle(blockId) {
+    const iframe = document.getElementById('canvas-preview');
+    if (!iframe || !iframe.contentDocument) return;
+    
+    const blockElement = iframe.contentDocument.querySelector(`[data-microsite-block-id="${blockId}"]`);
+    if (!blockElement) return;
+    
+    const formContainer = blockElement.querySelector('.form-container');
+    if (!formContainer) return;
+    
+    // Update inline form style
+    const inlineStyle = document.querySelector(`input[name="inline_form_style"]:checked`)?.value || 'card';
+    formContainer.classList.remove('form-style-card', 'form-style-minimal');
+    formContainer.classList.add(`form-style-${inlineStyle}`);
+    
+    // Update modal form style
+    const modalStyle = document.querySelector(`input[name="modal_form_style"]:checked`)?.value || 'standard';
+    formContainer.setAttribute('data-modal-style', modalStyle);
+    
+    // Update button trigger style
+    const buttonStyle = document.querySelector(`input[name="button_trigger_style"]:checked`)?.value || 'button';
+    const triggerButton = blockElement.querySelector('.form-trigger-button');
+    if (triggerButton) {
+        triggerButton.classList.remove('btn-style-button', 'btn-style-link', 'btn-style-icon');
+        triggerButton.classList.add(`btn-style-${buttonStyle}`);
+    }
+}
+
+function updateCanvasAnimation(blockId) {
+    const iframe = document.getElementById('canvas-preview');
+    if (!iframe || !iframe.contentDocument) return;
+    
+    const blockElement = iframe.contentDocument.querySelector(`[data-microsite-block-id="${blockId}"]`);
+    if (!blockElement) return;
+    
+    // Get animation settings
+    const animationType = document.querySelector('select[name="animation"]')?.value || 'false';
+    const animationRuns = document.querySelector('select[name="animation_runs"]')?.value || 'repeat-1';
+    const animationDelay = document.querySelector('input[name="animation_delay"]')?.value || '0';
+    
+    // Remove existing animation classes
+    blockElement.classList.remove('animate__animated', 'animate__bounce', 'animate__fadeIn', 'animate__slideInUp', 'animate__zoomIn', 'animate__rotateIn', 'animate__pulse', 'animate__heartBeat', 'animate__infinite', 'animate__repeat-1', 'animate__repeat-2', 'animate__repeat-3');
+    
+    if (animationType && animationType !== 'false') {
+        // Add animation classes
+        blockElement.classList.add('animate__animated', `animate__${animationType}`);
+        
+        // Set animation iteration count
+        if (animationRuns === 'infinite') {
+            blockElement.classList.add('animate__infinite');
+        } else {
+            blockElement.classList.add(`animate__${animationRuns}`);
+        }
+        
+        // Set animation delay
+        blockElement.style.animationDelay = `${animationDelay}ms`;
+        
+        // Restart animation by removing and re-adding classes
+        setTimeout(() => {
+            blockElement.classList.remove('animate__animated', `animate__${animationType}`);
+            setTimeout(() => {
+                blockElement.classList.add('animate__animated', `animate__${animationType}`);
+            }, 10);
+        }, 10);
+    }
+}
+
+function updateCanvasBackground(blockId) {
+    const iframe = document.getElementById('canvas-preview');
+    if (!iframe || !iframe.contentDocument) return;
+    
+    const blockElement = iframe.contentDocument.querySelector(`[data-microsite-block-id="${blockId}"]`);
+    if (!blockElement) return;
+    
+    // Update background color
+    const backgroundColor = document.querySelector('input[name="background_color"]')?.value;
+    if (backgroundColor) {
+        blockElement.style.backgroundColor = backgroundColor;
+    }
+}
+
+function updateCanvasBorder(blockId) {
+    // Check if there's a specific border update function available
+    if (typeof window.updateCanvasBorderRadius === 'function') {
+        window.updateCanvasBorderRadius(blockId);
+    }
+    if (typeof window.updateCanvasBorderWidth === 'function') {
+        window.updateCanvasBorderWidth(blockId);
+    }
+    
+    const iframe = document.getElementById('canvas-preview');
+    if (!iframe || !iframe.contentDocument) return;
+    
+    const blockElement = iframe.contentDocument.querySelector(`[data-microsite-block-id="${blockId}"]`);
+    if (!blockElement) return;
+    
+    // Update border color
+    const borderColor = document.querySelector('input[name="border_color"]')?.value;
+    if (borderColor) {
+        blockElement.style.borderColor = borderColor;
+    }
+}
+
+function updateCanvasShadow(blockId) {
+    // Check if there's a specific shadow update function available
+    if (typeof window.updateCanvasShadow === 'function') {
+        window.updateCanvasShadow(blockId);
+        return;
+    }
+    
+    const iframe = document.getElementById('canvas-preview');
+    if (!iframe || !iframe.contentDocument) return;
+    
+    const blockElement = iframe.contentDocument.querySelector(`[data-microsite-block-id="${blockId}"]`);
+    if (!blockElement) return;
+    
+    // Get shadow settings
+    const shadowHorizontal = document.querySelector('input[name="border_shadow_offset_x"]')?.value || '0';
+    const shadowVertical = document.querySelector('input[name="border_shadow_offset_y"]')?.value || '0';
+    const shadowBlur = document.querySelector('input[name="border_shadow_blur_radius"]')?.value || '0';
+    const shadowSpread = document.querySelector('input[name="border_shadow_spread_radius"]')?.value || '0';
+    const shadowColor = document.querySelector('input[name="border_shadow_color"]')?.value || 'rgba(0,0,0,0.1)';
+    
+    // Apply shadow
+    const shadowValue = `${shadowHorizontal}px ${shadowVertical}px ${shadowBlur}px ${shadowSpread}px ${shadowColor}`;
+    blockElement.style.boxShadow = shadowValue;
+}
 </script>

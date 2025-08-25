@@ -1696,6 +1696,27 @@ class AdminSettings extends Controller {
             $_POST['chats_assistant_name'] = input_clean($_POST['chats_assistant_name'], 64);
             $_POST['syntheses_is_enabled'] = (int) isset($_POST['syntheses_is_enabled']);
 
+            /* Receipt Analysis Settings */
+            $_POST['receipt_analysis_is_enabled'] = (int) isset($_POST['receipt_analysis_is_enabled']);
+            $_POST['receipt_openai_is_enabled'] = (int) isset($_POST['receipt_openai_is_enabled']);
+            $_POST['receipt_openai_model'] = in_array($_POST['receipt_openai_model'], ['gpt-4-vision-preview', 'gpt-4o', 'gpt-4o-mini']) ? $_POST['receipt_openai_model'] : 'gpt-4o';
+            $_POST['receipt_google_is_enabled'] = (int) isset($_POST['receipt_google_is_enabled']);
+            $_POST['receipt_google_api_key'] = trim($_POST['receipt_google_api_key'] ?? '');
+            $_POST['receipt_google_model'] = in_array($_POST['receipt_google_model'], ['gemini-pro-vision', 'gemini-1.5-pro']) ? $_POST['receipt_google_model'] : 'gemini-pro-vision';
+            $_POST['receipt_anthropic_is_enabled'] = (int) isset($_POST['receipt_anthropic_is_enabled']);
+            $_POST['receipt_anthropic_api_key'] = trim($_POST['receipt_anthropic_api_key'] ?? '');
+            $_POST['receipt_anthropic_model'] = in_array($_POST['receipt_anthropic_model'], ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307']) ? $_POST['receipt_anthropic_model'] : 'claude-3-opus-20240229';
+            $_POST['receipt_default_provider'] = in_array($_POST['receipt_default_provider'], ['openai', 'google', 'anthropic']) ? $_POST['receipt_default_provider'] : 'openai';
+            $_POST['receipt_max_retries'] = (int) $_POST['receipt_max_retries'] < 1 ? 3 : (int) $_POST['receipt_max_retries'];
+            $_POST['receipt_timeout'] = (int) $_POST['receipt_timeout'] < 10 ? 30 : (int) $_POST['receipt_timeout'];
+            $_POST['receipt_queue_processing_is_enabled'] = (int) isset($_POST['receipt_queue_processing_is_enabled']);
+            $_POST['receipt_max_concurrent_jobs'] = (int) $_POST['receipt_max_concurrent_jobs'] < 1 ? 5 : (int) $_POST['receipt_max_concurrent_jobs'];
+            $_POST['receipt_extract_items'] = (int) isset($_POST['receipt_extract_items']);
+            $_POST['receipt_extract_totals'] = (int) isset($_POST['receipt_extract_totals']);
+            $_POST['receipt_extract_merchant'] = (int) isset($_POST['receipt_extract_merchant']);
+            $_POST['receipt_extract_date'] = (int) isset($_POST['receipt_extract_date']);
+            $_POST['receipt_extract_payment'] = (int) isset($_POST['receipt_extract_payment']);
+
             /* Uploads processing */
             settings()->aix->chats_avatar = \SeeGap\Uploads::process_upload(settings()->aix->chats_avatar, 'chats_assistants', 'chats_avatar', 'chats_avatar_remove', null);
 
@@ -1713,6 +1734,27 @@ class AdminSettings extends Controller {
                 'chats_assistant_name' => $_POST['chats_assistant_name'],
                 'chats_avatar' => settings()->aix->chats_avatar ?? '',
                 'syntheses_is_enabled' => $_POST['syntheses_is_enabled'],
+
+                /* Receipt Analysis */
+                'receipt_analysis_is_enabled' => $_POST['receipt_analysis_is_enabled'],
+                'receipt_openai_is_enabled' => $_POST['receipt_openai_is_enabled'],
+                'receipt_openai_model' => $_POST['receipt_openai_model'],
+                'receipt_google_is_enabled' => $_POST['receipt_google_is_enabled'],
+                'receipt_google_api_key' => $_POST['receipt_google_api_key'],
+                'receipt_google_model' => $_POST['receipt_google_model'],
+                'receipt_anthropic_is_enabled' => $_POST['receipt_anthropic_is_enabled'],
+                'receipt_anthropic_api_key' => $_POST['receipt_anthropic_api_key'],
+                'receipt_anthropic_model' => $_POST['receipt_anthropic_model'],
+                'receipt_default_provider' => $_POST['receipt_default_provider'],
+                'receipt_max_retries' => $_POST['receipt_max_retries'],
+                'receipt_timeout' => $_POST['receipt_timeout'],
+                'receipt_queue_processing_is_enabled' => $_POST['receipt_queue_processing_is_enabled'],
+                'receipt_max_concurrent_jobs' => $_POST['receipt_max_concurrent_jobs'],
+                'receipt_extract_items' => $_POST['receipt_extract_items'],
+                'receipt_extract_totals' => $_POST['receipt_extract_totals'],
+                'receipt_extract_merchant' => $_POST['receipt_extract_merchant'],
+                'receipt_extract_date' => $_POST['receipt_extract_date'],
+                'receipt_extract_payment' => $_POST['receipt_extract_payment'],
             ]);
 
             $this->update_settings('aix', $value);

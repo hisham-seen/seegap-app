@@ -89,6 +89,19 @@ class ImageGridBlock extends BaseBlockHandler {
             'border_radius' => $_POST['border_radius'],
             'hover_effect' => $_POST['hover_effect'],
 
+            /* Background Settings */
+            'background_color' => !verify_hex_color($_POST['background_color'] ?? '#ffffff') ? '#ffffff' : $_POST['background_color'],
+
+            /* Individual Image Border & Shadow Settings */
+            'border_width' => in_array($_POST['border_width'] ?? 0, range(0, 20)) ? (int) $_POST['border_width'] : 0,
+            'border_color' => !verify_hex_color($_POST['border_color'] ?? '#ffffff') ? '#ffffff' : $_POST['border_color'],
+            'border_style' => in_array($_POST['border_style'] ?? 'solid', ['solid', 'dashed', 'double', 'inset', 'outset']) ? $_POST['border_style'] : 'solid',
+            'border_shadow_offset_x' => in_array($_POST['border_shadow_offset_x'] ?? 0, range(-25, 25)) ? (int) $_POST['border_shadow_offset_x'] : 0,
+            'border_shadow_offset_y' => in_array($_POST['border_shadow_offset_y'] ?? 0, range(-25, 25)) ? (int) $_POST['border_shadow_offset_y'] : 0,
+            'border_shadow_blur' => in_array($_POST['border_shadow_blur'] ?? 0, range(0, 30)) ? (int) $_POST['border_shadow_blur'] : 0,
+            'border_shadow_spread' => in_array($_POST['border_shadow_spread'] ?? 0, range(-15, 15)) ? (int) $_POST['border_shadow_spread'] : 0,
+            'border_shadow_color' => !verify_hex_color($_POST['border_shadow_color'] ?? '#00000010') ? '#00000010' : $_POST['border_shadow_color'],
+
             /* Display settings */
             'display_continents' => [],
             'display_countries' => [],
@@ -224,6 +237,19 @@ class ImageGridBlock extends BaseBlockHandler {
             'image_fit' => $_POST['image_fit'],
             'border_radius' => $_POST['border_radius'],
             'hover_effect' => $_POST['hover_effect'],
+
+            /* Background Settings */
+            'background_color' => !verify_hex_color($_POST['background_color'] ?? '#ffffff') ? '#ffffff' : $_POST['background_color'],
+
+            /* Individual Image Border & Shadow Settings */
+            'border_width' => in_array($_POST['border_width'] ?? 0, range(0, 20)) ? (int) $_POST['border_width'] : 0,
+            'border_color' => !verify_hex_color($_POST['border_color'] ?? '#ffffff') ? '#ffffff' : $_POST['border_color'],
+            'border_style' => in_array($_POST['border_style'] ?? 'solid', ['solid', 'dashed', 'double', 'inset', 'outset']) ? $_POST['border_style'] : 'solid',
+            'border_shadow_offset_x' => in_array($_POST['border_shadow_offset_x'] ?? 0, range(-25, 25)) ? (int) $_POST['border_shadow_offset_x'] : 0,
+            'border_shadow_offset_y' => in_array($_POST['border_shadow_offset_y'] ?? 0, range(-25, 25)) ? (int) $_POST['border_shadow_offset_y'] : 0,
+            'border_shadow_blur' => in_array($_POST['border_shadow_blur'] ?? 0, range(0, 30)) ? (int) $_POST['border_shadow_blur'] : 0,
+            'border_shadow_spread' => in_array($_POST['border_shadow_spread'] ?? 0, range(-15, 15)) ? (int) $_POST['border_shadow_spread'] : 0,
+            'border_shadow_color' => !verify_hex_color($_POST['border_shadow_color'] ?? '#00000010') ? '#00000010' : $_POST['border_shadow_color'],
 
             /* Display settings */
             'display_continents' => $_POST['display_continents'],

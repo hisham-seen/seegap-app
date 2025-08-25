@@ -42,7 +42,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-gray-300" data-dismiss="modal"><?= l('global.close') ?></button>
 
-                <form method="post" action="<?= url('gs1-link-ajax') ?>" role="form">
+                <form method="post" action="<?= url('ajax') ?>" role="form">
                     <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
                     <input type="hidden" name="request_type" value="delete" />
                     <input type="hidden" name="gs1_link_id" value="" />

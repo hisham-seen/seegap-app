@@ -1,44 +1,129 @@
 <?php defined('SEEGAP') || die() ?>
 
 <?php
-// Generate dynamic styles based on settings
-$countdown_styles = [];
+/* Generate all styles based on settings */
+$all_styles = [];
+$animation_class = '';
 
-// Background color for container
-if (isset($data->link->settings->background_color) && $data->link->settings->background_color !== '#ffffff' && $data->link->settings->background_color !== '#00000000') {
-    $countdown_styles[] = 'background-color: ' . $data->link->settings->background_color;
-    $countdown_styles[] = 'padding: 1rem';
-    $countdown_styles[] = 'border-radius: 8px';
-} else {
-    $countdown_styles[] = 'background-color: #0000001A';
-    $countdown_styles[] = 'padding: 1rem';
-    $countdown_styles[] = 'border-radius: 8px';
+// Get countdown settings
+$countdown_settings = $data->link->settings;
+
+// Handle background color
+if (isset($countdown_settings->background_color) && $countdown_settings->background_color !== '#00000000') {
+    $all_styles[] = 'background-color: ' . $countdown_settings->background_color;
 }
 
-// Animation classes
-$animation_classes = '';
-if (isset($data->link->settings->animation) && $data->link->settings->animation) {
-    $animation_classes .= ' animate__animated animate__' . $data->link->settings->animation;
-    
-    if (isset($data->link->settings->animation_runs) && $data->link->settings->animation_runs !== 'repeat-1') {
-        $animation_classes .= ' animate__' . $data->link->settings->animation_runs;
-    }
-    
-    if (isset($data->link->settings->animation_delay) && $data->link->settings->animation_delay > 0) {
-        $countdown_styles[] = 'animation-delay: ' . $data->link->settings->animation_delay . 's';
+// Handle border
+if (isset($countdown_settings->border_width) && $countdown_settings->border_width > 0) {
+    $border_width = $countdown_settings->border_width;
+    $border_color = $countdown_settings->border_color ?? '#ffffff';
+    $border_style = $countdown_settings->border_style ?? 'solid';
+    $all_styles[] = 'border: ' . $border_width . 'px ' . $border_style . ' ' . $border_color;
+}
+
+// Handle border radius
+if (isset($countdown_settings->border_radius)) {
+    if (is_numeric($countdown_settings->border_radius)) {
+        // New system: use pixel value
+        if ($countdown_settings->border_radius > 0) {
+            $all_styles[] = 'border-radius: ' . $countdown_settings->border_radius . 'px';
+        }
+    } else {
+        // Old system: convert string to pixels for backward compatibility
+        switch ($countdown_settings->border_radius) {
+            case 'straight':
+                $all_styles[] = 'border-radius: 0';
+                break;
+            case 'round':
+                $all_styles[] = 'border-radius: 25px';
+                break;
+            case 'rounded':
+                $all_styles[] = 'border-radius: 4px';
+                break;
+            case 'rounded-sm':
+                $all_styles[] = 'border-radius: 2px';
+                break;
+            case 'rounded-lg':
+                $all_styles[] = 'border-radius: 8px';
+                break;
+            case 'rounded-xl':
+                $all_styles[] = 'border-radius: 12px';
+                break;
+            case 'rounded-2xl':
+                $all_styles[] = 'border-radius: 16px';
+                break;
+            case 'rounded-3xl':
+                $all_styles[] = 'border-radius: 24px';
+                break;
+            case 'rounded-full':
+                $all_styles[] = 'border-radius: 50px';
+                break;
+        }
     }
 }
 
-$style_attribute = !empty($countdown_styles) ? 'style="' . implode('; ', $countdown_styles) . ';"' : '';
+// Handle shadow
+if (isset($countdown_settings->border_shadow_blur) && $countdown_settings->border_shadow_blur > 0) {
+    $shadow_x = $countdown_settings->border_shadow_offset_x ?? 0;
+    $shadow_y = $countdown_settings->border_shadow_offset_y ?? 0;
+    $shadow_blur = $countdown_settings->border_shadow_blur ?? 0;
+    $shadow_spread = $countdown_settings->border_shadow_spread ?? 0;
+    $shadow_color = $countdown_settings->border_shadow_color ?? '#00000010';
+    $all_styles[] = 'box-shadow: ' . $shadow_x . 'px ' . $shadow_y . 'px ' . $shadow_blur . 'px ' . $shadow_spread . 'px ' . $shadow_color;
+}
 
-// No custom CSS - let the timer use default styling
+// Handle animation
+if (isset($countdown_settings->animation) && $countdown_settings->animation && $countdown_settings->animation !== 'false') {
+    $animation_class = 'animate__animated animate__' . $countdown_settings->animation;
+    if (isset($countdown_settings->animation_runs) && $countdown_settings->animation_runs !== 'repeat-1') {
+        $animation_class .= ' animate__' . $countdown_settings->animation_runs;
+    }
+    if (isset($countdown_settings->animation_delay) && $countdown_settings->animation_delay > 0) {
+        $delay_class = 'animate__delay-' . ($countdown_settings->animation_delay / 1000) . 's';
+        $animation_class .= ' ' . $delay_class;
+    }
+}
+
+// Add padding if we have styling
+if (!empty($all_styles)) {
+    $all_styles[] = 'padding: 1rem';
+}
+
+$style_attribute = !empty($all_styles) ? 'style="' . implode('; ', $all_styles) . ';"' : '';
+
+// Determine if we need styling wrapper (has background, border, or shadow)
+$has_styling = (
+    (isset($countdown_settings->background_color) && $countdown_settings->background_color !== '#00000000') ||
+    (isset($countdown_settings->border_width) && $countdown_settings->border_width > 0) ||
+    (isset($countdown_settings->border_shadow_blur) && $countdown_settings->border_shadow_blur > 0)
+);
+
 $countdown_id = 'seegap_countdown_' . $data->link->microsite_block_id;
-$custom_css = '';
+
+// Custom CSS for countdown styling - override flipdown.min.css
+$custom_css = '
+<style>
+    .flipdown .rotor-group {
+        padding-right: 9px !important;
+    }
+    .flipdown .rotor {
+        font-size: 2.0rem !important;
+    }
+</style>
+';
 ?>
 
 <div id="<?= 'microsite_block_id_' . $data->link->microsite_block_id ?>" data-microsite-block-id="<?= $data->link->microsite_block_id ?>" data-microsite-block-type="<?= $data->link->type ?>" class="col-12 my-<?= $data->microsite->settings->block_spacing ?? '2' ?>">
-    <div class="d-flex align-items-center justify-content-center">
-        <div id="<?= 'seegap_countdown_' . $data->link->microsite_block_id ?>" class="flipdown flipdown__theme-<?= $data->link->settings->theme ?? 'light' ?><?= $animation_classes ?>" <?= $style_attribute ?>></div>
+    <div class="d-flex justify-content-center">
+        <?php if ($has_styling): ?>
+            <!-- Countdown with styling wrapper -->
+            <div class="<?= $animation_class ?>" <?= $style_attribute ?> data-border-width data-border-radius data-border-style data-border-color data-border-shadow data-background-color>
+                <div id="<?= 'seegap_countdown_' . $data->link->microsite_block_id ?>" class="flipdown flipdown__theme-<?= $countdown_settings->theme ?? 'light' ?>"></div>
+            </div>
+        <?php else: ?>
+            <!-- Countdown without styling wrapper -->
+            <div id="<?= 'seegap_countdown_' . $data->link->microsite_block_id ?>" class="flipdown flipdown__theme-<?= $countdown_settings->theme ?? 'light' ?> <?= $animation_class ?>" <?= $style_attribute ?>></div>
+        <?php endif ?>
     </div>
 </div>
 

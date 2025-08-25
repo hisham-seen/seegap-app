@@ -33,6 +33,7 @@
                 <?php endforeach ?>
 
                 <option value="<?= url('admin/settings/captcha') ?>" class="nav-link" <?= $data->method == 'captcha' ? 'selected="selected"' : null ?>>🧠 <?= l('admin_settings.captcha.tab') ?></option>
+                <option value="<?= url('admin/settings/aix') ?>" class="nav-link" <?= $data->method == 'aix' ? 'selected="selected"' : null ?>>🤖 AI Extensions</option>
                 <option value="<?= url('admin/settings/facebook') ?>" class="nav-link" <?= $data->method == 'facebook' ? 'selected="selected"' : null ?>>📘 <?= l('admin_settings.facebook.tab') ?></option>
                 <option value="<?= url('admin/settings/google') ?>" class="nav-link" <?= $data->method == 'google' ? 'selected="selected"' : null ?>>🔍 <?= l('admin_settings.google.tab') ?></option>
                 <option value="<?= url('admin/settings/twitter') ?>" class="nav-link" <?= $data->method == 'twitter' ? 'selected="selected"' : null ?>>🐦 <?= l('admin_settings.twitter.tab') ?></option>
@@ -104,6 +105,7 @@
 
 
                     <a class="nav-link <?= $data->method == 'captcha' ? 'active' : null ?>" href="<?= url('admin/settings/captcha') ?>"><i class="fas fa-fw fa-sm fa-low-vision mr-2"></i> <?= l('admin_settings.captcha.tab') ?></a>
+                    <a class="nav-link <?= $data->method == 'aix' ? 'active' : null ?>" href="<?= url('admin/settings/aix') ?>"><i class="fas fa-fw fa-sm fa-robot mr-2"></i> AI Extensions</a>
 
                     <a class="nav-link <?= in_array($data->method, ['facebook', 'google', 'twitter', 'discord', 'linkedin', 'microsoft']) ? 'active' : null ?>" data-toggle="collapse" href="#social_logins_collapse">
                         <i class="fas fa-fw fa-sm fa-share-alt mr-2"></i> <?= l('admin_settings.social_logins') ?> <i class="fas fa-fw fa-sm fa-caret-down"></i>
