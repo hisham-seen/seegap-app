@@ -1,18 +1,6 @@
 <?php defined('SEEGAP') || die() ?>
 
 <?php
-/**
- * Reusable Image Block Form Panel
- * 
- * This component provides the complete form structure for image blocks,
- * including primary tabs (Content, Style, Display) and all form functionality.
- * 
- * @param string $block_id - Unique identifier for the block (e.g., 'create' or actual block ID)
- * @param object $settings - Block settings object with default values
- * @param object $row - Block row data (for update form) or mock object (for create modal)
- * @param string $form_type - 'create' or 'update' to determine form behavior
- */
-
 $block_id = $block_id ?? 'default';
 $settings = $settings ?? (object)[];
 $form_type = $form_type ?? 'update';
@@ -43,6 +31,8 @@ if ($form_type === 'create') {
         'animation' => false,
         'animation_runs' => 'repeat-1',
         'animation_delay' => 0,
+        'use_product_images' => false,
+        'product_image_selections' => [],
         'verified_badge' => (object) [
             'enabled' => false,
             'style' => 'checkmark',
@@ -52,7 +42,6 @@ if ($form_type === 'create') {
         ]
     ];
     
-    // Merge with any provided settings
     foreach ($default_settings as $key => $value) {
         if (!isset($settings->$key)) {
             $settings->$key = $value;
@@ -61,17 +50,19 @@ if ($form_type === 'create') {
     $row->settings = $settings;
 }
 
-// Generate unique IDs based on block_id
 $unique_id = $form_type === 'create' ? 'create' : $row->microsite_block_id;
-?>
 
-<?php
 // Define tabs for the image block
 $tabs = [
     [
         'id' => 'content',
         'title' => 'Content',
         'icon' => 'fas fa-edit'
+    ],
+    [
+        'id' => 'data',
+        'title' => 'Data',
+        'icon' => 'fas fa-database'
     ],
     [
         'id' => 'style',
@@ -95,15 +86,11 @@ $tabs = [
     ]
 ];
 
-// Set the block_id for the tab component
 $primary_tab_block_id = 'image-' . $unique_id;
-$primary_tabs = $tabs; // Store primary tabs
-
-// Temporarily set variables for primary tabs
+$primary_tabs = $tabs;
 $block_id = $primary_tab_block_id;
 $tabs = $primary_tabs;
 
-// Include the reusable tab navigation
 include THEME_PATH . 'views/partials/microsite_block_tabs.php';
 ?>
 
@@ -111,16 +98,13 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
     
     <!-- Content Tab -->
     <div class="tab-pane fade show active" id="image-<?= $unique_id ?>-content" role="tabpanel" aria-labelledby="image-<?= $unique_id ?>-content-tab">
-        
         <?php if ($form_type === 'create'): ?>
-            <!-- Simple Image Upload for Create Modal -->
             <div class="form-group">
                 <label for="<?= 'image_image_' . $unique_id ?>"><i class="fas fa-fw fa-image fa-sm text-muted mr-1"></i> <?= l('global.image') ?></label>
                 <input id="<?= 'image_image_' . $unique_id ?>" type="file" name="image" accept="<?= \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']) ?>" class="form-control-file seegap-file-input" required="required" data-crop />
                 <small class="form-text text-muted"><?= sprintf(l('global.accessibility.whitelisted_file_extensions'), \SeeGap\Uploads::array_to_list_format($data->microsite_blocks['image']['whitelisted_image_extensions'] ?? ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) . ' ' . sprintf(l('global.accessibility.file_size_limit'), settings()->links->image_size_limit) ?></small>
             </div>
         <?php else: ?>
-            <!-- Advanced Image Upload for Update Form -->
             <?php
             $block_id = $unique_id;
             $field_name = 'image';
@@ -135,26 +119,30 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             ?>
         <?php endif; ?>
 
-        <!-- Image Alt Text -->
         <div class="form-group">
             <label for="<?= 'image_image_alt_' . $unique_id ?>"><i class="fas fa-fw fa-comment-dots fa-sm text-muted mr-1"></i> <?= l('microsite_link.image_alt') ?></label>
             <input id="<?= 'image_image_alt_' . $unique_id ?>" type="text" class="form-control" name="image_alt" value="<?= $row->settings->image_alt ?? '' ?>" maxlength="100" />
             <small class="form-text text-muted"><?= l('microsite_link.image_alt_help') ?></small>
         </div>
+    </div>
 
+    <!-- Data Tab -->
+    <div class="tab-pane fade" id="image-<?= $unique_id ?>-data" role="tabpanel" aria-labelledby="image-<?= $unique_id ?>-data-tab">
+        <?php
+        $block_id = $unique_id;
+        $settings = $row->settings;
+        include THEME_PATH . 'views/partials/microsite_block_components/product_data_settings.php';
+        ?>
     </div>
 
     <!-- Destination Tab -->
     <div class="tab-pane fade" id="image-<?= $unique_id ?>-destination" role="tabpanel" aria-labelledby="image-<?= $unique_id ?>-destination-tab">
-        
-        <!-- Basic Destination URL -->
         <div class="form-group">
             <label for="<?= 'destination_location_url_' . $unique_id ?>"><i class="fas fa-fw fa-link fa-sm text-muted mr-1"></i> <?= l('microsite_link.location_url') ?></label>
             <input id="<?= 'destination_location_url_' . $unique_id ?>" type="url" class="form-control" name="location_url" value="<?= $row->settings->location_url ?? '' ?>" maxlength="2048" placeholder="<?= l('global.url_placeholder') ?>" />
             <small class="form-text text-muted"><?= l('microsite_link.location_url_help') ?? 'Enter the URL where users will be redirected when they click this block' ?></small>
         </div>
 
-        <!-- Open in New Tab -->
         <div class="form-group custom-control custom-switch">
             <input
                 id="<?= 'open_in_new_tab_' . $unique_id ?>"
@@ -166,14 +154,11 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <label class="custom-control-label" for="<?= 'open_in_new_tab_' . $unique_id ?>"><?= l('microsite_link.open_in_new_tab') ?></label>
             <small class="form-text text-muted"><?= l('microsite_link.open_in_new_tab_help') ?></small>
         </div>
-
     </div>
 
     <!-- Style Tab -->
     <div class="tab-pane fade" id="image-<?= $unique_id ?>-style" role="tabpanel" aria-labelledby="image-<?= $unique_id ?>-style-tab">
-        
         <?php
-        // Define secondary tabs for the style section
         $style_tabs = [
             [
                 'id' => 'sizing',
@@ -202,20 +187,16 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             ]
         ];
 
-        // Set the block_id for the secondary tab component
         $secondary_block_id = 'image-style-' . $unique_id;
-        $tabs = $style_tabs; // Use style tabs for the secondary navigation
-        $block_id = $secondary_block_id; // Override block_id for secondary tabs
+        $tabs = $style_tabs;
+        $block_id = $secondary_block_id;
         
-        // Include the reusable tab navigation for secondary tabs
         include THEME_PATH . 'views/partials/microsite_block_tabs.php';
         ?>
 
         <div class="tab-content" id="image-style-<?= $unique_id ?>-tabContent">
-            
             <!-- Sizing Sub-tab -->
             <div class="tab-pane fade show active" id="image-style-<?= $unique_id ?>-sizing" role="tabpanel" aria-labelledby="image-style-<?= $unique_id ?>-sizing-tab">
-                <!-- Image Alignment -->
                 <?php
                 $block_id = $unique_id;
                 $settings = $row->settings;
@@ -223,10 +204,7 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                 $label = l('microsite_link.text_alignment');
                 $icon = 'fas fa-align-center';
                 include THEME_PATH . 'views/partials/microsite_block_components/alignment.php';
-                ?>
 
-                <!-- Image Sizing Component -->
-                <?php
                 $block_id = $unique_id;
                 $settings = $row->settings;
                 $dimensions = ['height', 'width'];
@@ -237,10 +215,9 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <!-- Background Sub-tab -->
             <div class="tab-pane fade" id="image-style-<?= $unique_id ?>-background" role="tabpanel" aria-labelledby="image-style-<?= $unique_id ?>-background-tab">
                 <?php
-                // Set up variables for background component (without accordion) - same as text block
                 $block_id = $unique_id;
                 $settings = $row->settings;
-                $use_accordion = false; // Disable accordion when used in tabs
+                $use_accordion = false;
                 include THEME_PATH . 'views/partials/microsite_block_components/background_settings.php';
                 ?>
             </div>
@@ -248,10 +225,9 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <!-- Border Sub-tab -->
             <div class="tab-pane fade" id="image-style-<?= $unique_id ?>-border" role="tabpanel" aria-labelledby="image-style-<?= $unique_id ?>-border-tab">
                 <?php
-                // Set up variables for border component (without accordion)
                 $block_id = $unique_id;
                 $settings = $row->settings;
-                $use_accordion = false; // Disable accordion when used in tabs
+                $use_accordion = false;
                 include THEME_PATH . 'views/partials/microsite_block_components/border_settings.php';
                 ?>
             </div>
@@ -259,10 +235,9 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <!-- Shadow Sub-tab -->
             <div class="tab-pane fade" id="image-style-<?= $unique_id ?>-shadow" role="tabpanel" aria-labelledby="image-style-<?= $unique_id ?>-shadow-tab">
                 <?php
-                // Set up variables for shadow component (without accordion)
                 $block_id = $unique_id;
                 $settings = $row->settings;
-                $use_accordion = false; // Disable accordion when used in tabs
+                $use_accordion = false;
                 include THEME_PATH . 'views/partials/microsite_block_components/shadow_settings.php';
                 ?>
             </div>
@@ -270,11 +245,8 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             <!-- Animation Sub-tab -->
             <div class="tab-pane fade" id="image-style-<?= $unique_id ?>-animation" role="tabpanel" aria-labelledby="image-style-<?= $unique_id ?>-animation-tab">
                 <?php
-                // Set up variables for animation component (without accordion)
                 $component_block_id = $unique_id;
                 $component_settings = $row->settings;
-                
-                // Include animation settings directly without accordion wrapper
                 ?>
                 <div class="form-group">
                     <label for="<?= 'animation_' . $component_block_id ?>"><i class="fas fa-fw fa-film fa-sm text-muted mr-1"></i> <?= l('microsite_link.animation') ?></label>
@@ -301,29 +273,22 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
                     <input id="<?= 'animation_delay_' . $component_block_id ?>" type="range" min="0" max="5000" step="100" class="form-control-range" name="animation_delay" value="<?= $component_settings->animation_delay ?? 0 ?>" required="required" onchange="updateCanvasAnimation('<?= $component_block_id ?>')" oninput="updateCanvasAnimation('<?= $component_block_id ?>')" />
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <!-- Badge Tab -->
     <div class="tab-pane fade" id="image-<?= $unique_id ?>-badge" role="tabpanel" aria-labelledby="image-<?= $unique_id ?>-badge-tab">
-        
-        <!-- Verified Badge Settings using shared component -->
         <?php
         $block_id = $unique_id;
         $settings = $row->settings;
         $field_prefix = 'verified_badge';
         include THEME_PATH . 'views/partials/microsite_block_components/badge_selector.php';
         ?>
-
     </div>
 
     <!-- Display Tab -->
     <div class="tab-pane fade" id="image-<?= $unique_id ?>-display" role="tabpanel" aria-labelledby="image-<?= $unique_id ?>-display-tab">
-        
         <?php 
-        // Set up variables for display settings component
         if ($form_type === 'create') {
             $display_row = (object) [
                 'microsite_block_id' => $unique_id,
@@ -343,20 +308,15 @@ include THEME_PATH . 'views/partials/microsite_block_tabs.php';
             $display_row = $row;
         }
         
-        // Temporarily set $row for the display settings component
         $original_row = isset($row) ? $row : null;
         $row = $display_row;
         include THEME_PATH . 'views/partials/microsite_block_components/display_settings.php';
-        $row = $original_row; // Restore original $row
+        $row = $original_row;
         ?>
-
     </div>
-
 </div>
 
-
 <script>
-// Real-time canvas update function for animation properties
 window.updateCanvasAnimation = function(blockId) {
     if (typeof $ !== 'undefined' && $('#microsite_preview_iframe').length) {
         const iframe = $('#microsite_preview_iframe');
@@ -364,22 +324,19 @@ window.updateCanvasAnimation = function(blockId) {
         const microsite_link = iframeDoc.find(`[data-microsite-block-id="${blockId}"]`);
         
         if (microsite_link.length) {
-            // Get animation values from the current form inputs with proper selectors
             const animation = $(`#animation_${blockId}`).val() || 'false';
             const runs = $(`#animation_runs_${blockId}`).val() || 'repeat-1';
             const delay = $(`#animation_delay_${blockId}`).val() || 0;
             
-            // Find the element that gets animation classes (either .card or the image element)
             let element = microsite_link.find('.card');
             if (!element.length) {
                 element = microsite_link.find('img');
             }
             if (!element.length) {
-                element = microsite_link; // fallback to the block itself
+                element = microsite_link;
             }
             
             if (element.length) {
-                // Remove all existing animate.css classes
                 const animateClasses = [
                     'animate__animated', 'animate__bounce', 'animate__flash', 'animate__pulse', 
                     'animate__rubberBand', 'animate__shakeX', 'animate__shakeY', 'animate__headShake',
@@ -405,26 +362,21 @@ window.updateCanvasAnimation = function(blockId) {
                 element.removeClass(animateClasses.join(' '));
                 
                 if (animation !== 'false' && animation !== '') {
-                    // Add new animation classes
                     element.addClass('animate__animated');
                     element.addClass(`animate__${animation}`);
                     
-                    // Add repeat class
                     if (runs && runs !== 'repeat-1') {
                         element.addClass(`animate__${runs}`);
                     }
                     
-                    // Apply delay - always set to ensure consistency
                     const delayMs = parseInt(delay) || 0;
                     element.css('animation-delay', `${delayMs}ms`);
                     
-                    // Force animation restart by triggering reflow
-                    element[0].offsetHeight; // trigger reflow
+                    element[0].offsetHeight;
                     
-                    // Remove and re-add animated class to restart animation
                     setTimeout(() => {
                         element.removeClass('animate__animated');
-                        element[0].offsetHeight; // trigger reflow
+                        element[0].offsetHeight;
                         setTimeout(() => {
                             element.addClass('animate__animated');
                         }, 50);

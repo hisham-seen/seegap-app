@@ -39,6 +39,21 @@ class AdminSettings extends Controller {
         $view = new \SeeGap\View('admin/settings/partials/' . $method, (array) $this);
         $this->add_view_content('method', $view->run());
 
+        /* Secondary Sidebar View */
+        require_once THEME_PATH . 'views/admin/partials/admin_settings_sidebar_config.php';
+        $secondary_sidebar_config = get_admin_settings_sidebar_config((object) [
+            'method' => $method,
+            'payment_processors' => $payment_processors,
+        ]);
+        
+        // Use output buffering to capture the include output
+        ob_start();
+        $config = $secondary_sidebar_config; // Make config available to the included file
+        include THEME_PATH . 'views/partials/secondary_sidebar.php';
+        $sidebar_content = ob_get_clean();
+        
+        $this->add_view_content('secondary_sidebar', $sidebar_content);
+
         /* Main View */
         $view = new \SeeGap\View('admin/settings/index', (array) $this);
         $this->add_view_content('content', $view->run([
@@ -214,8 +229,6 @@ class AdminSettings extends Controller {
                 'email_confirmation' => isset($_POST['email_confirmation']),
                 'welcome_email_is_enabled' => isset($_POST['welcome_email_is_enabled']),
                 'register_is_enabled' => isset($_POST['register_is_enabled']),
-                'register_only_social_logins' => isset($_POST['register_only_social_logins']),
-                'register_social_login_require_password' => isset($_POST['register_social_login_require_password']),
                 'register_display_newsletter_checkbox' => isset($_POST['register_display_newsletter_checkbox']),
                 'account_display_newsletter_checkbox' => isset($_POST['account_display_newsletter_checkbox']),
                 'login_rememberme_checkbox_is_checked' => isset($_POST['login_rememberme_checkbox_is_checked']),
@@ -228,12 +241,6 @@ class AdminSettings extends Controller {
                 'login_lockout_is_enabled' => isset($_POST['login_lockout_is_enabled']),
                 'login_lockout_max_retries' => (int) $_POST['login_lockout_max_retries'] < 1 ? 1 : (int) $_POST['login_lockout_max_retries'],
                 'login_lockout_time' => (int) $_POST['login_lockout_time'] < 1 ? 1 : (int) $_POST['login_lockout_time'],
-                'lost_password_lockout_is_enabled' => isset($_POST['lost_password_lockout_is_enabled']),
-                'lost_password_lockout_max_retries' => (int) $_POST['lost_password_lockout_max_retries'] < 1 ? 1 : (int) $_POST['lost_password_lockout_max_retries'],
-                'lost_password_lockout_time' => (int) $_POST['lost_password_lockout_time'] < 1 ? 1 : (int) $_POST['lost_password_lockout_time'],
-                'resend_activation_lockout_is_enabled' => isset($_POST['resend_activation_lockout_is_enabled']),
-                'resend_activation_lockout_max_retries' => (int) $_POST['resend_activation_lockout_max_retries'] < 1 ? 1 : (int) $_POST['resend_activation_lockout_max_retries'],
-                'resend_activation_lockout_time' => (int) $_POST['resend_activation_lockout_time'] < 1 ? 1 : (int) $_POST['resend_activation_lockout_time'],
                 'register_lockout_is_enabled' => isset($_POST['register_lockout_is_enabled']),
                 'register_lockout_max_registrations' => (int) $_POST['register_lockout_max_registrations'] < 1 ? 1 : (int) $_POST['register_lockout_max_registrations'],
                 'register_lockout_time' => (int) $_POST['register_lockout_time'] < 1 ? 1 : (int) $_POST['register_lockout_time'],
@@ -724,7 +731,7 @@ class AdminSettings extends Controller {
 
             /* :) */
             $_POST['type'] = in_array($_POST['type'], ['basic', 'recaptcha', 'hcaptcha', 'turnstile']) ? $_POST['type'] : 'basic';
-            foreach(['login', 'register', 'lost_password', 'resend_activation', 'contact', 'microsite'] as $key) {
+            foreach(['login', 'register', 'contact', 'microsite'] as $key) {
                 $_POST[$key . '_is_enabled'] = isset($_POST[$key . '_is_enabled']);
             }
 
@@ -745,8 +752,6 @@ class AdminSettings extends Controller {
                 'turnstile_secret_key' => $_POST['turnstile_secret_key'],
                 'login_is_enabled' => $_POST['login_is_enabled'],
                 'register_is_enabled' => $_POST['register_is_enabled'],
-                'lost_password_is_enabled' => $_POST['lost_password_is_enabled'],
-                'resend_activation_is_enabled' => $_POST['resend_activation_is_enabled'],
                 'contact_is_enabled' => $_POST['contact_is_enabled'],
                 'microsite_is_enabled' => $_POST['microsite_is_enabled'],
             ]);
@@ -756,98 +761,23 @@ class AdminSettings extends Controller {
     }
 
 
-    public function google() {
+    public function email_templates() {
         $this->process();
 
         if(!empty($_POST)) {
             //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
 
             /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-
             $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'client_id' => $_POST['client_id'],
-                'client_secret' => $_POST['client_secret'],
+                'login_subject' => $_POST['login_subject'],
+                'login_body' => $_POST['login_body'],
+                'welcome_subject' => $_POST['welcome_subject'],
+                'welcome_body' => $_POST['welcome_body'],
+                'account_delete_subject' => $_POST['account_delete_subject'],
+                'account_delete_body' => $_POST['account_delete_body'],
             ]);
 
-            $this->update_settings('google', $value);
-        }
-    }
-
-    public function twitter() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-
-            $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'consumer_api_key' => $_POST['consumer_api_key'],
-                'consumer_api_secret' => $_POST['consumer_api_secret'],
-            ]);
-
-            $this->update_settings('twitter', $value);
-        }
-    }
-
-    public function discord() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-
-            $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'client_id' => $_POST['client_id'],
-                'client_secret' => $_POST['client_secret'],
-            ]);
-
-            $this->update_settings('discord', $value);
-        }
-    }
-
-    public function linkedin() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-
-            $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'client_id' => $_POST['client_id'],
-                'client_secret' => $_POST['client_secret'],
-            ]);
-
-            $this->update_settings('linkedin', $value);
-        }
-    }
-
-    public function microsoft() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            /* :) */
-            $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
-
-            $value = json_encode([
-                'is_enabled' => $_POST['is_enabled'],
-                'client_id' => $_POST['client_id'],
-                'client_secret' => $_POST['client_secret'],
-            ]);
-
-            $this->update_settings('microsoft', $value);
+            $this->update_settings('email_templates', $value);
         }
     }
 
@@ -1771,47 +1701,45 @@ class AdminSettings extends Controller {
             $_POST['products_is_enabled'] = (int) isset($_POST['products_is_enabled']);
             $_POST['gtin_validation_is_enabled'] = (int) isset($_POST['gtin_validation_is_enabled']);
             $_POST['gtin_format_validation'] = in_array($_POST['gtin_format_validation'], ['strict', 'lenient', 'disabled']) ? $_POST['gtin_format_validation'] : 'strict';
-            $_POST['require_gtin'] = (int) isset($_POST['require_gtin']);
-            $_POST['auto_generate_gtin'] = (int) isset($_POST['auto_generate_gtin']);
-            $_POST['domains_is_enabled'] = (int) isset($_POST['domains_is_enabled']);
-            $_POST['projects_is_enabled'] = (int) isset($_POST['projects_is_enabled']);
-            $_POST['analytics_is_enabled'] = (int) isset($_POST['analytics_is_enabled']);
-            $_POST['import_export_is_enabled'] = (int) isset($_POST['import_export_is_enabled']);
-            $_POST['compliance_tracking_is_enabled'] = (int) isset($_POST['compliance_tracking_is_enabled']);
-            $_POST['sustainability_tracking_is_enabled'] = (int) isset($_POST['sustainability_tracking_is_enabled']);
-            $_POST['quality_control_is_enabled'] = (int) isset($_POST['quality_control_is_enabled']);
-            $_POST['inventory_tracking_is_enabled'] = (int) isset($_POST['inventory_tracking_is_enabled']);
-            $_POST['pricing_management_is_enabled'] = (int) isset($_POST['pricing_management_is_enabled']);
-            $_POST['product_relationships_is_enabled'] = (int) isset($_POST['product_relationships_is_enabled']);
-            $_POST['branding'] = trim($_POST['branding']);
-            $_POST['default_currency'] = input_clean($_POST['default_currency']);
-            $_POST['allowed_gtin_prefixes'] = array_filter(array_map('trim', explode(',', $_POST['allowed_gtin_prefixes'])));
-            $_POST['blacklisted_gtins'] = array_filter(array_map('trim', explode(',', $_POST['blacklisted_gtins'])));
-            $_POST['product_image_size_limit'] = $_POST['product_image_size_limit'] > get_max_upload() || $_POST['product_image_size_limit'] < 0 ? get_max_upload() : (float) $_POST['product_image_size_limit'];
-            $_POST['product_file_size_limit'] = $_POST['product_file_size_limit'] > get_max_upload() || $_POST['product_file_size_limit'] < 0 ? get_max_upload() : (float) $_POST['product_file_size_limit'];
+            $_POST['require_product_name'] = (int) isset($_POST['require_product_name']);
+            $_POST['require_brand_name'] = (int) isset($_POST['require_brand_name']);
+            $_POST['require_category'] = (int) isset($_POST['require_category']);
+            $_POST['require_manufacturer'] = (int) isset($_POST['require_manufacturer']);
+            $_POST['require_country_of_origin'] = (int) isset($_POST['require_country_of_origin']);
+            $_POST['require_net_weight'] = (int) isset($_POST['require_net_weight']);
+            $_POST['require_ingredients'] = (int) isset($_POST['require_ingredients']);
+            $_POST['require_nutritional_info'] = (int) isset($_POST['require_nutritional_info']);
+            $_POST['require_allergen_info'] = (int) isset($_POST['require_allergen_info']);
+            $_POST['require_storage_instructions'] = (int) isset($_POST['require_storage_instructions']);
+            $_POST['require_target_url'] = (int) isset($_POST['require_target_url']);
+            $_POST['auto_generate_gs1_links'] = (int) isset($_POST['auto_generate_gs1_links']);
+            $_POST['auto_generate_qr_codes'] = (int) isset($_POST['auto_generate_qr_codes']);
+            $_POST['image_upload_limit'] = (int) $_POST['image_upload_limit'];
+            $_POST['enable_csv_export'] = (int) isset($_POST['enable_csv_export']);
+            $_POST['enable_json_export'] = (int) isset($_POST['enable_json_export']);
+            $_POST['enable_xml_export'] = (int) isset($_POST['enable_xml_export']);
 
             $value = json_encode([
                 'products_is_enabled' => $_POST['products_is_enabled'],
                 'gtin_validation_is_enabled' => $_POST['gtin_validation_is_enabled'],
                 'gtin_format_validation' => $_POST['gtin_format_validation'],
-                'require_gtin' => $_POST['require_gtin'],
-                'auto_generate_gtin' => $_POST['auto_generate_gtin'],
-                'domains_is_enabled' => $_POST['domains_is_enabled'],
-                'projects_is_enabled' => $_POST['projects_is_enabled'],
-                'analytics_is_enabled' => $_POST['analytics_is_enabled'],
-                'import_export_is_enabled' => $_POST['import_export_is_enabled'],
-                'compliance_tracking_is_enabled' => $_POST['compliance_tracking_is_enabled'],
-                'sustainability_tracking_is_enabled' => $_POST['sustainability_tracking_is_enabled'],
-                'quality_control_is_enabled' => $_POST['quality_control_is_enabled'],
-                'inventory_tracking_is_enabled' => $_POST['inventory_tracking_is_enabled'],
-                'pricing_management_is_enabled' => $_POST['pricing_management_is_enabled'],
-                'product_relationships_is_enabled' => $_POST['product_relationships_is_enabled'],
-                'branding' => $_POST['branding'],
-                'default_currency' => $_POST['default_currency'],
-                'allowed_gtin_prefixes' => $_POST['allowed_gtin_prefixes'],
-                'blacklisted_gtins' => $_POST['blacklisted_gtins'],
-                'product_image_size_limit' => $_POST['product_image_size_limit'],
-                'product_file_size_limit' => $_POST['product_file_size_limit'],
+                'require_product_name' => $_POST['require_product_name'],
+                'require_brand_name' => $_POST['require_brand_name'],
+                'require_category' => $_POST['require_category'],
+                'require_manufacturer' => $_POST['require_manufacturer'],
+                'require_country_of_origin' => $_POST['require_country_of_origin'],
+                'require_net_weight' => $_POST['require_net_weight'],
+                'require_ingredients' => $_POST['require_ingredients'],
+                'require_nutritional_info' => $_POST['require_nutritional_info'],
+                'require_allergen_info' => $_POST['require_allergen_info'],
+                'require_storage_instructions' => $_POST['require_storage_instructions'],
+                'require_target_url' => $_POST['require_target_url'],
+                'auto_generate_gs1_links' => $_POST['auto_generate_gs1_links'],
+                'auto_generate_qr_codes' => $_POST['auto_generate_qr_codes'],
+                'image_upload_limit' => $_POST['image_upload_limit'],
+                'enable_csv_export' => $_POST['enable_csv_export'],
+                'enable_json_export' => $_POST['enable_json_export'],
+                'enable_xml_export' => $_POST['enable_xml_export'],
             ]);
 
             $this->update_settings('products', $value);

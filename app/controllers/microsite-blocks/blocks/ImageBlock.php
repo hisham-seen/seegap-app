@@ -28,6 +28,8 @@ class ImageBlock extends BaseBlockHandler {
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
         $_POST['location_url'] = get_url($_POST['location_url']);
+        $_POST['use_product_images'] = isset($_POST['use_product_images']);
+        $_POST['product_image_selections'] = isset($_POST['product_image_selections']) ? array_map('intval', $_POST['product_image_selections']) : [];
         
         // Process new flexible sizing fields
         $_POST['image_height'] = !empty($_POST['image_height']) ? (float) $_POST['image_height'] : null;
@@ -45,10 +47,28 @@ class ImageBlock extends BaseBlockHandler {
         $db_image = $this->handle_image_upload(null, 'block_images/', settings()->links->image_size_limit);
 
         $type = 'image';
+        // Handle product image if enabled
+        if ($_POST['use_product_images']) {
+            if ($link_settings = db()->where('link_id', $_POST['link_id'])->getValue('links', 'settings')) {
+                $link_settings = json_decode($link_settings);
+                if (isset($link_settings->product_id)) {
+                    $product = db()->where('product_id', $link_settings->product_id)->getOne('products');
+                    if ($product && isset($product->product_images) && !empty($product->product_images)) {
+                        $product_images = json_decode($product->product_images);
+                        if (!empty($_POST['product_image_selections']) && isset($product_images[$_POST['product_image_selections'][0]])) {
+                            $db_image = $product_images[$_POST['product_image_selections'][0]];
+                        }
+                    }
+                }
+            }
+        }
+
         $settings = json_encode([
             'image' => $db_image,
             'image_alt' => null,
             'open_in_new_tab' => false,
+            'use_product_images' => $_POST['use_product_images'],
+            'product_image_selections' => $_POST['product_image_selections'],
             'text_alignment' => $_POST['text_alignment'] ?? 'center',
             'image_height' => $_POST['image_height'],
             'image_height_unit' => $_POST['image_height_unit'],
@@ -113,6 +133,8 @@ class ImageBlock extends BaseBlockHandler {
         $_POST['location_url'] = get_url($_POST['location_url']);
         $_POST['image_alt'] = mb_substr(query_clean($_POST['image_alt']), 0, 100);
         $_POST['open_in_new_tab'] = (int) isset($_POST['open_in_new_tab']);
+        $_POST['use_product_images'] = isset($_POST['use_product_images']);
+        $_POST['product_image_selections'] = isset($_POST['product_image_selections']) ? array_map('intval', $_POST['product_image_selections']) : [];
         
         // Process new flexible sizing fields
         $_POST['image_height'] = !empty($_POST['image_height']) ? (float) $_POST['image_height'] : null;
@@ -135,10 +157,28 @@ class ImageBlock extends BaseBlockHandler {
 
         $image_url = $db_image ? \SeeGap\Uploads::get_full_url('block_images') . $db_image : null;
 
+        // Handle product image if enabled
+        if ($_POST['use_product_images']) {
+            if ($link_settings = db()->where('link_id', $microsite_block->link_id)->getValue('links', 'settings')) {
+                $link_settings = json_decode($link_settings);
+                if (isset($link_settings->product_id)) {
+                    $product = db()->where('product_id', $link_settings->product_id)->getOne('products');
+                    if ($product && isset($product->product_images) && !empty($product->product_images)) {
+                        $product_images = json_decode($product->product_images);
+                        if (!empty($_POST['product_image_selections']) && isset($product_images[$_POST['product_image_selections'][0]])) {
+                            $db_image = $product_images[$_POST['product_image_selections'][0]];
+                        }
+                    }
+                }
+            }
+        }
+
         $settings = json_encode([
             'image' => $db_image,
             'image_alt' => $_POST['image_alt'],
             'open_in_new_tab' => $_POST['open_in_new_tab'],
+            'use_product_images' => $_POST['use_product_images'],
+            'product_image_selections' => $_POST['product_image_selections'],
             'text_alignment' => $_POST['text_alignment'] ?? 'center',
             'image_height' => $_POST['image_height'],
             'image_height_unit' => $_POST['image_height_unit'],

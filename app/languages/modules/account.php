@@ -32,17 +32,6 @@ return [
     'account.avatar_help' => 'Upload a profile picture.',
     'account.avatar_remove' => 'Remove avatar',
 
-    // Password
-    'account.password' => 'Password',
-    'account.password_header' => 'Change password',
-    'account.password_subheader' => 'Update your account password',
-    'account.current_password' => 'Current password',
-    'account.current_password_placeholder' => 'Enter your current password',
-    'account.new_password' => 'New password',
-    'account.new_password_placeholder' => 'Enter your new password',
-    'account.repeat_password' => 'Repeat password',
-    'account.repeat_password_placeholder' => 'Repeat your new password',
-    'account.password_requirements' => 'Password must be at least 6 characters long.',
 
     // Two-factor authentication
     'account.twofa' => 'Two-factor authentication',

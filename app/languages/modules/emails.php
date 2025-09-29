@@ -25,7 +25,11 @@ return [
     'global.emails.user_pending_email.subject' => 'Confirm your email address change - {{WEBSITE_TITLE}}',
     'global.emails.user_pending_email.body' => 'Hello, <strong>{{NAME}}</strong>,<br /><br />You have requested to change your email address from {{CURRENT_EMAIL}} to {{NEW_EMAIL}}. <br /><br />Please click on the link below to confirm your new email address. <br /><br /><a href="{{ACTIVATION_LINK}}" class="cta">Confirm email address change</a><br /><br />Regards,<br />The {{WEBSITE_TITLE}} team.',
 
-    // Lost password email
+    // Email login link
+    'global.emails.user_email_login.subject' => 'Your secure login link - {{WEBSITE_TITLE}}',
+    'global.emails.user_email_login.body' => 'Hello, <strong>{{NAME}}</strong>,<br /><br />Click the button below to securely sign in to your account:<br /><br /><a href="{{LOGIN_LINK}}" class="cta">Sign In to {{WEBSITE_TITLE}}</a><br /><br /><strong>Security Information:</strong><br />• IP Address: {{IP_ADDRESS}}<br />• Device: {{DEVICE}}<br />• Browser: {{BROWSER}}<br />• This link expires in {{EXPIRY_TIME}}<br /><br />If you didn\'t request this login link, you can safely ignore this email.<br /><br />For your security, this link can only be used once and will expire automatically.<br /><br />Regards,<br />The {{WEBSITE_TITLE}} team.',
+
+    // Lost password email (deprecated - kept for compatibility)
     'global.emails.user_lost_password.subject' => 'Reset your password - {{WEBSITE_TITLE}}',
     'global.emails.user_lost_password.body' => 'Hello, <strong>{{NAME}}</strong>,<br /><br />This is your reset password link:<br /><br /><a href="{{LOST_PASSWORD_LINK}}" class="cta">Reset password</a><br /><br />If you did not request this, you can ignore it.<br /><br />Regards,<br />The {{WEBSITE_TITLE}} team.',
 

@@ -155,13 +155,9 @@ class User extends Model {
         cache()->deleteItemsByTag('user_id=' . $user_id);
     }
 
+    /* This method is no longer needed in passwordless authentication */
     public function verify_null_password($user_id, $email, $password) {
-        if(empty($password)) {
-            $lost_password_code = $lost_password_code ?? md5($email . microtime());
-            db()->where('user_id', $user_id)->update('users', ['lost_password_code' => $lost_password_code]);
-            redirect('reset-password/' . md5($email) . '/' . $lost_password_code);
-        }
-
+        // Passwordless authentication - no action needed
         return;
     }
 
@@ -227,15 +223,17 @@ class User extends Model {
             'openai_api_key' => '',
         ]);
 
+        /* Generate anti-phishing code for security */
+        $anti_phishing_code = strtoupper(substr(md5(rand()), 0, 8));
+
         /* Add the user to the database */
         $registered_user_id = db()->insert('users', [
-            'password' => $password,
             'email' => $email,
             'name' => $name,
             'billing' => $billing,
             'api_key' => $api_key,
             'email_activation_code' => $email_activation_code,
-            'lost_password_code' => $lost_password_code,
+            'anti_phishing_code' => $anti_phishing_code,
             'is_newsletter_subscribed' => (int) $is_newsletter_subscribed,
             'plan_id' => $plan_id,
             'plan_expiration_date' => $plan_expiration_date,

@@ -48,6 +48,12 @@
                     </li>
                 <?php endif ?>
 
+                <?php if(settings()->links->splash_page_is_enabled): ?>
+                    <li class="<?= in_array(\SeeGap\Router::$controller, ['SplashPages', 'SplashPageUpdate', 'SplashPageCreate']) ? 'active' : null ?>">
+                        <a href="<?= url('splash-pages') ?>"><i class="fas fa-fw fa-sm fa-droplet mr-2"></i> <?= l('splash_pages.menu') ?></a>
+                    </li>
+                <?php endif ?>
+
                 <?php if(settings()->links->shortener_is_enabled): ?>
                     <li class="<?= (\SeeGap\Router::$controller == 'Links' && ($_GET['type'] ?? null) == 'link') || (\SeeGap\Router::$controller == 'Link' && $this->link->type == 'link') || \SeeGap\Router::$controller == 'LinkCreate' ? 'active' : null ?>">
                         <a href="<?= url('links?type=link') ?>"><i class="fas fa-fw fa-sm fa-link mr-2"></i> <?= l('links.menu.link') ?></a>
@@ -126,12 +132,6 @@
                 <li class="<?= in_array(\SeeGap\Router::$controller, ['Projects', 'ProjectUpdate', 'ProjectCreate']) ? 'active' : null ?>">
                     <a href="<?= url('projects') ?>"><i class="fas fa-fw fa-sm fa-project-diagram mr-2"></i> <?= l('projects.menu') ?></a>
                 </li>
-                <?php endif ?>
-
-                <?php if(settings()->links->splash_page_is_enabled): ?>
-                    <li class="<?= in_array(\SeeGap\Router::$controller, ['SplashPages', 'SplashPageUpdate', 'SplashPageCreate']) ? 'active' : null ?>">
-                        <a href="<?= url('splash-pages') ?>"><i class="fas fa-fw fa-sm fa-droplet mr-2"></i> <?= l('splash_pages.menu') ?></a>
-                    </li>
                 <?php endif ?>
 
                 <?php if(settings()->links->microsites_is_enabled): ?>

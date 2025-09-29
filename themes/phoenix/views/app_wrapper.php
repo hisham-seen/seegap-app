@@ -80,6 +80,10 @@
 
     <div class="app-container">
         <?= $this->views['app_sidebar'] ?>
+        
+        <?php if(isset($this->views['secondary_sidebar'])): ?>
+            <?= $this->views['secondary_sidebar'] ?>
+        <?php endif ?>
 
         <section class="app-content">
             <?php require THEME_PATH . 'views/partials/js_welcome.php' ?>

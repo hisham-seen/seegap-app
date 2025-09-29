@@ -111,8 +111,17 @@ class Product extends Model {
         // Clean GTIN - just remove non-numeric characters
         $gtin = preg_replace('/[^0-9]/', '', $data['gtin']);
         
+        // If no GTIN provided, generate a new one
         if (empty($gtin)) {
-            return false;
+            // Get the last GTIN used by this user
+            $last_product = database()->query("SELECT gtin FROM products WHERE user_id = {$data['user_id']} ORDER BY product_id DESC LIMIT 1")->fetch_object();
+            if ($last_product) {
+                // Increment the last GTIN
+                $gtin = (string)((int)$last_product->gtin + 1);
+            } else {
+                // Start with a default GTIN if no products exist
+                $gtin = '100000000001';
+            }
         }
         
         // Validate required fields based on settings
@@ -131,20 +140,20 @@ class Product extends Model {
             
             // Length validation for both lenient and strict modes
             if (!in_array($gtin_length, $valid_lengths)) {
-                return false; // Invalid length
+                return ['error' => 'gtin_invalid_length', 'message' => l('products.error_message.gtin_invalid_format')];
             }
             
             // Strict validation includes checksum validation
             if (settings()->products->gtin_format_validation === 'strict') {
                 if (!$this->validate_gtin_checksum($gtin)) {
-                    return false; // Invalid checksum
+                    return ['error' => 'gtin_invalid_checksum', 'message' => l('products.error_message.gtin_invalid_checksum')];
                 }
             }
         }
         
         // Check if GTIN already exists for this user
         if ($this->get_product_by_gtin($gtin, $data['user_id'])) {
-            return false; // GTIN already exists
+            return ['error' => 'gtin_exists', 'message' => l('products.error_message.gtin_exists')];
         }
         
         $settings = json_encode($data['settings'] ?? []);
@@ -191,6 +200,48 @@ class Product extends Model {
     public function update_product($product_id, $data, $user_id) {
         $set_clauses = [];
         
+        // Define all possible fields that can be updated
+        $updatable_fields = [
+            // Basic fields
+            'gtin', 'brand_name', 'product_name', 'product_description', 'category', 'subcategory', 
+            'manufacturer', 'country_of_origin', 'net_weight', 'dimensions', 'ingredients', 
+            'nutritional_info', 'allergen_info', 'certifications', 'packaging_info', 
+            'storage_instructions', 'usage_instructions', 'target_url', 'project_id', 'gs1_link_id', 
+            'settings', 'is_enabled',
+            
+            // GS1 Identifiers (AI codes)
+            'gln', 'variant', 'batch_lot', 'serial', 'cpid', 'additional_id',
+            
+            // GS1 Attributes (dates and additional info)
+            'production_date', 'due_date', 'packaging_date', 'best_before_date', 'sell_by_date', 
+            'expiration_date', 'customer_part_number', 'made_to_order_variation', 'packaging_configuration',
+            'secondary_serial', 'reference_to_source', 'global_document_type_id',
+            
+            // GS1 Measurements (variable measures)
+            'net_weight_kg', 'length_m', 'width_m', 'height_m', 'area_m2', 'net_volume_l', 'gross_weight_kg',
+            'logistic_weight_kg', 'logistic_length_m', 'logistic_width_m', 'logistic_height_m', 
+            'logistic_area_m2', 'logistic_volume_l',
+            
+            // GS1 Logistics
+            'ship_to_loc', 'bill_to', 'purchased_from', 'ship_for_loc', 'phy_loc', 'rti_loc',
+            'ship_to_post', 'ship_to_post_iso', 'origin', 'country_initial_process', 'country_process',
+            'country_disassembly', 'country_full_process',
+            
+            // Content & Compliance
+            'organic_certification', 'fair_trade_certification', 'halal_certified', 'kosher_certified',
+            'gluten_free', 'vegan', 'vegetarian', 'non_gmo', 'care_instructions', 'warning_info',
+            
+            // Digital Integration
+            'product_url', 'manufacturer_url', 'product_info_url', 'sustainability_url', 'recycling_url',
+            'safety_url', 'facebook_url', 'instagram_url', 'twitter_url', 'youtube_url', 'purchase_url',
+            'amazon_asin', 'ebay_item_id', 'price_comparison_url', 'manual_url', 'support_url',
+            'faq_url', 'tutorial_url', 'api_endpoint', 'webhook_url',
+            
+            // Media & Images
+            'youtube_video_id', 'image_quality', 'auto_resize_images', 'generate_thumbnails', 'watermark_images'
+        ];
+        
+        // Special handling for GTIN
         if (isset($data['gtin'])) {
             // Clean GTIN - just remove non-numeric characters
             $gtin = preg_replace('/[^0-9]/', '', $data['gtin']);
@@ -208,94 +259,28 @@ class Product extends Model {
             $set_clauses[] = "`gtin` = '{$gtin}'";
         }
         
-        if (isset($data['brand_name'])) {
-            $set_clauses[] = "`brand_name` = '" . db()->escape($data['brand_name']) . "'";
-        }
-        
-        if (isset($data['product_name'])) {
-            $set_clauses[] = "`product_name` = '" . db()->escape($data['product_name']) . "'";
-        }
-        
-        if (isset($data['product_description'])) {
-            $set_clauses[] = "`product_description` = '" . db()->escape($data['product_description']) . "'";
-        }
-        
-        if (isset($data['category'])) {
-            $set_clauses[] = "`category` = '" . db()->escape($data['category']) . "'";
-        }
-        
-        if (isset($data['subcategory'])) {
-            $set_clauses[] = "`subcategory` = '" . db()->escape($data['subcategory']) . "'";
-        }
-        
-        if (isset($data['manufacturer'])) {
-            $set_clauses[] = "`manufacturer` = '" . db()->escape($data['manufacturer']) . "'";
-        }
-        
-        if (isset($data['country_of_origin'])) {
-            $set_clauses[] = "`country_of_origin` = '" . db()->escape($data['country_of_origin']) . "'";
-        }
-        
-        if (isset($data['net_weight'])) {
-            $set_clauses[] = "`net_weight` = '" . db()->escape($data['net_weight']) . "'";
-        }
-        
-        if (isset($data['dimensions'])) {
-            $set_clauses[] = "`dimensions` = '" . db()->escape($data['dimensions']) . "'";
-        }
-        
-        if (isset($data['ingredients'])) {
-            $set_clauses[] = "`ingredients` = '" . db()->escape($data['ingredients']) . "'";
-        }
-        
-        if (isset($data['nutritional_info'])) {
-            $set_clauses[] = "`nutritional_info` = '" . db()->escape($data['nutritional_info']) . "'";
-        }
-        
-        if (isset($data['allergen_info'])) {
-            $set_clauses[] = "`allergen_info` = '" . db()->escape($data['allergen_info']) . "'";
-        }
-        
-        if (isset($data['certifications'])) {
-            $set_clauses[] = "`certifications` = '" . db()->escape($data['certifications']) . "'";
-        }
-        
-        if (isset($data['product_images'])) {
-            $product_images = json_encode($data['product_images']);
-            $set_clauses[] = "`product_images` = '{$product_images}'";
-        }
-        
-        if (isset($data['packaging_info'])) {
-            $set_clauses[] = "`packaging_info` = '" . db()->escape($data['packaging_info']) . "'";
-        }
-        
-        if (isset($data['storage_instructions'])) {
-            $set_clauses[] = "`storage_instructions` = '" . db()->escape($data['storage_instructions']) . "'";
-        }
-        
-        if (isset($data['usage_instructions'])) {
-            $set_clauses[] = "`usage_instructions` = '" . db()->escape($data['usage_instructions']) . "'";
-        }
-        
-        if (isset($data['target_url'])) {
-            $set_clauses[] = "`target_url` = '" . db()->escape($data['target_url']) . "'";
-        }
-        
-        if (isset($data['project_id'])) {
-            $set_clauses[] = "`project_id` = " . ($data['project_id'] ? $data['project_id'] : 'NULL');
-        }
-        
-        if (isset($data['gs1_link_id'])) {
-            $set_clauses[] = "`gs1_link_id` = " . ($data['gs1_link_id'] ? $data['gs1_link_id'] : 'NULL');
-        }
-        
-        if (isset($data['settings'])) {
-            $settings = json_encode($data['settings']);
-            $set_clauses[] = "`settings` = '{$settings}'";
-        }
-        
-        if (isset($data['is_enabled'])) {
-            $set_clauses[] = "`is_enabled` = " . (int)$data['is_enabled'];
+        // Process all other fields
+        foreach ($updatable_fields as $field) {
+            if (isset($data[$field]) && $field !== 'gtin') {
+                if (in_array($field, ['project_id', 'gs1_link_id'])) {
+                    // Handle nullable integer fields
+                    $set_clauses[] = "`{$field}` = " . ($data[$field] ? (int)$data[$field] : 'NULL');
+                } elseif (in_array($field, ['is_enabled', 'halal_certified', 'kosher_certified', 'gluten_free', 'vegan', 'vegetarian', 'non_gmo', 'auto_resize_images', 'generate_thumbnails', 'watermark_images'])) {
+                    // Handle boolean fields
+                    $set_clauses[] = "`{$field}` = " . (int)$data[$field];
+                } elseif ($field === 'settings') {
+                    // Handle JSON fields
+                    $settings = json_encode($data['settings']);
+                    $set_clauses[] = "`settings` = '{$settings}'";
+                } elseif ($field === 'product_images') {
+                    // Handle JSON fields
+                    $product_images = json_encode($data['product_images']);
+                    $set_clauses[] = "`product_images` = '{$product_images}'";
+                } else {
+                    // Handle string fields
+                    $set_clauses[] = "`{$field}` = '" . db()->escape($data[$field]) . "'";
+                }
+            }
         }
         
         if (empty($set_clauses)) {

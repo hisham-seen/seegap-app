@@ -1,17 +1,19 @@
 CREATE TABLE `users` (
 `user_id` int NOT NULL AUTO_INCREMENT,
 `email` varchar(320) NOT NULL,
-`password` varchar(128) DEFAULT NULL,
 `name` varchar(64) NOT NULL,
+`login_token` varchar(64) DEFAULT NULL,
+`login_token_expiry` datetime DEFAULT NULL,
+`login_token_ip` varchar(64) DEFAULT NULL,
+`login_attempts` int DEFAULT '0',
+`login_attempts_datetime` datetime DEFAULT NULL,
 `billing` text,
 `api_key` varchar(32) DEFAULT NULL,
 `token_code` varchar(32) DEFAULT NULL,
-`twofa_secret` varchar(16) DEFAULT NULL,
-`anti_phishing_code` varchar(8) DEFAULT NULL,
 `one_time_login_code` varchar(32) DEFAULT NULL,
 `pending_email` varchar(128) DEFAULT NULL,
 `email_activation_code` varchar(32) DEFAULT NULL,
-`lost_password_code` varchar(32) DEFAULT NULL,
+`anti_phishing_code` varchar(8) DEFAULT NULL,
 `type` tinyint NOT NULL DEFAULT '0',
 `status` tinyint NOT NULL DEFAULT '0',
 `is_newsletter_subscribed` tinyint NOT NULL DEFAULT '0',
@@ -54,7 +56,10 @@ CREATE TABLE `users` (
 `chats_default_order_by` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT 'chat_id',
 PRIMARY KEY (`user_id`),
 KEY `plan_id` (`plan_id`),
-KEY `api_key` (`api_key`)
+KEY `api_key` (`api_key`),
+KEY `token_code` (`token_code`),
+KEY `login_token` (`login_token`),
+KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- SEPARATOR --
@@ -75,8 +80,8 @@ PRIMARY KEY (`code_id`)
 
 -- SEPARATOR --
 
-INSERT INTO `users` (`user_id`, `email`, `password`, `api_key`, `referral_key`, `name`, `type`, `status`, `plan_id`, `plan_expiration_date`, `plan_settings`, `datetime`, `ip`, `last_activity`, `preferences`)
-VALUES (1,'admin','$2y$10$uFNO0pQKEHSFcus1zSFlveiPCB3EvG9ZlES7XKgJFTAl5JbRGFCWy', md5(rand()), md5(rand()), 'SeeGap',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"microsites_templates":[],"microsites_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"password":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"microsite_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"microsites_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"gs1_links_limit":-1,"products_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_microsite_blocks":{"link":true,"text":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"soundcloud":true,"spotify":true,"twitch":true,"vimeo":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"form":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"pinterest_profile":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"external_item":true,"coupon":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"donation":true,"product":true,"service":true,"social_media_embed":true,"accordion":true,"cover":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_microsite":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}');
+INSERT INTO `users` (`user_id`, `email`, `api_key`, `token_code`, `referral_key`, `name`, `type`, `status`, `plan_id`, `plan_expiration_date`, `plan_settings`, `datetime`, `ip`, `last_activity`, `preferences`, `anti_phishing_code`)
+VALUES (1,'admin@seegap.com', md5(rand()), md5(rand()), md5(rand()), 'SeeGap Admin',1,1,'custom','2030-01-01 12:00:00', '{"url_minimum_characters":1,"url_maximum_characters":64,"additional_domains":["69"],"microsites_templates":[],"microsites_themes":["33","1","2","3","4","5","32","34"],"custom_url":true,"deep_links":true,"no_ads":true,"white_labeling_is_enabled":true,"export":{"pdf":true,"csv":true,"json":true},"removable_branding":true,"custom_branding":true,"statistics":true,"temporary_url_is_enabled":true,"cloaking_is_enabled":true,"app_linking_is_enabled":true,"targeting_is_enabled":true,"seo":true,"utm":true,"fonts":true,"sensitive_content":true,"leap_link":true,"api_is_enabled":true,"dofollow_is_enabled":true,"custom_pwa_is_enabled":true,"microsite_blocks_limit":-1,"projects_limit":-1,"splash_pages_limit":-1,"pixels_limit":-1,"qr_codes_limit":-1,"qr_codes_bulk_limit":-1,"microsites_limit":-1,"links_limit":-1,"files_limit":-1,"events_limit":-1,"static_limit":-1,"domains_limit":-1,"payment_processors_limit":-1,"signatures_limit":-1,"teams_limit":-1,"team_members_limit":-1,"gs1_links_limit":-1,"products_limit":-1,"affiliate_commission_percentage":10,"track_links_retention":999,"custom_css_is_enabled":true,"custom_js_is_enabled":true,"enabled_microsite_blocks":{"link":true,"text":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"soundcloud":true,"spotify":true,"twitch":true,"vimeo":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"form":true,"map":true,"applemusic":true,"tidal":true,"mixcloud":true,"kick":true,"anchor":true,"pinterest_profile":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"big_link":true,"faq":true,"typeform":true,"calendly":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"external_item":true,"coupon":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"powerpoint_presentation":true,"excel_spreadsheet":true,"markdown":true,"donation":true,"product":true,"service":true,"social_media_embed":true,"accordion":true,"cover":true},"exclusive_personal_api_keys":false,"documents_model":"gpt-4","documents_per_month_limit":-1,"words_per_month_limit":-1,"images_api":"dall-e-2","images_per_month_limit":-1,"transcriptions_per_month_limit":-1,"transcriptions_file_size_limit":2,"chats_model":"gpt-4","chats_per_month_limit":-1,"chat_messages_per_chat_limit":-1,"chat_image_size_limit":2,"syntheses_api":"openai_audio","syntheses_per_month_limit":-1,"synthesized_characters_per_month_limit":-1,"force_splash_page_on_link":false,"force_splash_page_on_microsite":false,"force_splash_page_on_file":false,"force_splash_page_on_static":false,"force_splash_page_on_event":false}', NOW(),'',NOW(), '{"default_results_per_page":100,"default_order_type":"DESC","links_default_order_by":"link_id","qr_codes_default_order_by":"qr_code_id","openai_api_key":"","clipdrop_api_key":""}', SUBSTRING(MD5(RAND()), 1, 8));
 
 -- SEPARATOR --
 
@@ -231,7 +236,7 @@ INSERT INTO `settings` (`key`, `value`)
 VALUES
 ('main', '{"title":"Your title","default_language":"english","default_theme_style":"light","default_timezone":"UTC","index_url":"","terms_and_conditions_url":"","privacy_policy_url":"","not_found_url":"","ai_scraping_is_allowed":true,"se_indexing":true,"display_index_plans":true,"display_index_testimonials":true,"display_index_faq":true,"display_index_latest_blog_posts":true,"default_results_per_page":100,"default_order_type":"DESC","auto_language_detection_is_enabled":true,"blog_is_enabled":false,"api_is_enabled":true,"theme_style_change_is_enabled":true,"logo_light":"","logo_dark":"","logo_email":"","opengraph":"","favicon":"","openai_api_key":"","openai_model":"gpt-4o","force_https_is_enabled":false,"broadcasts_statistics_is_enabled":true,"breadcrumbs_is_enabled":true,"display_pagination_when_no_pages":false,"chart_cache":12,"chart_days":30}'),
 ('languages', '{"english":{"status":"active"}}'),
-('users', '{"email_confirmation":false,"welcome_email_is_enabled":false,"register_is_enabled":true,"register_only_social_logins":false,"register_social_login_require_password":false,"register_display_newsletter_checkbox":false,"login_rememberme_checkbox_is_checked":true,"login_rememberme_cookie_days":90,"auto_delete_unconfirmed_users":3,"auto_delete_inactive_users":30,"user_deletion_reminder":0,"blacklisted_domains":[],"blacklisted_countries":[],"login_lockout_is_enabled":true,"login_lockout_max_retries":3,"login_lockout_time":10,"lost_password_lockout_is_enabled":true,"lost_password_lockout_max_retries":3,"lost_password_lockout_time":10,"resend_activation_lockout_is_enabled":true,"resend_activation_lockout_max_retries":3,"resend_activation_lockout_time":10,"register_lockout_is_enabled":true,"register_lockout_max_registrations":3,"register_lockout_time":10}'),
+('users', '{"email_confirmation":false,"welcome_email_is_enabled":false,"register_is_enabled":true,"register_display_newsletter_checkbox":false,"login_rememberme_checkbox_is_checked":true,"login_rememberme_cookie_days":90,"auto_delete_unconfirmed_users":3,"auto_delete_inactive_users":30,"user_deletion_reminder":0,"blacklisted_domains":[],"blacklisted_countries":[],"login_lockout_is_enabled":true,"login_lockout_max_retries":3,"login_lockout_time":10,"register_lockout_is_enabled":true,"register_lockout_max_registrations":3,"register_lockout_time":10}'),
 ('ads', '{"ad_blocker_detector_is_enabled":true,"ad_blocker_detector_lock_is_enabled":false,"ad_blocker_detector_delay":5,"header":"","footer":"","header_microsite":"","footer_microsite":"","header_splash":"","footer_splash":""}'),
 ('captcha', '{"type":"basic","recaptcha_public_key":"","recaptcha_private_key":"","login_is_enabled":0,"register_is_enabled":0,"lost_password_is_enabled":0,"resend_activation_is_enabled":0}'),
 ('cron', concat('{\"key\":\"', @cron_key, '\"}')),
@@ -266,6 +271,7 @@ VALUES
 ('lemonsqueezy', '{"is_enabled":false,"api_key":"","signing_secret":"","store_id":"","one_time_monthly_variant_id":"","one_time_annual_variant_id":"","one_time_lifetime_variant_id":"","recurring_monthly_variant_id":"","recurring_annual_variant_id":"","currencies":["USD"]}'),
 ('myfatoorah', '{"is_enabled":1,"api_endpoint":"apitest.myfatoorah.com","api_key":"","secret_key":"","currencies":["KWD"]}'),
 ('smtp', '{"from_name":"SeeGap","from":"","reply_to_name":"","reply_to":"","cc":"","bcc":"","host":"","encryption":"tls","port":"","auth":0,"username":"","password":"","display_socials":false,"company_details":""}'),
+('email_templates', '{"login_subject":"Your secure login link for {{SITE_TITLE}}","login_body":"<h2>Secure Login Request</h2>\\n<p>Hello {{USER_NAME}},</p>\\n<p>We received a request to log in to your account at {{SITE_TITLE}}.</p>\\n<p><strong>Login Details:</strong></p>\\n<ul>\\n<li>Email: {{USER_EMAIL}}</li>\\n<li>IP Address: {{USER_IP}}</li>\\n<li>Device: {{USER_DEVICE}}</li>\\n<li>Security Code: {{SECURITY_CODE}}</li>\\n</ul>\\n<p>Click the button below to securely log in to your account:</p>\\n<p><a href=\\"{{LOGIN_LINK}}\\" style=\\"background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;\\">Login to {{SITE_TITLE}}</a></p>\\n<p>This link will expire in 15 minutes for your security.</p>\\n<p>If you did not request this login, please ignore this email and consider changing your account password.</p>\\n<p>Best regards,<br>The {{SITE_TITLE}} Team</p>","welcome_subject":"Welcome to {{SITE_TITLE}}!","welcome_body":"<h2>Welcome to {{SITE_TITLE}}!</h2>\\n<p>Hello {{USER_NAME}},</p>\\n<p>Welcome to {{SITE_TITLE}}! We are excited to have you as part of our community.</p>\\n<p>Your account has been successfully created and you can now start using all our features.</p>\\n<p><a href=\\"{{SITE_URL}}\\" style=\\"background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;\\">Get Started</a></p>\\n<p>If you have any questions or need assistance, feel free to contact our support team.</p>\\n<p>Best regards,<br>The {{SITE_TITLE}} Team</p>","account_delete_subject":"Confirm account deletion for {{SITE_TITLE}}","account_delete_body":"<h2>Account Deletion Request</h2>\\n<p>Hello {{USER_NAME}},</p>\\n<p>We received a request to delete your account at {{SITE_TITLE}}.</p>\\n<p><strong>Account Details:</strong></p>\\n<ul>\\n<li>Email: {{USER_EMAIL}}</li>\\n<li>Request from IP: {{USER_IP}}</li>\\n<li>Device: {{USER_DEVICE}}</li>\\n</ul>\\n<p>If you want to proceed with deleting your account, please click the button below:</p>\\n<p><a href=\\"{{SITE_URL}}\\" style=\\"background-color: #dc3545; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;\\">Confirm Account Deletion</a></p>\\n<p><strong>Warning:</strong> This action cannot be undone. All your data will be permanently deleted.</p>\\n<p>If you did not request this deletion, please ignore this email and consider changing your account password.</p>\\n<p>Best regards,<br>The {{SITE_TITLE}} Team</p>"}'),
 ('custom', '{"body_content":"","head_js":"","head_css":"","head_js_microsite":"","head_css_microsite":"","body_content_microsite":"","head_js_splash_page":"","head_css_splash_page":"","body_content_splash_page":""}'),
 ('theme', '{"light_is_enabled": false, "dark_is_enabled": false}'),
 ('socials', '{"threads":"","youtube":"","facebook":"","x":"","instagram":"","tiktok":"","linkedin":"","whatsapp":"","email":""}'),
@@ -275,8 +281,8 @@ VALUES
 ('cookie_consent', '{"is_enabled":false,"logging_is_enabled":false,"necessary_is_enabled":true,"analytics_is_enabled":true,"targeting_is_enabled":true,"layout":"bar","position_y":"middle","position_x":"center"}'),
 ('links', '{"available_microsite_blocks":{"link":true,"text":true,"avatar":true,"image":true,"socials":true,"email_collector":true,"soundcloud":true,"spotify":true,"twitch":true,"vimeo":true,"paypal":true,"phone_collector":true,"contact_collector":true,"feedback_collector":true,"form":true,"map":true,"applemusic":true,"tidal":true,"anchor":true,"pinterest_profile":true,"snapchat":true,"rss_feed":true,"custom_html":true,"image_grid":true,"divider":true,"list":true,"big_link":true,"faq":true,"typeform":true,"reddit":true,"audio":true,"video":true,"iframe":true,"file":true,"countdown":true,"external_item":true,"timeline":true,"review":true,"image_slider":true,"pdf_document":true,"markdown":true,"donation":true,"product":true,"service":true,"social_media_embed":true,"accordion":true,"cover":true},"example_url":"","random_url_length":5,"branding":"Powered by Seegap","shortener_is_enabled":1,"microsites_is_enabled":1,"microsites_templates_is_enabled":1,"microsites_themes_is_enabled":"on","microsites_new_blocks_position":"bottom","microsites_default_active_tab":"settings","default_microsite_theme_id":null,"default_microsite_template_id":null,"files_is_enabled":1,"events_is_enabled":1,"static_is_enabled":1,"pixels_is_enabled":1,"splash_page_is_enabled":1,"splash_page_auto_redirect":1,"splash_page_link_unlock_seconds":3,"directory_is_enabled":1,"directory_access":"everyone","directory_display":"all","domains_is_enabled":1,"additional_domains_is_enabled":1,"main_domain_is_enabled":1,"domains_custom_main_ip":"","blacklisted_domains":[],"blacklisted_keywords":[],"google_safe_browsing_is_enabled":0,"google_safe_browsing_api_key":"","google_static_maps_is_enabled":0,"google_static_maps_api_key":"","avatar_size_limit":2,"background_size_limit":2,"favicon_size_limit":2,"seo_image_size_limit":2,"thumbnail_image_size_limit":2,"image_size_limit":2,"audio_size_limit":2,"video_size_limit":2,"file_size_limit":2,"product_file_size_limit":2,"static_size_limit":2,"whitelisted_image_extensions":["jpg","jpeg","png","gif","webp","svg"],"whitelisted_audio_extensions":["mp3","wav","ogg","m4a"],"whitelisted_video_extensions":["mp4","webm","ogg","avi","mov"],"whitelisted_file_extensions":["pdf","doc","docx","txt","zip","rar"]}'),
 ('codes', '{"qr_codes_is_enabled":1,"logo_size_limit":1,"background_size_limit":1,"available_qr_codes":{"text":true,"url":true,"phone":true,"sms":true,"email":true,"whatsapp":true,"facetime":true,"location":true,"wifi":true,"event":true,"vcard":true,"crypto":true,"paypal":true,"upi":true,"epc":true,"pix":true},"qr_codes_branding_logo":"","qr_codes_default_image":""}'),
-('gs1_links', '{"gs1_links_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_target_url":false,"default_target_url":"","domains_is_enabled":true,"projects_is_enabled":true,"pixels_is_enabled":true,"analytics_is_enabled":true,"auto_generate_qr_codes":false,"branding":"","random_gtin_length":"14","blacklisted_gtins":[],"allowed_gtin_prefixes":[]}'),
-('products', '{"products_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"strict","require_product_name":true,"require_brand_name":false,"auto_generate_gs1_links":false,"auto_generate_qr_codes":false,"projects_is_enabled":true,"image_size_limit":5,"max_images_per_product":10,"allowed_categories":[],"required_fields":["product_name","gtin"],"export_formats":["csv","json"],"bulk_import_is_enabled":true,"analytics_is_enabled":true}'),
+('gs1_links', '{"gs1_links_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"disabled","require_target_url":false,"default_target_url":"","domains_is_enabled":true,"projects_is_enabled":true,"pixels_is_enabled":true,"analytics_is_enabled":true,"auto_generate_qr_codes":false,"branding":"","random_gtin_length":"14","blacklisted_gtins":[],"allowed_gtin_prefixes":[]}'),
+('products', '{"products_is_enabled":true,"gtin_validation_is_enabled":true,"gtin_format_validation":"disabled","require_product_name":true,"require_brand_name":false,"auto_generate_gs1_links":false,"auto_generate_qr_codes":false,"projects_is_enabled":true,"image_size_limit":5,"max_images_per_product":10,"allowed_categories":[],"required_fields":["product_name","gtin"],"export_formats":["csv","json"],"bulk_import_is_enabled":true,"analytics_is_enabled":true}'),
 ('aix', '{"is_enabled":true,"openai_api_key":"","openai_model":"gpt-4","openai_max_tokens":4096,"google_api_key":"","google_model":"gemini-pro","anthropic_api_key":"","anthropic_model":"claude-3-sonnet-20240229","documents_is_enabled":true,"images_is_enabled":true,"chats_is_enabled":true,"templates_is_enabled":true,"receipt_analysis_is_enabled":true,"receipt_analysis_providers":["openai","google","anthropic"],"receipt_analysis_timeout":30,"receipt_analysis_max_retries":3,"receipt_analysis_auto_process":true,"receipt_analysis_extract_items":true,"receipt_analysis_extract_totals":true,"receipt_analysis_extract_merchant":true,"receipt_analysis_extract_date":true,"receipt_analysis_extract_payment":true}'),
 ('license', '{\"license\":\"BYPASSED-LICENSE\",\"type\":\"SPECIAL\"}'),
 ('product_info', '{\"version\":\"56.0.0\", \"code\":\"5600\"}'),
@@ -560,11 +566,11 @@ INSERT INTO `links` (`link_id`, `project_id`, `user_id`, `domain_id`, `pixels_id
 
 -- SEPARATOR --
 
-INSERT INTO `microsites_blocks` (`user_id`, `link_id`, `type`, `location_url`, `clicks`, `settings`, `order`, `start_date`, `end_date`, `is_enabled`, `datetime`) VALUES (1, 1, 'text', NULL, 0, '{\"text\":\"<h1>Example page</h1>\",\"text_color\":\"white\"}', 0, NULL, NULL, 1, '2021-12-20 18:05:52');
+INSERT INTO `microsites_blocks` (`user_id`, `link_id`, `type`, `location_url`, `clicks`, `settings`, `order`, `start_date`, `end_date`, `is_enabled`, `datetime`) VALUES (1, 1, 'text', NULL, 0, '{\"content\":\"<h2>Welcome to Our Platform</h2><p>Discover amazing features and connect with our community. This is a sample text block with rich content formatting.</p>\",\"text_color\":\"#ffffff\",\"text_alignment\":\"center\",\"animation\":false,\"animation_runs\":\"repeat-1\",\"animation_delay\":0,\"background_color\":\"#00000000\",\"border_width\":0,\"border_color\":\"#ffffff\",\"border_radius\":4,\"border_style\":\"solid\",\"border_shadow_offset_x\":0,\"border_shadow_offset_y\":0,\"border_shadow_blur\":0,\"border_shadow_spread\":0,\"border_shadow_color\":\"#00000000\",\"display_continents\":[],\"display_countries\":[],\"display_cities\":[],\"display_devices\":[],\"display_languages\":[],\"display_operating_systems\":[],\"display_browsers\":[]}', 2, NULL, NULL, 1, '2021-12-20 18:07:15');
 
 -- SEPARATOR --
 
-INSERT INTO `microsites_blocks` (`user_id`, `link_id`, `type`, `location_url`, `clicks`, `settings`, `order`, `start_date`, `end_date`, `is_enabled`, `datetime`) VALUES (1, 1, 'text', NULL, 0, '{\"text\":\"This is an example description.\",\"text_color\":\"white\"}', 1, NULL, NULL, 1, '2021-12-20 18:06:09');
+INSERT INTO `microsites_blocks` (`user_id`, `link_id`, `type`, `location_url`, `clicks`, `settings`, `order`, `start_date`, `end_date`, `is_enabled`, `datetime`) VALUES (1, 1, 'link', 'https://seegap.com', 0, '{\"name\":\"Visit SeeGap\",\"open_in_new_tab\":false,\"text_color\":\"#000000\",\"text_alignment\":\"center\",\"background_color\":\"#ffffff\",\"border_shadow_offset_x\":0,\"border_shadow_offset_y\":0,\"border_shadow_blur\":20,\"border_shadow_spread\":0,\"border_shadow_color\":\"#00000010\",\"border_width\":0,\"border_style\":\"solid\",\"border_color\":\"#ffffff\",\"border_radius\":4,\"animation\":false,\"animation_runs\":\"repeat-1\",\"animation_delay\":0,\"icon\":\"\",\"image\":\"\",\"display_continents\":[],\"display_countries\":[],\"display_cities\":[],\"display_devices\":[],\"display_languages\":[],\"display_operating_systems\":[],\"display_browsers\":[]}', 3, NULL, NULL, 1, '2021-12-20 18:08:30');
 
 -- SEPARATOR --
 
@@ -674,16 +680,16 @@ CREATE TABLE `products` (
   `product_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `project_id` int DEFAULT NULL,
-  `gtin` varchar(14) NOT NULL,
+  `gtin` varchar(14) NOT NULL COMMENT 'GS1 AI 01 - Global Trade Item Number',
   `brand_name` varchar(128) DEFAULT NULL,
   `product_name` varchar(256) NOT NULL,
   `product_description` text,
   `category` varchar(128) DEFAULT NULL,
   `subcategory` varchar(128) DEFAULT NULL,
   `manufacturer` varchar(256) DEFAULT NULL,
-  `country_of_origin` varchar(64) DEFAULT NULL,
-  `net_weight` varchar(64) DEFAULT NULL,
-  `dimensions` varchar(128) DEFAULT NULL,
+  `country_of_origin` varchar(3) DEFAULT NULL COMMENT 'GS1 AI 422 - Country of Origin (ISO 3166-1 alpha-3)',
+  `net_weight` varchar(64) DEFAULT NULL COMMENT 'GS1 AI 310n - Net Weight (kg)',
+  `dimensions` varchar(128) DEFAULT NULL COMMENT 'Length x Width x Height',
   `ingredients` text,
   `nutritional_info` text,
   `allergen_info` text,
@@ -694,6 +700,37 @@ CREATE TABLE `products` (
   `usage_instructions` text,
   `target_url` varchar(2048) DEFAULT NULL,
   `gs1_link_id` int DEFAULT NULL,
+  `gln` varchar(13) DEFAULT NULL COMMENT 'GS1 AI 413 - Global Location Number',
+  `batch_lot_number` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 10 - Batch/Lot Number',
+  `serial_number` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 21 - Serial Number',
+  `production_date` date DEFAULT NULL COMMENT 'GS1 AI 11 - Production Date (YYMMDD)',
+  `best_before_date` date DEFAULT NULL COMMENT 'GS1 AI 15 - Best Before Date (YYMMDD)',
+  `use_by_date` date DEFAULT NULL COMMENT 'GS1 AI 17 - Use By Date (YYMMDD)',
+  `sell_by_date` date DEFAULT NULL COMMENT 'GS1 AI 16 - Sell By Date (YYMMDD)',
+  `pack_date` date DEFAULT NULL COMMENT 'GS1 AI 13 - Pack Date (YYMMDD)',
+  `due_date` date DEFAULT NULL COMMENT 'GS1 AI 12 - Due Date (YYMMDD)',
+  `variant_number` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 20 - Variant Number',
+  `route_code` varchar(30) DEFAULT NULL COMMENT 'GS1 AI 403 - Route Code',
+  `ship_to_gln` varchar(13) DEFAULT NULL COMMENT 'GS1 AI 410 - Ship To Location GLN',
+  `bill_to_gln` varchar(13) DEFAULT NULL COMMENT 'GS1 AI 411 - Bill To Location GLN',
+  `purchase_from_gln` varchar(13) DEFAULT NULL COMMENT 'GS1 AI 412 - Purchase From Location GLN',
+  `gross_weight` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 330n - Gross Weight (kg)',
+  `net_volume_liters` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 315n - Net Volume (L)',
+  `net_volume_cubic` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 316n - Net Volume (m³)',
+  `area_square_meters` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 314n - Area (m²)',
+  `length_meters` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 311n - Length (m)',
+  `width_meters` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 312n - Width (m)',
+  `height_meters` varchar(20) DEFAULT NULL COMMENT 'GS1 AI 313n - Height (m)',
+  `processing_country` varchar(3) DEFAULT NULL COMMENT 'GS1 AI 423 - Country of Processing (ISO 3166-1 alpha-3)',
+  `disassembly_country` varchar(3) DEFAULT NULL COMMENT 'GS1 AI 424 - Country of Disassembly (ISO 3166-1 alpha-3)',
+  `full_process_country` varchar(3) DEFAULT NULL COMMENT 'GS1 AI 425 - Country of Full Process Chain (ISO 3166-1 alpha-3)',
+  `process_covering_country` varchar(3) DEFAULT NULL COMMENT 'GS1 AI 426 - Country Covering Process (ISO 3166-1 alpha-3)',
+  `customer_part_number` varchar(30) DEFAULT NULL COMMENT 'GS1 AI 241 - Customer Part Number',
+  `made_to_order_variation` varchar(30) DEFAULT NULL COMMENT 'GS1 AI 242 - Made-to-Order Variation Number',
+  `packaging_configuration` varchar(30) DEFAULT NULL COMMENT 'GS1 AI 243 - Packaging Configuration',
+  `secondary_serial` varchar(30) DEFAULT NULL COMMENT 'GS1 AI 250 - Secondary Serial Number',
+  `reference_source_entity` varchar(30) DEFAULT NULL COMMENT 'GS1 AI 251 - Reference to Source Entity',
+  `gdti` varchar(30) DEFAULT NULL COMMENT 'GS1 AI 253 - Global Document Type Identifier',
   `settings` text,
   `is_enabled` tinyint NOT NULL DEFAULT '1',
   `datetime` datetime NOT NULL,
@@ -706,6 +743,15 @@ CREATE TABLE `products` (
   KEY `gs1_link_id` (`gs1_link_id`),
   KEY `brand_name` (`brand_name`),
   KEY `category` (`category`),
+  KEY `idx_products_gln` (`gln`),
+  KEY `idx_products_batch_lot` (`batch_lot_number`),
+  KEY `idx_products_serial` (`serial_number`),
+  KEY `idx_products_production_date` (`production_date`),
+  KEY `idx_products_best_before` (`best_before_date`),
+  KEY `idx_products_variant` (`variant_number`),
+  KEY `idx_products_ship_to_gln` (`ship_to_gln`),
+  KEY `idx_products_bill_to_gln` (`bill_to_gln`),
+  KEY `idx_products_processing_country` (`processing_country`),
   CONSTRAINT `products_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `products_projects_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `products_gs1_links_fk` FOREIGN KEY (`gs1_link_id`) REFERENCES `gs1_links` (`gs1_link_id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -958,3 +1004,18 @@ CREATE TABLE `chats` (
   CONSTRAINT `chats_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `chats_ibfk_2` FOREIGN KEY (`chat_assistant_id`) REFERENCES `chats_assistants` (`chat_assistant_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AIX chat conversations';
+
+-- SEPARATOR --
+
+INSERT INTO `products` (`user_id`, `project_id`, `gtin`, `brand_name`, `product_name`, `product_description`, `category`, `subcategory`, `manufacturer`, `country_of_origin`, `net_weight`, `dimensions`, `ingredients`, `nutritional_info`, `allergen_info`, `certifications`, `product_images`, `packaging_info`, `storage_instructions`, `usage_instructions`, `target_url`, `batch_lot_number`, `serial_number`, `production_date`, `best_before_date`, `use_by_date`, `sell_by_date`, `pack_date`, `variant_number`, `settings`, `is_enabled`, `datetime`) VALUES 
+(1, NULL, '01234567890123', 'Organic Valley', 'Premium Organic Whole Milk', 'Fresh organic whole milk from grass-fed cows, rich in natural nutrients and free from artificial additives. Perfect for drinking, cooking, and baking.', 'Food & Beverages', 'Dairy Products', 'Organic Valley Cooperative', 'USA', '1.0', '10.2 x 6.4 x 25.4 cm', 'Organic Grade A Milk, Vitamin D3', 'Per 240ml: Calories 150, Total Fat 8g, Saturated Fat 5g, Cholesterol 35mg, Sodium 125mg, Total Carbs 12g, Sugars 12g, Protein 8g, Calcium 280mg, Vitamin D 2.5mcg', 'Contains: Milk. May contain traces of soy.', 'USDA Organic, Non-GMO Project Verified, Certified Humane', '["organic_milk_front.jpg", "organic_milk_nutrition.jpg"]', 'Recyclable paperboard carton with plastic cap', 'Keep refrigerated at 4°C or below. Do not freeze.', 'Shake well before use. Best served chilled.', 'https://organicvalley.coop/products/milk/whole-milk/', 'LOT2024001', 'MK240001', '2024-01-15', '2024-02-15', '2024-02-12', '2024-02-10', '2024-01-15', 'WM001', '{"organic": true, "grass_fed": true, "local_sourcing": true}', 1, NOW()),
+
+(1, NULL, '02345678901234', 'Apple', 'iPhone 15 Pro', 'The most advanced iPhone yet, featuring the powerful A17 Pro chip, titanium design, and professional camera system with 5x telephoto zoom.', 'Electronics', 'Smartphones', 'Apple Inc.', 'CHN', '187g', '14.67 x 7.08 x 0.83 cm', 'Titanium, Glass, Aluminum, Rare Earth Elements', 'Display: 6.1-inch Super Retina XDR, Chip: A17 Pro, Storage: 128GB, Camera: 48MP Main, 12MP Ultra Wide, 12MP Telephoto, Battery: Up to 23 hours video playback', 'Contains small parts. Not suitable for children under 3 years.', 'CE Marking, FCC Approved, Energy Star Certified', '["iphone15pro_titanium.jpg", "iphone15pro_camera.jpg", "iphone15pro_box.jpg"]', 'Premium recyclable packaging with minimal plastic', 'Store in dry place at room temperature. Avoid extreme temperatures.', 'Charge before first use. See user manual for complete setup instructions.', 'https://apple.com/iphone-15-pro/', 'APL240156', 'IP15P240001', '2024-03-10', NULL, NULL, NULL, '2024-03-10', 'TI128', '{"warranty_months": 12, "color": "Natural Titanium", "storage": "128GB", "carrier": "Unlocked"}', 1, NOW()),
+
+(1, NULL, '03456789012345', 'L\'Oréal Paris', 'Revitalift Anti-Aging Day Cream', 'Advanced anti-aging moisturizer with Pro-Retinol and Centella Asiatica to reduce wrinkles and firm skin. Suitable for all skin types.', 'Beauty & Personal Care', 'Skincare', 'L\'Oréal S.A.', 'FRA', '50ml', '7.5 x 7.5 x 5.2 cm', 'Aqua/Water, Glycerin, Dimethicone, Isohexadecane, Alcohol Denat., Isopropyl Isostearate, PEG-10 Dimethicone, Retinyl Palmitate, Centella Asiatica Extract, Adenosine, Ammonium Polyacryloyldimethyl Taurate, Caprylyl Glycol, Carbomer, Disodium EDTA, Hydroxyethylcellulose, Phenoxyethanol, Triethanolamine, Parfum/Fragrance', 'Active Ingredients: Pro-Retinol (Retinyl Palmitate) 0.1%, Centella Asiatica Extract 0.05%', 'For external use only. Avoid contact with eyes. Discontinue use if irritation occurs. Patch test recommended.', 'Dermatologically Tested, Hypoallergenic, Non-Comedogenic', '["revitalift_jar.jpg", "revitalift_texture.jpg", "revitalift_ingredients.jpg"]', 'Glass jar with aluminum cap in recyclable cardboard box', 'Store in cool, dry place away from direct sunlight. Use within 12 months of opening.', 'Apply to clean face and neck morning and evening. Use sunscreen during the day.', 'https://loreal-paris.com/revitalift-anti-aging-cream', 'LOR240089', 'RA240001', '2024-02-20', '2027-02-20', NULL, NULL, '2024-02-20', 'DAY50', '{"spf": false, "skin_type": "all", "age_group": "35+", "fragrance": true}', 1, NOW()),
+
+(1, NULL, '04567890123456', 'Johnson & Johnson', 'Tylenol Extra Strength', 'Fast-acting pain reliever and fever reducer. Each caplet contains 500mg of acetaminophen for effective relief of headaches, muscle aches, and fever.', 'Health & Wellness', 'Over-the-Counter Medicine', 'Johnson & Johnson Consumer Inc.', 'USA', '100 caplets', '11.4 x 6.4 x 4.1 cm', 'Active Ingredient: Acetaminophen 500mg per caplet. Inactive Ingredients: Croscarmellose Sodium, Magnesium Stearate, Microcrystalline Cellulose, Povidone, Pregelatinized Starch, Sodium Starch Glycolate, Stearic Acid', 'Each caplet contains 500mg acetaminophen. Maximum daily dose: 3000mg (6 caplets) in 24 hours for adults.', 'Keep out of reach of children. Do not exceed recommended dose. Consult doctor if pregnant or breastfeeding.', 'FDA Approved, USP Verified, Good Manufacturing Practice (GMP)', '["tylenol_bottle.jpg", "tylenol_caplets.jpg", "tylenol_label.jpg"]', 'Child-resistant bottle with tamper-evident seal', 'Store at room temperature 20-25°C. Protect from moisture and light.', 'Adults: Take 2 caplets every 6 hours as needed. Do not exceed 6 caplets in 24 hours.', 'https://tylenol.com/products/tylenol-extra-strength', 'TYL240067', 'ES240001', '2024-01-08', '2027-01-08', NULL, NULL, '2024-01-08', 'ES500', '{"drug_class": "analgesic", "prescription_required": false, "age_restriction": "12+"}', 1, NOW()),
+
+(1, NULL, '05678901234567', 'Levi\'s', '501 Original Fit Jeans', 'The original blue jean since 1873. Classic straight fit with button fly, made from 100% cotton denim. A timeless wardrobe essential.', 'Apparel & Accessories', 'Jeans', 'Levi Strauss & Co.', 'MEX', '650g', 'W32 x L34 inches', '100% Cotton Denim (14oz)', 'Fabric Weight: 14oz, Fit: Straight, Rise: Mid, Leg Opening: 16.5 inches', 'May contain traces of nickel in metal components. Check care label for washing instructions.', 'OEKO-TEX Standard 100, Better Cotton Initiative (BCI)', '["levis501_front.jpg", "levis501_back.jpg", "levis501_detail.jpg"]', 'Recyclable hang tag and packaging made from sustainable materials', 'Store in cool, dry place. Avoid prolonged exposure to direct sunlight.', 'Machine wash cold with like colors. Tumble dry medium. Iron if needed.', 'https://levi.com/products/501-original-fit-jeans', 'LEV240123', 'LJ240001', '2024-03-05', NULL, NULL, NULL, '2024-03-05', 'W32L34', '{"size": "32x34", "color": "Medium Stonewash", "fit": "Original", "material": "100% Cotton"}', 1, NOW());
+
+-- SEPARATOR --

@@ -276,42 +276,6 @@
             </div>
         </div>
 
-        <hr class="border-gray-50 my-4" />
-
-        <div>
-            <div class="d-flex align-items-center mb-3">
-                <h1 class="h4 m-0"><?= l('account.change_password.header') ?></h1>
-
-                <div class="ml-2">
-                    <span data-toggle="tooltip" title="<?= l('account.change_password.subheader') ?>">
-                        <i class="fas fa-fw fa-info-circle text-muted"></i>
-                    </span>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
-                        <label for="old_password"><i class="fas fa-fw fa-sm fa-unlock text-muted mr-1"></i> <?= l('account.change_password.current_password') ?></label>
-                        <input type="password" id="old_password" name="old_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('old_password') ? 'is-invalid' : null ?>" />
-                        <small class="form-text text-muted"><?= l('account.change_password.current_password_help') ?></small>
-                        <?= \SeeGap\Alerts::output_field_error('old_password') ?>
-                    </div>
-
-                    <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
-                        <label for="new_password"><i class="fas fa-fw fa-sm fa-lock text-muted mr-1"></i> <?= l('account.change_password.new_password') ?></label>
-                        <input type="password" id="new_password" name="new_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('new_password') ? 'is-invalid' : null ?>" />
-                        <?= \SeeGap\Alerts::output_field_error('new_password') ?>
-                    </div>
-
-                    <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
-                        <label for="repeat_password"><i class="fas fa-fw fa-sm fa-lock text-muted mr-1"></i> <?= l('account.change_password.repeat_password') ?></label>
-                        <input type="password" id="repeat_password" name="repeat_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('repeat_password') ? 'is-invalid' : null ?>" />
-                        <?= \SeeGap\Alerts::output_field_error('repeat_password') ?>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <button type="submit" name="submit" class="btn btn-block btn-primary mt-5"><?= l('global.update') ?></button>
     </form>

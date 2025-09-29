@@ -13,11 +13,11 @@
         </div>
 
         <div class="form-group">
-            <label for="gtin_validation"><?= l('admin_settings.products.gtin_validation') ?></label>
-            <select id="gtin_validation" name="gtin_validation" class="custom-select">
-                <option value="disabled" <?= settings()->products->gtin_validation == 'disabled' ? 'selected="selected"' : null ?>><?= l('admin_settings.products.gtin_validation_disabled') ?></option>
-                <option value="lenient" <?= settings()->products->gtin_validation == 'lenient' ? 'selected="selected"' : null ?>><?= l('admin_settings.products.gtin_validation_lenient') ?></option>
-                <option value="strict" <?= settings()->products->gtin_validation == 'strict' ? 'selected="selected"' : null ?>><?= l('admin_settings.products.gtin_validation_strict') ?></option>
+            <label for="gtin_format_validation"><?= l('admin_settings.products.gtin_validation') ?></label>
+            <select id="gtin_format_validation" name="gtin_format_validation" class="custom-select">
+                <option value="disabled" <?= settings()->products->gtin_format_validation == 'disabled' ? 'selected="selected"' : null ?>><?= l('admin_settings.products.gtin_validation_disabled') ?></option>
+                <option value="lenient" <?= settings()->products->gtin_format_validation == 'lenient' ? 'selected="selected"' : null ?>><?= l('admin_settings.products.gtin_validation_lenient') ?></option>
+                <option value="strict" <?= settings()->products->gtin_format_validation == 'strict' ? 'selected="selected"' : null ?>><?= l('admin_settings.products.gtin_validation_strict') ?></option>
             </select>
             <small class="form-text text-muted"><?= l('admin_settings.products.gtin_validation_help') ?></small>
         </div>

@@ -298,6 +298,14 @@ class Router {
                 ]
             ],
 
+            'product-ajax' => [
+                'controller' => 'ProductAjax',
+                'settings' => [
+                    'has_view' => false,
+                    'no_browser_language_detection' => true,
+                ]
+            ],
+
             'product-create' => [
                 'controller' => 'ProductCreate',
                 'settings' => [

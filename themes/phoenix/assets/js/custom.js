@@ -255,7 +255,7 @@ const initializeAjaxForms = () => {
     document.querySelectorAll('form:not([data-ajax-handler-attached])').forEach(form => {
         // Skip forms that have their own dedicated handlers
         const formName = form.getAttribute('name');
-        if (formName === 'microsite_block_delete_modal') {
+        if (formName === 'microsite_block_delete_modal' || formName === 'product_create') {
             return;
         }
         
@@ -267,7 +267,8 @@ const initializeAjaxForms = () => {
             if (!isBlockForm && (
                 modal.id.includes('microsite') ||
                 modal.id.includes('_update_form') ||
-                modal.id.startsWith('create_microsite_')
+                modal.id.startsWith('create_microsite_') ||
+                modal.id === 'product_create_modal'
             )) {
                 return;
             }

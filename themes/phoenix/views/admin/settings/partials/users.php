@@ -7,16 +7,9 @@
         <small class="form-text text-muted"><?= l('admin_settings.users.register_is_enabled_help') ?></small>
     </div>
 
-    <div class="form-group custom-control custom-switch">
-        <input id="register_only_social_logins" name="register_only_social_logins" type="checkbox" class="custom-control-input" <?= settings()->users->register_only_social_logins ? 'checked="checked"' : null?>>
-        <label class="custom-control-label" for="register_only_social_logins"><i class="fas fa-fw fa-sm fa-share-alt text-muted mr-1"></i> <?= l('admin_settings.users.register_only_social_logins') ?></label>
-        <small class="form-text text-muted"><?= l('admin_settings.users.register_only_social_logins_help') ?></small>
-    </div>
-
-    <div class="form-group custom-control custom-switch">
-        <input id="register_social_login_require_password" name="register_social_login_require_password" type="checkbox" class="custom-control-input" <?= settings()->users->register_social_login_require_password ? 'checked="checked"' : null?>>
-        <label class="custom-control-label" for="register_social_login_require_password"><i class="fas fa-fw fa-sm fa-unlock-alt text-muted mr-1"></i> <?= l('admin_settings.users.register_social_login_require_password') ?></label>
-        <small class="form-text text-muted"><?= l('admin_settings.users.register_social_login_require_password_help') ?></small>
+    <div class="alert alert-info" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Email-Only Authentication:</strong> This system uses passwordless email authentication. Social logins have been disabled in favor of secure magic link authentication.
     </div>
 
     <div class="form-group custom-control custom-switch">

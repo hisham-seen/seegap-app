@@ -69,8 +69,20 @@ DROP TABLE IF EXISTS `form_submissions`;
 DROP TABLE IF EXISTS `settings`;
 DROP TABLE IF EXISTS `languages`;
 DROP TABLE IF EXISTS `broadcasts`;
+DROP TABLE IF EXISTS `broadcasts_statistics`;
 DROP TABLE IF EXISTS `internal_notifications`;
 DROP TABLE IF EXISTS `statistics`;
+
+-- Drop receipt analysis tables (AIX plugin)
+DROP TABLE IF EXISTS `receipt_analysis_logs`;
+DROP TABLE IF EXISTS `receipt_analysis_providers`;
+DROP TABLE IF EXISTS `receipt_analysis_queue`;
+
+-- Drop receipt analysis views (AIX plugin)
+DROP VIEW IF EXISTS `receipt_analysis_summary`;
+
+-- Drop tracking tables
+DROP TABLE IF EXISTS `track_gs1_links`;
 
 -- Drop any remaining tables that might exist
 DROP TABLE IF EXISTS `track_links`;

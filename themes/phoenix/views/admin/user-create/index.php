@@ -35,10 +35,9 @@
                 <?= \SeeGap\Alerts::output_field_error('email') ?>
             </div>
 
-            <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
-                <label for="password"><i class="fas fa-fw fa-sm fa-key text-muted mr-1"></i> <?= l('global.password') ?></label>
-                <input id="password" type="password" name="password" class="form-control <?= \SeeGap\Alerts::has_field_errors('password') ? 'is-invalid' : null ?>" value="<?= $data->values['password'] ?>" required="required" />
-                <?= \SeeGap\Alerts::output_field_error('password') ?>
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Passwordless Authentication:</strong> This user will receive login links via email. No password is required.
             </div>
 
             <button type="submit" name="submit" class="btn btn-lg btn-block btn-primary mt-4"><?= l('global.create') ?></button>
@@ -46,4 +45,3 @@
 
     </div>
 </div>
-

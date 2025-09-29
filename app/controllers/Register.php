@@ -40,7 +40,6 @@ class Register extends Controller {
         $values = [
             'name' => isset($_GET['name']) ? query_clean($_GET['name']) : '',
             'email' => isset($_GET['email']) ? query_clean($_GET['email']) : '',
-            'password' => ''
         ];
 
         /* Initiate captcha */
@@ -56,10 +55,9 @@ class Register extends Controller {
             /* Default variables */
             $values['name'] = $_POST['name'];
             $values['email'] = $_POST['email'];
-            $values['password'] = $_POST['password'];
 
             /* Check for any errors */
-            $required_fields = ['name', 'email' ,'password'];
+            $required_fields = ['name', 'email'];
             foreach($required_fields as $field) {
                 if(!isset($_POST[$field]) || (isset($_POST[$field]) && empty($_POST[$field]) && $_POST[$field] != '0')) {
                     Alerts::add_field_error($field, l('global.error_message.empty_field'));
@@ -77,9 +75,6 @@ class Register extends Controller {
             }
             if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
                 Alerts::add_field_error('email', l('global.error_message.invalid_email'));
-            }
-            if(mb_strlen($_POST['password']) < 6 || mb_strlen($_POST['password']) > 64) {
-                Alerts::add_field_error('password', l('global.error_message.password_length'));
             }
 
             /* Make sure the domain is not blacklisted */
@@ -117,7 +112,6 @@ class Register extends Controller {
                 $values = [
                     'name' => '',
                     'email' => '',
-                    'password' => '',
                 ];
 
                 /* Define some needed variables */
@@ -131,7 +125,7 @@ class Register extends Controller {
 
                 $registered_user = (new User())->create(
                     $_POST['email'],
-                    $_POST['password'],
+                    null, // No password for passwordless authentication
                     $_POST['name'],
                     (int) !settings()->users->email_confirmation,
                     'direct',
@@ -226,7 +220,7 @@ class Register extends Controller {
                     Alerts::add_success(l('register.success_message.login'));
 
                     $_SESSION['user_id'] = $registered_user['user_id'];
-                    $_SESSION['user_password_hash'] = md5($registered_user['password']);
+                    $_SESSION['user_email_authenticated'] = true;
 
                     Logger::users($registered_user['user_id'], 'login.success');
 

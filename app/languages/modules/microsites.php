@@ -1894,6 +1894,15 @@ return [
     // Additional missing language hooks from feedback
     'microsite_link.animation_delay' => 'Animation Delay',
     'microsite_link.animation_delay_help' => 'Delay before animation starts (in milliseconds)',
+
+    // Product Image Integration
+    'microsite_blocks.use_product_images' => 'Use Product Images',
+    'microsite_blocks.select_product_first' => 'Please select a product in the microsite settings first.',
+    'microsite_blocks.product_image' => 'Product Image',
+    'microsite_blocks.product_images' => 'Product Images',
+    'microsite_blocks.product_image_help' => 'Select which product images to display',
+    'link.settings.product' => 'Product',
+    'link.settings.product_help' => 'Select a product to enable product image integration',
     
     // Link input schedule hooks
     'link.input.schedule' => 'Schedule Link',

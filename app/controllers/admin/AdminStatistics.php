@@ -41,6 +41,25 @@ class AdminStatistics extends Controller {
 
         $this->add_view_content('content', $view->run($data));
 
+        /* Secondary sidebar */
+        require_once THEME_PATH . 'views/admin/partials/admin_statistics_sidebar_config.php';
+        
+        // Create data object with required properties
+        $sidebar_data = (object) array_merge($data, [
+            'type' => $this->type,
+            'datetime' => $this->datetime
+        ]);
+        
+        $secondary_sidebar_config = get_admin_statistics_sidebar_config($sidebar_data);
+        
+        // Use output buffering to capture the include output
+        ob_start();
+        $config = $secondary_sidebar_config; // Make config available to the included file
+        include THEME_PATH . 'views/partials/secondary_sidebar.php';
+        $sidebar_content = ob_get_clean();
+        
+        $this->add_view_content('secondary_sidebar', $sidebar_content);
+
     }
 
     protected function database() {

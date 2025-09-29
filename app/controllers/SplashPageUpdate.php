@@ -43,19 +43,53 @@ class SplashPageUpdate extends Controller {
             $_POST['description'] = input_clean($_POST['description'], 2048);
             $_POST['secondary_button_name'] = input_clean($_POST['secondary_button_name'], 256);
             $_POST['secondary_button_url'] = input_clean($_POST['secondary_button_url'], 1024);
-            $_POST['custom_css'] = mb_substr(trim($_POST['custom_css']), 0, 10000);
-            $_POST['custom_js'] = mb_substr(trim($_POST['custom_js']), 0, 10000);
-            $_POST['ads_header'] = mb_substr(trim($_POST['ads_header']), 0, 10000);
-            $_POST['ads_footer'] = mb_substr(trim($_POST['ads_footer']), 0, 10000);
+            $_POST['custom_css'] = mb_substr(trim($_POST['custom_css'] ?? ''), 0, 10000);
+            $_POST['custom_js'] = mb_substr(trim($_POST['custom_js'] ?? ''), 0, 10000);
+            $_POST['ads_header'] = mb_substr(trim($_POST['ads_header'] ?? ''), 0, 10000);
+            $_POST['ads_footer'] = mb_substr(trim($_POST['ads_footer'] ?? ''), 0, 10000);
             $_POST['link_unlock_seconds'] = (int) $_POST['link_unlock_seconds'];
             $_POST['auto_redirect'] = (int) isset($_POST['auto_redirect']);
+
+            /* Background and typography settings */
+            $_POST['background_type'] = input_clean($_POST['background_type'] ?? 'preset', 32);
+            $_POST['background'] = input_clean($_POST['background'] ?? 'ocean', 128);
+            $_POST['background_color_one'] = input_clean($_POST['background_color_one'] ?? '#667eea', 16);
+            $_POST['background_color_two'] = input_clean($_POST['background_color_two'] ?? '#764ba2', 16);
+            $_POST['background_video_url'] = input_clean($_POST['background_video_url'] ?? '', 1024);
+            $_POST['background_video_autoplay'] = (int) isset($_POST['background_video_autoplay']);
+            $_POST['background_video_loop'] = (int) isset($_POST['background_video_loop']);
+            $_POST['background_video_mute'] = (int) isset($_POST['background_video_mute']);
+            $_POST['background_video_controls'] = (int) isset($_POST['background_video_controls']);
+            $_POST['background_overlay_color'] = input_clean($_POST['background_overlay_color'] ?? '#000000', 16);
+            $_POST['background_overlay_opacity'] = (int) ($_POST['background_overlay_opacity'] ?? 50);
+            $_POST['background_size'] = input_clean($_POST['background_size'] ?? 'cover', 16);
+            $_POST['background_position'] = input_clean($_POST['background_position'] ?? 'center', 32);
+            
+            /* Button settings */
+            $_POST['primary_button_bg_color'] = input_clean($_POST['primary_button_bg_color'] ?? '#007bff', 16);
+            $_POST['primary_button_text_color'] = input_clean($_POST['primary_button_text_color'] ?? '#ffffff', 16);
+            $_POST['primary_button_border_color'] = input_clean($_POST['primary_button_border_color'] ?? '#007bff', 16);
+            $_POST['primary_button_style'] = input_clean($_POST['primary_button_style'] ?? 'solid', 16);
+            $_POST['primary_button_shape'] = input_clean($_POST['primary_button_shape'] ?? 'rounded', 16);
+            $_POST['primary_button_size'] = input_clean($_POST['primary_button_size'] ?? 'medium', 16);
+            $_POST['secondary_button_bg_color'] = input_clean($_POST['secondary_button_bg_color'] ?? '#6c757d', 16);
+            $_POST['secondary_button_text_color'] = input_clean($_POST['secondary_button_text_color'] ?? '#ffffff', 16);
+            $_POST['secondary_button_border_color'] = input_clean($_POST['secondary_button_border_color'] ?? '#6c757d', 16);
+            $_POST['secondary_button_style'] = input_clean($_POST['secondary_button_style'] ?? 'outline', 16);
+            $_POST['secondary_button_shape'] = input_clean($_POST['secondary_button_shape'] ?? 'rounded', 16);
+            $_POST['secondary_button_size'] = input_clean($_POST['secondary_button_size'] ?? 'medium', 16);
+            $_POST['secondary_use_primary_settings'] = (int) isset($_POST['secondary_use_primary_settings']);
+            
+            $_POST['font'] = input_clean($_POST['font'] ?? 'default', 32);
+            $_POST['font_size'] = (int) ($_POST['font_size'] ?? 16);
 
             //SEEGAP:DEMO if(DEMO) if($this->user->user_id == 1) Alerts::add_error('Please create an account on the demo to test out this function.');
 
             /* Image uploads */
-            $logo = \SeeGap\Uploads::process_upload($splash_page->settings->logo, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
-            $favicon = \SeeGap\Uploads::process_upload($splash_page->settings->favicon, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
-            $opengraph = \SeeGap\Uploads::process_upload($splash_page->settings->opengraph, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
+            $logo = \SeeGap\Uploads::process_upload($splash_page->settings->logo ?? null, 'splash_pages', 'logo', 'logo_remove', settings()->links->avatar_size_limit);
+            $favicon = \SeeGap\Uploads::process_upload($splash_page->settings->favicon ?? null, 'splash_pages', 'favicon', 'favicon_remove', settings()->links->favicon_size_limit);
+            $opengraph = \SeeGap\Uploads::process_upload($splash_page->settings->opengraph ?? null, 'splash_pages', 'opengraph', 'opengraph_remove', settings()->links->seo_image_size_limit);
+            $background_image = \SeeGap\Uploads::process_upload(($_POST['background_type'] == 'image' && isset($splash_page->settings->background)) ? $splash_page->settings->background : null, 'backgrounds', 'background_image', 'background_image_remove', settings()->links->background_size_limit);
 
             /* Check for any errors */
             $required_fields = ['name'];
@@ -80,6 +114,34 @@ class SplashPageUpdate extends Controller {
                     'custom_js' => $_POST['custom_js'],
                     'ads_header' => $_POST['ads_header'],
                     'ads_footer' => $_POST['ads_footer'],
+                    'background_type' => $_POST['background_type'],
+                    'background' => $_POST['background_type'] == 'image' ? $background_image : $_POST['background'],
+                    'background_color_one' => $_POST['background_color_one'],
+                    'background_color_two' => $_POST['background_color_two'],
+                    'background_video_url' => $_POST['background_video_url'],
+                    'background_video_autoplay' => $_POST['background_video_autoplay'],
+                    'background_video_loop' => $_POST['background_video_loop'],
+                    'background_video_mute' => $_POST['background_video_mute'],
+                    'background_video_controls' => $_POST['background_video_controls'],
+                    'background_overlay_color' => $_POST['background_overlay_color'],
+                    'background_overlay_opacity' => $_POST['background_overlay_opacity'],
+                    'background_size' => $_POST['background_size'],
+                    'background_position' => $_POST['background_position'],
+                    'primary_button_bg_color' => $_POST['primary_button_bg_color'],
+                    'primary_button_text_color' => $_POST['primary_button_text_color'],
+                    'primary_button_border_color' => $_POST['primary_button_border_color'],
+                    'primary_button_style' => $_POST['primary_button_style'],
+                    'primary_button_shape' => $_POST['primary_button_shape'],
+                    'primary_button_size' => $_POST['primary_button_size'],
+                    'secondary_button_bg_color' => $_POST['secondary_button_bg_color'],
+                    'secondary_button_text_color' => $_POST['secondary_button_text_color'],
+                    'secondary_button_border_color' => $_POST['secondary_button_border_color'],
+                    'secondary_button_style' => $_POST['secondary_button_style'],
+                    'secondary_button_shape' => $_POST['secondary_button_shape'],
+                    'secondary_button_size' => $_POST['secondary_button_size'],
+                    'secondary_use_primary_settings' => $_POST['secondary_use_primary_settings'],
+                    'font' => $_POST['font'],
+                    'font_size' => $_POST['font_size'],
                 ]);
 
                 /* Database query */

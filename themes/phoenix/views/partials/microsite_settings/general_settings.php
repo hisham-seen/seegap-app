@@ -44,4 +44,27 @@
             <small class="form-text text-muted"><?= l('link.settings.is_main_link_help') ?></small>
         </div>
     <?php endif ?>
+
+    <!-- Product Selection -->
+    <div class="form-group mb-3">
+        <label for="product_id" class="small mb-1">
+            <i class="fas fa-fw fa-box fa-sm text-muted mr-1"></i> <?= l('link.settings.product') ?>
+        </label>
+        <select id="product_id" name="product_id" class="form-control form-control-sm">
+            <option value=""><?= l('global.none') ?></option>
+            <?php 
+            $product_model = new \SeeGap\Models\Product();
+            $products = $product_model->get_products_by_user_id($this->user->user_id);
+            foreach($products as $product): 
+                $selected = isset($data->link->settings->product_id) && $data->link->settings->product_id == $product->product_id;
+            ?>
+                <option value="<?= $product->product_id ?>" <?= $selected ? 'selected="selected"' : null ?>>
+                    <?= $product->product_name ?> (<?= $product->gtin ?>)
+                </option>
+            <?php endforeach ?>
+        </select>
+        <small class="form-text text-muted">
+            <?= l('link.settings.product_help') ?>
+        </small>
+    </div>
 </div>

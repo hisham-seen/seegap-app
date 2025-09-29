@@ -1,0 +1,166 @@
+/* Products Secondary Sidebar Styling */
+.products-secondary-sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    max-width: 200px;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 200px;
+    z-index: 100;
+    height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--gray-100);
+    box-shadow: var(--phoenix-card-shadow, 0 0 0.375rem 0.25rem rgba(0, 0, 0, 0.03));
+    padding-top: 1rem;
+}
+
+/* Dark theme override */
+[data-theme-style="dark"] .products-secondary-sidebar {
+    background: var(--phoenix-sidebar-bg, #0b1727);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[dir="rtl"] .products-secondary-sidebar {
+    left: auto;
+    right: 200px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 991px) {
+    .products-secondary-sidebar {
+        display: none;
+    }
+}
+
+/* Adjust content margin when secondary sidebar is present */
+@media (min-width: 992px) {
+    .app-content {
+        margin-left: 400px;
+    }
+
+    [dir="rtl"] .app-content {
+        margin-left: initial;
+        margin-right: 400px;
+    }
+}
+
+/* Product Actions Styling - Matching Microsite Tabs */
+.nav-minimal {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 4px;
+    background-color: #f8f9fa;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.nav-minimal .nav-link {
+    border: none;
+    border-radius: 6px;
+    padding: 5px;
+    margin: 0 1px;
+    color: #6c757d;
+    background: transparent;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 30px;
+    min-width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-minimal .nav-link:hover {
+    background-color: #e9ecef;
+    color: #495057;
+    transform: translateY(-1px);
+}
+
+.nav-minimal .nav-link.active {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
+}
+
+.nav-minimal .nav-link.active:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.nav-minimal .nav-link i {
+    font-size: 1rem;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .nav-minimal {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-minimal .nav-link {
+    color: #adb5bd;
+}
+
+[data-theme="dark"] .nav-minimal .nav-link:hover {
+    color: #80bdff;
+    background-color: rgba(128, 189, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-minimal .nav-link.active {
+    color: #fff;
+    background-color: #0d6efd;
+}
+
+/* Dropdown Menu Styling */
+.nav-minimal .dropdown-menu {
+    min-width: 160px;
+    margin: 0;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+}
+
+.nav-minimal .dropdown-item {
+    padding: 0.5rem 1rem;
+    color: #6c757d;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.nav-minimal .dropdown-item:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.nav-minimal .dropdown-item i {
+    margin-right: 0.5rem;
+    width: 1rem;
+    text-align: center;
+}
+
+/* Dark theme overrides for dropdown */
+[data-theme="dark"] .nav-minimal .dropdown-menu {
+    background-color: #1e2937;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .nav-minimal .dropdown-item {
+    color: #adb5bd;
+}
+
+[data-theme="dark"] .nav-minimal .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .nav-minimal .nav-link i {
+        font-size: 0.875rem;
+    }
+}

@@ -18,13 +18,29 @@
     <div class="card">
         <div class="card-body">
 
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Warning:</strong> This action cannot be undone. All your data, links, and account information will be permanently deleted.
+            </div>
+
             <form action="" method="post" role="form">
                 <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 
-                <div class="form-group" data-password-toggle-view data-password-toggle-view-show="<?= l('global.show') ?>" data-password-toggle-view-hide="<?= l('global.hide') ?>">
-                    <label for="current_password"><i class="fas fa-fw fa-sm fa-unlock text-muted mr-1"></i> <?= l('account_delete.current_password') ?></label>
-                    <input type="password" id="current_password" name="current_password" class="form-control <?= \SeeGap\Alerts::has_field_errors('current_password') ? 'is-invalid' : null ?>" required="required" />
-                    <?= \SeeGap\Alerts::output_field_error('current_password') ?>
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" name="confirm_deletion" class="custom-control-input" id="confirm_deletion" required="required">
+                        <label class="custom-control-label" for="confirm_deletion">
+                            <i class="fas fa-fw fa-sm fa-check text-muted mr-1"></i>
+                            I understand that this action is permanent and cannot be undone
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email_confirmation"><i class="fas fa-fw fa-sm fa-envelope text-muted mr-1"></i> Confirm your email address</label>
+                    <input type="email" id="email_confirmation" name="email_confirmation" class="form-control <?= \SeeGap\Alerts::has_field_errors('email_confirmation') ? 'is-invalid' : null ?>" placeholder="<?= $this->user->email ?>" required="required" />
+                    <small class="form-text text-muted">Type your email address to confirm account deletion</small>
+                    <?= \SeeGap\Alerts::output_field_error('email_confirmation') ?>
                 </div>
 
                 <button type="submit" name="submit" class="btn btn-block btn-danger"><?= l('global.delete') ?></button>

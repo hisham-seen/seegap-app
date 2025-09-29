@@ -200,15 +200,15 @@ return [
     'admin_plans.plan.additional_domains' => 'Additional domains',
     'admin_plans.plan.additional_domains_help' => 'Enable access to the additional custom domains that the admin has added via the admin panel.',
     'admin_plans.plan.force_splash_page_on_link' => 'Force splash page on links',
-    'admin_plans.plan.force_splash_page_on_link_help' => 'Enabling this will force all the short links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash pages limit is set to 0.',
+    'admin_plans.plan.force_splash_page_on_link_help' => 'Enabling this will force all the short links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash limit is set to 0.',
     'admin_plans.plan.force_splash_page_on_microsite' => 'Force splash page on bio links',
-    'admin_plans.plan.force_splash_page_on_microsite_help' => 'Enabling this will force all the bio links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash pages limit is set to 0.',
+    'admin_plans.plan.force_splash_page_on_microsite_help' => 'Enabling this will force all the bio links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash limit is set to 0.',
     'admin_plans.plan.force_splash_page_on_file' => 'Force splash page on file links',
-    'admin_plans.plan.force_splash_page_on_file_help' => 'Enabling this will force all the file links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash pages limit is set to 0.',
+    'admin_plans.plan.force_splash_page_on_file_help' => 'Enabling this will force all the file links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash limit is set to 0.',
     'admin_plans.plan.force_splash_page_on_event' => 'Force splash page on event links',
-    'admin_plans.plan.force_splash_page_on_event_help' => 'Enabling this will force all the event links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash pages limit is set to 0.',
+    'admin_plans.plan.force_splash_page_on_event_help' => 'Enabling this will force all the event links of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash limit is set to 0.',
     'admin_plans.plan.force_splash_page_on_static' => 'Force splash page on static sites',
-    'admin_plans.plan.force_splash_page_on_static_help' => 'Enabling this will force all the static sites of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash pages limit is set to 0.',
+    'admin_plans.plan.force_splash_page_on_static_help' => 'Enabling this will force all the static sites of the user to have a temporary splash page with a countdown timer and ads (if you setup the ads). Only works if the splash limit is set to 0.',
     'admin_plans.plan.custom_url' => 'Custom back-half',
     'admin_plans.plan.custom_url_help' => 'Enabling this will give the ability to the user to have custom url aliases instead of auto generated ones.',
     'admin_plans.plan.deep_links' => 'Deep links',
@@ -1248,7 +1248,7 @@ return [
     'admin_settings.links.tab' => 'Links system',
     'admin_settings.links.microsites' => 'Microsites system',
     'admin_settings.links.links' => 'Links features',
-    'admin_settings.links.splash_pages' => 'Splash pages system',
+    'admin_settings.links.splash_pages' => 'Splash system',
     'admin_settings.links.directory' => 'Directory system',
     'admin_settings.links.domains' => 'Custom domains system',
     'admin_settings.links.file_size_limits' => 'Upload file size limits',
@@ -1508,9 +1508,9 @@ return [
     'admin_statistics.microsites_blocks.menu' => 'Microsites blocks',
     'admin_statistics.microsites_blocks.header' => 'Microsites blocks',
 
-    'admin_statistics.splash_pages.menu' => 'Splash pages',
-    'admin_statistics.splash_pages.header' => 'Splash pages',
-    'admin_statistics.splash_pages.chart' => 'New splash pages',
+    'admin_statistics.splash_pages.menu' => 'Splash',
+    'admin_statistics.splash_pages.header' => 'Splash',
+    'admin_statistics.splash_pages.chart' => 'New splash',
 
     'admin_statistics.qr_codes.menu' => 'QR codes',
     'admin_statistics.qr_codes.header' => 'QR codes',
@@ -1771,9 +1771,9 @@ return [
     'admin_projects.menu' => 'Projects',
 
 
-    'admin_splash_pages.title' => 'Splash pages',
-    'admin_splash_pages.header' => 'Splash pages',
-    'admin_splash_pages.menu' => 'Splash pages',
+    'admin_splash_pages.title' => 'Splash',
+    'admin_splash_pages.header' => 'Splash',
+    'admin_splash_pages.menu' => 'Splash',
 
 
     'admin_pixels.title' => 'Pixels',
@@ -1955,4 +1955,45 @@ return [
 
     // Admin Plans - Products
     'admin_plans.plan.products_limit' => 'Products Limit',
+
+    // Email Templates
+    'admin_settings.email_templates.tab' => 'Email Templates',
+    'admin_settings.email_templates.header' => 'Email Templates',
+    'admin_settings.email_templates.info' => 'Customize the email templates sent to users for various authentication and account actions. Use the available variables to personalize the emails.',
+    
+    'admin_settings.email_templates.login_email' => 'Login Email Template',
+    'admin_settings.email_templates.login_subject' => 'Login Email Subject',
+    'admin_settings.email_templates.login_subject_placeholder' => 'Your secure login link for {{SITE_TITLE}}',
+    'admin_settings.email_templates.login_subject_help' => 'The subject line for login emails. Use {{SITE_TITLE}} for dynamic site name.',
+    'admin_settings.email_templates.login_body' => 'Login Email Body',
+    'admin_settings.email_templates.login_body_placeholder' => 'Click the link below to securely log in to your account...',
+    'admin_settings.email_templates.login_body_help' => 'The main content of the login email. HTML is supported. Use {{LOGIN_LINK}} for the login button.',
+    
+    'admin_settings.email_templates.welcome_email' => 'Welcome Email Template',
+    'admin_settings.email_templates.welcome_subject' => 'Welcome Email Subject',
+    'admin_settings.email_templates.welcome_subject_placeholder' => 'Welcome to {{SITE_TITLE}}!',
+    'admin_settings.email_templates.welcome_subject_help' => 'The subject line for welcome emails sent to new users.',
+    'admin_settings.email_templates.welcome_body' => 'Welcome Email Body',
+    'admin_settings.email_templates.welcome_body_placeholder' => 'Welcome to our platform! We\'re excited to have you...',
+    'admin_settings.email_templates.welcome_body_help' => 'The main content of the welcome email. HTML is supported.',
+    
+    'admin_settings.email_templates.account_delete_email' => 'Account Deletion Email Template',
+    'admin_settings.email_templates.account_delete_subject' => 'Account Deletion Subject',
+    'admin_settings.email_templates.account_delete_subject_placeholder' => 'Confirm account deletion for {{SITE_TITLE}}',
+    'admin_settings.email_templates.account_delete_subject_help' => 'The subject line for account deletion confirmation emails.',
+    'admin_settings.email_templates.account_delete_body' => 'Account Deletion Body',
+    'admin_settings.email_templates.account_delete_body_placeholder' => 'Please confirm that you want to delete your account...',
+    'admin_settings.email_templates.account_delete_body_help' => 'The main content of the account deletion email. HTML is supported.',
+    
+    'admin_settings.email_templates.available_variables' => 'Available Template Variables',
+    'admin_settings.email_templates.user_variables' => 'User Variables',
+    'admin_settings.email_templates.system_variables' => 'System Variables',
+    'admin_settings.email_templates.user_name_desc' => 'User\'s display name',
+    'admin_settings.email_templates.user_email_desc' => 'User\'s email address',
+    'admin_settings.email_templates.user_ip_desc' => 'User\'s IP address',
+    'admin_settings.email_templates.user_device_desc' => 'User\'s device and browser info',
+    'admin_settings.email_templates.site_title_desc' => 'Website title',
+    'admin_settings.email_templates.site_url_desc' => 'Website URL',
+    'admin_settings.email_templates.login_link_desc' => 'Secure login link (login emails only)',
+    'admin_settings.email_templates.security_code_desc' => 'Anti-phishing security code',
 ];

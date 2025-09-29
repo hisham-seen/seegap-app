@@ -56,7 +56,8 @@ class Ajax extends Controller {
                 'ajax_type' => $ajax_type,
                 'request_type' => $_POST['request_type'] ?? 'not_set',
                 'csrf_valid' => true,
-                'user_id' => $this->user->user_id ?? 'unknown'
+                'user_id' => $this->user->user_id ?? 'unknown',
+                'all_post_keys' => array_keys($_POST)
             ]);
 
             try {
@@ -109,6 +110,11 @@ class Ajax extends Controller {
     private function detectAjaxType() {
         // Parameter-based detection (primary method now)
         
+        // Check for explicit ajax_type parameter first
+        if (isset($_POST['ajax_type'])) {
+            return $_POST['ajax_type'];
+        }
+        
         // Special case: is_enabled_toggle with id parameter should be microsite_block
         if (isset($_POST['request_type']) && $_POST['request_type'] === 'is_enabled_toggle' && isset($_POST['id'])) {
             return 'microsite_block';
@@ -119,8 +125,9 @@ class Ajax extends Controller {
             return 'gs1_link';
         }
         
-        // Product operations
-        if (isset($_POST['product_id'])) {
+        // Product operations - check for product-specific fields
+        if (isset($_POST['product_id']) || 
+            (isset($_POST['gtin']) && isset($_POST['product_name']) && isset($_POST['brand_name']))) {
             return 'product';
         }
         
@@ -250,6 +257,8 @@ class Ajax extends Controller {
         }
 
         switch($_POST['request_type']) {
+            case 'create':
+                return $this->productCreate();
             case 'is_enabled_toggle':
                 return $this->productIsEnabledToggle();
             case 'duplicate':
@@ -1391,6 +1400,158 @@ class Ajax extends Controller {
     // ========================================
     // PRODUCT OPERATIONS
     // ========================================
+
+    private function productCreate() {
+        /* Team checks */
+        if(\SeeGap\Teams::is_delegated() && !\SeeGap\Teams::has_access('create.products')) {
+            Response::json(l('global.info_message.team_no_access'), 'error');
+        }
+
+        debug_log('PRODUCT_CREATE_ATTEMPT', [
+            'user_id' => $this->user->user_id,
+            'post_data' => $_POST,
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
+
+        /* Check for the plan limit */
+        $total_rows = database()->query("SELECT COUNT(*) AS `total` FROM `products` WHERE `user_id` = {$this->user->user_id}")->fetch_object()->total ?? 0;
+
+        if(($this->user->plan_settings->products_limit ?? -1) != -1 && $total_rows >= ($this->user->plan_settings->products_limit ?? 0)) {
+            Response::json(l('global.info_message.plan_feature_limit'), 'error');
+        }
+
+        /* Clean and validate input */
+        $gtin = trim($_POST['gtin'] ?? '');
+        $product_name = trim($_POST['product_name'] ?? '');
+        $brand_name = trim($_POST['brand_name'] ?? '');
+        $category = trim($_POST['category'] ?? '');
+        $project_id = (int) ($_POST['project_id'] ?? 0);
+        $target_url = trim($_POST['target_url'] ?? '');
+        $description = trim($_POST['description'] ?? $_POST['product_description'] ?? '');
+
+        /* Validation */
+        $errors = [];
+
+        if(empty($gtin)) {
+            $errors['gtin'] = l('products.error_message.gtin_required');
+        } elseif(!preg_match('/^[0-9]{8,14}$/', $gtin)) {
+            $errors['gtin'] = l('products.error_message.gtin_invalid_format');
+        } else {
+            /* Check GTIN uniqueness */
+            if(db()->where('gtin', $gtin)->where('user_id', $this->user->user_id)->has('products')) {
+                $errors['gtin'] = l('products.error_message.gtin_exists');
+            }
+        }
+
+        // Check required fields based on admin settings
+        if((settings()->products->require_product_name ?? true) && empty($product_name)) {
+            $errors['product_name'] = l('products.error_message.product_name_required');
+        }
+
+        if((settings()->products->require_brand_name ?? false) && empty($brand_name)) {
+            $errors['brand_name'] = l('products.error_message.brand_name_required');
+        }
+
+        if((settings()->products->require_category ?? false) && empty($category)) {
+            $errors['category'] = l('products.error_message.category_required');
+        }
+
+        if(!empty($target_url) && !filter_var($target_url, FILTER_VALIDATE_URL)) {
+            $errors['target_url'] = l('products.error_message.target_url_invalid');
+        }
+
+        /* Check if project exists and belongs to user */
+        if($project_id > 0) {
+            if(!db()->where('project_id', $project_id)->where('user_id', $this->user->user_id)->has('projects')) {
+                $errors['project_id'] = l('projects.error_message.not_found');
+            }
+        }
+
+        if(!empty($errors)) {
+            debug_log('PRODUCT_CREATE_VALIDATION_FAILED', [
+                'user_id' => $this->user->user_id,
+                'errors' => $errors
+            ]);
+            Response::json(l('global.error_message.basic'), 'error', ['field_errors' => $errors]);
+        }
+
+        /* Prepare product data */
+        $product_data = [
+            'user_id' => $this->user->user_id,
+            'project_id' => $project_id ?: null,
+            'gtin' => $gtin,
+            'brand_name' => $brand_name,
+            'product_name' => $product_name,
+            'product_description' => $description,
+            'category' => $category,
+            'target_url' => $target_url ?: null,
+            'settings' => json_encode([]),
+            'is_enabled' => 1
+        ];
+
+        try {
+            $product_model = new \SeeGap\Models\Product();
+            
+            debug_log('PRODUCT_CREATE_BEFORE_MODEL', [
+                'user_id' => $this->user->user_id,
+                'product_data' => $product_data,
+                'settings_check' => [
+                    'require_product_name' => settings()->products->require_product_name ?? 'not_set',
+                    'require_brand_name' => settings()->products->require_brand_name ?? 'not_set',
+                    'gtin_validation_is_enabled' => settings()->products->gtin_validation_is_enabled ?? 'not_set',
+                    'gtin_format_validation' => settings()->products->gtin_format_validation ?? 'not_set'
+                ]
+            ]);
+            
+            $result = $product_model->create_product($product_data);
+
+            if(is_array($result) && isset($result['error'])) {
+                // Handle specific GTIN validation errors
+                debug_log('PRODUCT_CREATE_GTIN_VALIDATION_FAILED', [
+                    'user_id' => $this->user->user_id,
+                    'error_type' => $result['error'],
+                    'error_message' => $result['message'],
+                    'gtin' => $gtin
+                ]);
+                
+                $field_errors = ['gtin' => $result['message']];
+                Response::json(l('products.error_message.creation_failed'), 'error', ['field_errors' => $field_errors]);
+            } elseif($result) {
+                debug_log('PRODUCT_CREATE_SUCCESS', [
+                    'user_id' => $this->user->user_id,
+                    'product_id' => $result,
+                    'gtin' => $gtin,
+                    'product_name' => $product_name
+                ]);
+
+                Response::json(sprintf(l('global.success_message.create1'), '<strong>' . $product_name . '</strong>'), 'success', [
+                    'url' => url('product-update/' . $result)
+                ]);
+            } else {
+                debug_log('PRODUCT_CREATE_FAILED', [
+                    'user_id' => $this->user->user_id,
+                    'product_data' => $product_data,
+                    'possible_reasons' => [
+                        'empty_gtin_after_cleaning',
+                        'required_field_validation_failed',
+                        'gtin_already_exists',
+                        'database_insert_failed'
+                    ]
+                ]);
+                
+                // Generic failure - could be GTIN already exists or other issue
+                $field_errors = ['gtin' => l('products.error_message.gtin_invalid_or_exists')];
+                Response::json(l('products.error_message.creation_failed'), 'error', ['field_errors' => $field_errors]);
+            }
+        } catch(\Exception $e) {
+            debug_log('PRODUCT_CREATE_EXCEPTION', [
+                'user_id' => $this->user->user_id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            Response::json(l('global.error_message.basic') . ': ' . $e->getMessage(), 'error');
+        }
+    }
 
     private function productIsEnabledToggle() {
         /* Team checks */

@@ -28,6 +28,8 @@ class ImageGridBlock extends BaseBlockHandler {
     public function create($type) {
         $_POST['link_id'] = (int) $_POST['link_id'];
         $_POST['open_in_new_tab'] = isset($_POST['open_in_new_tab']);
+        $_POST['use_product_images'] = isset($_POST['use_product_images']);
+        $_POST['product_image_selections'] = isset($_POST['product_image_selections']) ? array_map('intval', $_POST['product_image_selections']) : [];
         
         // Grid-specific settings with validation
         $_POST['columns'] = in_array($_POST['columns'], range(1, 6)) ? (int) $_POST['columns'] : 3;
@@ -46,6 +48,30 @@ class ImageGridBlock extends BaseBlockHandler {
         
         // Handle initial image uploads using the system method
         $items = [];
+        
+        // Handle product images if enabled
+        if ($_POST['use_product_images']) {
+            if ($link_settings = db()->where('link_id', $_POST['link_id'])->getValue('links', 'settings')) {
+                $link_settings = json_decode($link_settings);
+                if (isset($link_settings->product_id)) {
+                    $product = db()->where('product_id', $link_settings->product_id)->getOne('products');
+                    if ($product && isset($product->product_images) && !empty($product->product_images)) {
+                        $product_images = json_decode($product->product_images);
+                        foreach ($_POST['product_image_selections'] as $index) {
+                            if (isset($product_images[$index])) {
+                                $items[] = [
+                                    'image' => $product_images[$index],
+                                    'image_alt' => '',
+                                    'location_url' => ''
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Handle uploaded images
         if(isset($_FILES['new_images']) && is_array($_FILES['new_images']['name'])) {
             foreach($_FILES['new_images']['name'] as $key => $file_name) {
                 if(empty($file_name) || $_FILES['new_images']['error'][$key] != UPLOAD_ERR_OK) {
@@ -134,6 +160,8 @@ class ImageGridBlock extends BaseBlockHandler {
     public function update($type) {
         $_POST['microsite_block_id'] = (int) $_POST['microsite_block_id'];
         $_POST['open_in_new_tab'] = isset($_POST['open_in_new_tab']);
+        $_POST['use_product_images'] = isset($_POST['use_product_images']);
+        $_POST['product_image_selections'] = isset($_POST['product_image_selections']) ? array_map('intval', $_POST['product_image_selections']) : [];
         
         // Grid-specific settings with validation
         $_POST['columns'] = in_array($_POST['columns'], range(1, 6)) ? (int) $_POST['columns'] : 3;
@@ -156,6 +184,28 @@ class ImageGridBlock extends BaseBlockHandler {
         
         // Handle image management (reordering, editing, removing)
         $items = [];
+        
+        // Handle product images if enabled
+        if ($_POST['use_product_images']) {
+            if ($link_settings = db()->where('link_id', $microsite_block->link_id)->getValue('links', 'settings')) {
+                $link_settings = json_decode($link_settings);
+                if (isset($link_settings->product_id)) {
+                    $product = db()->where('product_id', $link_settings->product_id)->getOne('products');
+                    if ($product && isset($product->product_images) && !empty($product->product_images)) {
+                        $product_images = json_decode($product->product_images);
+                        foreach ($_POST['product_image_selections'] as $index) {
+                            if (isset($product_images[$index])) {
+                                $items[] = [
+                                    'image' => $product_images[$index],
+                                    'image_alt' => '',
+                                    'location_url' => ''
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
         
         // Check if we have updated images data from the form
         if(isset($_POST['images_data']) && !empty($_POST['images_data'])) {
@@ -228,6 +278,8 @@ class ImageGridBlock extends BaseBlockHandler {
         $settings = json_encode([
             'items' => $items,
             'open_in_new_tab' => $_POST['open_in_new_tab'],
+            'use_product_images' => $_POST['use_product_images'],
+            'product_image_selections' => $_POST['product_image_selections'],
 
             /* Grid-specific Visual & Layout Settings */
             'columns' => $_POST['columns'],

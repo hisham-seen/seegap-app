@@ -21,9 +21,9 @@
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('products.create') ?>
                     </button>
                 <?php else: ?>
-                    <a href="<?= url('product-create') ?>" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#product_create_modal">
                         <i class="fas fa-fw fa-plus-circle fa-sm mr-1"></i> <?= l('products.create') ?>
-                    </a>
+                    </button>
                 <?php endif ?>
             </div>
 
@@ -311,5 +311,7 @@
 <?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/product_delete_modal.php'), 'modals') ?>
 
 <?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/duplicate_modal.php', ['modal_id' => 'product_duplicate_modal', 'resource_id' => 'product_id', 'path' => 'product-ajax/duplicate']), 'modals'); ?>
+
+<?php \SeeGap\Event::add_content(include_view(THEME_PATH . 'views/partials/product_create_modal.php', ['data' => $data]), 'modals'); ?>
 
 <?php include_view(THEME_PATH . 'views/partials/clipboard_js.php') ?>

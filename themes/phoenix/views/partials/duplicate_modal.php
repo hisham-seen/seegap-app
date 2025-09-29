@@ -17,12 +17,12 @@
 
                 <p class="text-muted"><?= l('duplicate_modal.subheader') ?></p>
 
-                <form name="<?= $data->modal_id ?>" method="post" action="<?= url($data->path) ?>" role="form">
+                <form name="<?= $data->modal_id ?>" method="post" role="form" onsubmit="return false;">
                     <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" required="required" />
                     <input type="hidden" name="<?= $data->resource_id ?>" value="" />
 
                     <div class="mt-4">
-                        <button type="submit" name="submit" class="btn btn-block btn-primary"><?= l('global.submit') ?></button>
+                        <button type="button" name="submit" class="btn btn-block btn-primary" onclick="duplicateItem(this)"><?= l('global.submit') ?></button>
                     </div>
                 </form>
             </div>
@@ -37,9 +37,42 @@
 
     /* On modal show load new data */
     $('<?= '#' . $data->modal_id ?>').on('show.bs.modal', event => {
-        let id = $(event.relatedTarget).data('<?= str_replace('_', '-', $data->resource_id) ?>');
-
+        let id = $(event.relatedTarget).data('product-id');
         $(event.currentTarget).find('input[name="<?= $data->resource_id ?>"]').val(id);
     });
+
+    function duplicateItem(button) {
+        let form = button.closest('form');
+        let modal = button.closest('.modal');
+        let formData = {
+            token: form.querySelector('input[name="token"]').value,
+            <?= $data->resource_id ?>: form.querySelector('input[name="<?= $data->resource_id ?>"]').value
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '<?= url($data->path) ?>',
+            data: formData,
+            success: function(response) {
+                if(response.status == 'success') {
+                    showToast('success', response.message);
+                    setTimeout(() => {
+                        if(response.url) {
+                            window.location.href = response.url;
+                        } else {
+                            window.location.reload();
+                        }
+                    }, 1000);
+                } else {
+                    showToast('error', response.message);
+                }
+                $(modal).modal('hide');
+            },
+            error: function() {
+                showToast('error', 'An error occurred while processing your request.');
+                $(modal).modal('hide');
+            }
+        });
+    }
 </script>
 <?php \SeeGap\Event::add_content(ob_get_clean(), 'javascript') ?>

@@ -43,6 +43,10 @@
 
 <div class="app-container">
     <?= $this->views['admin_sidebar'] ?>
+    
+    <?php if(isset($this->views['secondary_sidebar'])): ?>
+        <?= $this->views['secondary_sidebar'] ?>
+    <?php endif ?>
 
     <section class="app-content">
         <div class="py-4 p-lg-5 flex-grow-1">
