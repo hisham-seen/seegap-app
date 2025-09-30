@@ -1,5 +1,7 @@
 <?php defined('SEEGAP') || die() ?>
 
+<link href="<?= ASSETS_FULL_URL ?>css/products-custom.css?v=<?= PRODUCT_CODE ?>" rel="stylesheet" media="screen,print">
+
 <div class="container">
     <?= \SeeGap\Alerts::output_alerts() ?>
 
@@ -17,8 +19,14 @@
     </div>
 
     <div class="card">
+        <div class="card-header bg-white border-bottom">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-fw fa-box fa-sm text-primary mr-2"></i>
+                <?= l('products.create.form_title') ?? 'Product Information' ?>
+            </h5>
+        </div>
+        
         <div class="card-body">
-
             <form action="" method="post" role="form">
                 <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
 

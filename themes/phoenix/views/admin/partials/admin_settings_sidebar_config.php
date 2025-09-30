@@ -40,15 +40,6 @@ function get_admin_settings_sidebar_config($data) {
     
     $items[] = [
         'type' => 'link',
-        'url' => url('admin/settings/gs1_links'),
-        'icon' => 'fas fa-fw fa-sm fa-barcode mr-2',
-        'label' => l('admin_settings.gs1_links.tab'),
-        'active' => $data->method == 'gs1_links',
-        'mobile_emoji' => '📊'
-    ];
-    
-    $items[] = [
-        'type' => 'link',
         'url' => url('admin/settings/products'),
         'icon' => 'fas fa-fw fa-sm fa-box mr-2',
         'label' => l('admin_settings.products.tab'),

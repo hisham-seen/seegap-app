@@ -1565,48 +1565,6 @@ class AdminSettings extends Controller {
 
 
 
-    public function gs1_links() {
-        $this->process();
-
-        if(!empty($_POST)) {
-            //SEEGAP:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');
-
-            /* :) */
-            $_POST['gs1_links_is_enabled'] = (int) isset($_POST['gs1_links_is_enabled']);
-            $_POST['gtin_validation_is_enabled'] = (int) isset($_POST['gtin_validation_is_enabled']);
-            $_POST['gtin_format_validation'] = in_array($_POST['gtin_format_validation'], ['strict', 'lenient', 'disabled']) ? $_POST['gtin_format_validation'] : 'strict';
-            $_POST['require_target_url'] = (int) isset($_POST['require_target_url']);
-            $_POST['default_target_url'] = input_clean($_POST['default_target_url']);
-            $_POST['domains_is_enabled'] = (int) isset($_POST['domains_is_enabled']);
-            $_POST['projects_is_enabled'] = (int) isset($_POST['projects_is_enabled']);
-            $_POST['pixels_is_enabled'] = (int) isset($_POST['pixels_is_enabled']);
-            $_POST['analytics_is_enabled'] = (int) isset($_POST['analytics_is_enabled']);
-            $_POST['auto_generate_qr_codes'] = (int) isset($_POST['auto_generate_qr_codes']);
-            $_POST['branding'] = trim($_POST['branding']);
-            $_POST['random_gtin_length'] = in_array($_POST['random_gtin_length'], ['8', '12', '13', '14']) ? $_POST['random_gtin_length'] : '13';
-            $_POST['blacklisted_gtins'] = array_filter(array_map('trim', explode(',', $_POST['blacklisted_gtins'])));
-            $_POST['allowed_gtin_prefixes'] = array_filter(array_map('trim', explode(',', $_POST['allowed_gtin_prefixes'])));
-
-            $value = json_encode([
-                'gs1_links_is_enabled' => $_POST['gs1_links_is_enabled'],
-                'gtin_validation_is_enabled' => $_POST['gtin_validation_is_enabled'],
-                'gtin_format_validation' => $_POST['gtin_format_validation'],
-                'require_target_url' => $_POST['require_target_url'],
-                'default_target_url' => $_POST['default_target_url'],
-                'domains_is_enabled' => $_POST['domains_is_enabled'],
-                'projects_is_enabled' => $_POST['projects_is_enabled'],
-                'pixels_is_enabled' => $_POST['pixels_is_enabled'],
-                'analytics_is_enabled' => $_POST['analytics_is_enabled'],
-                'auto_generate_qr_codes' => $_POST['auto_generate_qr_codes'],
-                'branding' => $_POST['branding'],
-                'random_gtin_length' => $_POST['random_gtin_length'],
-                'blacklisted_gtins' => $_POST['blacklisted_gtins'],
-                'allowed_gtin_prefixes' => $_POST['allowed_gtin_prefixes'],
-            ]);
-
-            $this->update_settings('gs1_links', $value);
-        }
-    }
 
     public function aix() {
         //SEEGAP:DEMO if(DEMO) settings()->aix->openai_api_key = 'not shown on the demo';

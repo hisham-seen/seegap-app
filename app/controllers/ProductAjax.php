@@ -16,7 +16,31 @@ defined('SEEGAP') || die();
 class ProductAjax extends Controller {
 
     public function index() {
-        die();
+        \SeeGap\Authentication::guard();
+
+        if(empty($_POST)) {
+            Response::json(l('global.error_message.empty_request'), 'error');
+        }
+
+        $type = input_clean($_POST['type'] ?? '');
+
+        switch($type) {
+            case 'get_existing_content':
+                $this->get_existing_content();
+                break;
+            
+            case 'duplicate':
+                $this->duplicate();
+                break;
+                
+            case 'is_enabled_toggle':
+                $this->is_enabled_toggle();
+                break;
+                
+            default:
+                Response::json(l('global.error_message.invalid_request'), 'error');
+                break;
+        }
     }
 
     public function duplicate() {
@@ -121,5 +145,104 @@ class ProductAjax extends Controller {
         ]);
 
         Response::json(l('global.success_message.update2'), 'success');
+    }
+
+    public function get_existing_content() {
+        \SeeGap\Authentication::guard();
+
+        if(empty($_POST)) {
+            Response::json(l('global.error_message.empty_request'), 'error');
+        }
+
+        if(!\SeeGap\Csrf::check()) {
+            Response::json(l('global.error_message.invalid_csrf_token'), 'error');
+        }
+
+        $content_type = input_clean($_POST['content_type'] ?? '');
+        $data = [];
+
+        // Debug logging
+        error_log("ProductAjax get_existing_content called with type: " . $content_type . " for user: " . $this->user->user_id);
+
+        try {
+            switch($content_type) {
+                case 'microsite':
+                    $results = database()->query("SELECT `link_id`, `url`, `settings` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'microsite' ORDER BY `datetime` DESC");
+                    
+                    while($result = $results->fetch_object()) {
+                        $settings = json_decode($result->settings ?? '{}');
+                        $name = $settings->title ?? $result->url;
+                        $data[] = [
+                            'id' => $result->link_id,
+                            'name' => $name . ' (' . $result->url . ')'
+                        ];
+                    }
+                    break;
+
+                case 'link':
+                    $results = database()->query("SELECT `link_id`, `url`, `location_url` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'link' ORDER BY `datetime` DESC");
+                    
+                    while($result = $results->fetch_object()) {
+                        $data[] = [
+                            'id' => $result->link_id,
+                            'name' => $result->url . ' → ' . $result->location_url
+                        ];
+                    }
+                    break;
+
+                case 'file':
+                    $results = database()->query("SELECT `link_id`, `url`, `settings` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'file' ORDER BY `datetime` DESC");
+                    
+                    while($result = $results->fetch_object()) {
+                        $settings = json_decode($result->settings ?? '{}');
+                        $filename = $settings->file_name ?? 'File';
+                        $data[] = [
+                            'id' => $result->link_id,
+                            'name' => $filename . ' (' . $result->url . ')'
+                        ];
+                    }
+                    break;
+
+                case 'event':
+                    $results = database()->query("SELECT `link_id`, `url`, `settings` FROM `links` WHERE `user_id` = {$this->user->user_id} AND `type` = 'event' ORDER BY `datetime` DESC");
+                    
+                    while($result = $results->fetch_object()) {
+                        $settings = json_decode($result->settings ?? '{}');
+                        $event_name = $settings->name ?? 'Event';
+                        $data[] = [
+                            'id' => $result->link_id,
+                            'name' => $event_name . ' (' . $result->url . ')'
+                        ];
+                    }
+                    break;
+
+                case 'static':
+                    // Get static pages or splash pages
+                    $results = database()->query("SELECT `splash_page_id`, `name`, `url` FROM `splash_pages` WHERE `user_id` = {$this->user->user_id} ORDER BY `datetime` DESC");
+                    
+                    while($result = $results->fetch_object()) {
+                        $data[] = [
+                            'id' => 'splash_' . $result->splash_page_id,
+                            'name' => $result->name . ' (' . $result->url . ')'
+                        ];
+                    }
+                    break;
+
+                default:
+                    error_log("ProductAjax get_existing_content: Invalid content type: " . $content_type);
+                    Response::json('Invalid content type', 'error');
+                    break;
+            }
+
+            // Debug logging
+            error_log("ProductAjax get_existing_content found " . count($data) . " items for type: " . $content_type);
+
+            Response::json('', 'success', ['data' => $data]);
+            
+        } catch (Exception $e) {
+            // Log the error for debugging
+            error_log('ProductAjax get_existing_content error: ' . $e->getMessage());
+            Response::json('Error loading content: ' . $e->getMessage(), 'error');
+        }
     }
 }

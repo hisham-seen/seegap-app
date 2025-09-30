@@ -14,6 +14,8 @@ DROP TABLE IF EXISTS `pixels`;
 DROP TABLE IF EXISTS `domains`;
 DROP TABLE IF EXISTS `data`;
 DROP TABLE IF EXISTS `reports`;
+DROP TABLE IF EXISTS `gs1_links_statistics`;
+
 
 -- Drop user and authentication tables
 DROP TABLE IF EXISTS `users`;

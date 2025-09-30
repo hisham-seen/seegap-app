@@ -65,28 +65,32 @@
     </div>
 </div>
 
-<!-- Product Information Card -->
-<div class="card mb-4">
-    <div class="card-body">
-        <div class="row">
+<?= \SeeGap\Alerts::output_alerts() ?>
+
+<!-- Single Clean Card Design -->
+<div class="card">
+    <div class="card-header bg-white border-bottom">
+        <div class="row align-items-center">
             <div class="col-md-8">
-                <h5 class="card-title mb-2"><?= $data->product->product_name ?></h5>
-                <?php if($data->product->brand_name): ?>
-                    <p class="text-muted mb-1">
-                        <i class="fas fa-tag fa-sm mr-1"></i>
-                        <?= $data->product->brand_name ?>
-                    </p>
-                <?php endif ?>
-                <?php if($data->product->category): ?>
-                    <p class="text-muted mb-1">
-                        <i class="fas fa-folder fa-sm mr-1"></i>
-                        <?= $data->product->category ?>
-                        <?php if($data->product->subcategory): ?>
-                            <i class="fas fa-angle-right fa-sm mx-1"></i>
-                            <?= $data->product->subcategory ?>
-                        <?php endif ?>
-                    </p>
-                <?php endif ?>
+                <h5 class="card-title mb-1"><?= $data->product->product_name ?></h5>
+                <div class="d-flex flex-wrap align-items-center">
+                    <?php if($data->product->brand_name): ?>
+                        <span class="text-muted mr-3">
+                            <i class="fas fa-tag fa-sm mr-1"></i>
+                            <?= $data->product->brand_name ?>
+                        </span>
+                    <?php endif ?>
+                    <?php if($data->product->category): ?>
+                        <span class="text-muted mr-3">
+                            <i class="fas fa-folder fa-sm mr-1"></i>
+                            <?= $data->product->category ?>
+                            <?php if($data->product->subcategory): ?>
+                                <i class="fas fa-angle-right fa-sm mx-1"></i>
+                                <?= $data->product->subcategory ?>
+                            <?php endif ?>
+                        </span>
+                    <?php endif ?>
+                </div>
             </div>
             <div class="col-md-4 text-md-right">
                 <?php if($data->product->datetime): ?>
@@ -104,11 +108,7 @@
             </div>
         </div>
     </div>
-</div>
-
-<?= \SeeGap\Alerts::output_alerts() ?>
-
-<div class="card">
+    
     <div class="card-body">
         <form action="" method="post" role="form">
             <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />

@@ -164,3 +164,192 @@
         font-size: 0.875rem;
     }
 }
+
+/* Enhanced Card Styling for Products */
+.card-header.bg-white {
+    background-color: #f8f9fa !important;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.75rem;
+}
+
+.card-body {
+    padding: 1.75rem;
+}
+
+.card-header .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.card-header .text-muted {
+    font-size: 0.875rem;
+    color: #6c757d !important;
+}
+
+.card-header .text-muted i {
+    color: #adb5bd;
+    margin-right: 0.25rem;
+}
+
+/* Dark theme support for enhanced cards */
+[data-theme="dark"] .card-header.bg-white {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .card-header .card-title {
+    color: #e9ecef;
+}
+
+[data-theme="dark"] .card-header .text-muted {
+    color: #adb5bd !important;
+}
+
+[data-theme="dark"] .card-header .text-muted i {
+    color: #6c757d;
+}
+
+/* Product Info Styling */
+.card-header .d-flex.flex-wrap span {
+    white-space: nowrap;
+    margin-bottom: 0.25rem;
+}
+
+.card-header .d-flex.flex-wrap span:not(:last-child)::after {
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 12px;
+    background-color: #dee2e6;
+    margin: 0 0.75rem;
+    vertical-align: middle;
+}
+
+[data-theme="dark"] .card-header .d-flex.flex-wrap span:not(:last-child)::after {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Improved form styling within cards */
+.card-body .form-group label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.card-body .form-group label i {
+    color: #6c757d;
+    margin-right: 0.5rem;
+}
+
+[data-theme="dark"] .card-body .form-group label {
+    color: #e9ecef;
+}
+
+[data-theme="dark"] .card-body .form-group label i {
+    color: #adb5bd;
+}
+
+/* Responsive card header */
+@media (max-width: 768px) {
+    .card-header .row {
+        flex-direction: column;
+    }
+    
+    .card-header .col-md-4.text-md-right {
+        text-align: left !important;
+        margin-top: 0.75rem;
+    }
+    
+    .card-header .d-flex.flex-wrap {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .card-header .d-flex.flex-wrap span {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .card-header .d-flex.flex-wrap span:not(:last-child)::after {
+        display: none;
+    }
+}
+
+/* Section Divider Styling - Replaces nested cards */
+.section-divider {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    overflow: hidden;
+}
+
+.section-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1.25rem;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    color: #6c757d;
+    margin-right: 0.5rem;
+}
+
+.section-content {
+    padding: 1.5rem 1.25rem;
+}
+
+/* Dark theme support for section dividers */
+[data-theme="dark"] .section-divider {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .section-header {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .section-title {
+    color: #e9ecef;
+}
+
+[data-theme="dark"] .section-title i {
+    color: #adb5bd;
+}
+
+/* Hover effect for section dividers */
+.section-divider:hover {
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+[data-theme="dark"] .section-divider:hover {
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive section styling */
+@media (max-width: 768px) {
+    .section-header {
+        padding: 0.875rem 1rem;
+    }
+    
+    .section-content {
+        padding: 1.25rem 1rem;
+    }
+    
+    .section-title {
+        font-size: 0.9rem;
+    }
+}

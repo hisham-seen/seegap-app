@@ -84,11 +84,6 @@
                     </li>
                 <?php endif ?>
 
-                <?php if(settings()->gs1_links->gs1_links_is_enabled): ?>
-                    <li class="<?= in_array(\SeeGap\Router::$controller, ['Gs1Links', 'Gs1LinkManager']) ? 'active' : null ?>">
-                        <a href="<?= url('gs1-links') ?>"><i class="fas fa-fw fa-sm fa-barcode mr-2"></i> <?= l('gs1_links.menu') ?></a>
-                    </li>
-                <?php endif ?>
 
                 <?php if(settings()->products->products_is_enabled): ?>
                     <li class="<?= in_array(\SeeGap\Router::$controller, ['Products', 'ProductCreate', 'ProductUpdate']) ? 'active' : null ?>">

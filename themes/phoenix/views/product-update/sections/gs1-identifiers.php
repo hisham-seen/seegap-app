@@ -1,10 +1,8 @@
 <?php defined('SEEGAP') || die() ?>
 
-<form action="" method="post" role="form">
-    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
-    <input type="hidden" name="section" value="gs1-identifiers" />
+<input type="hidden" name="section" value="gs1-identifiers" />
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="mb-0">
             <i class="fas fa-barcode text-primary mr-2"></i>
             <?= l('products.sections.gs1_identifiers') ?>
@@ -13,15 +11,12 @@
     </div>
 
     <!-- Primary GS1 Identifiers -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="card-title mb-0">
-                <i class="fas fa-id-card fa-sm mr-1"></i>
-                <?= l('products.gs1.primary_identifiers') ?>
-            </h6>
-        </div>
-        <div class="card-body">
-            <div class="row">
+    <div class="mb-4">
+        <h6 class="mb-3">
+            <i class="fas fa-id-card fa-sm mr-2"></i>
+            <?= l('products.gs1.primary_identifiers') ?>
+        </h6>
+        <div class="row">
                 <!-- GLN (413) - Global Location Number -->
                 <div class="col-12 col-lg-6">
                     <div class="form-group">
@@ -40,30 +35,26 @@
                 <!-- Variant Number (20) -->
                 <div class="col-12 col-lg-6">
                     <div class="form-group">
-                        <label for="variant_number">
-                            <i class="fas fa-fw fa-code-branch fa-sm text-muted mr-1"></i> 
+                        <label for="variant">
+                            <i class="fas fa-fw fa-code-branch fa-sm text-muted mr-1"></i>
                             <?= l('products.gs1.variant_number_20') ?>
                         </label>
-                        <input type="text" id="variant_number" name="variant_number" class="form-control <?= \SeeGap\Alerts::has_field_errors('variant_number') ? 'is-invalid' : null ?>" value="<?= $data->product->variant_number ?>" maxlength="20" />
-                        <?= \SeeGap\Alerts::output_field_error('variant_number') ?>
+                        <input type="text" id="variant" name="variant" class="form-control <?= \SeeGap\Alerts::has_field_errors('variant') ? 'is-invalid' : null ?>" value="<?= $data->product->variant ?>" maxlength="20" />
+                        <?= \SeeGap\Alerts::output_field_error('variant') ?>
                         <small class="form-text text-muted">
                             <strong>GS1 AI (20):</strong> <?= l('products.gs1.variant_number_help') ?>
                         </small>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- Batch & Serial Information -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="card-title mb-0">
-                <i class="fas fa-hashtag fa-sm mr-1"></i>
-                <?= l('products.gs1.batch_serial_info') ?>
-            </h6>
-        </div>
-        <div class="card-body">
+    <div class="mb-4">
+        <h6 class="mb-3">
+            <i class="fas fa-hashtag fa-sm mr-2"></i>
+            <?= l('products.gs1.batch_serial_info') ?>
+        </h6>
             <div class="row">
                 <!-- Batch/Lot Number (10) -->
                 <div class="col-12 col-lg-6">
@@ -83,12 +74,12 @@
                 <!-- Serial Number (21) -->
                 <div class="col-12 col-lg-6">
                     <div class="form-group">
-                        <label for="serial_number">
+                        <label for="serial">
                             <i class="fas fa-fw fa-fingerprint fa-sm text-muted mr-1"></i> 
                             <?= l('products.gs1.serial_number_21') ?>
                         </label>
-                        <input type="text" id="serial_number" name="serial_number" class="form-control <?= \SeeGap\Alerts::has_field_errors('serial_number') ? 'is-invalid' : null ?>" value="<?= $data->product->serial_number ?>" maxlength="20" />
-                        <?= \SeeGap\Alerts::output_field_error('serial_number') ?>
+                        <input type="text" id="serial" name="serial" class="form-control <?= \SeeGap\Alerts::has_field_errors('serial') ? 'is-invalid' : null ?>" value="<?= $data->product->serial ?>" maxlength="20" />
+                        <?= \SeeGap\Alerts::output_field_error('serial') ?>
                         <small class="form-text text-muted">
                             <strong>GS1 AI (21):</strong> <?= l('products.gs1.serial_number_help') ?>
                         </small>
@@ -127,18 +118,14 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- Additional Identifiers -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="card-title mb-0">
-                <i class="fas fa-tags fa-sm mr-1"></i>
-                <?= l('products.gs1.additional_identifiers') ?>
-            </h6>
-        </div>
-        <div class="card-body">
+    <div class="mb-4">
+        <h6 class="mb-3">
+            <i class="fas fa-tags fa-sm mr-2"></i>
+            <?= l('products.gs1.additional_identifiers') ?>
+        </h6>
             <div class="row">
                 <!-- Customer Part Number (241) -->
                 <div class="col-12 col-lg-6">
@@ -202,7 +189,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- Save Button -->
@@ -216,4 +202,3 @@
             <?= l('global.cancel') ?>
         </a>
     </div>
-</form>

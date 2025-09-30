@@ -1668,18 +1668,7 @@ return [
     'pay.custom_plan.summary.tax_exclusive' => 'Tax exclusive',
     'pay.custom_plan.stripe' => 'Stripe',
     'pay.custom_plan.paypal' => 'PayPal',
-    'pay.custom_plan.coinbase' => 'Coinbase',
-    'pay.custom_plan.payu' => 'PayU',
-    'pay.custom_plan.paystack' => 'Paystack',
-    'pay.custom_plan.razorpay' => 'Razorpay',
-    'pay.custom_plan.mollie' => 'Mollie',
-    'pay.custom_plan.yookassa' => 'YooKassa',
-    'pay.custom_plan.crypto_com' => 'Crypto.com',
-    'pay.custom_plan.paddle' => 'Paddle',
-    'pay.custom_plan.midtrans' => 'Midtrans',
-    'pay.custom_plan.flutterwave' => 'Flutterwave',
-    'pay.custom_plan.lemonsqueezy' => 'Lemon Squeezy',
-    'pay.custom_plan.myfatoorah' => 'MyFatoorah',
+
 
     // Domains
     'domains.breadcrumb' => 'Domains',

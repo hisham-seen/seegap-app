@@ -108,9 +108,16 @@ ALTUM;
     /* Run SQL */
     $dump_content = file_get_contents(ROOT . 'install/dump.sql');
 
-    $dump = array_filter(explode('-- SEPARATOR --', $dump_content));
+    $dump = explode('-- SEPARATOR --', $dump_content);
 
     foreach($dump as $query) {
+        $query = trim($query);
+        
+        // Skip empty queries or queries with only whitespace/comments
+        if(empty($query) || preg_match('/^\s*$/', $query) || preg_match('/^\s*--/', $query)) {
+            continue;
+        }
+        
         $database->query($query);
 
         if($database->error) {

@@ -54,6 +54,7 @@ class Router {
                 'settings' => [
                     'no_authentication_check' => true,
                     'no_browser_language_detection' => true,
+                    'wrapper' => 'public_wrapper',
                     'ads' => true,
                 ]
             ],
@@ -264,31 +265,6 @@ class Router {
                 ]
             ],
 
-            'gs1-links' => [
-                'controller' => 'Gs1Links',
-                'settings' => [
-                    'wrapper' => 'app_wrapper',
-                    'ads' => true,
-                ]
-            ],
-
-
-
-            'gs1-link-manager' => [
-                'controller' => 'Gs1LinkManager',
-                'settings' => [
-                    'wrapper' => 'app_wrapper',
-                    'ads' => true,
-                ]
-            ],
-
-            'gs1-link' => [
-                'controller' => 'Gs1Link',
-                'settings' => [
-                    'wrapper' => 'app_wrapper',
-                    'ads' => true,
-                ]
-            ],
 
             'products' => [
                 'controller' => 'Products',
@@ -321,6 +297,7 @@ class Router {
                     'ads' => true,
                 ]
             ],
+
 
             'link' => [
                 'controller' => 'Link',
@@ -1086,11 +1063,20 @@ class Router {
             ],
 
             'gs1-link-redirect' => [
-                'controller' => 'Gs1LinkRedirect',
+                'controller' => 'Gs1Product',
                 'settings' => [
                     'no_authentication_check' => true,
-                    'has_view' => false,
                     'no_browser_language_detection' => true,
+                    'wrapper' => 'public_wrapper',
+                    'ads' => false,
+                ]
+            ],
+
+            'gs1-product' => [
+                'controller' => 'Gs1Product',
+                'settings' => [
+                    'wrapper' => 'app_wrapper',
+                    'ads' => false,
                 ]
             ],
         ],
@@ -1168,16 +1154,16 @@ class Router {
                     'allow_indexing' => false,
                 ]
             ],
-            'gs1-links' => [
-                'controller' => 'ApiGs1Links',
+            'products' => [
+                'controller' => 'ApiProducts',
                 'settings' => [
                     'no_authentication_check' => true,
                     'has_view' => false,
                     'allow_indexing' => false,
                 ]
             ],
-            'products' => [
-                'controller' => 'ApiProducts',
+            'gs1-products' => [
+                'controller' => 'ApiGs1Products',
                 'settings' => [
                     'no_authentication_check' => true,
                     'has_view' => false,
@@ -1362,9 +1348,6 @@ class Router {
                 'controller' => 'AdminQrCodes'
             ],
 
-            'gs1-links' => [
-                'controller' => 'AdminGs1Links'
-            ],
 
             'products' => [
                 'controller' => 'AdminProducts'
@@ -1702,55 +1685,74 @@ class Router {
 
             } else {
 
-                /* Try to check if the link exists via the cache */
-                $cache_instance = cache()->getItem('link?url=' . md5(self::$params[0]) . (isset(self::$data['domain']) ? '&domain_id=' . self::$data['domain']->domain_id : null));
-
-                /* Set cache if not existing */
-                if(!$cache_instance->get()) {
-
-                    /* Get data from the database */
-                    if(isset(self::$data['domain'])) {
-                        if(self::$data['domain']->link_id) {
-                            $link = db()->where('link_id', self::$data['domain']->link_id)->getOne('links');
-                        } else {
-                            $link = db()->where('url', self::$params[0])->where('domain_id', self::$data['domain']->domain_id)->getOne('links');
-                        }
-                    } else {
-                        $link = db()->where('url', self::$params[0])->where('domain_id', 0)->getOne('links');
-                    }
-
-                    if($link) {
-                        cache()->save($cache_instance->set($link)->expiresAfter(CACHE_DEFAULT_SECONDS)->addTag('link_id=' . $link->link_id));
-
-                        /* Set some route data */
-                        self::$data['link'] = $link;
-                    }
-
-                } else {
-
-                    /* Get cache */
-                    $link = $cache_instance->get();
-
-                    /* Set some route data */
-                    self::$data['link'] = $link;
-
-                }
-
-                /* Check if there is any link available in the database */
-                if($link) {
-
-                    self::$controller_key = 'link';
-                    self::$controller = 'Link';
-                    self::$path = 'l';
-
-                } else {
-
-                    /* Check if this might be a GS1 Digital Link */
-                    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-                    if(function_exists('parse_gs1_digital_link') && parse_gs1_digital_link($request_uri)) {
+                /* Check if this might be a GS1 Digital Link FIRST, before checking regular links */
+                $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+                
+                // Debug logging
+                error_log("DEBUG: Checking GS1 for REQUEST_URI: " . $request_uri);
+                error_log("DEBUG: Function exists: " . (function_exists('parse_gs1_digital_link') ? 'YES' : 'NO'));
+                
+                if(function_exists('parse_gs1_digital_link')) {
+                    $gs1_result = parse_gs1_digital_link($request_uri);
+                    error_log("DEBUG: GS1 parse result: " . json_encode($gs1_result));
+                    
+                    if($gs1_result) {
+                        error_log("DEBUG: GS1 Digital Link detected! Routing to gs1-link-redirect");
                         self::$controller_key = 'gs1-link-redirect';
                         self::$controller = 'Gs1LinkRedirect';
                         self::$path = '';
+                        
+                        // Set the GS1 parameters for the controller
+                        self::$params = [$gs1_result['ai'], $gs1_result['gtin']];
+                        error_log("DEBUG: Set params: " . json_encode(self::$params));
+                    } else {
+                        error_log("DEBUG: GS1 Digital Link NOT detected, checking regular links");
+                        // Continue to regular link checking
+                    }
+                }
+                
+                if(!isset($gs1_result) || !$gs1_result) {
+                    /* Try to check if the link exists via the cache */
+                    $cache_instance = cache()->getItem('link?url=' . md5(self::$params[0]) . (isset(self::$data['domain']) ? '&domain_id=' . self::$data['domain']->domain_id : null));
+
+                    /* Set cache if not existing */
+                    if(!$cache_instance->get()) {
+
+                        /* Get data from the database */
+                        if(isset(self::$data['domain'])) {
+                            if(self::$data['domain']->link_id) {
+                                $link = db()->where('link_id', self::$data['domain']->link_id)->getOne('links');
+                            } else {
+                                $link = db()->where('url', self::$params[0])->where('domain_id', self::$data['domain']->domain_id)->getOne('links');
+                            }
+                        } else {
+                            $link = db()->where('url', self::$params[0])->where('domain_id', 0)->getOne('links');
+                        }
+
+                        if($link) {
+                            cache()->save($cache_instance->set($link)->expiresAfter(CACHE_DEFAULT_SECONDS)->addTag('link_id=' . $link->link_id));
+
+                            /* Set some route data */
+                            self::$data['link'] = $link;
+                        }
+
+                    } else {
+
+                        /* Get cache */
+                        $link = $cache_instance->get();
+
+                        /* Set some route data */
+                        self::$data['link'] = $link;
+
+                    }
+
+                    /* Check if there is any link available in the database */
+                    if($link) {
+
+                        self::$controller_key = 'link';
+                        self::$controller = 'Link';
+                        self::$path = 'l';
+
                     } else {
                         /* Check for a custom domain 404 redirect */
                         if(isset(self::$data['domain']) && self::$data['domain']->custom_not_found_url) {
@@ -1764,7 +1766,6 @@ class Router {
                             self::$controller_key = 'not-found';
                         }
                     }
-
                 }
 
             }

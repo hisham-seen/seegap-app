@@ -1,10 +1,8 @@
 <?php defined('SEEGAP') || die() ?>
 
-<form action="" method="post" role="form">
-    <input type="hidden" name="token" value="<?= \SeeGap\Csrf::get() ?>" />
-    <input type="hidden" name="section" value="general" />
+<input type="hidden" name="section" value="general" />
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="mb-0">
             <i class="fas fa-info-circle text-primary mr-2"></i>
             <?= l('products.sections.general') ?>
@@ -178,4 +176,3 @@
             <?= l('global.cancel') ?>
         </a>
     </div>
-</form>

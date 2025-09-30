@@ -33,7 +33,7 @@ class ProductUpdate extends Controller {
         }
 
         /* Validate section */
-        $valid_sections = ['general', 'gs1-identifiers', 'attributes', 'measurements', 'logistics', 'content', 'digital', 'media'];
+        $valid_sections = ['general', 'gs1-identifiers', 'attributes', 'measurements', 'logistics', 'content', 'digital', 'media', 'gs1-digital-link', 'gs1-default-page-design', 'gs1-digital-passport'];
         if(!in_array($section, $valid_sections)) {
             $section = 'general';
         }
@@ -64,6 +64,9 @@ class ProductUpdate extends Controller {
         }
 
         if(!empty($_POST)) {
+            // Clear any existing field errors from previous submissions
+            Alerts::clear_field_errors();
+            
             // Clean and validate all form inputs based on section
             $this->process_form_data($section);
 
@@ -75,6 +78,7 @@ class ProductUpdate extends Controller {
             if(!\SeeGap\Csrf::check()) {
                 Alerts::add_error(l('global.error_message.invalid_csrf_token'));
             }
+
 
             if(!Alerts::has_field_errors() && !Alerts::has_errors()) {
 
@@ -93,9 +97,55 @@ class ProductUpdate extends Controller {
                     cache()->deleteItem('product?product_id=' . $product_id);
                     cache()->deleteItemsByTag('product_id=' . $product_id);
 
+                    /* Handle AJAX requests */
+                    if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'status' => 'success',
+                            'message' => sprintf(l('global.success_message.update1'), $product_name)
+                        ]);
+                        exit;
+                    }
+
                     redirect('product-update/' . $product_id . '/' . $section);
                 } else {
                     Alerts::add_error(l('products.error_message.update_failed'));
+                    
+                    /* Handle AJAX error response */
+                    if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'status' => 'error',
+                            'message' => l('products.error_message.update_failed')
+                        ]);
+                        exit;
+                    }
+                }
+            } else {
+                /* Handle AJAX validation error response */
+                if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header('Content-Type: application/json');
+                    $errors = [];
+                    
+                    // Get field errors
+                    if(Alerts::has_field_errors()) {
+                        $field_errors = Alerts::get_field_errors();
+                        foreach($field_errors as $field => $error) {
+                            $errors[] = $field . ': ' . $error;
+                        }
+                    }
+                    
+                    // Get general errors
+                    if(Alerts::has_errors()) {
+                        $general_errors = Alerts::get_errors();
+                        $errors = array_merge($errors, $general_errors);
+                    }
+                    
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => implode(', ', $errors)
+                    ]);
+                    exit;
                 }
             }
         }
@@ -187,6 +237,33 @@ class ProductUpdate extends Controller {
                     'label' => l('products.sections.media_images'),
                     'active' => $section == 'media',
                     'mobile_emoji' => '🖼️'
+                ],
+                [
+                    'type' => 'divider'
+                ],
+                [
+                    'type' => 'link',
+                    'url' => url('product-update/' . $product->product_id . '/gs1-digital-link'),
+                    'icon' => 'fas fa-fw fa-sm fa-qrcode mr-2',
+                    'label' => l('products.sections.gs1_digital_link'),
+                    'active' => $section == 'gs1-digital-link',
+                    'mobile_emoji' => '🔗'
+                ],
+                [
+                    'type' => 'link',
+                    'url' => url('product-update/' . $product->product_id . '/gs1-default-page-design'),
+                    'icon' => 'fas fa-fw fa-sm fa-palette mr-2',
+                    'label' => l('products.sections.gs1_default_page_design'),
+                    'active' => $section == 'gs1-default-page-design',
+                    'mobile_emoji' => '🎨'
+                ],
+                [
+                    'type' => 'link',
+                    'url' => url('product-update/' . $product->product_id . '/gs1-digital-passport'),
+                    'icon' => 'fas fa-fw fa-sm fa-passport mr-2',
+                    'label' => l('products.sections.gs1_digital_passport'),
+                    'active' => $section == 'gs1-digital-passport',
+                    'mobile_emoji' => '📋'
                 ]
             ]
         ];
@@ -209,13 +286,14 @@ class ProductUpdate extends Controller {
      * Process form data based on section
      */
     private function process_form_data($section) {
-        // Common fields across all sections
-        $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
+        // Common fields across all sections (but not is_enabled - that's section-specific)
         $_POST['project_id'] = !empty($_POST['project_id']) ? (int) $_POST['project_id'] : null;
         $_POST['gs1_link_id'] = !empty($_POST['gs1_link_id']) ? (int) $_POST['gs1_link_id'] : null;
 
         switch($section) {
             case 'general':
+                // Process is_enabled for general section only
+                $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
                 $_POST['gtin'] = query_clean($_POST['gtin'] ?? '');
                 $_POST['brand_name'] = query_clean($_POST['brand_name'] ?? '');
                 $_POST['product_name'] = query_clean($_POST['product_name'] ?? '');
@@ -229,7 +307,7 @@ class ProductUpdate extends Controller {
             case 'gs1-identifiers':
                 $_POST['gln'] = query_clean($_POST['gln'] ?? '');
                 $_POST['variant'] = query_clean($_POST['variant'] ?? '');
-                $_POST['batch_lot'] = query_clean($_POST['batch_lot'] ?? '');
+                $_POST['batch_lot_number'] = query_clean($_POST['batch_lot_number'] ?? '');
                 $_POST['serial'] = query_clean($_POST['serial'] ?? '');
                 $_POST['cpid'] = query_clean($_POST['cpid'] ?? '');
                 $_POST['additional_id'] = query_clean($_POST['additional_id'] ?? '');
@@ -331,6 +409,68 @@ class ProductUpdate extends Controller {
                 $_POST['generate_thumbnails'] = (int) isset($_POST['generate_thumbnails']);
                 $_POST['watermark_images'] = (int) isset($_POST['watermark_images']);
                 break;
+
+            case 'gs1-digital-link':
+                // Process is_enabled for gs1-digital-link section
+                $_POST['is_enabled'] = (int) isset($_POST['is_enabled']);
+                $_POST['gs1_link_enabled'] = (int) isset($_POST['gs1_link_enabled']);
+                $_POST['gs1_link_type'] = query_clean($_POST['gs1_link_type'] ?? 'custom');
+                $_POST['gs1_target_url'] = query_clean($_POST['gs1_target_url'] ?? '');
+                $_POST['gs1_existing_content_id'] = !empty($_POST['gs1_existing_content_id']) ? (int) $_POST['gs1_existing_content_id'] : null;
+                $_POST['gs1_link_title'] = query_clean($_POST['gs1_link_title'] ?? '');
+                $_POST['gs1_link_description'] = input_clean($_POST['gs1_link_description'] ?? '');
+                $_POST['auto_generate_qr'] = (int) isset($_POST['auto_generate_qr']);
+                $_POST['qr_code_size'] = query_clean($_POST['qr_code_size'] ?? '500');
+                $_POST['qr_code_ecc'] = query_clean($_POST['qr_code_ecc'] ?? 'M');
+                $_POST['gs1_schedule_enabled'] = (int) isset($_POST['gs1_schedule_enabled']);
+                $_POST['gs1_start_date'] = query_clean($_POST['gs1_start_date'] ?? '');
+                $_POST['gs1_end_date'] = query_clean($_POST['gs1_end_date'] ?? '');
+                $_POST['gs1_clicks_limit'] = !empty($_POST['gs1_clicks_limit']) ? (int) $_POST['gs1_clicks_limit'] : null;
+                $_POST['gs1_expiration_url'] = query_clean($_POST['gs1_expiration_url'] ?? '');
+                $_POST['gs1_utm_source'] = query_clean($_POST['gs1_utm_source'] ?? '');
+                $_POST['gs1_utm_medium'] = query_clean($_POST['gs1_utm_medium'] ?? '');
+                $_POST['gs1_utm_campaign'] = query_clean($_POST['gs1_utm_campaign'] ?? '');
+                break;
+
+            case 'gs1-default-page-design':
+                // GS1 Default Page Design Configuration - does NOT process is_enabled
+                // This section only updates template settings, not product status
+                $_POST['gs1_template'] = query_clean($_POST['gs1_template'] ?? 'modern');
+                $_POST['gs1_theme'] = query_clean($_POST['gs1_theme'] ?? 'blue');
+                $_POST['gs1_enabled_datapoints'] = $_POST['gs1_enabled_datapoints'] ?? [];
+                break;
+
+            case 'gs1-digital-passport':
+                // Sustainability Information
+                $_POST['carbon_footprint'] = !empty($_POST['carbon_footprint']) ? (float) $_POST['carbon_footprint'] : null;
+                $_POST['water_usage'] = !empty($_POST['water_usage']) ? (float) $_POST['water_usage'] : null;
+                $_POST['renewable_energy_percentage'] = !empty($_POST['renewable_energy_percentage']) ? (int) $_POST['renewable_energy_percentage'] : null;
+                $_POST['recyclability_score'] = query_clean($_POST['recyclability_score'] ?? '');
+                $_POST['sustainability_certifications'] = input_clean($_POST['sustainability_certifications'] ?? '');
+                
+                // Supply Chain & Traceability
+                $_POST['supply_chain_transparency'] = query_clean($_POST['supply_chain_transparency'] ?? '');
+                $_POST['ethical_sourcing'] = query_clean($_POST['ethical_sourcing'] ?? '');
+                $_POST['key_suppliers'] = input_clean($_POST['key_suppliers'] ?? '');
+                $_POST['blockchain_verified'] = (int) isset($_POST['blockchain_verified']);
+                
+                // Compliance & Safety
+                $_POST['regulatory_compliance'] = input_clean($_POST['regulatory_compliance'] ?? '');
+                $_POST['safety_standards'] = input_clean($_POST['safety_standards'] ?? '');
+                $_POST['quality_certifications'] = input_clean($_POST['quality_certifications'] ?? '');
+                
+                // Product Lifecycle
+                $_POST['lifecycle_stage'] = query_clean($_POST['lifecycle_stage'] ?? '');
+                $_POST['expected_lifespan'] = !empty($_POST['expected_lifespan']) ? (int) $_POST['expected_lifespan'] : null;
+                $_POST['lifespan_unit'] = query_clean($_POST['lifespan_unit'] ?? 'years');
+                $_POST['end_of_life_instructions'] = input_clean($_POST['end_of_life_instructions'] ?? '');
+                
+                // Digital Passport Settings
+                $_POST['passport_public'] = (int) isset($_POST['passport_public']);
+                $_POST['passport_seo'] = (int) isset($_POST['passport_seo']);
+                $_POST['passport_last_updated'] = !empty($_POST['passport_last_updated']) ? $_POST['passport_last_updated'] : null;
+                $_POST['data_verification_status'] = query_clean($_POST['data_verification_status'] ?? 'unverified');
+                break;
         }
     }
 
@@ -381,6 +521,95 @@ class ProductUpdate extends Controller {
                     }
                 }
                 break;
+
+            case 'gs1-digital-link':
+                // Validate GS1 Digital Link URLs
+                $gs1_url_fields = ['gs1_target_url', 'gs1_expiration_url'];
+                foreach($gs1_url_fields as $field) {
+                    if(!empty($_POST[$field]) && !filter_var($_POST[$field], FILTER_VALIDATE_URL)) {
+                        Alerts::add_field_error($field, l('global.error_message.invalid_url'));
+                    }
+                }
+
+                // Validate required fields when GS1 link is enabled
+                if(!empty($_POST['gs1_link_enabled'])) {
+                    if($_POST['gs1_link_type'] === 'custom' && empty($_POST['gs1_target_url'])) {
+                        Alerts::add_field_error('gs1_target_url', l('global.error_message.empty_field'));
+                    }
+                    
+                    if($_POST['gs1_link_type'] !== 'custom' && $_POST['gs1_link_type'] !== 'default' && empty($_POST['gs1_existing_content_id'])) {
+                        Alerts::add_field_error('gs1_existing_content_id', l('global.error_message.empty_field'));
+                    }
+                }
+
+                // Validate date fields
+                if(!empty($_POST['gs1_start_date']) && !empty($_POST['gs1_end_date'])) {
+                    $start_date = strtotime($_POST['gs1_start_date']);
+                    $end_date = strtotime($_POST['gs1_end_date']);
+                    
+                    if($start_date && $end_date && $start_date >= $end_date) {
+                        Alerts::add_field_error('gs1_end_date', 'End date must be after start date.');
+                    }
+                }
+
+                // Validate clicks limit
+                if(!empty($_POST['gs1_clicks_limit']) && (!is_numeric($_POST['gs1_clicks_limit']) || (int)$_POST['gs1_clicks_limit'] < 1)) {
+                    Alerts::add_field_error('gs1_clicks_limit', 'Clicks limit must be a positive number.');
+                }
+
+                // Validate QR code size
+                if(!empty($_POST['qr_code_size']) && !in_array($_POST['qr_code_size'], ['200', '300', '500', '800', '1000'])) {
+                    Alerts::add_field_error('qr_code_size', 'Invalid QR code size selected.');
+                }
+
+                // Validate QR code error correction level
+                if(!empty($_POST['qr_code_ecc']) && !in_array($_POST['qr_code_ecc'], ['L', 'M', 'Q', 'H'])) {
+                    Alerts::add_field_error('qr_code_ecc', 'Invalid QR code error correction level.');
+                }
+                break;
+
+            case 'gs1-default-page-design':
+                // Validate template selection
+                $valid_templates = ['modern', 'classic', 'minimal', 'detailed'];
+                if(!empty($_POST['gs1_template']) && !in_array($_POST['gs1_template'], $valid_templates)) {
+                    Alerts::add_field_error('gs1_template', 'Invalid template selected.');
+                }
+                
+                // Validate theme selection
+                $valid_themes = ['blue', 'green', 'purple', 'orange', 'red', 'gray'];
+                if(!empty($_POST['gs1_theme']) && !in_array($_POST['gs1_theme'], $valid_themes)) {
+                    Alerts::add_field_error('gs1_theme', 'Invalid theme selected.');
+                }
+                break;
+
+            case 'gs1-digital-passport':
+                // Validate numeric fields
+                if(!empty($_POST['carbon_footprint']) && !is_numeric($_POST['carbon_footprint'])) {
+                    Alerts::add_field_error('carbon_footprint', 'Carbon footprint must be a valid number.');
+                }
+                
+                if(!empty($_POST['water_usage']) && !is_numeric($_POST['water_usage'])) {
+                    Alerts::add_field_error('water_usage', 'Water usage must be a valid number.');
+                }
+                
+                if(!empty($_POST['renewable_energy_percentage']) && (!is_numeric($_POST['renewable_energy_percentage']) || (int)$_POST['renewable_energy_percentage'] < 0 || (int)$_POST['renewable_energy_percentage'] > 100)) {
+                    Alerts::add_field_error('renewable_energy_percentage', 'Renewable energy percentage must be between 0 and 100.');
+                }
+                
+                if(!empty($_POST['expected_lifespan']) && (!is_numeric($_POST['expected_lifespan']) || (int)$_POST['expected_lifespan'] < 1)) {
+                    Alerts::add_field_error('expected_lifespan', 'Expected lifespan must be a positive number.');
+                }
+                
+                // Validate lifecycle stage options
+                if(!empty($_POST['lifecycle_stage']) && !in_array($_POST['lifecycle_stage'], ['development', 'production', 'active', 'mature', 'declining', 'discontinued'])) {
+                    Alerts::add_field_error('lifecycle_stage', 'Invalid lifecycle stage selected.');
+                }
+                
+                // Validate data verification status
+                if(!empty($_POST['data_verification_status']) && !in_array($_POST['data_verification_status'], ['unverified', 'self_verified', 'third_party_verified', 'certified'])) {
+                    Alerts::add_field_error('data_verification_status', 'Invalid data verification status.');
+                }
+                break;
         }
     }
 
@@ -390,10 +619,21 @@ class ProductUpdate extends Controller {
     private function prepare_product_data($section) {
         $product_data = [];
 
+        // Only include is_enabled if it was processed for this section
+        if (isset($_POST['is_enabled'])) {
+            $product_data['is_enabled'] = $_POST['is_enabled'];
+        }
+        
         // Always include common fields
-        $product_data['is_enabled'] = $_POST['is_enabled'];
         $product_data['project_id'] = $_POST['project_id'];
         $product_data['gs1_link_id'] = $_POST['gs1_link_id'];
+        
+        // Get current product for settings merging
+        $product_id = isset($this->params[0]) ? (int) $this->params[0] : null;
+        $product = null;
+        if ($product_id) {
+            $product = (new \SeeGap\Models\Product())->get_product_by_id($product_id, $this->user->user_id);
+        }
 
         switch($section) {
             case 'general':
@@ -413,7 +653,7 @@ class ProductUpdate extends Controller {
                 $product_data = array_merge($product_data, [
                     'gln' => $_POST['gln'],
                     'variant' => $_POST['variant'],
-                    'batch_lot' => $_POST['batch_lot'],
+                    'batch_lot_number' => $_POST['batch_lot_number'],
                     'serial' => $_POST['serial'],
                     'cpid' => $_POST['cpid'],
                     'additional_id' => $_POST['additional_id']
@@ -526,6 +766,99 @@ class ProductUpdate extends Controller {
                     'auto_resize_images' => $_POST['auto_resize_images'],
                     'generate_thumbnails' => $_POST['generate_thumbnails'],
                     'watermark_images' => $_POST['watermark_images']
+                ]);
+                break;
+
+            case 'gs1-digital-link':
+                // For GS1 Digital Link, we need to handle all the GS1 fields
+                $product_data = array_merge($product_data, [
+                    'gs1_link_enabled' => $_POST['gs1_link_enabled'],
+                    'gs1_link_type' => $_POST['gs1_link_type'],
+                    'gs1_target_url' => $_POST['gs1_target_url'],
+                    'gs1_existing_content_id' => $_POST['gs1_existing_content_id'],
+                    'gs1_link_title' => $_POST['gs1_link_title'],
+                    'gs1_link_description' => $_POST['gs1_link_description'],
+                    'auto_generate_qr' => $_POST['auto_generate_qr'],
+                    'qr_code_size' => $_POST['qr_code_size'],
+                    'qr_code_ecc' => $_POST['qr_code_ecc'],
+                    'gs1_schedule_enabled' => $_POST['gs1_schedule_enabled'],
+                    'gs1_start_date' => $_POST['gs1_start_date'],
+                    'gs1_end_date' => $_POST['gs1_end_date'],
+                    'gs1_clicks_limit' => $_POST['gs1_clicks_limit'],
+                    'gs1_expiration_url' => $_POST['gs1_expiration_url'],
+                    'gs1_utm_source' => $_POST['gs1_utm_source'],
+                    'gs1_utm_medium' => $_POST['gs1_utm_medium'],
+                    'gs1_utm_campaign' => $_POST['gs1_utm_campaign'],
+                    // Also update the main target_url for backward compatibility
+                    'target_url' => $_POST['gs1_target_url']
+                ]);
+                break;
+
+            case 'gs1-default-page-design':
+                // Handle GS1 Default Page Design configuration
+                // This section ONLY updates settings, not product status or other fields
+                
+                // Get existing settings and merge with new design config
+                $existing_settings = [];
+                if (!empty($product->settings)) {
+                    if (is_string($product->settings)) {
+                        $existing_settings = json_decode($product->settings, true) ?? [];
+                    } elseif (is_object($product->settings)) {
+                        $existing_settings = json_decode(json_encode($product->settings), true) ?? [];
+                    } elseif (is_array($product->settings)) {
+                        $existing_settings = $product->settings;
+                    }
+                }
+                
+                $gs1_design_config = [
+                    'template' => $_POST['gs1_template'],
+                    'theme' => $_POST['gs1_theme'],
+                    'enabled_datapoints' => $_POST['gs1_enabled_datapoints'],
+                    'last_updated' => date('Y-m-d H:i:s')
+                ];
+                
+                // Debug logging
+                error_log("DEBUG: Controller - Existing settings: " . print_r($existing_settings, true));
+                error_log("DEBUG: Controller - New GS1 config: " . print_r($gs1_design_config, true));
+                
+                // Merge with existing settings
+                $existing_settings['gs1_default_page_design'] = $gs1_design_config;
+                
+                // For GS1 template section, we ONLY return the settings field
+                // This prevents any other product fields from being modified
+                return ['settings' => $existing_settings];
+
+            case 'gs1-digital-passport':
+                $product_data = array_merge($product_data, [
+                    // Sustainability Information
+                    'carbon_footprint' => $_POST['carbon_footprint'],
+                    'water_usage' => $_POST['water_usage'],
+                    'renewable_energy_percentage' => $_POST['renewable_energy_percentage'],
+                    'recyclability_score' => $_POST['recyclability_score'],
+                    'sustainability_certifications' => $_POST['sustainability_certifications'],
+                    
+                    // Supply Chain & Traceability
+                    'supply_chain_transparency' => $_POST['supply_chain_transparency'],
+                    'ethical_sourcing' => $_POST['ethical_sourcing'],
+                    'key_suppliers' => $_POST['key_suppliers'],
+                    'blockchain_verified' => $_POST['blockchain_verified'],
+                    
+                    // Compliance & Safety
+                    'regulatory_compliance' => $_POST['regulatory_compliance'],
+                    'safety_standards' => $_POST['safety_standards'],
+                    'quality_certifications' => $_POST['quality_certifications'],
+                    
+                    // Product Lifecycle
+                    'lifecycle_stage' => $_POST['lifecycle_stage'],
+                    'expected_lifespan' => $_POST['expected_lifespan'],
+                    'lifespan_unit' => $_POST['lifespan_unit'],
+                    'end_of_life_instructions' => $_POST['end_of_life_instructions'],
+                    
+                    // Digital Passport Settings
+                    'passport_public' => $_POST['passport_public'],
+                    'passport_seo' => $_POST['passport_seo'],
+                    'passport_last_updated' => $_POST['passport_last_updated'],
+                    'data_verification_status' => $_POST['data_verification_status']
                 ]);
                 break;
         }

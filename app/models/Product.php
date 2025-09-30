@@ -75,8 +75,30 @@ class Product extends Model {
         $result = database()->query($query);
         
         if ($result && ($product = $result->fetch_object())) {
-            $product->settings = json_decode($product->settings ?? '{}');
-            $product->product_images = json_decode($product->product_images ?? '[]');
+            // Handle settings decoding - check if it's already an object or needs decoding
+            if (is_string($product->settings)) {
+                $decoded_settings = json_decode($product->settings, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $product->settings = (object) $decoded_settings;
+                } else {
+                    $product->settings = new \stdClass();
+                }
+            } elseif (is_null($product->settings)) {
+                $product->settings = new \stdClass();
+            }
+            
+            // Handle product images
+            if (is_string($product->product_images)) {
+                $decoded_images = json_decode($product->product_images, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $product->product_images = $decoded_images;
+                } else {
+                    $product->product_images = [];
+                }
+            } elseif (is_null($product->product_images)) {
+                $product->product_images = [];
+            }
+            
             return $product;
         }
         
@@ -210,7 +232,7 @@ class Product extends Model {
             'settings', 'is_enabled',
             
             // GS1 Identifiers (AI codes)
-            'gln', 'variant', 'batch_lot', 'serial', 'cpid', 'additional_id',
+            'gln', 'variant', 'batch_lot_number', 'serial', 'cpid', 'additional_id',
             
             // GS1 Attributes (dates and additional info)
             'production_date', 'due_date', 'packaging_date', 'best_before_date', 'sell_by_date', 
@@ -238,7 +260,20 @@ class Product extends Model {
             'faq_url', 'tutorial_url', 'api_endpoint', 'webhook_url',
             
             // Media & Images
-            'youtube_video_id', 'image_quality', 'auto_resize_images', 'generate_thumbnails', 'watermark_images'
+            'youtube_video_id', 'image_quality', 'auto_resize_images', 'generate_thumbnails', 'watermark_images',
+            
+            // GS1 Digital Link fields
+            'gs1_link_enabled', 'gs1_link_type', 'gs1_target_url', 'gs1_existing_content_id',
+            'gs1_link_title', 'gs1_link_description', 'auto_generate_qr', 'qr_code_size', 'qr_code_ecc',
+            'gs1_schedule_enabled', 'gs1_start_date', 'gs1_end_date', 'gs1_clicks_limit', 'gs1_expiration_url',
+            'gs1_utm_source', 'gs1_utm_medium', 'gs1_utm_campaign',
+            
+            // GS1 Digital Passport fields
+            'carbon_footprint', 'water_usage', 'renewable_energy_percentage', 'recyclability_score',
+            'sustainability_certifications', 'supply_chain_transparency', 'ethical_sourcing', 'key_suppliers',
+            'blockchain_verified', 'regulatory_compliance', 'safety_standards', 'quality_certifications',
+            'lifecycle_stage', 'expected_lifespan', 'lifespan_unit', 'end_of_life_instructions',
+            'passport_public', 'passport_seo', 'data_verification_status', 'passport_last_updated'
         ];
         
         // Special handling for GTIN
@@ -265,9 +300,16 @@ class Product extends Model {
                 if (in_array($field, ['project_id', 'gs1_link_id'])) {
                     // Handle nullable integer fields
                     $set_clauses[] = "`{$field}` = " . ($data[$field] ? (int)$data[$field] : 'NULL');
-                } elseif (in_array($field, ['is_enabled', 'halal_certified', 'kosher_certified', 'gluten_free', 'vegan', 'vegetarian', 'non_gmo', 'auto_resize_images', 'generate_thumbnails', 'watermark_images'])) {
+                } elseif (in_array($field, ['is_enabled', 'halal_certified', 'kosher_certified', 'gluten_free', 'vegan', 'vegetarian', 'non_gmo', 'auto_resize_images', 'generate_thumbnails', 'watermark_images', 'gs1_link_enabled', 'auto_generate_qr', 'gs1_schedule_enabled', 'blockchain_verified', 'passport_public', 'passport_seo'])) {
                     // Handle boolean fields
                     $set_clauses[] = "`{$field}` = " . (int)$data[$field];
+                } elseif (in_array($field, ['production_date', 'due_date', 'packaging_date', 'best_before_date', 'sell_by_date', 'expiration_date', 'gs1_start_date', 'gs1_end_date', 'passport_last_updated'])) {
+                    // Handle date fields - convert empty strings to NULL
+                    if (empty($data[$field])) {
+                        $set_clauses[] = "`{$field}` = NULL";
+                    } else {
+                        $set_clauses[] = "`{$field}` = '" . db()->escape($data[$field]) . "'";
+                    }
                 } elseif ($field === 'settings') {
                     // Handle JSON fields
                     $settings = json_encode($data['settings']);
@@ -291,9 +333,25 @@ class Product extends Model {
         
         $query = "UPDATE `products` SET " . implode(', ', $set_clauses) . " WHERE `product_id` = {$product_id} AND `user_id` = {$user_id}";
         
+        // Debug logging for GS1 Digital Link updates
+        if (isset($data['gs1_link_enabled'])) {
+            error_log("Product Model: Executing update query for product {$product_id}");
+            error_log("Product Model: Query: " . $query);
+        }
+        
         database()->query($query);
         
-        return database()->affected_rows > 0;
+        $affected_rows = database()->affected_rows;
+        
+        // Debug logging for results
+        if (isset($data['gs1_link_enabled'])) {
+            error_log("Product Model: Affected rows: " . $affected_rows);
+            if ($affected_rows === 0) {
+                error_log("Product Model: No rows affected - possible issue with WHERE clause or data");
+            }
+        }
+        
+        return $affected_rows > 0;
     }
 
     public function delete_product($product_id, $user_id) {

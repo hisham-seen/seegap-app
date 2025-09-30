@@ -113,15 +113,6 @@ function get_admin_statistics_sidebar_config($data) {
     
     $items[] = [
         'type' => 'link',
-        'url' => url('admin/statistics/gs1_links?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']),
-        'icon' => 'fas fa-fw fa-sm fa-barcode mr-1',
-        'label' => l('admin_statistics.gs1_links.menu'),
-        'active' => $data->type == 'gs1_links',
-        'mobile_emoji' => '📊'
-    ];
-    
-    $items[] = [
-        'type' => 'link',
         'url' => url('admin/statistics/products?start_date=' . $data->datetime['start_date'] . '&end_date=' . $data->datetime['end_date']),
         'icon' => 'fas fa-fw fa-sm fa-box mr-1',
         'label' => l('admin_statistics.products.menu'),
